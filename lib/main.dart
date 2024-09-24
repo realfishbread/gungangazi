@@ -1,3 +1,4 @@
+import 'package:example4/MealPage.dart';
 import 'package:example4/splash/SplashPage.dart';
 import 'package:flutter/material.dart';
 import 'PopupHandler.dart';
@@ -6,7 +7,7 @@ import 'SupplementsPage.dart';
 import 'SleepPage.dart'; // 수면 페이지 임포트
 import 'WaterDrink.dart';
 import 'StressPage.dart';
-import 'NutritionPage.dart';
+import 'MealPage.dart';
 import 'BloodPressurePage.dart';
 import 'TeethHealthPage.dart';
 import 'WoundCarePage.dart'; // 필요한 페이지 임포트
@@ -111,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
       '수면': SleepPage(),
       '수분': WaterDrink(),
       '스트레스': StressPage(),
-      '식단': NutritionPage(),
+      '식단': MealPage(),
       '영양제': SupplementsPage(),
       '혈압': BloodPressurePage(),
       '치아건강': TeethHealthPage(),

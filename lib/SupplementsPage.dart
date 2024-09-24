@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class SupplementsPage extends StatefulWidget {
   const SupplementsPage({super.key});
@@ -9,24 +13,135 @@ class SupplementsPage extends StatefulWidget {
 }
 
 class _SupplementsPageState extends State<SupplementsPage> {
-  // 캘린더에 표시할 데이터 저장
   final Map<DateTime, bool> _supplementTaken = {};
-  final Map<DateTime, bool> _menstruationRecorded = {}; // 생리 기록을 저장할 변수
-  DateTime _selectedDay = DateTime.now(); // 오늘 날짜를 기준으로 선택한 날짜 관리
-  int _cycleLength = 28; // 생리 주기 기본값
-  final int _periodLength = 5; // 생리 기간 (5일로 가정)
+  final Map<DateTime, bool> _menstruationRecorded = {};
+  DateTime _selectedDay = DateTime.now();
+  int _cycleLength = 28;
+  int _periodLength = 5;
+  DateTime? _lastMenstruationDate;
+  List<DateTime> _predictedMenstruationDates = [];
 
-  DateTime? _lastMenstruationDate; // 마지막 생리일을 저장하는 변수
-  List<DateTime> _predictedMenstruationDates = []; // 예측된 생리 주기 날짜 리스트
+  // 알림을 위한 플러그인 인스턴스 생성
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
 
-  // 마지막 생리일로부터 예측된 생리 주기 계산
+  @override
+  void initState() {
+    super.initState();
+    _initializeNotifications(); // 알림 초기화
+    _loadData(); // 저장된 데이터 불러오기
+  }
+
+  // 알림 초기화
+  Future<void> _initializeNotifications() async {
+    tz.initializeTimeZones(); // 타임존 초기화
+
+    const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  // 알림 예약하기
+  Future<void> _scheduleNotification(DateTime scheduledDate) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails(
+        'your_channel_id', 'your_channel_name',
+        importance: Importance.max,
+        priority: Priority.high,
+        ticker: 'ticker');
+
+    const NotificationDetails platformChannelSpecifics =
+    NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      0,
+      '예정된 생리일 알림',
+      '생리 주기를 확인하세요.',
+      tz.TZDateTime.from(scheduledDate, tz.local), // 예약 시간
+      platformChannelSpecifics,
+      androidAllowWhileIdle: true,
+      uiLocalNotificationDateInterpretation:
+      UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+  }
+
+  // 데이터 불러오기
+  Future<void> _loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final supplementData = prefs.getStringList('supplementTaken');
+    if (supplementData != null) {
+      supplementData.forEach((entry) {
+        final date = DateTime.parse(entry);
+        _supplementTaken[date] = true;
+      });
+    }
+
+    final menstruationData = prefs.getStringList('menstruationRecorded');
+    if (menstruationData != null) {
+      menstruationData.forEach((entry) {
+        final date = DateTime.parse(entry);
+        _menstruationRecorded[date] = true;
+      });
+    }
+
+    final lastMenstruation = prefs.getString('lastMenstruationDate');
+    if (lastMenstruation != null) {
+      _lastMenstruationDate = DateTime.parse(lastMenstruation);
+      _predictNextMenstruation();
+    }
+
+    setState(() {});
+  }
+
+  // 데이터 저장하기
+  Future<void> _saveData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final supplementData = _supplementTaken.keys
+        .where((date) => _supplementTaken[date] == true)
+        .map((date) => date.toIso8601String())
+        .toList();
+    prefs.setStringList('supplementTaken', supplementData);
+
+    final menstruationData = _menstruationRecorded.keys
+        .where((date) => _menstruationRecorded[date] == true)
+        .map((date) => date.toIso8601String())
+        .toList();
+    prefs.setStringList('menstruationRecorded', menstruationData);
+
+    if (_lastMenstruationDate != null) {
+      prefs.setString('lastMenstruationDate', _lastMenstruationDate!.toIso8601String());
+    } else {
+      prefs.remove('lastMenstruationDate');
+    }
+  }
+
+  // 페이지 나갈 때 데이터 저장
+  @override
+  void dispose() {
+    _saveData();
+    super.dispose();
+  }
+
+  // 생리 주기 예측 및 알림 예약
   void _predictNextMenstruation() {
     if (_lastMenstruationDate != null) {
-      _predictedMenstruationDates.clear(); // 예측 주기 초기화
-      for (int i = 1; i <= 12; i++) { // 12개월 동안 예측
+      _predictedMenstruationDates.clear();
+      for (int i = 1; i <= 12; i++) {
         DateTime nextPeriodStart = _lastMenstruationDate!.add(Duration(days: _cycleLength * i));
         for (int j = 0; j < _periodLength; j++) {
-          _predictedMenstruationDates.add(nextPeriodStart.add(Duration(days: j)));
+          DateTime predictedDate = nextPeriodStart.add(Duration(days: j));
+          _predictedMenstruationDates.add(predictedDate);
+
+          // 생리 예측 날짜마다 알림 예약
+          _scheduleNotification(predictedDate);
         }
       }
     }
@@ -51,15 +166,13 @@ class _SupplementsPageState extends State<SupplementsPage> {
                 _selectedDay = selectedDay;
               });
             },
-            // 날짜에 맞게 영양제 복용 여부 및 생리 기록 표시
             calendarBuilders: CalendarBuilders(
               defaultBuilder: (context, date, focusedDay) {
-                // 생리 주기 예측된 날짜를 다른 색상으로 표시
                 if (_predictedMenstruationDates.contains(date)) {
                   return Container(
                     margin: const EdgeInsets.all(4.0),
                     decoration: BoxDecoration(
-                      color: Colors.blue.withOpacity(0.5), // 예측된 생리 주기 배경색
+                      color: Colors.blue.withOpacity(0.5),
                       shape: BoxShape.circle,
                     ),
                     child: Center(child: Text('${date.day}')),
@@ -86,34 +199,26 @@ class _SupplementsPageState extends State<SupplementsPage> {
           ElevatedButton(
             onPressed: () {
               setState(() {
-                // 선택한 날짜의 영양제 복용 여부 토글
-                _supplementTaken[_selectedDay] =
-                !(_supplementTaken[_selectedDay] ?? false);
+                _supplementTaken[_selectedDay] = !(_supplementTaken[_selectedDay] ?? false);
               });
             },
-            child: Text(_supplementTaken[_selectedDay] == true
-                ? '영양제 복용 취소'
-                : '영양제 복용 기록'),
+            child: Text(_supplementTaken[_selectedDay] == true ? '영양제 복용 취소' : '영양제 복용 기록'),
           ),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
               setState(() {
-                // 선택한 날짜의 생리 기록 여부 토글
-                _menstruationRecorded[_selectedDay] =
-                !(_menstruationRecorded[_selectedDay] ?? false);
+                _menstruationRecorded[_selectedDay] = !(_menstruationRecorded[_selectedDay] ?? false);
                 if (_menstruationRecorded[_selectedDay] == true) {
-                  _lastMenstruationDate = _selectedDay; // 마지막 생리일 기록
-                  _predictNextMenstruation(); // 생리 주기 예측
+                  _lastMenstruationDate = _selectedDay;
+                  _predictNextMenstruation();
                 } else if (_lastMenstruationDate == _selectedDay) {
-                  _lastMenstruationDate = null; // 마지막 생리일 초기화
-                  _predictedMenstruationDates.clear(); // 예측된 주기 초기화
+                  _lastMenstruationDate = null;
+                  _predictedMenstruationDates.clear();
                 }
               });
             },
-            child: Text(_menstruationRecorded[_selectedDay] == true
-                ? '생리 기록 취소'
-                : '생리 기록'),
+            child: Text(_menstruationRecorded[_selectedDay] == true ? '생리 기록 취소' : '생리 기록'),
           ),
           const SizedBox(height: 20),
           Row(
@@ -133,7 +238,33 @@ class _SupplementsPageState extends State<SupplementsPage> {
                     if (newValue != null) {
                       _cycleLength = newValue;
                       if (_lastMenstruationDate != null) {
-                        _predictNextMenstruation(); // 주기 변경 시 예측 갱신
+                        _predictNextMenstruation();
+                      }
+                    }
+                  });
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('생리 기간: '),
+              DropdownButton<int>(
+                value: _periodLength,
+                items: List.generate(5, (index) => 3 + index).map((int value) {
+                  return DropdownMenuItem<int>(
+                    value: value,
+                    child: Text('$value일'),
+                  );
+                }).toList(),
+                onChanged: (int? newValue) {
+                  setState(() {
+                    if (newValue != null) {
+                      _periodLength = newValue;
+                      if (_lastMenstruationDate != null) {
+                        _predictNextMenstruation();
                       }
                     }
                   });

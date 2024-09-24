@@ -4,7 +4,6 @@ import 'PopupHandler.dart';
 import 'ProfilePage.dart';
 import 'SupplementsPage.dart';
 import 'SleepPage.dart'; // 수면 페이지 임포트
-import 'DepressionPage.dart';
 import 'AnxietyPage.dart';
 import 'StressPage.dart';
 import 'NutritionPage.dart';
@@ -37,7 +36,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const SplashPage(),
       debugShowCheckedModeBanner: false,
-      );
+    );
   }
 
   // MaterialColor로 변경하는 함수
@@ -110,7 +109,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void _navigateToPage(BuildContext context, String title) {
     final routes = {
       '수면': SleepPage(),
-      '우울': DepressionPage(),
       '불안': AnxietyPage(),
       '스트레스': StressPage(),
       '식단': NutritionPage(),
@@ -148,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // "마이 페이지" 선택 시 ProfilePage로 이동
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ProfilePage()),
+        MaterialPageRoute(builder: (context) => ProfilePage()),
       );
     }
   }
@@ -203,7 +201,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-
 
   // 드로어 항목을 생성하는 함수
   Widget _getDrawerContent() {

@@ -4,7 +4,7 @@ import 'PopupHandler.dart';
 import 'ProfilePage.dart';
 import 'SupplementsPage.dart';
 import 'SleepPage.dart'; // 수면 페이지 임포트
-import 'AnxietyPage.dart';
+import 'WaterDrink.dart';
 import 'StressPage.dart';
 import 'NutritionPage.dart';
 import 'BloodPressurePage.dart';
@@ -109,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _navigateToPage(BuildContext context, String title) {
     final routes = {
       '수면': SleepPage(),
-      '불안': AnxietyPage(),
+      '수분': WaterDrink(),
       '스트레스': StressPage(),
       '식단': NutritionPage(),
       '영양제': SupplementsPage(),
@@ -213,7 +213,7 @@ class _MyHomePageState extends State<MyHomePage> {
             [
               {'icon': Icons.dark_mode, 'title': '수면'},
               {'icon': Icons.person, 'title': '식단'},
-              {'icon': Icons.food_bank, 'title': '혈압'},
+              {'icon': Icons.water_drop_outlined, 'title': '수분'},
             ],
           ),
         );

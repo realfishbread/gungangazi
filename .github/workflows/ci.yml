@@ -1,0 +1,46 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main  # 메인 브랜치로 푸시될 때 실행
+  pull_request:
+    branches:
+      - main  # 메인 브랜치로 풀 리퀘스트가 열릴 때 실행
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 코드 체크아웃
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # 스프링 빌드 및 테스트
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11'
+
+      - name: Build and Test Spring Backend
+        run: |
+          cd backend   # 백엔드 경로로 이동
+          ./mvnw clean install  # Maven을 사용하여 빌드 및 테스트
+
+      # Dart 설치
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+
+      # Dart 의존성 설치 및 빌드
+      - name: Install and Build Dart Frontend
+        run: |
+          cd frontend   # 프론트엔드 경로로 이동
+          dart pub get  # 의존성 설치
+          dart build    # 빌드
+
+      # Dart 테스트 실행
+      - name: Run Dart Tests
+        run: |
+          cd frontend
+          dart test

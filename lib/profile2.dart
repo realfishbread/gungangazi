@@ -8,7 +8,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginPage(),
+      home: LoginPage(), // 앱 시작 시 로그인 페이지를 보여줌
       theme: ThemeData(
         primaryColor: Colors.yellow,
       ),
@@ -30,12 +30,16 @@ class LoginPage extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            // 로그인 시 프로필 페이지로 이동
+            // 로그인 버튼을 누르면 메인 페이지로 이동
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => ProfilePage()),
+              MaterialPageRoute(builder: (context) => MainPage()),
             );
           },
+          style: ElevatedButton.styleFrom(
+            primary: Colors.yellow,
+            onPrimary: Colors.black,
+          ),
           child: Text('로그인'),
         ),
       ),
@@ -43,18 +47,39 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-// 프로필 페이지
-class ProfilePage extends StatefulWidget {
+// 메인 페이지
+class MainPage extends StatelessWidget {
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('메인 페이지', style: TextStyle(color: Colors.yellow)),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            // 버튼을 누르면 프로필 페이지로 이동
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfilePage()),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            primary: Colors.yellow,
+            onPrimary: Colors.black,
+          ),
+          child: Text('프로필 페이지로 이동'),
+        ),
+      ),
+    );
+  }
 }
 
-class _ProfilePageState extends State<ProfilePage> {
-  String name = '홍길동';
-  String email = 'user123@example.com';
-  String height = '180 cm';
-  String weight = '75 kg';
-
+// 프로필 페이지
+class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,45 +119,33 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(height: 20),
             Divider(color: Colors.black), // 아이디 위의 검은 선
             _buildProfileItem('아이디', 'user123', null), // 아이디는 수정 버튼 없음
-            _buildProfileItem('이름', name, () {
-              _navigateToEditPage(context, '이름', name, (newValue) {
-                setState(() {
-                  name = newValue;
-                });
-              });
+            _buildProfileItem('이름', '홍길동', () {
+              // 이름 수정 페이지로 이동하는 로직 추가
             }),
-            _buildProfileItem('이메일', email, () {
-              _navigateToEditPage(context, '이메일', email, (newValue) {
-                setState(() {
-                  email = newValue;
-                });
-              });
+            _buildProfileItem('이메일', 'user123@example.com', () {
+              // 이메일 수정 페이지로 이동하는 로직 추가
             }),
-            _buildProfileItem('키', height, () {
-              _navigateToEditPage(context, '키', height, (newValue) {
-                setState(() {
-                  height = newValue;
-                });
-              });
+            _buildProfileItem('키', '180 cm', () {
+              // 키 수정 페이지로 이동하는 로직 추가
             }),
-            _buildProfileItem('몸무게', weight, () {
-              _navigateToEditPage(context, '몸무게', weight, (newValue) {
-                setState(() {
-                  weight = newValue;
-                });
-              });
+            _buildProfileItem('몸무게', '75 kg', () {
+              // 몸무게 수정 페이지로 이동하는 로직 추가
             }),
             _buildProfileItem('성별', '남자', null), // 성별은 수정 버튼 없음
             SizedBox(height: 20),
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  // 로그아웃 버튼을 누르면 로그인 화면으로 이동
+                  // 로그아웃 버튼을 누르면 로그인 페이지로 이동
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => LoginPage()),
                   );
                 },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.red, // 로그아웃 버튼은 빨간색으로 설정
+                  onPrimary: Colors.white,
+                ),
                 child: Text('로그아웃'),
               ),
             ),
@@ -166,64 +179,6 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
         ],
-      ),
-    );
-  }
-
-  // 수정 페이지로 이동하는 함수
-  void _navigateToEditPage(BuildContext context, String field, String currentValue, Function(String) onSave) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EditPage(
-          field: field,
-          currentValue: currentValue,
-          onSave: onSave,
-        ),
-      ),
-    );
-  }
-}
-
-// 수정 페이지
-class EditPage extends StatelessWidget {
-  final String field;
-  final String currentValue;
-  final Function(String) onSave;
-
-  EditPage({required this.field, required this.currentValue, required this.onSave});
-
-  final TextEditingController _controller = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    _controller.text = currentValue;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('$field 수정'),
-        backgroundColor: Colors.yellow,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _controller,
-              decoration: InputDecoration(
-                labelText: '$field 입력',
-              ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                onSave(_controller.text);
-                Navigator.pop(context);
-              },
-              child: Text('저장'),
-            ),
-          ],
-        ),
       ),
     );
   }

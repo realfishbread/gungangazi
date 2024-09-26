@@ -25,7 +25,7 @@ jobs:
 
       - name: Build and Test Spring demo
         run: |
-          cd backend   # 백엔드 경로로 이동
+          cd demo   # 백엔드 경로로 이동
           ./mvnw clean install  # Maven을 사용하여 빌드 및 테스트
 
       # Dart 설치

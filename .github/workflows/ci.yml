@@ -23,7 +23,7 @@ jobs:
         with:
           java-version: '11'
 
-      - name: Build and Test Spring Backend
+      - name: Build and Test Spring demo
         run: |
           cd backend   # 백엔드 경로로 이동
           ./mvnw clean install  # Maven을 사용하여 빌드 및 테스트

@@ -42,10 +42,9 @@ jobs:
 
       - name: Install and Build Dart Frontend
         run: |
-          dart pub get  # 의존성 설치
-          dart build  # 빌드
+          flutter pub get  # Flutter 의존성 설치
+          flutter build  # 빌드
           
       - name: Run Dart Tests
         run: |
-          cd frontend  # 프론트엔드 경로로 이동
           dart test  # 테스트 실행

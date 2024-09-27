@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
@@ -21,7 +21,8 @@ jobs:
           sudo apt-get install -y curl unzip xz-utils
           curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.0-stable.tar.xz
           tar xf flutter_linux_3.24.0-stable.tar.xz
-          export PATH="$PATH:`pwd`/flutter/bin"
+          echo "FLUTTER_HOME=$(pwd)/flutter" >> $GITHUB_ENV
+          echo "$FLUTTER_HOME/bin" >> $GITHUB_PATH
           flutter doctor
 
       # Flutter 패키지 설치

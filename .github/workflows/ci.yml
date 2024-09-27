@@ -51,6 +51,12 @@ jobs:
       - name: Clear Flutter cache
         run: flutter pub cache repair
 
+      - name: dart-problem-matcher
+      # You may pin to the exact commit or the version.
+      # uses: leancodepl/dart-problem-matcher@db2c48534f89233ae58cb81a45ebc8fd21d90bff
+        uses: leancodepl/dart-problem-matcher@0.0.2
+          
+
       - name: Install Flutter dependencies
         run: flutter pub get --verbose  # verbose 추가
 

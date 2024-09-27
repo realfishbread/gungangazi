@@ -1,12 +1,6 @@
 name: CI Pipeline
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: [push, pull_request]
 
 jobs:
   build:
@@ -24,12 +18,29 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+     # Flutter SDK 직접 설치
+      - name: Install Flutter SDK
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl unzip xz-utils
+          curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.0-stable.tar.xz
+          tar xf flutter_linux_3.24.0-stable.tar.xz
+          export PATH="$PATH:`pwd`/flutter/bin"
+          flutter doctor
+
+    # Dart SDK 설치
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
         with:
-          flutter-version: '3.0.0'
+          sdk: 'stable'
 
+    # Flutter 패키지 설치
+      - name: Install dependencies
+        run: flutter pub get
 
+    # 테스트 실행
+      - name: Run tests
+        run: flutter test
       
           
 

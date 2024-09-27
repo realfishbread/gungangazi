@@ -22,7 +22,6 @@ environment:
 <<<<<<< HEAD
   sdk: ">=3.0.0 <4.0.0"
 =======
-   sdk: ">=3.0.0 <4.0.0"
 >>>>>>> 55ffd2d50c83a5f6bd68bb01a63208daa74166b4
 
 # Dependencies specify other packages that your package needs in order to work.

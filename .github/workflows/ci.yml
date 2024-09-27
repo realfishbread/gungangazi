@@ -28,40 +28,27 @@ jobs:
           export PATH="$PATH:`pwd`/flutter/bin"
           flutter doctor
 
-    # Dart SDK 설치
-      - name: Set up Dart
-        uses: dart-lang/setup-dart@v1
-        with:
-          sdk: 'stable'
+      - name: Install Dart SDK
+        run: |
+          sudo apt-get update
+          sudo apt-get install apt-transport-https
+          sudo sh -c 'wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /usr/share/keyrings/dart-archive-keyring.gpg'
+          sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
+          sudo apt-get update
+          sudo apt-get install dart
 
     # Flutter 패키지 설치
       - name: Install dependencies
-        run: flutter pub get
+        run: flutter pub get --verbose
 
-    # 테스트 실행
-      - name: Run tests
-        run: flutter test
+   
       
           
-
-      - name: Verify Flutter and Dart Versions
-        run: |
-          flutter --version
-          dart --version
-
-      - name: Install Flutter dependencies
-        run: flutter pub get --verbose  # verbose 추가
 
       - name: Build and Test Spring demo
         run: |
           ./mvnw clean install
 
-      - name: Install and Build Dart Frontend
-        run: | 
-          flutter pub get
-          flutter build
-
-      - name: Run Dart Tests
-        run: |
-          flutter test
-
+     # 테스트 실행
+      - name: Run tests
+        run: flutter test

@@ -3,52 +3,45 @@ name: CI Pipeline
 on:
   push:
     branches:
-      - main  # 메인 브랜치로 푸시될 때 실행
+      - main
   pull_request:
     branches:
-      - main  # 메인 브랜치로 풀 리퀘스트가 열릴 때 실행
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # 코드 체크아웃
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3  # v3으로 업데이트
 
-      # 스프링 빌드 및 테스트
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'temurin'  # 배포판 설정 (temurin)
-          
-
+          java-version: '17'  # Java 17을 사용, 버전 확인 필요
+          distribution: 'temurin'
 
       - name: Set permissions for Maven Wrapper
         run: chmod +x ./mvnw
-        
+
       - name: Build and Test Spring demo
         run: |
           ./mvnw clean install  # Maven을 사용하여 빌드 및 테스트
-           steps:
+          
       - name: Checkout repository
-        uses: actions/checkout@v3  # v2에서 v3으로 업데이트
+        uses: actions/checkout@v3  # v3으로 업데이트
 
-
-      # Dart 설치
       - name: Set up Dart
         uses: dart-lang/setup-dart@v1
 
-      # Dart 의존성 설치 및 빌드
       - name: Install and Build Dart Frontend
         run: |
-          cd frontend   # 프론트엔드 경로로 이동
+          cd frontend  # 프론트엔드 경로로 이동
           dart pub get  # 의존성 설치
-          dart build    # 빌드
-      # Dart 테스트 실행
+          dart build  # 빌드
+          
       - name: Run Dart Tests
         run: |
-          cd frontend
-          dart test
+          cd frontend  # 프론트엔드 경로로 이동
+          dart test  # 테스트 실행

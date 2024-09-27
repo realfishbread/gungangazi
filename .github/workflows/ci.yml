@@ -7,48 +7,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dart-lang/setup-dart@v1
-        with:
-          sdk: '3.0.0'
-      - run: dart --version
-
+      
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
-     # Flutter SDK 직접 설치
+      # Flutter SDK 직접 설치
       - name: Install Flutter SDK
         run: |
           sudo apt-get update
           sudo apt-get install -y curl unzip xz-utils
           curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.0-stable.tar.xz
           tar xf flutter_linux_3.24.0-stable.tar.xz
-          export PATH="$PATH:`pwd`/flutter/bin"
+          echo "FLUTTER_HOME=$PWD/flutter" >> $GITHUB_ENV
+          echo "$PWD/flutter/bin" >> $GITHUB_PATH
           flutter doctor
 
-      - name: Install Dart SDK
-        run: |
-          sudo apt-get update
-          sudo apt-get install apt-transport-https
-          sudo sh -c 'wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /usr/share/keyrings/dart-archive-keyring.gpg'
-          sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
-          sudo apt-get update
-          sudo apt-get install dart
-
-    # Flutter 패키지 설치
+      # Flutter 패키지 설치
       - name: Install dependencies
         run: flutter pub get --verbose
 
-   
-      
-          
-
+      # Build and Test Spring demo
       - name: Build and Test Spring demo
         run: |
           ./mvnw clean install
 
-     # 테스트 실행
+      # 테스트 실행
       - name: Run tests
         run: flutter test
+

@@ -25,7 +25,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.13.0'
+          flutter-version: '3.3.0'
 
       - name: Clear Flutter cache
         run: flutter pub cache repair
@@ -38,8 +38,7 @@ jobs:
           ./mvnw clean install
 
       - name: Install and Build Dart Frontend
-        run: |
-          cd frontend
+        run: | 
           flutter pub get
           flutter build
 

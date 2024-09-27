@@ -40,7 +40,7 @@ jobs:
 
       # Dart 설치
       - name: Set up Dart
-        uses: dart-lang/setup-dart@v1
+        uses: dart-lang/setup-dart@v2
 
       # Dart 의존성 설치 및 빌드
       - name: Install and Build Dart Frontend

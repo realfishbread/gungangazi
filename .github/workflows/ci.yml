@@ -25,9 +25,12 @@ jobs:
           distribution: 'temurin'  # 배포판 설정 (temurin)
           
 
+
+      - name: Set permissions for Maven Wrapper
+        run: chmod +x ./mvnw
+        
       - name: Build and Test Spring demo
         run: |
-          cd demo   # 백엔드 경로로 이동
           ./mvnw clean install  # Maven을 사용하여 빌드 및 테스트
            steps:
       - name: Checkout repository

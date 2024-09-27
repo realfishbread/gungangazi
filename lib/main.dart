@@ -1,18 +1,15 @@
-import 'package:example4/MealPage.dart';
-import 'package:example4/splash/SplashPage.dart';
 import 'package:flutter/material.dart';
 import 'PopupHandler.dart';
 import 'ProfilePage.dart';
 import 'SupplementsPage.dart';
-import 'SleepPage.dart'; // 수면 페이지 임포트
+import 'SleepPage.dart';
 import 'WaterDrink.dart';
-import 'StressPage.dart';
 import 'MealPage.dart';
-import 'BloodPressurePage.dart';
-import 'TeethHealthPage.dart';
-import 'WoundCarePage.dart'; // 필요한 페이지 임포트
+import 'ChatPage.dart';
+import 'LoginPage.dart'; // 로그인 페이지 임포트
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:example4/splash/SplashPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '건강아지', // MaterialApp의 title은 여전히 문자열이어야 합니다.
+      title: '건강아지',
       theme: ThemeData(
         brightness: Brightness.light,
         primarySwatch: createMaterialColor(const Color(0xFFFFF9C4)),
@@ -33,14 +30,20 @@ class MyApp extends StatelessWidget {
           backgroundColor: Color(0xFFFFF9C4),
           titleTextStyle: TextStyle(color: Colors.black, fontSize: 20),
         ),
+
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const SplashPage(),
+      // 초기 화면을 로그인 페이지로 설정
+      initialRoute: '/', // 첫 화면을 스플래시 페이지로 설정
+      routes: {
+        '/': (context) => const SplashPage(), // 스플래시 페이지
+        '/login': (context) => const LoginPage(), // 로그인 페이지
+        '/home': (context) => const MyHomePage(), // 메인 페이지
+      },
       debugShowCheckedModeBanner: false,
     );
   }
 
-  // MaterialColor로 변경하는 함수
   MaterialColor createMaterialColor(Color color) {
     List strengths = <double>[.05];
     final Map<int, Color> swatch = {};
@@ -76,7 +79,6 @@ class _MyHomePageState extends State<MyHomePage> {
   List<dynamic> _listData = [];
   late PopupHandler _popupHandler;
 
-  // API를 호출하는 함수
   Future<void> fetchData() async {
     try {
       final response = await http.get(Uri.parse('http://your-api-url'));
@@ -106,17 +108,12 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  // 페이지 네비게이션 처리 함수
   void _navigateToPage(BuildContext context, String title) {
     final routes = {
-      '수면': SleepPage(),
-      '수분': WaterDrink(),
-      '스트레스': StressPage(),
-      '식단': MealPage(),
-      '영양제': SupplementsPage(),
-      '혈압': BloodPressurePage(),
-      '치아건강': TeethHealthPage(),
-      '상처': WoundCarePage(),
+      '수면': const SleepPage(),
+      '수분': const WaterDrink(),
+      '식단': const MealPage(),
+      '영양제': const SupplementsPage(),
     };
 
     final page = routes[title];
@@ -128,26 +125,22 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  // 내비게이션 아이템 선택시 처리
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
 
     if (_selectedIndex == 0 || _selectedIndex == 1) {
-      // 내과나 외과 선택 시 드로어 열기
       _scaffoldKey.currentState?.openEndDrawer();
     } else if (_selectedIndex == 2) {
-      // "캘린더" 선택 시 SupplementsPage로 이동
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const SupplementsPage()),
       );
     } else if (_selectedIndex == 3) {
-      // "마이 페이지" 선택 시 ProfilePage로 이동
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ProfilePage()),
+        MaterialPageRoute(builder: (context) => const ProfilePage()),
       );
     }
   }
@@ -155,12 +148,21 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey, // GlobalKey 사용
+      key: _scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Icon(Icons.pets, color: Colors.black), // 텍스트 대신 아이콘 추가
+        title: const Icon(Icons.pets, color: Colors.black),
         backgroundColor: const Color(0xFFFFF9C4),
-        centerTitle: true, // 아이콘을 중앙에 배치
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout), // 로그아웃 아이콘
+            onPressed: () {
+              // 로그아웃 버튼 클릭 시 로그인 페이지로 이동
+              Navigator.pushReplacementNamed(context, '/login');
+            },
+          ),
+        ],
       ),
       endDrawer: SizedBox(
         width: 150,
@@ -169,21 +171,19 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       body: Center(
-        child: _popupHandler.buildVideoWithTouch(context, (newImagePath) {
-          setState(() {
-            // 선택된 이미지 경로 처리
-          });
+        child: _popupHandler.buildImageAnimationWithTouch(context, (newImagePath) {
+          setState(() {});
         }),
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color(0xFFFFF9C4),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.headphones),
+            icon: Icon(Icons.medical_services_outlined),
             label: '내과',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.alarm),
+            icon: Icon(Icons.local_hospital_outlined),
             label: '외과',
           ),
           BottomNavigationBarItem(
@@ -191,7 +191,7 @@ class _MyHomePageState extends State<MyHomePage> {
             label: '캘린더',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.pets),
+            icon: Icon(Icons.menu),
             label: '마이 페이지',
           ),
         ],
@@ -200,10 +200,20 @@ class _MyHomePageState extends State<MyHomePage> {
         unselectedItemColor: Colors.black12,
         onTap: _onItemTapped,
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ChatPage()), // 채팅 페이지로 이동
+          );
+        },
+        backgroundColor:  const Color(0xFFFFF9C4),
+        child: const Icon(Icons.pets), // 원형 버튼 색상
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat, // FAB를 왼쪽 아래에 배치
     );
   }
 
-  // 드로어 항목을 생성하는 함수
   Widget _getDrawerContent() {
     switch (_selectedIndex) {
       case 0:
@@ -253,11 +263,11 @@ class _MyHomePageState extends State<MyHomePage> {
           leading: Icon(item['icon'], color: Colors.black),
           title: Text(item['title'], style: const TextStyle(color: Colors.black)),
           onTap: () {
-            Navigator.pop(context); // 드로어 닫기
-            _navigateToPage(context, item['title'] as String); // 페이지 이동
+            Navigator.pop(context);
+            _navigateToPage(context, item['title'] as String);
           },
         );
-      }).toList(),
+      }),
     ];
   }
 }

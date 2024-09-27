@@ -27,6 +27,11 @@ jobs:
         with:
           flutter-version: '3.3.0'
 
+      - name: Verify Flutter and Dart Versions
+        run: |
+          flutter --version
+          dart --version
+
       - name: Clear Flutter cache
         run: flutter pub cache repair
 

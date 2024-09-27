@@ -37,7 +37,6 @@ jobs:
 
       - name: Install and Build Dart Frontend
         run: |
-          cd frontend  # 프론트엔드 경로로 이동
           dart pub get  # 의존성 설치
           dart build  # 빌드
           

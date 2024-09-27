@@ -38,17 +38,10 @@ jobs:
           ./mvnw clean install
 
       - name: Install and Build Dart Frontend
-<<<<<<< Updated upstream
         run: | 
           flutter pub get
           flutter build
 
-=======
-        run: |
-          dart pub get  # 의존성 설치
-          dart build    # 빌드
-      # Dart 테스트 실행
->>>>>>> Stashed changes
       - name: Run Dart Tests
         run: |
           cd frontend

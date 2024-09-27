@@ -27,6 +27,12 @@ jobs:
         with:
           flutter-version: '3.3.0'
 
+      - name: Update Dart SDK
+        run: |
+          sudo apt-get remove dart
+          sudo apt-get update
+          sudo apt-get install dart
+
       - name: Verify Flutter and Dart Versions
         run: |
           flutter --version

@@ -6,17 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:5.7
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=5
-        env:
-          MYSQL_ROOT_PASSWORD: endbackend!
-          MYSQL_DATABASE: myapp
-          MYSQL_USER: root
-          MYSQL_PASSWORD: endbackend!
+   
 
     steps:
       - name: Checkout code
@@ -58,11 +48,6 @@ jobs:
       - name: Install dependencies
         run: flutter pub get --verbose
 
-      # MySQL 서비스 확인 및 데이터베이스 실행
-      - name: Wait for MySQL to be ready
-        run: |
-          until mysqladmin ping -h 127.0.0.1 --silent; do echo waiting for mysql; sleep 2; done
-
-      - name: Verify MySQL setup
+    
         run: |
           mysql -h 127.0.0.1 -u root -pendbackend! -e "SHOW DATABASES;"

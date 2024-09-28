@@ -111,25 +111,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-// 프로필 페이지 (로그인 후 이동)
-class ProfilePage extends StatelessWidget {
-  final String memberId;
-
-  ProfilePage({required this.memberId});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('프로필 페이지'),
-      ),
-      body: Center(
-        child: Text('환영합니다, $memberId님'),
-      ),
-    );
-  }
-}
-
 // 회원가입 페이지
 class SignUpPage extends StatefulWidget {
   @override

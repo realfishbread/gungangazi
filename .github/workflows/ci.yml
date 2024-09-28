@@ -17,10 +17,10 @@ jobs:
           --health-timeout=5s
           --health-retries=5
         env:
-          MYSQL_ROOT_PASSWORD: rootpassword
-          MYSQL_DATABASE: testdb
-          MYSQL_USER: testuser
-          MYSQL_PASSWORD: testpassword
+          MYSQL_ROOT_PASSWORD: endbackend!
+          MYSQL_DATABASE: TEST
+          MYSQL_USER: root
+          MYSQL_PASSWORD: endbackend!
 
     steps:
       - name: Checkout code

@@ -5,6 +5,23 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7 # 원하는 MySQL 버전을 선택하세요
+        ports:
+          - 3306:3306
+        options: > 
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: testdb
+          MYSQL_USER: testuser
+          MYSQL_PASSWORD: testpassword
+
     steps:
       - uses: actions/checkout@v4
 
@@ -12,36 +29,5 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'temurin'
 
-      # Flutter SDK 설치
-      - name: Install Flutter SDK
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y curl unzip xz-utils
-          curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.0-stable.tar.xz
-          tar xf flutter_linux_3.24.0-stable.tar.xz
-          echo "$PWD/flutter/bin" >> $GITHUB_PATH
-          echo "$PWD/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
-          export PATH="$PATH:$PWD/flutter/bin"
-          flutter doctor
-
-      - name: Install Dart SDK
-        run: |
-          sudo apt-get update
-          sudo apt-get install apt-transport-https
-          sudo sh -c 'wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /usr/share/keyrings/dart-archive-keyring.gpg'
-          sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
-          sudo apt-get update
-          sudo apt-get install dart
-
-      # mvnw에 실행 권한 부여
-      - name: Grant execute permission for Maven Wrapper
-        run: chmod +x ./mvnw
-
-      # Flutter 패키지 설치
-      - name: Install dependencies
-        run: flutter pub get --verbose
-
-      
 

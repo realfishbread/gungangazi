@@ -45,6 +45,3 @@ jobs:
         run: flutter test
 
 
-      - name: Run tests
-        run: flutter test
-

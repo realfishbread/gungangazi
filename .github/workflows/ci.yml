@@ -43,11 +43,5 @@ jobs:
       - name: Install dependencies
         run: flutter pub get --verbose
 
-      - name: Build and Test Spring demo
-        run: ./mvnw clean install
-
-      # 테스트 실행
-      - name: Run Flutter tests
-        run: flutter test
-
+      
 

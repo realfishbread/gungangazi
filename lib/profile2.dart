@@ -1,96 +1,49 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
+class Profilepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginPage(), // 앱 시작 시 로그인 페이지를 보여줌
-      theme: ThemeData(
-        primaryColor: Colors.yellow,
-      ),
+      home: MainPage(),
     );
   }
 }
 
-// 로그인 페이지
-class LoginPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('로그인', style: TextStyle(color: Colors.yellow)),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // 로그인 버튼을 누르면 메인 페이지로 이동
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => MainPage()),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            primary: Colors.yellow,
-            onPrimary: Colors.black,
-          ),
-          child: Text('로그인'),
-        ),
-      ),
-    );
-  }
-}
-
-// 메인 페이지
 class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('메인 페이지', style: TextStyle(color: Colors.yellow)),
-        backgroundColor: Colors.transparent,
+        title: Text('메인 페이지'),
         elevation: 0,
         centerTitle: true,
       ),
       body: Center(
-        child: ElevatedButton(
+        child: TextButton(
           onPressed: () {
-            // 버튼을 누르면 프로필 페이지로 이동
+            // 프로필 페이지로 이동
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ProfilePage()),
             );
           },
-          style: ElevatedButton.styleFrom(
-            primary: Colors.yellow,
-            onPrimary: Colors.black,
-          ),
-          child: Text('프로필 페이지로 이동'),
+          child: Text('프로필 페이지로 이동', style: TextStyle(color: Colors.black)),
         ),
       ),
     );
   }
 }
 
-// 프로필 페이지
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('프로필 설정', style: TextStyle(color: Colors.yellow)),
-        backgroundColor: Colors.transparent,
+        title: Text('프로필 설정'),
         elevation: 0,
         centerTitle: true,
       ),
       body: Container(
-        color: Colors.white,
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,24 +70,48 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20),
-            Divider(color: Colors.black), // 아이디 위의 검은 선
-            _buildProfileItem('아이디', 'user123', null), // 아이디는 수정 버튼 없음
+            Divider(color: Colors.black),
+            _buildProfileItem('아이디', 'user123', null),
             _buildProfileItem('이름', '홍길동', () {
-              // 이름 수정 페이지로 이동하는 로직 추가
+              // 이름 수정 페이지로 이동
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditPage(fieldName: '이름', currentValue: '홍길동'),
+                ),
+              );
             }),
             _buildProfileItem('이메일', 'user123@example.com', () {
-              // 이메일 수정 페이지로 이동하는 로직 추가
+              // 이메일 수정 페이지로 이동
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditPage(fieldName: '이메일', currentValue: 'user123@example.com'),
+                ),
+              );
             }),
             _buildProfileItem('키', '180 cm', () {
-              // 키 수정 페이지로 이동하는 로직 추가
+              // 키 수정 페이지로 이동
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditPage(fieldName: '키', currentValue: '180 cm'),
+                ),
+              );
             }),
             _buildProfileItem('몸무게', '75 kg', () {
-              // 몸무게 수정 페이지로 이동하는 로직 추가
+              // 몸무게 수정 페이지로 이동
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditPage(fieldName: '몸무게', currentValue: '75 kg'),
+                ),
+              );
             }),
-            _buildProfileItem('성별', '남자', null), // 성별은 수정 버튼 없음
+            _buildProfileItem('성별', '남자', null),
             SizedBox(height: 20),
             Center(
-              child: ElevatedButton(
+              child: TextButton(
                 onPressed: () {
                   // 로그아웃 버튼을 누르면 로그인 페이지로 이동
                   Navigator.pushReplacement(
@@ -142,11 +119,7 @@ class ProfilePage extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => LoginPage()),
                   );
                 },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.red, // 로그아웃 버튼은 빨간색으로 설정
-                  onPrimary: Colors.white,
-                ),
-                child: Text('로그아웃'),
+                child: Text('로그아웃', style: TextStyle(color: Colors.black)),
               ),
             ),
           ],
@@ -163,13 +136,13 @@ class ProfilePage extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
           ),
           Row(
             children: [
               Text(
                 value,
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 16, color: Colors.black),
               ),
               if (onEdit != null) // 수정 버튼이 필요한 항목만 표시
                 IconButton(
@@ -179,6 +152,83 @@ class ProfilePage extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+// 수정 페이지
+class EditPage extends StatefulWidget {
+  final String fieldName;
+  final String currentValue;
+
+  EditPage({required this.fieldName, required this.currentValue});
+
+  @override
+  _EditPageState createState() => _EditPageState();
+}
+
+class _EditPageState extends State<EditPage> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.currentValue);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('${widget.fieldName} 수정', style: TextStyle(color: Colors.yellow)),
+        backgroundColor: Colors.transparent, // 배경 투명
+        elevation: 0,
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                labelText: '${widget.fieldName}',
+                labelStyle: TextStyle(color: Colors.black),
+                border: OutlineInputBorder(),
+              ),
+              style: TextStyle(color: Colors.black),
+            ),
+            SizedBox(height: 20),
+            TextButton(
+              onPressed: () {
+                // 수정된 값을 저장하고 프로필 페이지로 돌아감
+                Navigator.pop(context);
+              },
+              child: Text('저장', style: TextStyle(color: Colors.black)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// 로그인 페이지
+class LoginPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('로그인'),
+        elevation: 0,
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Text(
+          '로그인 페이지',
+          style: TextStyle(fontSize: 20, color: Colors.black),
+        ),
       ),
     );
   }

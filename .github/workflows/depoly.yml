@@ -16,35 +16,11 @@ jobs:
     - name: Set up SSH
       uses: webfactory/ssh-agent@v0.5.3
       with:
-        ssh-private-key: ${{ MIIEpAIBAAKCAQEAl7n05e3EEwSC1qsg2IbZ9Ox1vkRgipa208lXx8v85jWoaKdo
-IB0U95HQlvMtf1LDRhpV+eRRsvHK/wbdehI9IeNO35ndcAzjX/bZhlVyvqsCaOaj
-HpJRrWbaFuW7NE3pDSJfjgDoRHqW+aTtaGACxil/uQVLMMmMUDiEoU6i973SDE39
-5UWOH0ree6EtHbydoTyfLtaJKpn7sB+NWV7sMM9x46e/KgLJDyBJ94RpnzTpKPHJ
-+kLbzhNFL4NRvciQiIRvVz3r4SIF3aVogQUl4vlgH1AeTg0RPLB66JEokTvL+xYY
-Gqr5NBYehuVZdXQUgpCLRkHxgsARlfsOdmA6EQIDAQABAoIBAQCIWp0FOd25PZeb
-9mTpUp9z5kGWgXrFcdbSlCKoMuGPve8gRjpkid468zcjQV3FDArj6G0Vy6PEjlnh
-QTkvKE76Mn7ColOIDH0W1A//ErGxOpxKy+MSaWqvzDv40fKgedgUbqyzQIt8ZzNh
-HWAiKg60Kb1X+LLvIGJSAcjn8nSw8OpqYj8cs3ddF2dSsuBR+aUDtUbJz54RypME
-R03Aj0dd7wovOXyDbjchjSyA3flzFCf8SsBVY+zs0HqgZSqxTORxB4e8Ym5h91qW
-6WeuZfz6/QnlhI95IMrU2MQdMQMHkFn9MvJq9xwTJgECJizITPwpzItOveGC8NFC
-aa+qSWJBAoGBANIeiLF1GPCSCmr//N+U5iy/H808xshh3uMlUZ1CK2pHYNyc6Ntw
-9V6tXXzo0gRpaHiJos9xcBnE37ZRb59T7F3y3CDsOoMSaprtf3bPq94JMGG0yFZn
-AFCah7VwytaU9pDNqPnK6MIrcw3ps9F2GzoFlChEButt2rFjWWDqyolJAoGBALjb
-UQ5bOKabi1c5uIk8PhbeWxqz0jtyaNRDNwvnqaFVEHh7x5RYnKMRB99D2DsazKX2
-IwKnOxMEnkyb4SrrkEpKiAwOEMWTGrnL+MNl9pgvJJyAuw6yTZK0bODBffLqK26O
-TYrPoM1+V36mstnI6WEZHs6JjBT01HVCoI5gSLKJAoGAfoHHxyA7bcxf3WBWvb6G
-fvZrjUREYq0aZyQ26TnHretf1DPctxJhiSlUGjqLCAD212v2zHL+DWXNU5XgYMtE
-iqQICQJxkCzsZm8LyVrrnXlm2czgubS2KdGAV6ubVGrHsRNB43NZhF5onT3R+BDl
-/58QPtYGXIT9oMOyMnnqi5ECgYAjzW5cfnRxaEzLfwVrpvxLh5NTj6JXGyiMe9ws
-dRjYg1YmT6ru416rAoBo0IYPpHggaJSNTgBWBZ33LnWkz2zpxpek5hB/g6c4dvXe
-OmBRR0gq+4+/H++AS2uO+ErBgnMY/XytNttpEWA2ymh3X787rBbYX7F+2ZBQia/5
-A1LxKQKBgQDC+3kUepDMF+mTfjlU9mG5GzYffg4duhn5dICWThxZLYxaQ2bAU4dH
-TloKWfHqSKNOJ2RzRPxQbB/89TUCaLNnNtSGrCOHe7yp1f+Bd0IJlmp/i9vR4AI1
-whhifc37P1RmQe2iTWsd5TzAwY7UzDrAg2SbAAmrDPD3bH8cYaV37g== }}
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}  # GitHub Secrets에 저장된 SSH 키
 
     - name: Deploy to EC2
       run: |
-        ssh -o StrictHostKeyChecking=no ubuntu@54.66.38.186 << 'EOF'
+        ssh -o StrictHostKeyChecking=no ubuntu@<your-ec2-public-ip> << 'EOF'
           # Nginx 서비스 중지
           sudo systemctl stop nginx
 
@@ -57,3 +33,4 @@ whhifc37P1RmQe2iTWsd5TzAwY7UzDrAg2SbAAmrDPD3bH8cYaV37g== }}
           # Nginx 서비스 재시작
           sudo systemctl start nginx
         EOF
+

@@ -44,7 +44,7 @@ whhifc37P1RmQe2iTWsd5TzAwY7UzDrAg2SbAAmrDPD3bH8cYaV37g== }}
 
     - name: Deploy to EC2
       run: |
-        ssh -o StrictHostKeyChecking=no ubuntu@<your-ec2-public-ip> << 'EOF'
+        ssh -o StrictHostKeyChecking=no ubuntu@54.66.38.186 << 'EOF'
           # Nginx 서비스 중지
           sudo systemctl stop nginx
 

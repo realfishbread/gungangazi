@@ -8,14 +8,14 @@ jobs:
 
     services:
       mysql:
-        image: mysql:5.7 # 원하는 MySQL 버전을 선택하세요
+        image: mysql:5.7
         ports:
           - 3306:3306
         options: > 
           --health-cmd="mysqladmin ping --silent"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=5
+          --health-retries=5 # 문제 있는 부분을 수정하여 줄바꿈 제거
         env:
           MYSQL_ROOT_PASSWORD: rootpassword
           MYSQL_DATABASE: testdb
@@ -54,19 +54,5 @@ jobs:
           flutter doctor
 
       # mvnw에 실행 권한 부여
-      - name: Grant execute permission for Maven Wrapper
-        run: chmod +x ./mvnw
-
-      # Flutter 패키지 설치
-      - name: Install dependencies
-        run: flutter pub get --verbose
-
-      # MySQL 서비스 확인 및 데이터베이스 실행
-      - name: Wait for MySQL to be ready
-        run: |
-          until mysqladmin ping -h 127.0.0.1 --silent; do echo waiting for mysql; sleep 2; done
-
-      - name: Verify MySQL setup
-        run: |
-          mysql -h 127.0.0.1 -u testuser -ptestpassword -e "SHOW DATABASES;"
+      - name: Gran
 

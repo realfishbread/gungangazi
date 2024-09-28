@@ -69,5 +69,5 @@ jobs:
 
       - name: Verify MySQL setup
         run: |
-          mysql -h 127.0.0.1 -u testuser -ptestpassword -e "SHOW DATABASES;"
+          mysql -h 127.0.0.1 -u root -pendbackend! -e "SHOW DATABASES;"
 

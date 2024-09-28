@@ -29,5 +29,44 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
+          distribution: 'temurin'
 
+      # Flutter 및 Dart SDK 설치
+      - name: Install Flutter and Dart SDKs
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl unzip xz-utils apt-transport-https
+          
+          # Flutter 설치
+          curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.0-stable.tar.xz
+          tar xf flutter_linux_3.24.0-stable.tar.xz
+          echo "$PWD/flutter/bin" >> $GITHUB_PATH
+          echo "$PWD/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
+          export PATH="$PATH:$PWD/flutter/bin"
+          
+          # Dart SDK 설치
+          sudo sh -c 'wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /usr/share/keyrings/dart-archive-keyring.gpg'
+          sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
+          sudo apt-get update
+          sudo apt-get install dart
+          
+          # Flutter doctor 실행으로 확인
+          flutter doctor
+
+      # mvnw에 실행 권한 부여
+      - name: Grant execute permission for Maven Wrapper
+        run: chmod +x ./mvnw
+
+      # Flutter 패키지 설치
+      - name: Install dependencies
+        run: flutter pub get --verbose
+
+      # MySQL 서비스 확인 및 데이터베이스 실행
+      - name: Wait for MySQL to be ready
+        run: |
+          until mysqladmin ping -h 127.0.0.1 --silent; do echo waiting for mysql; sleep 2; done
+
+      - name: Verify MySQL setup
+        run: |
+          mysql -h 127.0.0.1 -u testuser -ptestpassword -e "SHOW DATABASES;"
 

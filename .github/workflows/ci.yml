@@ -33,6 +33,8 @@ jobs:
           sudo sh -c 'wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /usr/share/keyrings/dart-archive-keyring.gpg'
           sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
           sudo apt-get update
+          sudo chmod +x /usr/share/keyrings/dart-archive-keyring.gpg  # Dart 설치 관련 권한 부여
+          sudo chmod +x /etc/apt/sources.list.d/dart_stable.list      # Dart 리스트 파일 권한 부여
           sudo apt-get install dart
 
       # Flutter 패키지 설치

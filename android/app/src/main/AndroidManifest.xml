@@ -21,8 +21,6 @@
               android:resource="@style/NormalTheme"
               />
               <meta-data
-            android:name="com.google.android.gms.auth.api.signin.GoogleSignInOptions"
-            android:value="YOUR_GOOGLE_WEB_CLIENT_ID" /> 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

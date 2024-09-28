@@ -25,6 +25,7 @@ jobs:
           echo "$PWD/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
           export PATH="$PATH:$PWD/flutter/bin"
           flutter doctor
+
       - name: Install Dart SDK
         run: |
           sudo apt-get update
@@ -33,6 +34,7 @@ jobs:
           sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
           sudo apt-get update
           sudo apt-get install dart
+
       # mvnw에 실행 권한 부여
       - name: Grant execute permission for Maven Wrapper
         run: chmod +x ./mvnw
@@ -41,4 +43,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get --verbose
 
+      - name: Build and Test Spring demo
+        run: ./mvnw clean install
+
+      # 테스트 실행
+      - name: Run Flutter tests
+        run: flutter test
 

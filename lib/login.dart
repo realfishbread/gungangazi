@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(); // Firebase 초기화
-  await KakaoSdk.init(nativeAppKey: 'YOUR_KAKAO_APP_KEY'); // 카카오 SDK 초기화
+void main() {
   runApp(MyApp());
 }
 
@@ -15,99 +8,41 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Login and Sign Up',
+      title: 'Login App',
       theme: ThemeData(
-        primarySwatch: Colors.yellow, // 사용자가 원하는 앱 색상
+        primarySwatch: Colors.yellow,
       ),
-      home: LoginPage(),
+      home: LoginScreen(),
     );
   }
 }
 
-class LoginPage extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _emailController = TextEditingController();
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  String? _loginError; // 로그인 오류 메시지
+  String _errorMessage = '';
 
-  Future<void> _googleSignIn() async {
-    try {
-      final GoogleSignIn googleSignIn = GoogleSignIn();
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-
-      if (googleUser != null) {
-        final GoogleSignInAuthentication googleAuth =
-            await googleUser.authentication;
-
-        final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
-
-        await FirebaseAuth.instance.signInWithCredential(credential);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-      }
-    } catch (e) {
-      setState(() {
-        _loginError = '구글 로그인에 실패하였습니다.';
-      });
-    }
-  }
-
-  Future<void> _kakaoSignIn() async {
-    try {
-      final token = await AuthApi.instance.loginWithKakaoTalk();
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: token.accessToken,
-      );
-
-      await FirebaseAuth.instance.signInWithCredential(credential);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
-    } catch (e) {
-      setState(() {
-        _loginError = '카카오 로그인에 실패하였습니다.';
-      });
-    }
-  }
-
-  Future<void> _login() async {
-    String email = _emailController.text;
+  void _login() {
+    String username = _usernameController.text;
     String password = _passwordController.text;
 
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      // 로그인 성공 시 홈 페이지로 이동
+    // 여기에서 로그인 로직을 추가합니다.
+    // 예를 들어, 아이디와 비밀번호가 "admin"으로 설정하면 성공하도록 하겠습니다.
+    if (username == 'admin' && password == 'admin') {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => MainScreen()),
       );
-    } catch (e) {
+    } else {
       setState(() {
-        _loginError = '로그인에 실패하였습니다. 이메일 또는 비밀번호를 확인하세요.'; // 오류 메시지 설정
+        _errorMessage = '로그인에 실패하였습니다.';
       });
     }
-  }
-
-  void _goToSignUp() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => SignUpPage()),
-    );
   }
 
   @override
@@ -116,119 +51,96 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         title: Text('Login'),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Card(
-            elevation: 4, // 그림자 효과
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8), // 둥근 모서리
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '로그인',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 16),
-                  TextField(
-                    controller: _emailController,
-                    decoration: InputDecoration(labelText: '아이디 (Email)'),
-                  ),
-                  SizedBox(height: 16),
-                  TextField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(labelText: '비밀번호'),
-                    obscureText: true,
-                  ),
-                  SizedBox(height: 8),
-                  // 로그인 오류 메시지 표시
-                  if (_loginError != null)
-                    Text(
-                      _loginError!,
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  SizedBox(height: 32),
-                  ElevatedButton(
-                    onPressed: _login,
-                    child: Text('로그인'),
-                  ),
-                  SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _googleSignIn, // 구글 로그인 버튼
-                    child: Text('구글로 로그인'),
-                  ),
-                  SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _kakaoSignIn, // 카카오 로그인 버튼
-                    child: Text('카카오로 로그인'),
-                  ),
-                  SizedBox(height: 16),
-                  TextButton(
-                    onPressed: _goToSignUp,
-                    child: Text('계정이 없으신가요? 회원가입'),
-                  ),
-                ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            TextField(
+              controller: _usernameController,
+              decoration: InputDecoration(
+                labelText: '아이디',
+                border: OutlineInputBorder(),
               ),
             ),
-          ),
+            SizedBox(height: 16),
+            TextField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: '비밀번호',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 8),
+            if (_errorMessage.isNotEmpty)
+              Text(
+                _errorMessage,
+                style: TextStyle(color: Colors.red),
+              ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _login,
+              child: Text('로그인'),
+            ),
+            TextButton(
+              onPressed: () {
+                // 회원가입 화면으로 이동
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SignupScreen()),
+                );
+              },
+              child: Text('회원가입'),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
+class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home Page'),
+        title: Text('메인 화면'),
       ),
       body: Center(
-        child: Text('Welcome to the Home Page!'),
+        child: Text(
+          '환영합니다!',
+          style: TextStyle(fontSize: 24),
+        ),
       ),
     );
   }
 }
 
-class SignUpPage extends StatefulWidget {
+class SignupScreen extends StatefulWidget {
   @override
-  _SignUpPageState createState() => _SignUpPageState();
+  _SignupScreenState createState() => _SignupScreenState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
+class _SignupScreenState extends State<SignupScreen> {
+  final TextEditingController _signupUsernameController = TextEditingController();
+  final TextEditingController _signupPasswordController = TextEditingController();
+  final TextEditingController _signupEmailController = TextEditingController();
+  final TextEditingController _signupNameController = TextEditingController();
+  String _selectedGender = '남자'; // 기본 성별
 
-  String _selectedGender = 'Male'; // 기본 성별
-
-  void _signUp() {
-    String username = _usernameController.text;
-    String password = _passwordController.text;
-    String email = _emailController.text;
-    String name = _nameController.text;
-
-    // 회원가입 성공 메시지 표시
+  void _showWelcomeDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('환영합니다!'),
+          title: Text('환영합니다.'),
           content: Text('회원가입이 완료되었습니다.'),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // 메시지 창 닫기
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginPage()), // 로그인 화면으로 이동
-                );
+                Navigator.pop(context); // 다이얼로그 닫기
+                Navigator.pop(context); // 로그인 화면으로 돌아가기
               },
               child: Text('확인'),
             ),
@@ -242,38 +154,49 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign Up'),
+        title: Text('회원가입'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: <Widget>[
             TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
+              controller: _signupUsernameController,
+              decoration: InputDecoration(
+                labelText: '아이디',
+                border: OutlineInputBorder(),
+              ),
             ),
             SizedBox(height: 16),
             TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
+              controller: _signupPasswordController,
               obscureText: true,
+              decoration: InputDecoration(
+                labelText: '비밀번호',
+                border: OutlineInputBorder(),
+              ),
             ),
             SizedBox(height: 16),
             TextField(
-              controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
+              controller: _signupEmailController,
+              decoration: InputDecoration(
+                labelText: '이메일',
+                border: OutlineInputBorder(),
+              ),
             ),
             SizedBox(height: 16),
             TextField(
-              controller: _nameController,
-              decoration: InputDecoration(labelText: 'Name'),
+              controller: _signupNameController,
+              decoration: InputDecoration(
+                labelText: '이름',
+                border: OutlineInputBorder(),
+              ),
             ),
             SizedBox(height: 16),
             DropdownButton<String>(
               value: _selectedGender,
-              items: <String>['Male', 'Female']
-                  .map<DropdownMenuItem<String>>((String value) {
+              items: <String>['남자', '여자'].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
@@ -285,9 +208,20 @@ class _SignUpPageState extends State<SignUpPage> {
                 });
               },
             ),
-            SizedBox(height: 32),
+            SizedBox(height: 16),
             ElevatedButton(
-              onPressed: _signUp,
+              onPressed: () {
+                String username = _signupUsernameController.text;
+                String password = _signupPasswordController.text;
+                String email = _signupEmailController.text;
+                String name = _signupNameController.text;
+
+                // 회원가입 로직 추가 (여기서는 콘솔에 출력)
+                print('회원가입 아이디: $username, 비밀번호: $password, 이메일: $email, 이름: $name, 성별: $_selectedGender');
+
+                // 환영 메시지 다이얼로그 표시
+                _showWelcomeDialog(context);
+              },
               child: Text('회원가입'),
             ),
           ],

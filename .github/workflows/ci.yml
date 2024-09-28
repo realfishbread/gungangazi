@@ -16,10 +16,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # Flutter 및 Dart SDK 설치 및 RDS 연결
-      - name: Install Flutter, Dart SDKs and Connect to RDS
+      # Flutter 및 Dart SDK 설치
+      - name: Install Flutter and Dart SDKs
         run: |
-          # Flutter 및 Dart 설치
           sudo apt-get update
           sudo apt-get install -y curl unzip xz-utils apt-transport-https
           curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.0-stable.tar.xz
@@ -29,15 +28,6 @@ jobs:
           export PATH="$PATH:$PWD/flutter/bin"
           flutter doctor
 
-          # RDS 연결을 위한 MySQL 클라이언트 설치 및 명령 실행
-          sudo apt-get install -y mysql-client
-          mysql -h <RDS 엔드포인트> -P 3306 -u <Master username> -p<Master password> -e "SHOW DATABASES;"
-
       # Flutter 패키지 설치
       - name: Install dependencies
         run: flutter pub get --verbose
-
-
-    
-        run: |
-          mysql -h 127.0.0.1 -u root -pendbackend! -e "SHOW DATABASES;"

@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 
-class Profilepage extends StatelessWidget {
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: MainPage(),
+      theme: ThemeData(
+        primaryColor: Colors.yellow,
+      ),
     );
   }
 }
@@ -14,7 +21,8 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('메인 페이지'),
+        title: Text('메인 페이지', style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.yellow, // 타이틀 배경색 노란색
         elevation: 0,
         centerTitle: true,
       ),
@@ -39,7 +47,8 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('프로필 설정'),
+        title: Text('프로필 설정', style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.yellow, // 타이틀 배경색 노란색
         elevation: 0,
         centerTitle: true,
       ),
@@ -181,8 +190,8 @@ class _EditPageState extends State<EditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.fieldName} 수정', style: TextStyle(color: Colors.yellow)),
-        backgroundColor: Colors.transparent, // 배경 투명
+        title: Text('${widget.fieldName} 수정', style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.yellow, // 타이틀 배경색 노란색
         elevation: 0,
         centerTitle: true,
       ),
@@ -220,7 +229,8 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('로그인'),
+        title: Text('로그인', style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.yellow, // 타이틀 배경색 노란색
         elevation: 0,
         centerTitle: true,
       ),

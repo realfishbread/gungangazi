@@ -46,3 +46,19 @@ jobs:
       - name: Build and Test Spring demo
         run: ./mvnw clean install
 
+
+      - name: Build Flutter Web
+        run: flutter build web
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to EC2
+        run: |
+          scp -o StrictHostKeyChecking=no -r ./build/web/* ubuntu@13.124.3.87:/var/www/html/
+
+      - name: Restart Nginx on EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@13.124.3.87 "sudo systemctl restart nginx"

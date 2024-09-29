@@ -9,7 +9,7 @@
     },
     {
       "name": "_macros",
-      "rootUri": "file:///C:/Users/Administrator/Desktop/flutter/bin/cache/dart-sdk/pkg/_macros",
+      "rootUri": "file:///D:/flutter/bin/cache/dart-sdk/pkg/_macros",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
@@ -42,6 +42,12 @@
       "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/async-2.11.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
+    },
+    {
+      "name": "badges",
+      "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/badges-3.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "boolean_selector",
@@ -116,6 +122,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "easy_sidemenu",
+      "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/easy_sidemenu-0.6.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
       "name": "equatable",
       "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/equatable-2.0.5",
       "packageUri": "lib/",
@@ -135,9 +147,9 @@
     },
     {
       "name": "file",
-      "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/file-7.0.0",
+      "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/file-6.1.4",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "2.12"
     },
     {
       "name": "fl_chart",
@@ -147,7 +159,7 @@
     },
     {
       "name": "flutter",
-      "rootUri": "file:///C:/Users/Administrator/Desktop/flutter/packages/flutter",
+      "rootUri": "file:///D:/flutter/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "3.3"
     },
@@ -183,13 +195,13 @@
     },
     {
       "name": "flutter_test",
-      "rootUri": "file:///C:/Users/Administrator/Desktop/flutter/packages/flutter_test",
+      "rootUri": "file:///D:/flutter/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "3.3"
     },
     {
       "name": "flutter_web_plugins",
-      "rootUri": "file:///C:/Users/Administrator/Desktop/flutter/packages/flutter_web_plugins",
+      "rootUri": "file:///D:/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -338,6 +350,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "process",
+      "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/process-4.2.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
       "name": "process_run",
       "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/process_run-0.14.2",
       "packageUri": "lib/",
@@ -417,7 +435,7 @@
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///C:/Users/Administrator/Desktop/flutter/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///D:/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -447,7 +465,7 @@
     },
     {
       "name": "synchronized",
-      "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/synchronized-3.3.0+3",
+      "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/synchronized-3.3.0+2",
       "packageUri": "lib/",
       "languageVersion": "3.5"
     },
@@ -507,7 +525,7 @@
     },
     {
       "name": "video_player_android",
-      "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/video_player_android-2.7.5",
+      "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/video_player_android-2.7.3",
       "packageUri": "lib/",
       "languageVersion": "3.5"
     },
@@ -531,7 +549,7 @@
     },
     {
       "name": "vm_service",
-      "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/vm_service-14.2.5",
+      "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/vm_service-14.2.4",
       "packageUri": "lib/",
       "languageVersion": "3.3"
     },
@@ -543,7 +561,7 @@
     },
     {
       "name": "web",
-      "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/web-1.1.0",
+      "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/web-1.0.0",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
@@ -555,9 +573,9 @@
     },
     {
       "name": "xdg_directories",
-      "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/xdg_directories-1.0.4",
+      "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/xdg_directories-0.2.0+3",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "2.12"
     },
     {
       "name": "xml",
@@ -578,10 +596,10 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-09-27T12:53:45.390432Z",
+  "generated": "2024-09-29T11:22:13.219882Z",
   "generator": "pub",
-  "generatorVersion": "3.5.3",
-  "flutterRoot": "file:///C:/Users/Administrator/Desktop/flutter",
-  "flutterVersion": "3.24.3",
+  "generatorVersion": "3.5.0",
+  "flutterRoot": "file:///D:/flutter",
+  "flutterVersion": "3.24.0",
   "pubCache": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache"
 }

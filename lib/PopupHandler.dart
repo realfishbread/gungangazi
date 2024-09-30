@@ -1,3 +1,4 @@
+
 import 'package:example4/MealPage.dart';
 import 'package:example4/SleepPage.dart';
 import 'package:example4/SupplementsPage.dart';
@@ -211,13 +212,4 @@ class PopupHandler {
   }
 }
 
-// 예시로 사용할 다른 페이지
-class AnotherPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("다른 페이지")),
-      body: Center(child: const Text("다른 페이지 내용")),
-    );
-  }
-}
+

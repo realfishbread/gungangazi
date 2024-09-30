@@ -7,9 +7,7 @@ import 'SleepPage.dart';
 import 'WaterDrink.dart';
 import 'MealPage.dart';
 import 'ChatPage.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'LoginPage.dart'; // 로그인 페이지 임포트
+import 'loginPge.dart';
 
 class MobileHomePage extends StatefulWidget {
   const MobileHomePage({super.key});
@@ -25,26 +23,9 @@ class _MobileHomePageState extends State<MobileHomePage> {
   List<dynamic> _listData = [];
   late PopupHandler _popupHandler;
 
-  Future<void> fetchData() async {
-    try {
-      final response = await http.get(Uri.parse('http://your-api-url'));
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        setState(() {
-          _listData = data['listData'];
-        });
-      } else {
-        throw Exception('데이터를 가져오지 못했습니다.');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    fetchData();
     _popupHandler = PopupHandler(listData: _listData);
   }
 
@@ -102,9 +83,8 @@ class _MobileHomePageState extends State<MobileHomePage> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout), // 로그아웃 아이콘
+            icon: const Icon(Icons.logout),
             onPressed: () {
-              // 로그아웃 버튼 클릭 시 로그인 페이지로 이동
               Navigator.pushReplacementNamed(context, '/login');
             },
           ),
@@ -150,13 +130,13 @@ class _MobileHomePageState extends State<MobileHomePage> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const ChatPage()), // 채팅 페이지로 이동
+            MaterialPageRoute(builder: (context) => const ChatPage()),
           );
         },
         backgroundColor: const Color(0xFFFFF9C4),
-        child: const Icon(Icons.pets), // 원형 버튼 색상
+        child: const Icon(Icons.pets),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat, // FAB를 왼쪽 아래에 배치
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
 

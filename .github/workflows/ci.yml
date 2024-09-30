@@ -26,6 +26,7 @@ jobs:
           export PATH="$PATH:$PWD/flutter/bin"
           flutter doctor
 
+      # Dart SDK 설치 (Flutter와는 별도로 사용되는 경우에만 추가)
       - name: Install Dart SDK
         run: |
           sudo apt-get update
@@ -40,25 +41,29 @@ jobs:
         run: chmod +x ./mvnw
 
       # Flutter 패키지 설치
-      - name: Install dependencies
+      - name: Install Flutter dependencies
         run: flutter pub get --verbose
 
+      # Spring 빌드 및 테스트
       - name: Build and Test Spring demo
         run: ./mvnw clean install
 
-
+      # Flutter 웹 빌드
       - name: Build Flutter Web
         run: flutter build web
 
+      # SSH 설정 (EC2 배포를 위한 비밀 키)
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Deploy to EC2
+      # Flutter 웹 파일을 EC2로 배포
+      - name: Deploy Flutter Web to EC2
         run: |
           scp -o StrictHostKeyChecking=no -r ./build/web/* ubuntu@13.124.3.87:/var/www/html/
 
+      # Nginx 다시 시작
       - name: Restart Nginx on EC2
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@13.124.3.87 "sudo systemctl restart nginx"

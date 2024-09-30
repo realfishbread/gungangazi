@@ -1,20 +1,12 @@
 name: CI Pipeline
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up JDK
         uses: actions/setup-java@v3
@@ -22,28 +14,39 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.3.0'
+      # Flutter SDK 설치
+      - name: Install Flutter SDK
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl unzip xz-utils
+          curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.0-stable.tar.xz
+          tar xf flutter_linux_3.24.0-stable.tar.xz
+          echo "$PWD/flutter/bin" >> $GITHUB_PATH
+          echo "$PWD/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
+          export PATH="$PATH:$PWD/flutter/bin"
+          flutter doctor
 
-      - name: Clear Flutter cache
-        run: flutter pub cache repair
+      - name: Install Dart SDK
+        run: |
+          sudo apt-get update
+          sudo apt-get install apt-transport-https
+          sudo sh -c 'wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /usr/share/keyrings/dart-archive-keyring.gpg'
+          sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
+          sudo apt-get update
+          sudo apt-get install dart
 
-      - name: Install Flutter dependencies
-        run: flutter pub get --verbose  # verbose 추가
+      # mvnw에 실행 권한 부여
+      - name: Grant execute permission for Maven Wrapper
+        run: chmod +x ./mvnw
+
+      # Flutter 패키지 설치
+      - name: Install dependencies
+        run: flutter pub get --verbose
 
       - name: Build and Test Spring demo
-        run: |
-          ./mvnw clean install
+        run: ./mvnw clean install
 
-      - name: Install and Build Dart Frontend
-        run: | 
-          flutter pub get
-          flutter build
-
-      - name: Run Dart Tests
-        run: |
-          cd frontend
-          flutter test
+      # 테스트 실행
+      - name: Run Flutter tests
+        run: flutter test
 

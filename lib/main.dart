@@ -19,7 +19,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: createMaterialColor(const Color(0xFFFFF9C4)), // 기본 색상 설정
       ),
       // 통합된 로그인 페이지로 시작
+
       initialRoute: '/login',
+
+      home: const LoginPage(),
       routes: {
         '/login': (context) => const LoginPage(), // 로그인 페이지 경로 추가
         '/homeApp': (context) => const MobileHomePage(), // 앱 전용 페이지

@@ -5,14 +5,14 @@ import 'dart:async';
 
 
 // 프로필 페이지
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class ProfilePage1 extends StatefulWidget {
+  const ProfilePage1({super.key});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage1> {
   String _name = '';
   String _height = '';
   String _weight = '';

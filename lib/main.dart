@@ -1,3 +1,4 @@
+import 'package:example4/splash/SplashPage.dart';
 import 'package:flutter/material.dart';
 import 'mobile_home_page.dart'; // 앱 전용 페이지
 import 'web_home_page.dart'; // 웹 전용 페이지
@@ -20,10 +21,11 @@ class MyApp extends StatelessWidget {
       ),
       // 통합된 로그인 페이지로 시작
 
-      initialRoute: '/login',
+      initialRoute: '/splash',
 
-      home: const LoginPage(),
+      home: const SplashPage(),
       routes: {
+        '/splash': (context) => const SplashPage(),
         '/login': (context) => const LoginPage(), // 로그인 페이지 경로 추가
         '/homeApp': (context) => const MobileHomePage(), // 앱 전용 페이지
         '/homeWeb': (context) => const WebHomePage(), // 웹 전용 페이지

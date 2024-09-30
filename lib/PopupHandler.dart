@@ -22,22 +22,64 @@ class PopupHandler {
     'assets/person/jindan_N1.jpg',
     'assets/person/jindan_N3.jpg',
     'assets/person/jindan_N5.jpg',
+    'assets/person/jindan_N7.jpg',
+    'assets/person/jindan_N9.jpg',
+    'assets/person/jindan_N10.jpg',
+    'assets/person/jindan_N12.jpg',
+    'assets/person/jindan_N10.jpg',
+    'assets/person/jindan_N9.jpg',
+    'assets/person/jindan_N7.jpg',
+    'assets/person/jindan_N5.jpg',
+    'assets/person/jindan_N3.jpg',
+    'assets/person/jindan_N1.jpg',
   ];
 
   PopupHandler({required this.listData})
       : imagePathsByBodyPart = {
     'head': [
       'assets/person/jindan_sad1.jpg',
-      'assets/person/jindan_sad2.jpg',
+      'assets/person/jindan_sad3.jpg',
+      'assets/person/jindan_sad5.jpg',
+      'assets/person/jindan_sad7.jpg',
+      'assets/person/jindan_sad9.jpg',
+      'assets/person/jindan_sad7.jpg',
+      'assets/person/jindan_sad5.jpg',
+      'assets/person/jindan_sad3.jpg',
+      'assets/person/jindan_sad1.jpg',
     ],
     'body': [
       'assets/person/jindan_stomach1.jpg',
       'assets/person/jindan_stomach2.jpg',
+      'assets/person/jindan_stomach3.jpg',
+      'assets/person/jindan_stomach4.jpg',
+      'assets/person/jindan_stomach5.jpg',
+      'assets/person/jindan_stomach6.jpg',
+      'assets/person/jindan_stomach7.jpg',
+      'assets/person/jindan_stomach6.jpg',
+      'assets/person/jindan_stomach5.jpg',
+      'assets/person/jindan_stomach4.jpg',
+      'assets/person/jindan_stomach3.jpg',
+      'assets/person/jindan_stomach2.jpg',
+      'assets/person/jindan_stomach1.jpg',
     ],
     'arm': [
       'assets/person/jindan_armsick1.jpg',
       'assets/person/jindan_armsick3.jpg',
+      'assets/person/jindan_armsick5.jpg',
+      'assets/person/jindan_armsick7.jpg',
+      'assets/person/jindan_armsick9.jpg',
+      'assets/person/jindan_armsick11.jpg',
+      'assets/person/jindan_armsick13.jpg',
+      'assets/person/jindan_armsick16.jpg',
+      'assets/person/jindan_armsick13.jpg',
+      'assets/person/jindan_armsick11.jpg',
+      'assets/person/jindan_armsick9.jpg',
+      'assets/person/jindan_armsick7.jpg',
+      'assets/person/jindan_armsick5.jpg',
+      'assets/person/jindan_armsick3.jpg',
+      'assets/person/jindan_armsick1.jpg',
     ],
+
     'leg': [
       'assets/person/leg1.jpg',
       'assets/person/leg2.jpg',
@@ -48,6 +90,12 @@ class PopupHandler {
 
   // 이미지 애니메이션 시작
   void startImageAnimation() {
+
+    // 기존 타이머가 있으면 중지
+    if (_imageTimer != null && _imageTimer!.isActive) {
+      _imageTimer!.cancel();
+    }
+
     _imageTimer = Timer.periodic(frameDuration, (timer) {
       if (_currentBodyPart == 'default') {
         _currentImageIndex = (_currentImageIndex + 1) % defaultImagePaths.length;

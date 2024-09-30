@@ -1,54 +1,14 @@
+import 'package:example4/loginPge.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MainPage(),
-      theme: ThemeData(
-        primaryColor: Colors.yellow,
-      ),
-    );
-  }
-}
-
-class MainPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('메인 페이지', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.yellow, // 타이틀 배경색 노란색
-        elevation: 0,
-        centerTitle: true,
-      ),
-      body: Center(
-        child: TextButton(
-          onPressed: () {
-            // 프로필 페이지로 이동
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ProfilePage()),
-            );
-          },
-          child: Text('프로필 페이지로 이동', style: TextStyle(color: Colors.black)),
-        ),
-      ),
-    );
-  }
-}
-
-class ProfilePage extends StatelessWidget {
+class Profile2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('프로필 설정', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.yellow, // 타이틀 배경색 노란색
+        backgroundColor: const Color(0xFFFFF9C4), // 타이틀 배경색 노란색
         elevation: 0,
         centerTitle: true,
       ),
@@ -125,7 +85,7 @@ class ProfilePage extends StatelessWidget {
                   // 로그아웃 버튼을 누르면 로그인 페이지로 이동
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
                   );
                 },
                 child: Text('로그아웃', style: TextStyle(color: Colors.black)),
@@ -191,7 +151,7 @@ class _EditPageState extends State<EditPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.fieldName} 수정', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.yellow, // 타이틀 배경색 노란색
+        backgroundColor: const Color(0xFFFFF9C4), // 타이틀 배경색 노란색
         elevation: 0,
         centerTitle: true,
       ),
@@ -223,23 +183,4 @@ class _EditPageState extends State<EditPage> {
   }
 }
 
-// 로그인 페이지
-class LoginPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('로그인', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.yellow, // 타이틀 배경색 노란색
-        elevation: 0,
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Text(
-          '로그인 페이지',
-          style: TextStyle(fontSize: 20, color: Colors.black),
-        ),
-      ),
-    );
-  }
-}
+

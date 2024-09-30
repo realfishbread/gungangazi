@@ -1,3 +1,4 @@
+import 'package:example4/profile2.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'PopupHandler.dart';
@@ -174,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onTap: (index, _) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ProfilePage()),
+                    MaterialPageRoute(builder: (context) =>  Profile2()),//프로필페이지 바꿔가면서 확인
                   );
                 },
                 icon: const Icon(Icons.person),

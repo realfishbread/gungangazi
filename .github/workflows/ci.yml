@@ -5,6 +5,7 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -25,7 +26,7 @@ jobs:
           echo "$PWD/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
           export PATH="$PATH:$PWD/flutter/bin"
           flutter doctor
-
+          
       # Dart SDK 설치 (Flutter와는 별도로 사용되는 경우에만 추가)
       - name: Install Dart SDK
         run: |
@@ -47,6 +48,16 @@ jobs:
       # Spring 빌드 및 테스트
       - name: Build and Test Spring demo
         run: ./mvnw clean install
+
+      # SQL 파일 실행 (Amazon RDS 사용)
+      - name: Run SQL script on Amazon RDS
+        env:
+          RDS_HOST: ${{ secrets.RDS_HOST }}
+          RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
+          RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
+          RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
+        run: |
+          mysql -h $RDS_HOST -P 3306 -u $RDS_USERNAME -p$RDS_PASSWORD $RDS_DATABASE < path/to/your_script.sql
 
       # Flutter 웹 빌드
       - name: Build Flutter Web

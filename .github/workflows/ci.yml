@@ -7,15 +7,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout repository
       - uses: actions/checkout@v4
 
+      # 2. Set up JDK
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # Flutter SDK 설치
+      # 3. Install Flutter SDK
       - name: Install Flutter SDK
         run: |
           sudo apt-get update
@@ -26,8 +28,8 @@ jobs:
           echo "$PWD/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
           export PATH="$PATH:$PWD/flutter/bin"
           flutter doctor
-          
-      # Dart SDK 설치 (Flutter와는 별도로 사용되는 경우에만 추가)
+
+      # 4. Install Dart SDK (only if used separately from Flutter)
       - name: Install Dart SDK
         run: |
           sudo apt-get update
@@ -36,20 +38,30 @@ jobs:
           sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
           sudo apt-get update
           sudo apt-get install dart
-          
-      # mvnw에 실행 권한 부여
+
+      # 5. Grant execute permission for Maven Wrapper
       - name: Grant execute permission for Maven Wrapper
         run: chmod +x ./mvnw
 
-      # Flutter 패키지 설치
+      # 6. Install Flutter dependencies
       - name: Install Flutter dependencies
         run: flutter pub get --verbose
 
-      # Spring 빌드 및 테스트
+      # 7. Build and Test Spring demo
       - name: Build and Test Spring demo
         run: ./mvnw clean install
 
-      # SQL 파일 실행 (Amazon RDS 사용)
+      # 8. Create Database if not exists (Amazon RDS)
+      - name: Create Database on Amazon RDS
+        env:
+          RDS_HOST: ${{ secrets.RDS_HOST }}
+          RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
+          RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
+          RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
+        run: |
+          mysql -h $RDS_HOST -P 3306 -u $RDS_USERNAME -p"$RDS_PASSWORD" -e "CREATE DATABASE IF NOT EXISTS $RDS_DATABASE;"
+
+      # 9. Run SQL script (Amazon RDS)
       - name: Run SQL script on Amazon RDS
         env:
           RDS_HOST: ${{ secrets.RDS_HOST }}
@@ -58,23 +70,23 @@ jobs:
           RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
         run: |
           mysql -h $RDS_HOST -P 3306 -u $RDS_USERNAME -p"$RDS_PASSWORD" $RDS_DATABASE < backup.sql
-          
-      # Flutter 웹 빌드
+
+      # 10. Build Flutter Web
       - name: Build Flutter Web
         run: flutter build web
 
-      # SSH 설정 (EC2 배포를 위한 비밀 키)
+      # 11. Setup SSH (for EC2 deployment)
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      # Flutter 웹 파일을 EC2로 배포
+      # 12. Deploy Flutter Web to EC2
       - name: Deploy Flutter Web to EC2
         run: |
           scp -r ./build/web/* ubuntu@13.124.3.87:/var/www/html/
-          
-      # Nginx 다시 시작
+
+      # 13. Restart Nginx on EC2
       - name: Restart Nginx on EC2
         run: |
           ssh ubuntu@13.124.3.87 "sudo systemctl restart nginx"

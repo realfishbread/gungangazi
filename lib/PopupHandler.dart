@@ -1,4 +1,3 @@
-
 import 'package:example4/MealPage.dart';
 import 'package:example4/SleepPage.dart';
 import 'package:example4/SupplementsPage.dart';
@@ -246,6 +245,7 @@ class PopupHandler {
                     : imagePathsByBodyPart[_currentBodyPart]![value],
                 fit: BoxFit.cover,
                 key: _imageKey, // GlobalKey를 사용하여 이미지 위치 계산
+                gaplessPlayback: true, // 깜박임 방지를 위해 추가
               );
             },
           ),

@@ -36,7 +36,7 @@ jobs:
           sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
           sudo apt-get update
           sudo apt-get install dart
-
+          
       # mvnw에 실행 권한 부여
       - name: Grant execute permission for Maven Wrapper
         run: chmod +x ./mvnw
@@ -57,9 +57,8 @@ jobs:
           RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
           RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
         run: |
-          mysql -h $RDS_HOST -P 3306 -u $RDS_USERNAME -p$RDS_PASSWORD $RDS_DATABASE < backup.sql
-
-
+          mysql -h $RDS_HOST -P 3306 -u $RDS_USERNAME -p"$RDS_PASSWORD" $RDS_DATABASE < backup.sql
+          
       # Flutter 웹 빌드
       - name: Build Flutter Web
         run: flutter build web
@@ -73,9 +72,9 @@ jobs:
       # Flutter 웹 파일을 EC2로 배포
       - name: Deploy Flutter Web to EC2
         run: |
-          scp -o StrictHostKeyChecking=no -r ./build/web/* ubuntu@13.124.3.87:/var/www/html/
-
+          scp -r ./build/web/* ubuntu@13.124.3.87:/var/www/html/
+          
       # Nginx 다시 시작
       - name: Restart Nginx on EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@13.124.3.87 "sudo systemctl restart nginx"
+          ssh ubuntu@13.124.3.87 "sudo systemctl restart nginx"

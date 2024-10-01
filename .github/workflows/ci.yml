@@ -90,7 +90,7 @@ jobs:
       # 13. Deploy Flutter Web to EC2
       - name: Deploy Flutter Web to EC2
         run: |
-          scp -r scp -r ./build/web/* ubuntu@13.124.3.87:/var/www/html/
+          scp -r ./build/web/* ubuntu@13.124.3.87:/var/www/html/
 
       # 14. Restart Nginx on EC2
       - name: Restart Nginx on EC2

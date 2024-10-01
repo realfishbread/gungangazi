@@ -57,7 +57,8 @@ jobs:
           RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
           RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
         run: |
-          mysql -h database-1.c76iaa8ycok0.ap-northeast-2.rds.amazonaws.com -P 3306 -u root -pendbackend! appdb < backup.sql
+          mysql -h $RDS_HOST -P 3306 -u $RDS_USERNAME -p$RDS_PASSWORD $RDS_DATABASE < backup.sql
+
 
       # Flutter 웹 빌드
       - name: Build Flutter Web

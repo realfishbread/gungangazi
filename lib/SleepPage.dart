@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:fl_chart/fl_chart.dart';
 
 class SleepPage extends StatefulWidget {
   const SleepPage({super.key});
@@ -19,32 +20,26 @@ class _SleepPageState extends State<SleepPage> {
   @override
   void initState() {
     super.initState();
-    _loadSleepData(); // 앱 시작 시 데이터 로드
+    _loadSleepData();
   }
 
-  // 수면 시간 로컬 저장
   Future<void> _saveSleepDataLocally() async {
     if (_sleepTime != null && _wakeUpTime != null) {
       String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
-      String formattedSleepTime = _sleepTime!.format(context);
-      String formattedWakeUpTime = _wakeUpTime!.format(context);
 
-      // 새로운 기록을 저장할 데이터로 변환
+      // 시간을 24시간 형식으로 저장
       Map<String, String> newRecord = {
         'date': formattedDate,
-        'sleepTime': formattedSleepTime,
-        'wakeUpTime': formattedWakeUpTime,
+        'sleepTime': '${_sleepTime!.hour}:${_sleepTime!.minute}',  // 시간 형식 수정
+        'wakeUpTime': '${_wakeUpTime!.hour}:${_wakeUpTime!.minute}',  // 시간 형식 수정
       };
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
-
-      // 이전에 저장된 데이터를 불러오기
       String? savedData = prefs.getString('sleepData');
       List<Map<String, String>> records = [];
 
       if (savedData != null) {
         try {
-          // 저장된 데이터 불러오기
           List<dynamic> decodedData = json.decode(savedData);
           records = decodedData.map((item) {
             return Map<String, String>.from(item);
@@ -54,33 +49,27 @@ class _SleepPageState extends State<SleepPage> {
         }
       }
 
-      // 동일한 날짜의 기록이 있는지 확인하고 업데이트
       bool recordExists = false;
       for (int i = 0; i < records.length; i++) {
         if (records[i]['date'] == formattedDate) {
-          records[i] = newRecord; // 동일한 날짜면 업데이트
+          records[i] = newRecord;
           recordExists = true;
           break;
         }
       }
 
       if (!recordExists) {
-        records.add(newRecord); // 동일한 날짜가 없으면 새로운 기록 추가
+        records.add(newRecord);
       }
 
-      // 업데이트된 리스트를 다시 저장
       await prefs.setString('sleepData', json.encode(records));
-
       print('수면 데이터 로컬에 저장 성공: $records');
-
-      // 저장 후 데이터 다시 로드
       _loadSleepData();
     } else {
       print('수면 시간 또는 기상 시간이 선택되지 않음');
     }
   }
 
-  // 데이터베이스에 수면 시간 전송
   Future<void> _saveSleepDataToDatabase() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? savedData = prefs.getString('sleepData');
@@ -92,9 +81,8 @@ class _SleepPageState extends State<SleepPage> {
           return Map<String, String>.from(item);
         }).toList();
 
-        // 예시 API URL로 데이터 전송
         final response = await http.post(
-          Uri.parse('https://your-api-endpoint.com/saveSleepData'),  // API 엔드포인트 설정
+          Uri.parse('https://your-api-endpoint.com/saveSleepData'),
           headers: {'Content-Type': 'application/json'},
           body: json.encode({'records': records}),
         );
@@ -112,7 +100,6 @@ class _SleepPageState extends State<SleepPage> {
     }
   }
 
-  // 로컬에서 수면 데이터 가져오기
   Future<void> _loadSleepData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? savedData = prefs.getString('sleepData');
@@ -139,21 +126,92 @@ class _SleepPageState extends State<SleepPage> {
     }
   }
 
+  Duration _calculateSleepDuration(TimeOfDay sleepTime, TimeOfDay wakeUpTime) {
+    final now = DateTime.now();
+
+    final sleepDateTime = DateTime(now.year, now.month, now.day, sleepTime.hour, sleepTime.minute);
+    final wakeUpDateTime = DateTime(now.year, now.month, now.day, wakeUpTime.hour, wakeUpTime.minute);
+
+    if (wakeUpDateTime.isBefore(sleepDateTime)) {
+      return wakeUpDateTime.add(const Duration(days: 1)).difference(sleepDateTime);
+    } else {
+      return wakeUpDateTime.difference(sleepDateTime);
+    }
+  }
+
+  Widget _buildSleepGraph() {
+    if (_sleepRecords.isEmpty) {
+      return const Center(child: Text('저장된 수면 기록이 없습니다.'));
+    }
+
+    List<BarChartGroupData> barGroups = _sleepRecords.asMap().entries.map((entry) {
+      int index = entry.key;
+      Map<String, String> record = entry.value;
+
+      TimeOfDay sleepTime = TimeOfDay(
+        hour: int.parse(record['sleepTime']!.split(":")[0]),
+        minute: int.parse(record['sleepTime']!.split(":")[1]),
+      );
+      TimeOfDay wakeUpTime = TimeOfDay(
+        hour: int.parse(record['wakeUpTime']!.split(":")[0]),
+        minute: int.parse(record['wakeUpTime']!.split(":")[1]),
+      );
+
+      Duration sleepDuration = _calculateSleepDuration(sleepTime, wakeUpTime);
+      double sleepHours = sleepDuration.inMinutes / 60.0;
+
+      return BarChartGroupData(
+        x: index,
+        barRods: [
+          BarChartRodData(
+            toY: sleepHours.toInt().toDouble(), // 소수점 없는 정수 값으로 변환
+            color: Colors.blueAccent,
+            width: 20,
+          ),
+        ],
+      );
+    }).toList();
+
+    return BarChart(
+      BarChartData(
+        barGroups: barGroups, // 막대 데이터 리스트
+        titlesData: FlTitlesData(
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              interval: 4, // y축 레이블 간격 (4시간 단위)
+              getTitlesWidget: (value, meta) => Text('${value.toInt()}h'), // y축 레이블 (0~24시간)
+            ),
+          ),
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              getTitlesWidget: (double value, meta) {
+                return Text(_sleepRecords[value.toInt()]['date'] ?? ''); // x축 레이블: 날짜
+              },
+            ),
+          ),
+        ),
+        borderData: FlBorderData(show: false), // 테두리 비활성화
+        minY: 0, // y축 최소값 (0시간)
+        maxY: 24, // y축 최대값 (24시간)
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // 화면 크기 정보 가져오기
     final screenSize = MediaQuery.of(context).size;
-    final bool isWeb = screenSize.width > 600; // 너비가 600 이상이면 웹으로 간주
+    final bool isWeb = screenSize.width > 600;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('수면 정보'),
         backgroundColor: const Color(0xFFFFF9C4),
       ),
-      // 웹 화면일 경우, 중앙에 고정된 컨테이너로 레이아웃 설정
       body: Center(
         child: Container(
-          width: isWeb ? 800 : screenSize.width, // 웹일 경우 너비를 800으로 제한
+          width: isWeb ? 800 : screenSize.width,
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
@@ -169,8 +227,8 @@ class _SleepPageState extends State<SleepPage> {
                           : '수면 시간: ${_sleepTime!.format(context)}',
                     ),
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), // 크기 조정
-                      minimumSize: const Size(140, 40), // 최소 크기 설정
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      minimumSize: const Size(140, 40),
                     ),
                   ),
                   ElevatedButton.icon(
@@ -182,8 +240,8 @@ class _SleepPageState extends State<SleepPage> {
                           : '기상 시간: ${_wakeUpTime!.format(context)}',
                     ),
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), // 크기 조정
-                      minimumSize: const Size(140, 40), // 최소 크기 설정
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      minimumSize: const Size(140, 40),
                     ),
                   ),
                 ],
@@ -193,40 +251,23 @@ class _SleepPageState extends State<SleepPage> {
                 onPressed: _saveSleepDataLocally,
                 child: const Text('로컬에 저장하기'),
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15), // 크기 조정
-                  minimumSize: const Size(140, 40), // 최소 크기 설정
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  minimumSize: const Size(140, 40),
                 ),
               ),
               const SizedBox(height: 20),
               Expanded(
-                child: _sleepRecords.isEmpty
-                    ? const Center(child: Text('저장된 수면 기록이 없습니다.'))
-                    : SingleChildScrollView(
-                  child: DataTable(
-                    columns: const [
-                      DataColumn(label: Text('날짜')),
-                      DataColumn(label: Text('수면 시간')),
-                      DataColumn(label: Text('기상 시간')),
-                    ],
-                    rows: _sleepRecords.map((record) {
-                      return DataRow(cells: [
-                        DataCell(Text(record['date']!)),
-                        DataCell(Text(record['sleepTime']!)),
-                        DataCell(Text(record['wakeUpTime']!)),
-                      ]);
-                    }).toList(),
-                  ),
-                ),
+                child: _buildSleepGraph(),
               ),
-              const SizedBox(height: 10), // 리스트와 버튼 사이 간격 추가
+              const SizedBox(height: 10),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: ElevatedButton(
                   onPressed: _saveSleepDataToDatabase,
                   child: const Text('데이터베이스로 전송하기'),
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15), // 크기 조정
-                    minimumSize: const Size(140, 40), // 최소 크기 설정
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    minimumSize: const Size(140, 40),
                   ),
                 ),
               ),
@@ -237,7 +278,6 @@ class _SleepPageState extends State<SleepPage> {
     );
   }
 
-  // 수면 시간 선택
   Future<void> _selectSleepTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -250,7 +290,6 @@ class _SleepPageState extends State<SleepPage> {
     }
   }
 
-  // 기상 시간 선택
   Future<void> _selectWakeUpTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,

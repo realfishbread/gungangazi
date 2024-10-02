@@ -1,6 +1,7 @@
 import 'package:example4/MealPage.dart';
 import 'package:example4/SleepPage.dart';
 import 'package:example4/SupplementsPage.dart';
+import 'package:example4/sorhkPage.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -124,7 +125,7 @@ class PopupHandler {
   // 부위마다 다른 페이지로 이동하는 함수
   void _navigateToBodyPartPage(BuildContext context) {
     if (_currentBodyPart == 'head') {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => SleepPage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => SorhkPage()));
     } else if (_currentBodyPart == 'arm') {
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => SupplementsPage()));
     } else if (_currentBodyPart == 'body') {

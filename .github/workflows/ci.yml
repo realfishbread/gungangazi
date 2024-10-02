@@ -87,12 +87,15 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      # 13. Deploy Flutter Web to EC2
+     # 13. Deploy Flutter Web to EC2
+
       - name: Deploy Flutter Web to EC2
-        run: |
-          scp -r ./build/web/* ubuntu@13.124.3.87:/var/www/html/
+        run: |
+          scp -r ./build/web/* ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com:/var/www/html/
 
       # 14. Restart Nginx on EC2
+
       - name: Restart Nginx on EC2
         run: |
-          ssh ubuntu@13.124.3.87 "sudo systemctl restart nginx"
+          ssh ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com "sudo systemctl restart nginx"
+

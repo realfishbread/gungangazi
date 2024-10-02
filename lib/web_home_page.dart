@@ -70,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         elevation: 0, // 그림자 제거
         centerTitle: true, // 제목(아이콘)을 가운데로 설정
-        title: const Icon(Icons.pets, color: Colors.black), // 가운데에 아이콘 추가
+        title: const Icon(Icons.local_hospital_outlined, color: Colors.black), // 가운데에 아이콘 추가
         backgroundColor: const Color(0xFFFFF9C4), // 앱바 배경색
       ),
       body: Row(
@@ -169,6 +169,25 @@ class _MyHomePageState extends State<MyHomePage> {
                   );
                 },
                 icon: const Icon(Icons.calendar_today),
+              ),
+
+              SideMenuItem(
+                title: '채팅',
+                onTap: (index, _) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ChatPage()),
+                  );
+                },
+                icon: const Icon(Icons.pets),
+              ),
+              SideMenuItem(
+                builder: (context, displayMode) {
+                  return const Divider(
+                    endIndent: 8,
+                    indent: 8,
+                  );
+                },
               ),
               SideMenuItem(
                 title: '프로필',

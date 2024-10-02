@@ -47,7 +47,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
       body: Center(
         child: FadeTransition(
           opacity: _animation,
-          child: Icon(Icons.pets, size: 100, color: Colors.yellow[200]), // 로고
+          child: Icon(Icons.local_hospital_outlined, size: 100, color: Colors.yellow[200]), // 로고
         ),
       ),
     );

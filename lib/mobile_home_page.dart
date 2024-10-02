@@ -79,7 +79,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
       key: _scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Icon(Icons.pets, color: Colors.black),
+        title: const Icon(Icons.local_hospital_outlined, color: Colors.black),
         backgroundColor: const Color(0xFFFFF9C4),
         centerTitle: true,
         actions: [
@@ -135,7 +135,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
           );
         },
         backgroundColor: const Color(0xFFFFF9C4),
-        child: const Icon(Icons.pets),
+        child: const Icon(Icons.chat),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );

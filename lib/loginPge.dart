@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 // 로그인 페이지 중앙에 아이콘 표시
                 Icon(
-                  Icons.pets,
+                  Icons.local_hospital_outlined,
                   size: 100,
                   color: Colors.yellow[400], // 아이콘 색상 설정
                 ),

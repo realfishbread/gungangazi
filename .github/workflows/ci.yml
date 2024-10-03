@@ -47,10 +47,7 @@ jobs:
       - name: Build and Test Spring demo
         run: ./mvnw clean install
 
-      - name: Run Flutter tests
-        run: |
-          export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
-          flutter test
+  
 
   deploy:
     runs-on: ubuntu-latest

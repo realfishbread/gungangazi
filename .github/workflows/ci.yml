@@ -82,10 +82,11 @@ jobs:
           echo "13.124.3.87 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDQRZG7+4YJ5IfZ8R5+L26VvENi4m2z8cG7WRTmETZH9PV0RngxoKWT4bqHtnKkKLJ4M4yGUbMFjwn6V6tCcHihSdGeTHmjqQdHcez0GjK6xLw/Q7zE06NPeaOqG/T6NGNYA3cKes7KbjVxAa1MpjgklTeojDuwNrJEOttkpV2XvXTKTKu1CeyaBmtsLr8D40L0hEfmzmgy2zpv4RzxagJkFUxhL8wxl+hfb4H17XiVnkzqe54vLky5Uaq2+8yAi51sRBwbUoxyZ3xQvRpvOtDicTQ6dRivLcjsEf28vDd2VmT0T1w2zBBm3xG3D8/JMYFGk9GXwEGQdyVC31lbLVzXOC5+FjmJdYzJOkV1SC2+fCSuJoMz4KhqYbijq/kYI0AwvbS5p/ZbgfstHCiVM+8Qm6FuGW1iRNhuDwvfahdahbSgbkvU5yJLeqvyK7YbUuaaGMAWL1WP3/ZvjfPv88Hm13K5OnsadSkFdeBCMTwocpM+LhDzcmAJBgPbBu0nkhk=" >> ~/.ssh/known_hosts
 
       # 12. Setup SSH (for EC2 deployment)
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.5.4
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Set up SSH Key
+        run: |
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
 
       - name: Deploy Flutter Web to EC2
         run: |

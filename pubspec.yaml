@@ -25,7 +25,7 @@ dependencies:
 
   # 추가된 웹 관련 의존성
   flutter_web_plugins: ^0.5.0 # Flutter 웹 애플리케이션의 플러그인을 지원합니다.
-  flutter_web: ^2.10.0 # Flutter 웹 관련 패키지 (버전은 필요에 따라 조정하세요)
+  
 
   intl: ^0.18.0
 

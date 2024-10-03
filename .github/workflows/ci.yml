@@ -1,23 +1,26 @@
-name: CI Pipeline
+name: CI/CD Pipeline
 
-on: [push, pull_request]
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      # 1. Checkout repository
       - uses: actions/checkout@v4
 
-      # 2. Set up JDK
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # 3. Install Flutter SDK
+      # Flutter SDK 설치
       - name: Install Flutter SDK
         run: |
           sudo apt-get update
@@ -29,7 +32,6 @@ jobs:
           export PATH="$PATH:$PWD/flutter/bin"
           flutter doctor
 
-      # 4. Install Dart SDK (only if used separately from Flutter)
       - name: Install Dart SDK
         run: |
           sudo apt-get update
@@ -39,62 +41,38 @@ jobs:
           sudo apt-get update
           sudo apt-get install dart
 
-      # 5. Grant execute permission for Maven Wrapper
       - name: Grant execute permission for Maven Wrapper
         run: chmod +x ./mvnw
 
-      # 6. Install Flutter dependencies
-      - name: Install Flutter dependencies
+      - name: Install dependencies
         run: flutter pub get --verbose
 
-      # 7. Build and Test Spring demo
       - name: Build and Test Spring demo
         run: ./mvnw clean install
 
-      # 8. Create Database if not exists (Amazon RDS)
-      - name: Create Database on Amazon RDS
-        env:
-          RDS_HOST: ${{ secrets.RDS_HOST }}
-          RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
-          RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
-          RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
+      - name: Run Flutter tests
+        run: flutter test
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Copy files to EC2
         run: |
-          mysql -h $RDS_HOST -P 3306 -u $RDS_USERNAME -p"$RDS_PASSWORD" -e "CREATE DATABASE IF NOT EXISTS $RDS_DATABASE;"
+          scp -o StrictHostKeyChecking=no -r ./build/web/* ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com:/var/www/html/
 
-      # 9. Run SQL script (Amazon RDS)
-      - name: Run SQL script on Amazon RDS
-        env:
-          RDS_HOST: ${{ secrets.RDS_HOST }}
-          RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
-          RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
-          RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
+      - name: Restart Nginx
         run: |
-          mysql -h $RDS_HOST -P 3306 -u $RDS_USERNAME -p"$RDS_PASSWORD" $RDS_DATABASE < backup.sql
-
-      # 10. Build Flutter Web
-      - name: Build Flutter Web
-        run: flutter build web
-
-      # 11. Add EC2 Host Key to known_hosts
-      - name: Add host key to known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          echo "13.124.3.87 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDQRZG7+4YJ5IfZ8R5+L26VvENi4m2z8cG7WRTmETZH9PV0RngxoKWT4bqHtnKkKLJ4M4yGUbMFjwn6V6tCcHihSdGeTHmjqQdHcez0GjK6xLw/Q7zE06NPeaOqG/T6NGNYA3cKes7KbjVxAa1MpjgklTeojDuwNrJEOttkpV2XvXTKTKu1CeyaBmtsLr8D40L0hEfmzmgy2zpv4RzxagJkFUxhL8wxl+hfb4H17XiVnkzqe54vLky5Uaq2+8yAi51sRBwbUoxyZ3xQvRpvOtDicTQ6dRivLcjsEf28vDd2VmT0T1w2zBBm3xG3D8/JMYFGk9GXwEGQdyVC31lbLVzXOC5+FjmJdYzJOkV1SC2+fCSuJoMz4KhqYbijq/kYI0AwvbS5p/ZbgfstHCiVM+8Qm6FuGW1iRNhuDwvfahdahbSgbkvU5yJLeqvyK7YbUuaaGMAWL1WP3/ZvjfPv88Hm13K5OnsadSkFdeBCMTwocpM+LhDzcmAJBgPbBu0nkhk=" >> ~/.ssh/known_hosts
-
-      # 12. Setup SSH (for EC2 deployment)
-      - name: Set up SSH Key
-        run: |
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-
-      - name: Deploy Flutter Web to EC2
-        run: |
-          scp -r ./build/web/* ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com:/var/www/html/
-
-      # 14. Restart Nginx on EC2
-
-      - name: Restart Nginx on EC2
-        run: |
-          ssh ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com "sudo systemctl restart nginx"
-
+          ssh -o StrictHostKeyChecking=no ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com << 'EOF'
+            # Nginx 서비스 재시작
+            sudo systemctl restart nginx
+          EOF

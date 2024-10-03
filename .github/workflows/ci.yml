@@ -36,13 +36,13 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd web
+          cd lib
           export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
           flutter pub get --verbose
 
       - name: Build Flutter web app
         run: |
-          cd web
+          cd lib
           export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
           flutter build web --release
 

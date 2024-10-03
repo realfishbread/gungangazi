@@ -23,8 +23,6 @@ dependencies:
   easy_sidemenu: ^0.6.0
   cupertino_icons: ^1.0.5
 
-  # 추가된 웹 관련 의존성
-  flutter_web_plugins: ^0.5.0 # Flutter 웹 애플리케이션의 플러그인을 지원합니다.
   
 
   intl: ^0.18.0

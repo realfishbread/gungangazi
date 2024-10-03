@@ -1,4 +1,3 @@
-// mobile_home_page.dart
 import 'profile2.dart';
 import 'package:flutter/material.dart';
 import 'PopupHandler.dart';

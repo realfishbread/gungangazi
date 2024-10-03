@@ -49,10 +49,10 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          echo "${{ secrets.PRIVATE_KEY }}" > private_key.pem
-          chmod 600 private_key.pem
-          scp -o StrictHostKeyChecking=no -i private_key.pem -r build/web/* ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com:/var/www/myapp/
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com 'sudo systemctl restart nginx'
+          echo "${{ secrets.PRIVATE_KEY }}" > SSH_PRIVATE_KEY.pem
+          chmod 600 SSH_PRIVATE_KEY.pem
+          scp -o StrictHostKeyChecking=no -i SSH_PRIVATE_KEY.pem -r build/web/* ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com:/var/www/myapp/
+          ssh -o StrictHostKeyChecking=no -i SSH_PRIVATE_KEY.pem ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com 'sudo systemctl restart nginx'
 
       - name: Cleanup
-        run: rm -f private_key.pem
+        run: rm -f SSH_PRIVATE_KEY.pem

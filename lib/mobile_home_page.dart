@@ -1,4 +1,5 @@
 // mobile_home_page.dart
+import 'package:example4/profile2.dart';
 import 'package:flutter/material.dart';
 import 'PopupHandler.dart';
 import 'ProfilePage.dart';
@@ -67,7 +68,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
     } else if (_selectedIndex == 3) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ProfilePage()),
+        MaterialPageRoute(builder: (context) =>  Profile2()),//프로필 페이지 바꿔가면서 확인
       );
     }
   }
@@ -197,3 +198,4 @@ class _MobileHomePageState extends State<MobileHomePage> {
     ];
   }
 }
+

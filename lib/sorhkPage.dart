@@ -73,7 +73,7 @@ class SleepCard extends StatelessWidget {
           child: Column(
             children: [
               ListTile(
-                title: Text('Sleep Data'),
+                title: Text('수면'),
                 subtitle: Text('Hours slept each day this week'),
               ),
               Expanded(
@@ -108,7 +108,7 @@ class DietCard extends StatelessWidget {
         child: Column(
           children: [
             ListTile(
-              title: Text('Diet Data'),
+              title: Text('식단'),
               subtitle: Text('Meal descriptions'),
             ),
             dataList.isEmpty
@@ -151,7 +151,7 @@ class WaterCard extends StatelessWidget {
         child: Column(
           children: [
             ListTile(
-              title: Text('Water Data'),
+              title: Text('수분'),
               subtitle: Text('Water intake for each day'),
             ),
             dataList.isEmpty

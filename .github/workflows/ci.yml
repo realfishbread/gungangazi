@@ -20,6 +20,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      # Install Flutter SDK
       - name: Install Flutter SDK
         run: |
           sudo apt-get update
@@ -28,28 +29,36 @@ jobs:
           tar xf flutter_linux_3.24.0-stable.tar.xz
           echo "$PWD/flutter/bin" >> $GITHUB_PATH
           echo "$PWD/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
+          export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
           flutter doctor
 
-      - name: Install Dart SDK
-        run: |
-          sudo apt-get update
-          sudo apt-get install apt-transport-https
-          sudo sh -c 'wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /usr/share/keyrings/dart-archive-keyring.gpg'
-          sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
-          sudo apt-get update
-          sudo apt-get install dart
+      # Install Dart SDK (only if used separately from Flutter)
+      # Removed Dart SDK installation since Flutter comes with Dart SDK
+      # If you need it separately, uncomment below
+      # - name: Install Dart SDK
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install apt-transport-https
+      #     sudo sh -c 'wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /usr/share/keyrings/dart-archive-keyring.gpg'
+      #     sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
+      #     sudo apt-get update
+      #     sudo apt-get install dart
 
       - name: Grant execute permission for Maven Wrapper
         run: chmod +x ./mvnw
 
       - name: Install dependencies
-        run: flutter pub get --verbose
+        run: |
+          export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
+          flutter pub get --verbose
 
       - name: Build and Test Spring demo
         run: ./mvnw clean install
 
       - name: Run Flutter tests
-        run: flutter test
+        run: |
+          export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
+          flutter test
 
   deploy:
     runs-on: ubuntu-latest
@@ -77,4 +86,5 @@ jobs:
           ssh -o StrictHostKeyChecking=no ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com << 'EOF'
             sudo systemctl restart nginx
           EOF
+
 

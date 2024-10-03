@@ -65,6 +65,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com "mkdir -p /home/ubuntu/github_action_test"
   
-      - name: Copy files to EC2
+      - name: Restart Nginx
         run: |
-        scp -o StrictHostKey
+          ssh -o StrictHostKeyChecking=no ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com "sudo systemctl restart nginx"
+

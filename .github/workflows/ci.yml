@@ -26,7 +26,8 @@ jobs:
           sudo apt-get install -y curl unzip xz-utils
           curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.0-stable.tar.xz
           tar xf flutter_linux_3.24.0-stable.tar.xz
-          export PATH="$PATH:$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin"
+          echo "$PWD/flutter/bin" >> $GITHUB_PATH
+          echo "$PWD/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
           flutter doctor
 
       - name: Install Dart SDK
@@ -76,3 +77,4 @@ jobs:
           ssh -o StrictHostKeyChecking=no ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com << 'EOF'
             sudo systemctl restart nginx
           EOF
+

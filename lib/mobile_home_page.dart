@@ -1,6 +1,6 @@
 // mobile_home_page.dart
 import 'profile2.dart';
-import 'material.dart';
+import 'package:flutter/material.dart';
 import 'PopupHandler.dart';
 import 'ProfilePage.dart';
 import 'SupplementsPage.dart';

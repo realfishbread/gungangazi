@@ -1,3 +1,4 @@
+import 'package:example4/BloodPressure.dart';
 import 'package:example4/MealPage.dart';
 import 'package:example4/SleepPage.dart';
 import 'package:example4/WaterDrink.dart';
@@ -5,13 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 
-// Main screen: SorhkPage
-class SorhkPage extends StatefulWidget {
+class dhlrhkPage extends StatefulWidget {
   @override
-  _SorhkPageState createState() => _SorhkPageState();
+  _dhlrhkPageState createState() => _dhlrhkPageState();
 }
 
-class _SorhkPageState extends State<SorhkPage> {
+class _dhlrhkPageState extends State<dhlrhkPage> {
   List<SleepData> sleepDataList = [];
   List<DietData> dietDataList = [];
   List<WaterData> waterDataList = [];
@@ -67,21 +67,14 @@ class SleepCard extends StatelessWidget {
         Navigator.push(context, MaterialPageRoute(builder: (context) => SleepPage()));
       },
       child: Container(
-        height: 300,  // 카드의 높이를 300으로 설정
+        height: 200,  // 카드의 높이
         margin: EdgeInsets.all(10),
         child: Card(
           child: Column(
             children: [
               ListTile(
-                title: Text('수면'),
+                title: Text('상처'),
                 subtitle: Text('Hours slept each day this week'),
-              ),
-              Expanded(
-                // 그래프가 남은 공간을 차지하도록 설정
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: BarChartWidget(dataList: dataList.map((e) => e.hours).toList()), // 그래프 위젯
-                ),
               ),
             ],
           ),
@@ -108,7 +101,7 @@ class DietCard extends StatelessWidget {
         child: Column(
           children: [
             ListTile(
-              title: Text('식단'),
+              title: Text('치아 건강'),
               subtitle: Text('Meal descriptions'),
             ),
             dataList.isEmpty
@@ -144,14 +137,14 @@ class WaterCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => WaterDrink()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => BloodPressurePage()));
       },
       child: Card(
         margin: EdgeInsets.all(10),
         child: Column(
           children: [
             ListTile(
-              title: Text('수분'),
+              title: Text('혈압'),
               subtitle: Text('Water intake for each day'),
             ),
             dataList.isEmpty

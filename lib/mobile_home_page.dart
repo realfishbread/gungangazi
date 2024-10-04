@@ -1,4 +1,5 @@
 // mobile_home_page.dart
+import 'package:example4/dhlrhkPage.dart';
 import 'package:example4/profile2.dart';
 import 'package:example4/sorhkPage.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
     } else if (_selectedIndex == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const MealPage()), // 외과 첫 번째 페이지
+        MaterialPageRoute(builder: (context) => dhlrhkPage()), // 외과 첫 번째 페이지
       );
     } else if (_selectedIndex == 2) {
       Navigator.push(

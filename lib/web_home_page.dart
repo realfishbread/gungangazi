@@ -147,14 +147,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   SideMenuItem(
                     title: '치아 건강',
                     onTap: (index, _) {
-                      sideMenu.changePage(3); // 페이지 인덱스 변경
+
                     },
                     icon: const Icon(Icons.medical_services),
                   ),
                   SideMenuItem(
                     title: '혈압',
                     onTap: (index, _) {
-                      sideMenu.changePage(4); // 페이지 인덱스 변경
+
                     },
                     icon: const Icon(Icons.favorite),
                   ),

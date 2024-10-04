@@ -1,4 +1,4 @@
-import 'package:example4/splash/SplashPage.dart';
+import 'splash/SplashPage.dart';
 import 'package:flutter/material.dart';
 import 'mobile_home_page.dart'; // 앱 전용 페이지
 import 'web_home_page.dart'; // 웹 전용 페이지

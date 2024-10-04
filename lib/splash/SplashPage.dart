@@ -1,5 +1,5 @@
-import 'loginPge.dart';
-import 'main.dart';
+import '../loginPge.dart';
+import '../main.dart';
 import 'package:flutter/material.dart';
 
 class SplashPage extends StatefulWidget {

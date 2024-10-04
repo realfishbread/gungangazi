@@ -30,13 +30,14 @@ jobs:
       - name: Install dependencies
         run: flutter pub get --verbose
 
+      - name: Clean Flutter project
+        run: flutter clean
+
       # Flutter 웹 앱 빌드
       - name: Build Flutter web app
         run: flutter build web --release
 
-      # 빌드 파일 확인 (선택사항)
-      - name: Check Flutter build files
-        run: ls build/web
+    
 
       # Spring 프로젝트 빌드 및 테스트
       - name: Build and Test Spring demo

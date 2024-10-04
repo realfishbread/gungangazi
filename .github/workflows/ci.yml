@@ -65,4 +65,4 @@ jobs:
       # Cleanup
       - name: Cleanup
         run: rm -f GUNGANGAZI.pem
-        run: ls -al build/web
+        

@@ -1,6 +1,12 @@
-name: CI Pipeline
+name: CI/CD Pipeline
 
-on: [push, pull_request]
+on: 
+  push:
+    branches:
+      - successful-build
+  pull_request:
+    branches:
+      - successful-build
 
 jobs:
   build:
@@ -14,7 +20,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # Flutter SDK 설치
       - name: Install Flutter SDK
         run: |
           sudo apt-get update
@@ -23,30 +28,34 @@ jobs:
           tar xf flutter_linux_3.24.0-stable.tar.xz
           echo "$PWD/flutter/bin" >> $GITHUB_PATH
           echo "$PWD/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
-          export PATH="$PATH:$PWD/flutter/bin"
+          export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
           flutter doctor
 
-      - name: Install Dart SDK
-        run: |
-          sudo apt-get update
-          sudo apt-get install apt-transport-https
-          sudo sh -c 'wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /usr/share/keyrings/dart-archive-keyring.gpg'
-          sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
-          sudo apt-get update
-          sudo apt-get install dart
-
-      # mvnw에 실행 권한 부여
       - name: Grant execute permission for Maven Wrapper
         run: chmod +x ./mvnw
 
-      # Flutter 패키지 설치
       - name: Install dependencies
-        run: flutter pub get --verbose
+        run: |
+          cd lib
+          export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
+          flutter pub get --verbose
+
+      - name: Build Flutter web app
+        run: |
+          cd lib
+          export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
+          flutter build web --release
 
       - name: Build and Test Spring demo
         run: ./mvnw clean install
 
-      # 테스트 실행
-      - name: Run Flutter tests
-        run: flutter test
+      - name: Deploy to EC2
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > GUNGANGAZI.pem
+          chmod 600 GUNGANGAZI.pem
+          scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem -r build/web/* ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com:/var/www/myapp/
+          ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com 'sudo systemctl restart nginx'
+
+      - name: Cleanup
+        run: rm -f GUNGANGAZI.pem
 

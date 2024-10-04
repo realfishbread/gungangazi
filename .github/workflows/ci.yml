@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: Build Flutter Web
 
 on: [push, pull_request]
 
@@ -8,50 +8,33 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
       - name: Install Flutter SDK
         run: |
           sudo apt-get update
           sudo apt-get install -y curl unzip xz-utils
           curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.0-stable.tar.xz
           tar xf flutter_linux_3.24.0-stable.tar.xz
-          echo "$PWD/flutter/bin" >> $GITHUB_PATH  # Flutter 경로 추가
-          echo "$PWD/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH  # Dart SDK 경로 추가
-          flutter/bin/flutter doctor  # flutter doctor 실행
+          echo "$PWD/flutter/bin" >> $GITHUB_PATH
+          echo "$PWD/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
+          flutter doctor
 
-      - name: Grant execute permission for Maven Wrapper
-        run: chmod +x ./mvnw
+      - name: Print current working directory  # 현재 작업 디렉토리 확인
+        run: pwd
 
-      - name: Install dependencies
-        run: flutter pub get --verbose
+      - name: List current directory contents  # 현재 디렉토리 파일 목록 확인
+        run: ls -al
 
-      - name: Clean Flutter project
+      - name: Clean Flutter project  # 빌드 캐시 정리
         run: flutter clean
+
+      - name: Install dependencies  # 의존성 설치
+        run: flutter pub get --verbose
 
       # Flutter 웹 앱 빌드
       - name: Build Flutter web app
+        working-directory: ${{ github.workspace }}
         run: flutter build web --release
 
-    
-
-      # Spring 프로젝트 빌드 및 테스트
-      - name: Build and Test Spring demo
-        run: ./mvnw clean install
-
-      # EC2 서버로 Flutter 파일 복사 및 Nginx 재시작
-      - name: Deploy Flutter to EC2
-        run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > GUNGANGAZI.pem
-          chmod 600 GUNGANGAZI.pem
-          scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem -r build/web/* ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com:/var/www/myapp/build/web/
-          ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com 'sudo systemctl restart nginx'
-     
-      # Cleanup
-      - name: Cleanup
-        run: rm -f GUNGANGAZI.pem
-
+      # 빌드 파일 확인
+      - name: List build/web directory contents
+        run: ls -al build/web

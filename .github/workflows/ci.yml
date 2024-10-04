@@ -1,12 +1,6 @@
-name: CI/CD Pipeline
+name: CI Pipeline
 
-on: 
-  push:
-    branches:
-      - successful-build
-  pull_request:
-    branches:
-      - successful-build
+on: [push, pull_request]
 
 jobs:
   build:
@@ -26,36 +20,42 @@ jobs:
           sudo apt-get install -y curl unzip xz-utils
           curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.0-stable.tar.xz
           tar xf flutter_linux_3.24.0-stable.tar.xz
-          echo "$PWD/flutter/bin" >> $GITHUB_PATH  # flutter/bin 추가
-          echo "$PWD/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH  # dart-sdk/bin 추가
-          export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"  # 경로 즉시 적용
-          flutter doctor  # Flutter 설치 확인
+          echo "$PWD/flutter/bin" >> $GITHUB_PATH
+          echo "$PWD/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
+          export PATH="$PATH:$PWD/flutter/bin"
+          flutter doctor
 
+      - name: Install Dart SDK
+        run: |
+          sudo apt-get update
+          sudo apt-get install apt-transport-https
+          sudo sh -c 'wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /usr/share/keyrings/dart-archive-keyring.gpg'
+          sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
+          sudo apt-get update
+          sudo apt-get install dart
 
       - name: Grant execute permission for Maven Wrapper
         run: chmod +x ./mvnw
-    
+
       - name: Install dependencies
         run: flutter pub get --verbose
-    
-      - name: Check Flutter Installation
-        run: |
-         ls -l $PWD/flutter/bin  # Flutter 경로 확인
-         which flutter  # flutter 명령어 경로 확인
-    
-      - name: Build Flutter web app
-        run: flutter build web --release
 
+      # Flutter 웹 앱 빌드
+      - name: Build Flutter web app
+        run: |
+          flutter build web --release
+
+      # Build and Test Spring demo
       - name: Build and Test Spring demo
         run: ./mvnw clean install
 
+      # EC2 서버로 파일 복사
       - name: Deploy to EC2
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > GUNGANGAZI.pem
           chmod 600 GUNGANGAZI.pem
-          scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem -r build/web/* ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com:/var/www/myapp/
+          scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem -r build/web/* ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com:/var/www/myapp/build/web/
           ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com 'sudo systemctl restart nginx'
 
       - name: Cleanup
         run: rm -f GUNGANGAZI.pem
-

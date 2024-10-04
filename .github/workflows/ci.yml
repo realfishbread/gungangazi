@@ -42,7 +42,6 @@ jobs:
       # Flutter 웹 앱 빌드
       - name: Build Flutter web app
         run: |
-          export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
           flutter build web --release
 
       # 빌드 파일 확인 (선택사항)

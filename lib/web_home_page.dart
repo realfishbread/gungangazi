@@ -1,5 +1,5 @@
-import 'package:example4/BloodPressure.dart';
-import 'package:example4/profile2.dart';
+import 'BloodPressure.dart';
+import 'profile2.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'PopupHandler.dart';

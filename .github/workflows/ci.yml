@@ -46,17 +46,29 @@ jobs:
           export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
           flutter build web --release
 
-      # Build and Test Spring demo
+      # 빌드 파일 확인 (선택사항)
+      - name: Check Flutter build files
+        run: ls build/web
+
+      # Spring 프로젝트 빌드 및 테스트
       - name: Build and Test Spring demo
         run: ./mvnw clean install
 
-      # EC2 서버로 파일 복사
-      - name: Deploy to EC2
+      # EC2 서버로 Flutter 파일 복사 및 Nginx 재시작
+      - name: Deploy Flutter to EC2
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > GUNGANGAZI.pem
           chmod 600 GUNGANGAZI.pem
           scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem -r build/web/* ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com:/var/www/myapp/build/web/
           ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com 'sudo systemctl restart nginx'
 
+      # Spring 프로젝트 EC2로 배포 (선택사항, 만약 Spring 프로젝트를 함께 배포할 경우)
+      - name: Deploy Spring app to EC2
+        run: |
+          scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem target/demo.jar ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com:/home/ubuntu/app/
+          ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com 'sudo systemctl restart my-spring-app'
+
+      # Cleanup
       - name: Cleanup
         run: rm -f GUNGANGAZI.pem
+

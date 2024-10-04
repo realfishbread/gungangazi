@@ -224,7 +224,7 @@ class _EditPageState extends State<EditPage> {
 }
 
 // 로그인 페이지
-class LoginPage extends StatelessWidget {
+class profile2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

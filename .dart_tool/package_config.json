@@ -147,9 +147,9 @@
     },
     {
       "name": "file",
-      "rootUri": "file:///C:/Users/skawl/AppData/Local/Pub/Cache/hosted/pub.dev/file-7.0.0",
+      "rootUri": "file:///C:/Users/skawl/AppData/Local/Pub/Cache/hosted/pub.dev/file-6.1.4",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "2.12"
     },
     {
       "name": "fl_chart",
@@ -171,9 +171,9 @@
     },
     {
       "name": "flutter_lints",
-      "rootUri": "file:///C:/Users/skawl/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-5.0.0",
+      "rootUri": "file:///C:/Users/skawl/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-3.0.2",
       "packageUri": "lib/",
-      "languageVersion": "3.5"
+      "languageVersion": "3.1"
     },
     {
       "name": "flutter_local_notifications",
@@ -267,9 +267,9 @@
     },
     {
       "name": "lints",
-      "rootUri": "file:///C:/Users/skawl/AppData/Local/Pub/Cache/hosted/pub.dev/lints-5.0.0",
+      "rootUri": "file:///C:/Users/skawl/AppData/Local/Pub/Cache/hosted/pub.dev/lints-3.0.0",
       "packageUri": "lib/",
-      "languageVersion": "3.5"
+      "languageVersion": "3.0"
     },
     {
       "name": "macros",
@@ -348,6 +348,12 @@
       "rootUri": "file:///C:/Users/skawl/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.8",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "process",
+      "rootUri": "file:///C:/Users/skawl/AppData/Local/Pub/Cache/hosted/pub.dev/process-4.2.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
     },
     {
       "name": "process_run",
@@ -459,7 +465,7 @@
     },
     {
       "name": "synchronized",
-      "rootUri": "file:///C:/Users/skawl/AppData/Local/Pub/Cache/hosted/pub.dev/synchronized-3.3.0+3",
+      "rootUri": "file:///C:/Users/skawl/AppData/Local/Pub/Cache/hosted/pub.dev/synchronized-3.3.0+2",
       "packageUri": "lib/",
       "languageVersion": "3.5"
     },
@@ -519,7 +525,7 @@
     },
     {
       "name": "video_player_android",
-      "rootUri": "file:///C:/Users/skawl/AppData/Local/Pub/Cache/hosted/pub.dev/video_player_android-2.7.5",
+      "rootUri": "file:///C:/Users/skawl/AppData/Local/Pub/Cache/hosted/pub.dev/video_player_android-2.7.3",
       "packageUri": "lib/",
       "languageVersion": "3.5"
     },
@@ -555,7 +561,7 @@
     },
     {
       "name": "web",
-      "rootUri": "file:///C:/Users/skawl/AppData/Local/Pub/Cache/hosted/pub.dev/web-1.1.0",
+      "rootUri": "file:///C:/Users/skawl/AppData/Local/Pub/Cache/hosted/pub.dev/web-1.0.0",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
@@ -567,9 +573,9 @@
     },
     {
       "name": "xdg_directories",
-      "rootUri": "file:///C:/Users/skawl/AppData/Local/Pub/Cache/hosted/pub.dev/xdg_directories-1.0.4",
+      "rootUri": "file:///C:/Users/skawl/AppData/Local/Pub/Cache/hosted/pub.dev/xdg_directories-0.2.0+3",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "2.12"
     },
     {
       "name": "xml",
@@ -590,7 +596,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-10-01T03:11:17.062634Z",
+  "generated": "2024-10-04T11:44:51.503287Z",
   "generator": "pub",
   "generatorVersion": "3.5.0",
   "flutterRoot": "file:///C:/2024024/flutter",

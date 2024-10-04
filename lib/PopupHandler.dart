@@ -1,8 +1,6 @@
 import 'package:example4/MealPage.dart';
 import 'package:example4/SleepPage.dart';
 import 'package:example4/SupplementsPage.dart';
-import 'package:example4/dhlrhkPage.dart';
-import 'package:example4/sorhkPage.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -43,7 +41,10 @@ class PopupHandler {
       'assets/person/jindan_sad5.jpg',
       'assets/person/jindan_sad7.jpg',
       'assets/person/jindan_sad9.jpg',
-
+      'assets/person/jindan_sad7.jpg',
+      'assets/person/jindan_sad5.jpg',
+      'assets/person/jindan_sad3.jpg',
+      'assets/person/jindan_sad1.jpg',
     ],
     'body': [
       'assets/person/jindan_stomach1.jpg',
@@ -123,9 +124,9 @@ class PopupHandler {
   // 부위마다 다른 페이지로 이동하는 함수
   void _navigateToBodyPartPage(BuildContext context) {
     if (_currentBodyPart == 'head') {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => SorhkPage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => SleepPage()));
     } else if (_currentBodyPart == 'arm') {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => dhlrhkPage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => SupplementsPage()));
     } else if (_currentBodyPart == 'body') {
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => MealPage()));
     } else if (_currentBodyPart == 'leg') {
@@ -258,5 +259,3 @@ class PopupHandler {
     stopImageAnimation();
   }
 }
-
-

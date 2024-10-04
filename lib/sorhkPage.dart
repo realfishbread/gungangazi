@@ -265,5 +265,6 @@ class DietData {
 class WaterData {
   final String day;
   final double liters;
+
   WaterData({required this.day, required this.liters});
 }

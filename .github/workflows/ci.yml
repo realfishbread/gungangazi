@@ -22,32 +22,27 @@ jobs:
 
       - name: Install Flutter SDK
         run: |
-          sudo apt-get update
-          sudo apt-get install -y curl unzip xz-utils
-          curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.0-stable.tar.xz
-          tar xf flutter_linux_3.24.0-stable.tar.xz
-          echo "$PWD/flutter/bin" >> $GITHUB_PATH
-          echo "$PWD/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
-          export PATH="$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
-          flutter doctor
+         sudo apt-get update
+         sudo apt-get install -y curl unzip xz-utils
+         curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.0-stable.tar.xz
+         tar xf flutter_linux_3.24.0-stable.tar.xz
+         echo "$PWD/flutter/bin" >> $GITHUB_PATH  # flutter/bin 추가
+         echo "$PWD/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH  # dart-sdk/bin 추가
+         flutter doctor
 
       - name: Grant execute permission for Maven Wrapper
         run: chmod +x ./mvnw
-
+    
       - name: Install dependencies
-        run: |
-          flutter pub get --verbose
-
+        run: flutter pub get --verbose
+    
       - name: Check directory structure
         run: |
           pwd   # 현재 작업 디렉토리 확인
           ls -R # 모든 디렉토리 및 파일 출력
-
-
+    
       - name: Build Flutter web app
-        run: |
-          export PATH="$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
-          flutter build web --release
+        run: flutter build web --release
 
       - name: Build and Test Spring demo
         run: ./mvnw clean install

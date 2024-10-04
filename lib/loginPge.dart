@@ -1,4 +1,4 @@
-import 'package:example4/SignUp.dart'; // 회원가입 페이지를 불러오기 위해 추가
+import 'SignUp.dart'; // 회원가입 페이지를 불러오기 위해 추가
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 

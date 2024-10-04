@@ -38,10 +38,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get --verbose
     
-      - name: Check directory structure
+      - name: Check Flutter Installation
         run: |
-          pwd   # 현재 작업 디렉토리 확인
-          ls -R # 모든 디렉토리 및 파일 출력
+         ls -l $PWD/flutter/bin  # Flutter 경로 확인
+         which flutter  # flutter 명령어 경로 확인
     
       - name: Build Flutter web app
         run: flutter build web --release

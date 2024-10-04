@@ -22,7 +22,7 @@ jobs:
           tar xf flutter_linux_3.24.0-stable.tar.xz
           echo "$PWD/flutter/bin" >> $GITHUB_PATH
           echo "$PWD/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
-          export PATH="$PATH:$PWD/flutter/bin"
+          export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
           flutter doctor
 
       - name: Install Dart SDK

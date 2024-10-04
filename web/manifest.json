@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {
     "name": "example4",
     "short_name": "example4",
@@ -34,7 +33,6 @@
         }
     ]
 }
-=======
 {
     "name": "example4",
     "short_name": "example4",
@@ -70,4 +68,3 @@
         }
     ]
 }
->>>>>>> b53280c (첫 커밋 메시지)

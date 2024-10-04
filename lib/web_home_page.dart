@@ -1,3 +1,4 @@
+import 'package:example4/BloodPressure.dart';
 import 'package:example4/profile2.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
@@ -154,7 +155,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   SideMenuItem(
                     title: '혈압',
                     onTap: (index, _) {
-
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) =>  BloodPressurePage()),
+                      );
                     },
                     icon: const Icon(Icons.favorite),
                   ),

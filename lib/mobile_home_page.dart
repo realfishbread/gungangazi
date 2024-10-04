@@ -1,7 +1,7 @@
 // mobile_home_page.dart
-import 'package:example4/dhlrhkPage.dart';
-import 'package:example4/profile2.dart';
-import 'package:example4/sorhkPage.dart';
+import 'dhlrhkPage.dart';
+import 'profile2.dart';
+import 'sorhkPage.dart';
 import 'package:flutter/material.dart';
 import 'PopupHandler.dart';
 import 'ProfilePage.dart';

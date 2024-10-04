@@ -1,6 +1,6 @@
-import 'package:example4/MealPage.dart';
-import 'package:example4/SleepPage.dart';
-import 'package:example4/SupplementsPage.dart';
+import 'MealPage.dart';
+import 'SleepPage.dart';
+import 'SupplementsPage.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 

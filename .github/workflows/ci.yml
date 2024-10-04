@@ -22,13 +22,15 @@ jobs:
 
       - name: Install Flutter SDK
         run: |
-         sudo apt-get update
-         sudo apt-get install -y curl unzip xz-utils
-         curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.0-stable.tar.xz
-         tar xf flutter_linux_3.24.0-stable.tar.xz
-         echo "$PWD/flutter/bin" >> $GITHUB_PATH  # flutter/bin 추가
-         echo "$PWD/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH  # dart-sdk/bin 추가
-         flutter doctor
+          sudo apt-get update
+          sudo apt-get install -y curl unzip xz-utils
+          curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.0-stable.tar.xz
+          tar xf flutter_linux_3.24.0-stable.tar.xz
+          echo "$PWD/flutter/bin" >> $GITHUB_PATH  # flutter/bin 추가
+          echo "$PWD/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH  # dart-sdk/bin 추가
+          export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"  # 경로 즉시 적용
+          flutter doctor  # Flutter 설치 확인
+
 
       - name: Grant execute permission for Maven Wrapper
         run: chmod +x ./mvnw

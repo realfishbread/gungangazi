@@ -40,6 +40,12 @@ jobs:
           export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
           flutter pub get --verbose
 
+      - name: Check directory structure
+        run: |
+          pwd   # 현재 작업 디렉토리 확인
+          ls -R # 모든 디렉토리 및 파일 출력
+
+
       - name: Build Flutter web app
         run: |
           cd lib

@@ -1,7 +1,7 @@
-import 'package:example4/BloodPressure.dart';
-import 'package:example4/MealPage.dart';
-import 'package:example4/SleepPage.dart';
-import 'package:example4/WaterDrink.dart';
+import 'BloodPressure.dart';
+import 'MealPage.dart';
+import 'SleepPage.dart';
+import 'WaterDrink.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 

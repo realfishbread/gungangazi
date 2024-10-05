@@ -21,13 +21,9 @@ jobs:
           distribution: 'temurin'
 
 
-      - name: Cache Flutter SDK
-        uses: actions/cache@v3
-        with:
-          path: flutter
-          key: flutter-${{ runner.os }}-${{ hashFiles('flutter/bin/cache/dart-sdk/version') }}
-          restore-keys: |
-           flutter-${{ runner.os }}-
+      - name: Clear cache
+        run: flutter clean
+
            
       - name: Install Flutter SDK
         run: |

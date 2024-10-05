@@ -67,12 +67,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ubuntu@ec2-13-124-3-87.ap-northeast-2.compute.amazonaws.com 'sudo systemctl restart nginx'
 
 
-      - name: Remove old files from server
-        run: ssh ubuntu@13.124.3.87 'rm -rf /var/www/myapp/*'
-
-      - name: Deploy new build to server
-        run: scp -r build/web/* ubuntu@13.124.3.87:/var/www/myapp
-
+    
 
       - name: Cleanup
         run: rm -f GUNGANGAZI.pem

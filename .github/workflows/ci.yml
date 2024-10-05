@@ -21,8 +21,7 @@ jobs:
           distribution: 'temurin'
 
 
-      - name: Clear cache
-        run: flutter clean
+      
 
            
       - name: Install Flutter SDK
@@ -46,6 +45,10 @@ jobs:
           export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
           flutter pub get --verbose
 
+
+      - name: Clear cache
+        run: flutter clean
+        
       - name: Build Flutter web app
         run: |
           export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"

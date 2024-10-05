@@ -79,6 +79,10 @@ app.*.map.json
 # Ignore system-specific files
 NTUSER.DAT*
 
+
+# Ignore Dart tool files
+.dart_tool/
+
 # Other unnecessary files
 *.log
 

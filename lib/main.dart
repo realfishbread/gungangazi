@@ -1,4 +1,4 @@
-import 'package:http/http.dart' as http;
+import 'demo/src/main/java/com/example/demo/controller/Controller.dart' as http;
 import 'splash/SplashPage.dart';
 import 'package:flutter/material.dart';
 import 'mobile_home_page.dart'; // 앱 전용 페이지

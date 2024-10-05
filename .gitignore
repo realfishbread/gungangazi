@@ -68,3 +68,17 @@ app.*.map.json
 /android/app/release
 .android/
 
+
+# Ignore IDE specific files
+.classpath
+.project
+.metadata
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Ignore system-specific files
+NTUSER.DAT*
+
+# Other unnecessary files
+*.log
+

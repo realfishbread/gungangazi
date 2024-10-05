@@ -1,4 +1,4 @@
-import '../demo/src/main/java/com/example/demo/controller/Controller.dart' as http;
+import '../demo/src/main/java/com/example/demo/controller/Controller.java' as http;
 import 'splash/SplashPage.dart';
 import 'package:flutter/material.dart';
 import 'mobile_home_page.dart'; // 앱 전용 페이지
@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
 // API 호출 예시 함수 추가
 Future<String> fetchHello() async {
   // 서버에 GET 요청 보내기
-  final response = await http.get(Uri.parse('http://13.124.3.87//api/hello'));
+  final response = await http.get(Uri.parse('http://13.124.3.87/api/hello'));
 
   if (response.statusCode == 200) {
     return response.body; // 서버에서 반환된 데이터를 리턴

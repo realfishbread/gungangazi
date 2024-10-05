@@ -21,7 +21,9 @@ jobs:
           distribution: 'temurin'
 
 
-      
+      - name: Clear old builds
+        run: rm -rf build/
+
 
            
       - name: Install Flutter SDK

@@ -15,12 +15,12 @@ public class UserController {
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    private userRepository userRepository;
+    private UserRepository UserRepository;
 
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody User user) {
         // 중복 아이디 검사
-        if (userRepository.existsByUsername(user.getUsername())) {
+        if (UserRepository.existsByUsername(user.getUsername())) {
             Map<String, String> response = new HashMap<>();
             response.put("message", "아이디가 이미 존재합니다.");
             return ResponseEntity.badRequest().body(response);
@@ -30,7 +30,7 @@ public class UserController {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         // 사용자 저장
-        userRepository.save(user);
+        UserRepository.save(user);
         Map<String, String> response = new HashMap<>();
         response.put("message", "회원가입 성공");
         return ResponseEntity.ok(response);

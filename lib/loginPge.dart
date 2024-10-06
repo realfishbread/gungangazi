@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _loginFailed = false;
 
   // 기본 아이디와 비밀번호 (나중에 쉽게 제거 가능)
-  final String _defaultUsername = "admin";
+  final String _defaultUsername = "testUser";
   final String _defaultPassword = "password123";
 
   Future<void> _login() async {

@@ -1,30 +1,32 @@
-package com.example.demo.controller;
-
-import com.example.demo.entity.User;
-import com.example.demo.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api")
 public class UserController {
 
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
+    @PostMapping("/signup")
+    public ResponseEntity<?> signUp(@RequestBody User user) {
+        // 중복 아이디 검사
+        if (userRepository.existsByUsername(user.getUsername())) {
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "아이디가 이미 존재합니다.");
+            return ResponseEntity.badRequest().body(response);
+        }
 
-    @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userRepository.save(user);
+        // 사용자 저장
+        userRepository.save(user);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "회원가입 성공");
+        return ResponseEntity.ok(response);
     }
-    
-  
+}
+
     
 }

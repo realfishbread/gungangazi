@@ -8,46 +8,27 @@ import jakarta.persistence.Id;
 @Entity
 public class User {
 
-    @Id
+   @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
-    private String memberName;
-    private String memberEmail;
+    private Long id;
+    private String username;
+    private String password;
 
-    // 기본 생성자 (JPA에서 필요)
-    public User() {}
-
-    // 매개변수 있는 생성자
-    public User(String memberName, String memberEmail) {
-        this.memberName = memberName;
-        this.memberEmail = memberEmail;
+    // Getters and Setters
+    public String getUsername() {
+        return username;
     }
 
-    // Getter and Setter for 'memberId'
-    public Long getMemberId() {
-        return memberId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public String getPassword() {
+        return password;
     }
 
-    // Getter and Setter for 'memberName'
-    public String getMemberName() {
-        return memberName;
-    }
-
-    public void setMemberName(String memberName) {
-        this.memberName = memberName;
-    }
-
-    // Getter and Setter for 'memberEmail'
-    public String getMemberEmail() {
-        return memberEmail;
-    }
-
-    public void setMemberEmail(String memberEmail) {
-        this.memberEmail = memberEmail;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
 

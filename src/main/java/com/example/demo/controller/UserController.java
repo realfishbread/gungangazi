@@ -15,7 +15,7 @@ public class UserController {
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    private UserRepository userRepository;
+    private userRepository userRepository;
 
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody User user) {

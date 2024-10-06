@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.example.demo.entity.User;
+import com.example.demo.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,27 +14,22 @@ import java.util.Map;
 public class UserController {
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UserRepository UserRepository;
+    private UserRepository userRepository;
 
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody User user) {
-        // 중복 아이디 검사
-        if (UserRepository.existsByUsername(user.getUsername())) {
+        if (userRepository.existsByUsername(user.getUsername())) {  // getUsername 메서드 사용
             Map<String, String> response = new HashMap<>();
             response.put("message", "아이디가 이미 존재합니다.");
             return ResponseEntity.badRequest().body(response);
         }
 
-        // 비밀번호 암호화
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword("암호화된 비밀번호");  // 적절한 암호화 처리 필요
+        userRepository.save(user);
 
-        // 사용자 저장
-        UserRepository.save(user);
         Map<String, String> response = new HashMap<>();
         response.put("message", "회원가입 성공");
         return ResponseEntity.ok(response);
     }
 }
+

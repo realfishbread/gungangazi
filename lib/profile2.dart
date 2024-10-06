@@ -151,7 +151,7 @@ class _Profile2State extends State<Profile2> {
   // 서버로 수정된 프로필 데이터를 보내는 함수
   Future<void> saveProfile(String fieldName, String newValue) async {
     final response = await http.put(
-      Uri.parse('http://yourapi.com/api/profile/update'),// api url 적기
+      Uri.parse('http://15.164.140.55/api/profile/update'),// api url 적기
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         fieldName: newValue,

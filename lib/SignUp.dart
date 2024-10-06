@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -14,6 +16,12 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _idController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  // 각 필드에 대한 유효성 검사 상태
+  bool _nameValid = true;
+  bool _emailValid = true;
+  bool _idValid = true;
+  bool _passwordValid = true;
+
   // 현재 보여줄 단계
   int _currentStep = 0;
 
@@ -23,25 +31,52 @@ class _SignUpPageState extends State<SignUpPage> {
   // 단계별로 입력받은 값을 검증하고 다음 단계로 이동
   void _nextStep() {
     setState(() {
-      if (_currentStep < steps.length - 1) {
-        _currentStep++;
+      // 각 단계에 따라 빈 필드 체크
+      if (_currentStep == 0 && _nameController.text.isEmpty) {
+        _nameValid = false;
+      } else if (_currentStep == 1 && _emailController.text.isEmpty) {
+        _emailValid = false;
+      } else if (_currentStep == 2 && _idController.text.isEmpty) {
+        _idValid = false;
+      } else if (_currentStep == 3 && _passwordController.text.isEmpty) {
+        _passwordValid = false;
       } else {
-        // 모든 단계 완료 후 회원가입 처리
-        _completeSignUp();
+        // 모든 단계가 유효하면 다음 단계로 이동
+        if (_currentStep < steps.length - 1) {
+          _currentStep++;
+        } else {
+          // 모든 단계 완료 후 회원가입 처리
+          _completeSignUp();
+        }
       }
     });
   }
 
-  // 회원가입 완료 처리 함수
-  void _completeSignUp() {
-    print('회원가입 완료');
-    print('이름: ${_nameController.text}');
-    print('이메일: ${_emailController.text}');
-    print('아이디: ${_idController.text}');
-    print('비밀번호: ${_passwordController.text}');
+  // 회원가입 완료 처리 함수 (데이터 서버 전송)
+  Future<void> _completeSignUp() async {
+    // 사용자 입력 정보를 JSON 형식으로 구성
+    final Map<String, dynamic> userData = {
+      'name': _nameController.text,
+      'email': _emailController.text,
+      'username': _idController.text,
+      'password': _passwordController.text,
+    };
 
-    // 회원가입 완료 후 로그인 페이지로 돌아가기
-    Navigator.pop(context);
+    // 서버로 데이터 전송
+    final response = await http.post(
+      Uri.parse('http://15.164.140.55/api/signup'), // 서버 URL을 설정
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(userData),
+    );
+
+    if (response.statusCode == 200) {
+      // 회원가입 성공 시
+      print('회원가입 성공');
+      Navigator.pop(context); // 로그인 페이지로 돌아가기
+    } else {
+      // 회원가입 실패 시
+      print('회원가입 실패: ${response.body}');
+    }
   }
 
   @override
@@ -87,23 +122,27 @@ class _SignUpPageState extends State<SignUpPage> {
                         _buildTextField(
                           controller: _nameController,
                           labelText: '이름',
+                          isValid: _nameValid,
                         ),
                       if (_currentStep == 1)
                         _buildTextField(
                           controller: _emailController,
                           labelText: '이메일',
                           keyboardType: TextInputType.emailAddress,
+                          isValid: _emailValid,
                         ),
                       if (_currentStep == 2)
                         _buildTextField(
                           controller: _idController,
                           labelText: '아이디',
+                          isValid: _idValid,
                         ),
                       if (_currentStep == 3)
                         _buildTextField(
                           controller: _passwordController,
                           labelText: '비밀번호',
                           obscureText: true,
+                          isValid: _passwordValid,
                         ),
                       const SizedBox(height: 16),
 
@@ -143,15 +182,23 @@ class _SignUpPageState extends State<SignUpPage> {
     required String labelText,
     TextInputType keyboardType = TextInputType.text,
     bool obscureText = false,
+    bool isValid = true,
   }) {
-    return TextField(
-      controller: controller,
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      decoration: InputDecoration(
-        labelText: labelText,
-        border: const OutlineInputBorder(),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          controller: controller,
+          keyboardType: keyboardType,
+          obscureText: obscureText,
+          decoration: InputDecoration(
+            labelText: labelText,
+            border: const OutlineInputBorder(),
+            errorText: isValid ? null : '정보를 적지 않았습니다', // 필드가 유효하지 않으면 오류 메시지 표시
+          ),
+        ),
+        const SizedBox(height: 8),
+      ],
     );
   }
 }

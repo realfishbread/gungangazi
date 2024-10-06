@@ -24,6 +24,7 @@ dependencies:
   video_player: ^2.9.1
   fl_chart: ^0.69.0
   easy_sidemenu: ^0.6.0
+  dio: ^5.7.0
 
   cupertino_icons: ^1.0.5
   provider: ^6.0.0

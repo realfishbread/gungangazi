@@ -29,7 +29,7 @@ class _Profile2State extends State<Profile2> {
   // 서버에서 프로필 정보를 받아오는 함수
   Future<void> fetchProfile() async {
     try {
-      final response = await http.get(Uri.parse('http://13.124.3.87/api/User.java')); //api url 적기
+      final response = await http.get(Uri.parse('http://15.164.140.55/api/User.java')); //api url 적기
 
       if (response.statusCode == 200) {
         // 서버에서 받은 JSON 데이터를 파싱

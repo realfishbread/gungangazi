@@ -1,27 +1,26 @@
-package com.example.demo.service;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import com.example.demo.entity.User;
-import com.example.demo.repository.UserRepository;
 
 @Service
 public class UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository userRepository; // 데이터베이스와 상호작용하는 리포지토리
 
-    @Transactional
-    public void createAndDeleteUser(User newUser, Long deleteUserId) {
-        userRepository.save(newUser); //새로운 유저 생성
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder; // 비밀번호 암호화
 
-     // 중간에 예외 발생시 전체 트랜잭션 롤백
-        if (newUser.getName().equals("Error")) {
-            throw new RuntimeException("강제 예외 발생");
+    public void signUp(User user) {
+        // 중복 아이디 검사
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new IllegalArgumentException("아이디가 이미 존재합니다.");
         }
 
-        // 유저 삭제 (에러가 발생하면 이 작업도 롤백됨)
-        userRepository.deleteById(deleteUserId);
+        // 비밀번호 암호화
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // 사용자 저장
+        userRepository.save(user);
     }
 }

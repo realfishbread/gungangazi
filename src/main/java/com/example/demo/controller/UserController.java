@@ -79,7 +79,7 @@ public ResponseEntity<?> updateUser(@PathVariable String username, @RequestBody 
 }
 
     @DeleteMapping("/{username}")
-public ResponseEntity<?> deleteUser(@PathVariable String username) {
+   public ResponseEntity<?> deleteUser(@PathVariable String username) {
     User existingUser = userRepository.findByUsername(username);
     
     if (existingUser == null) {
@@ -93,12 +93,10 @@ public ResponseEntity<?> deleteUser(@PathVariable String username) {
     Map<String, String> response = new HashMap<>();
     response.put("message", "사용자가 삭제되었습니다.");
     return ResponseEntity.ok(response);
-}
+ }
 
    
 
-@Autowired
-private BCryptPasswordEncoder passwordEncoder;
 
 
 }

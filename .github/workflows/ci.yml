@@ -11,6 +11,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:latest
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        env:
+          MYSQL_ROOT_PASSWORD: endbackend!
+          MYSQL_DATABASE: appdb
+          MYSQL_USER: yh
+          MYSQL_PASSWORD: endbackend!
+        ports:
+          - 3306:3306
+
     steps:
       - uses: actions/checkout@v4
 
@@ -20,12 +33,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-
       - name: Clear old builds
         run: rm -rf build/
 
-
-           
       - name: Install Flutter SDK
         run: |
           sudo apt-get update
@@ -37,8 +47,6 @@ jobs:
           export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
           flutter doctor
 
-
-
       - name: Grant execute permission for Maven Wrapper
         run: chmod +x ./mvnw
 
@@ -46,7 +54,6 @@ jobs:
         run: |
           export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
           flutter pub get --verbose
-
 
       - name: Clear cache
         run: flutter clean
@@ -56,20 +63,18 @@ jobs:
           export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
           flutter build web --release
 
+      - name: Install MySQL Client
+        run: sudo apt-get install -y mysql-client
+
       - name: Build and Test Spring demo
         run: ./mvnw clean install
 
-
-      
       - name: Deploy to EC2
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > GUNGANGAZI.pem
           chmod 600 GUNGANGAZI.pem
           scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem -r build/web/* ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com:/var/www/myapp
           ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com 'sudo systemctl restart nginx'
-
-
-    
 
       - name: Cleanup
         run: rm -f GUNGANGAZI.pem

@@ -64,7 +64,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
     // 서버로 데이터 전송
     final response = await http.post(
-      Uri.parse('http://15.164.140.55/api/signup'), // 서버 URL을 설정
+      Uri.parse('https://15.164.140.55/api/signup'), // 서버 URL을 설정
       headers: {'Content-Type': 'application/json'},
       body: json.encode(userData),
     );

@@ -41,10 +41,7 @@ class PopupHandler {
       'assets/person/jindan_sad5.jpg',
       'assets/person/jindan_sad7.jpg',
       'assets/person/jindan_sad9.jpg',
-      'assets/person/jindan_sad7.jpg',
-      'assets/person/jindan_sad5.jpg',
-      'assets/person/jindan_sad3.jpg',
-      'assets/person/jindan_sad1.jpg',
+
     ],
     'body': [
       'assets/person/jindan_stomach1.jpg',
@@ -134,7 +131,8 @@ class PopupHandler {
     }
   }
 
-  // 터치된 좌표에 맞는 팝업 표시
+
+
   void showPopupForCoordinates(
       BuildContext context, Offset tapPosition, Function(String) onImageSelected) {
     if (_imageRect == null) return; // 이미지 크기가 설정되지 않은 경우 무시
@@ -149,7 +147,7 @@ class PopupHandler {
       double imageHeight = _imageRect!.height;
       double imageWidth = _imageRect!.width;
 
-      double headHeight = imageHeight * 0.30;
+      double headHeight = imageHeight * 0.40;
       double bodyHeight = imageHeight * 0.30;
       double legStartHeight = imageHeight * 0.55;
       double legEndHeight = imageHeight * 0.90;
@@ -172,18 +170,13 @@ class PopupHandler {
         _currentBodyPart = 'leg';
       }
 
-      // 이미지 전환 애니메이션 시작
-      _currentImageIndex = 0;
-      _imageNotifier.value = _currentImageIndex;
-      startImageAnimation();
-
-      // 팝업 표시
-      showDialog(
+      // 말풍선 형태의 팝업 표시
+      showMenu(
         context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('선택된 영역'),
-            content: Column(
+        position: RelativeRect.fromLTRB(tapPosition.dx, tapPosition.dy, tapPosition.dx, tapPosition.dy),
+        items: [
+          PopupMenuItem(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(popupMessage),
@@ -205,24 +198,21 @@ class PopupHandler {
                   ),
                 )
                     : const SizedBox(), // 데이터가 없을 때는 빈 위젯으로 대체
-              ],
-            ),
-            actions: [
-              Center( // 버튼을 중앙에 배치
-                child: ElevatedButton(
+                const SizedBox(height: 10),
+                ElevatedButton(
                   onPressed: () {
-                    _navigateToBodyPartPage(context); // 부위에 맞는 페이지로 이동
+                    Navigator.of(context).pop(); // 말풍선 닫기
+                    _navigateToBodyPartPage(context); // 다른 페이지로 이동
                   },
                   child: const Text('다른 페이지로 이동'),
                 ),
-              ),
-            ],
-          );
-        },
+              ],
+            ),
+          ),
+        ],
       );
     }
   }
-
 
   // 터치 이벤트와 이미지 애니메이션 처리
   Widget buildImageAnimationWithTouch(BuildContext context, Function(String) onImageSelected) {

@@ -1,7 +1,7 @@
-import 'loginPge.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert'; // JSON 파싱을 위해 필요
+import '../dto/profile_dto.dart';
+import '../repositories/profile_repository.dart';
+import 'LoginPge.dart';
 
 class Profile2 extends StatefulWidget {
   @override
@@ -9,51 +9,45 @@ class Profile2 extends StatefulWidget {
 }
 
 class _Profile2State extends State<Profile2> {
-  // 기본값 설정
-  String userId = 'user123';
-  String name = '홍길동';
-  String email = 'user123@example.com';
-  String height = '180 cm';
-  String weight = '75 kg';
-  String gender = '남자';
-
-  bool isLoading = true; // 데이터 로딩 상태를 나타냄
+  late ProfileRepository _profileRepository;
+  ProfileDto? _profile; // 프로필 정보를 저장할 변수
+  bool isLoading = true; // 데이터 로딩 상태
 
   @override
   void initState() {
     super.initState();
-    // 프로필 정보를 가져옴
-    fetchProfile();
+    _profileRepository = ProfileRepository();
+    fetchProfile(); // 프로필 정보 가져오기
   }
 
-  // 서버에서 프로필 정보를 받아오는 함수
+  // 서버에서 프로필 정보를 가져오는 함수
   Future<void> fetchProfile() async {
-    try {
-      final response = await http.get(Uri.parse('http://15.164.140.55/api/User.java')); //api url 적기
+    setState(() {
+      isLoading = true;
+    });
 
-      if (response.statusCode == 200) {
-        // 서버에서 받은 JSON 데이터를 파싱
-        final data = json.decode(response.body);
-        setState(() {
-          userId = data['userId'];
-          name = data['name'];
-          email = data['email'];
-          height = data['height'];
-          weight = data['weight'];
-          gender = data['gender'];
-          isLoading = false; // 데이터 로딩 완료
-        });
-      } else {
-        // 실패 시 기본값으로 유지 (별도 처리 없이 그냥 넘어감)
-        setState(() {
-          isLoading = false;
-        });
-      }
-    } catch (e) {
-      // 예외 처리: 서버와의 통신에 실패할 경우
+    ProfileDto? profile = await _profileRepository.fetchProfile();
+    if (profile != null) {
       setState(() {
-        isLoading = false; // 로딩 중단
+        _profile = profile;
+        isLoading = false;
       });
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  // 서버로 수정된 프로필 데이터를 보내는 함수
+  Future<void> saveProfile(String fieldName, String newValue) async {
+    bool success = await _profileRepository.updateProfile(fieldName, newValue);
+    if (success) {
+      // 성공적으로 저장하면 프로필 정보를 다시 가져옴
+      fetchProfile();
+    } else {
+      // 에러 처리
+      throw Exception('Failed to save profile');
     }
   }
 
@@ -62,109 +56,96 @@ class _Profile2State extends State<Profile2> {
     return Scaffold(
       appBar: AppBar(
         title: Text('프로필 설정', style: TextStyle(color: Colors.black)),
-        backgroundColor: const Color(0xFFFFF9C4), // 타이틀 배경색 노란색
+        backgroundColor: const Color(0xFFFFF9C4),
         elevation: 0,
         centerTitle: true,
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator()) // 데이터 로딩 중일 때 로딩 스피너 표시
-          : Container(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Stack(
-                children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.grey,
-                    backgroundImage: AssetImage('assets/profile_placeholder.png'), // 프로필 이미지
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: IconButton(
-                      icon: Icon(Icons.camera_alt, color: Colors.black),
-                      onPressed: () {
-                        // 사진 변경 기능 추가 예정
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20),
-            Divider(color: Colors.black),
-            _buildProfileItem('아이디', userId, null),
-            _buildProfileItem('이름', name, () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditPage(fieldName: '이름', currentValue: name, onSave: saveProfile),
-                ),
-              );
-            }),
-            _buildProfileItem('이메일', email, () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditPage(fieldName: '이메일', currentValue: email, onSave: saveProfile),
-                ),
-              );
-            }),
-            _buildProfileItem('키', height, () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditPage(fieldName: '키', currentValue: height, onSave: saveProfile),
-                ),
-              );
-            }),
-            _buildProfileItem('몸무게', weight, () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditPage(fieldName: '몸무게', currentValue: weight, onSave: saveProfile),
-                ),
-              );
-            }),
-            _buildProfileItem('성별', gender, null),
-            SizedBox(height: 20),
-            Center(
-              child: TextButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
-                  );
-                },
-                child: Text('로그아웃', style: TextStyle(color: Colors.black)),
-              ),
-            ),
-          ],
-        ),
-      ),
+          : _profile == null
+          ? Center(child: Text('프로필을 불러올 수 없습니다.'))
+          : buildProfileContent(), // 프로필 내용 표시
     );
   }
 
-  // 서버로 수정된 프로필 데이터를 보내는 함수
-  Future<void> saveProfile(String fieldName, String newValue) async {
-    final response = await http.put(
-      Uri.parse('http://15.164.140.55/api/profile/update'),// api url 적기
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        fieldName: newValue,
-      }),
+  Widget buildProfileContent() {
+    return Container(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Stack(
+              children: [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Colors.grey,
+                  backgroundImage: AssetImage('assets/profile_placeholder.png'),
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: IconButton(
+                    icon: Icon(Icons.camera_alt, color: Colors.black),
+                    onPressed: () {
+                      // 사진 변경 기능 추가 예정
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 20),
+          Divider(color: Colors.black),
+          _buildProfileItem('아이디', _profile!.userId, null),
+          _buildProfileItem('이름', _profile!.name, () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditPage(fieldName: '이름', currentValue: _profile!.name, onSave: saveProfile),
+              ),
+            );
+          }),
+          _buildProfileItem('이메일', _profile!.email, () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditPage(fieldName: '이메일', currentValue: _profile!.email, onSave: saveProfile),
+              ),
+            );
+          }),
+          _buildProfileItem('키', _profile!.height, () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditPage(fieldName: '키', currentValue: _profile!.height, onSave: saveProfile),
+              ),
+            );
+          }),
+          _buildProfileItem('몸무게', _profile!.weight, () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditPage(fieldName: '몸무게', currentValue: _profile!.weight, onSave: saveProfile),
+              ),
+            );
+          }),
+          _buildProfileItem('성별', _profile!.gender, null),
+          SizedBox(height: 20),
+          Center(
+            child: TextButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                );
+              },
+              child: Text('로그아웃', style: TextStyle(color: Colors.black)),
+            ),
+          ),
+        ],
+      ),
     );
-
-    if (response.statusCode == 200) {
-      // 성공적으로 저장하면 프로필 정보를 다시 받아옴
-      fetchProfile();
-    } else {
-      // 에러 처리
-      throw Exception('Failed to save profile');
-    }
   }
 
   Widget _buildProfileItem(String title, String value, VoidCallback? onEdit) {
@@ -196,7 +177,6 @@ class _Profile2State extends State<Profile2> {
   }
 }
 
-// 수정 페이지
 class EditPage extends StatefulWidget {
   final String fieldName;
   final String currentValue;
@@ -210,11 +190,35 @@ class EditPage extends StatefulWidget {
 
 class _EditPageState extends State<EditPage> {
   late TextEditingController _controller;
+  bool _isSaving = false; // 저장 중인지 여부를 나타내는 상태
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.currentValue);
+  }
+
+  Future<void> _saveProfile() async {
+    if (_controller.text.isEmpty) {
+      // 입력값이 비어있을 때 경고 메시지 표시
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('값을 입력해주세요.'),
+        backgroundColor: Colors.red,
+      ));
+      return;
+    }
+
+    setState(() {
+      _isSaving = true; // 저장 중 상태 설정
+    });
+
+    await widget.onSave(widget.fieldName, _controller.text);
+
+    setState(() {
+      _isSaving = false; // 저장 완료 상태로 변경
+    });
+
+    Navigator.pop(context);
   }
 
   @override
@@ -238,14 +242,13 @@ class _EditPageState extends State<EditPage> {
                 border: OutlineInputBorder(),
               ),
               style: TextStyle(color: Colors.black),
+              onSubmitted: (value) => _saveProfile(), // 엔터키 입력 시 자동 저장
             ),
             SizedBox(height: 20),
-            TextButton(
-              onPressed: () {
-                // 수정된 값을 서버로 저장
-                widget.onSave(widget.fieldName, _controller.text);
-                Navigator.pop(context);
-              },
+            _isSaving
+                ? CircularProgressIndicator() // 저장 중일 때 로딩 스피너 표시
+                : TextButton(
+              onPressed: _saveProfile,
               child: Text('저장', style: TextStyle(color: Colors.black)),
             ),
           ],
@@ -254,4 +257,3 @@ class _EditPageState extends State<EditPage> {
     );
   }
 }
-

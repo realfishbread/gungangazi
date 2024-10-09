@@ -1,4 +1,5 @@
 import 'package:gungangazi/BloodPressure.dart';
+import 'package:gungangazi/ToothCarePage.dart';
 
 import 'profile2.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,8 @@ class _MobileHomePageState extends State<MobileHomePage> {
       '수분': const WaterDrink(),
       '식단': const MealPage(),
       '영양제': const SupplementsPage(),
-      '혈압':  BloodPressurePage()
+      '혈압':  BloodPressurePage(),
+      '치아건강': ToothCarePage()
     };
 
     final page = routes[title];

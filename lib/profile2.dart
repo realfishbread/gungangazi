@@ -13,6 +13,16 @@ class _Profile2State extends State<Profile2> {
   ProfileDto? _profile; // 프로필 정보를 저장할 변수
   bool isLoading = true; // 데이터 로딩 상태
 
+  // 기본 프로필 정보
+  final ProfileDto defaultProfile = ProfileDto(
+    userId: '기본아이디',
+    name: '기본이름',
+    email: '기본이메일@example.com',
+    height: '170cm',
+    weight: '70kg',
+    gender: '남성',
+  );
+
   @override
   void initState() {
     super.initState();
@@ -27,16 +37,10 @@ class _Profile2State extends State<Profile2> {
     });
 
     ProfileDto? profile = await _profileRepository.fetchProfile();
-    if (profile != null) {
-      setState(() {
-        _profile = profile;
-        isLoading = false;
-      });
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-    }
+    setState(() {
+      _profile = profile ?? defaultProfile; // 프로필이 없을 경우 기본 프로필 사용
+      isLoading = false;
+    });
   }
 
   // 서버로 수정된 프로필 데이터를 보내는 함수
@@ -62,13 +66,14 @@ class _Profile2State extends State<Profile2> {
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator()) // 데이터 로딩 중일 때 로딩 스피너 표시
-          : _profile == null
-          ? Center(child: Text('프로필을 불러올 수 없습니다.'))
           : buildProfileContent(), // 프로필 내용 표시
     );
   }
 
   Widget buildProfileContent() {
+    // 기본 프로필 정보가 없을 경우 기본값을 사용
+    final profile = _profile ?? defaultProfile;
+
     return Container(
       padding: EdgeInsets.all(16.0),
       child: Column(
@@ -97,40 +102,40 @@ class _Profile2State extends State<Profile2> {
           ),
           SizedBox(height: 20),
           Divider(color: Colors.black),
-          _buildProfileItem('아이디', _profile!.userId, null),
-          _buildProfileItem('이름', _profile!.name, () {
+          _buildProfileItem('아이디', profile.userId, null),
+          _buildProfileItem('이름', profile.name, () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => EditPage(fieldName: '이름', currentValue: _profile!.name, onSave: saveProfile),
+                builder: (context) => EditPage(fieldName: '이름', currentValue: profile.name, onSave: saveProfile),
               ),
             );
           }),
-          _buildProfileItem('이메일', _profile!.email, () {
+          _buildProfileItem('이메일', profile.email, () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => EditPage(fieldName: '이메일', currentValue: _profile!.email, onSave: saveProfile),
+                builder: (context) => EditPage(fieldName: '이메일', currentValue: profile.email, onSave: saveProfile),
               ),
             );
           }),
-          _buildProfileItem('키', _profile!.height, () {
+          _buildProfileItem('키', profile.height, () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => EditPage(fieldName: '키', currentValue: _profile!.height, onSave: saveProfile),
+                builder: (context) => EditPage(fieldName: '키', currentValue: profile.height, onSave: saveProfile),
               ),
             );
           }),
-          _buildProfileItem('몸무게', _profile!.weight, () {
+          _buildProfileItem('몸무게', profile.weight, () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => EditPage(fieldName: '몸무게', currentValue: _profile!.weight, onSave: saveProfile),
+                builder: (context) => EditPage(fieldName: '몸무게', currentValue: profile.weight, onSave: saveProfile),
               ),
             );
           }),
-          _buildProfileItem('성별', _profile!.gender, null),
+          _buildProfileItem('성별', profile.gender, null),
           SizedBox(height: 20),
           Center(
             child: TextButton(
@@ -176,6 +181,7 @@ class _Profile2State extends State<Profile2> {
     );
   }
 }
+
 
 class EditPage extends StatefulWidget {
   final String fieldName;

@@ -1,3 +1,5 @@
+import 'package:gungangazi/ToothCarePage.dart';
+
 import 'BloodPressure.dart';
 import 'profile2.dart';
 import 'package:flutter/material.dart';
@@ -147,7 +149,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   SideMenuItem(
                     title: '치아 건강',
                     onTap: (index, _) {
-
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) =>  ToothCarePage()),
+                      );
                     },
                     icon: const Icon(Icons.medical_services),
                   ),

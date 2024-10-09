@@ -1,3 +1,5 @@
+import 'package:gungangazi/ToothCarePage.dart';
+
 import 'BloodPressure.dart';
 import 'MealPage.dart';
 import 'SleepPage.dart';
@@ -94,7 +96,7 @@ class DietCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => MealPage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ToothCarePage()));
       },
       child: Card(
         margin: EdgeInsets.all(10),

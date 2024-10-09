@@ -9,7 +9,7 @@ class AuthRepository {
   Future<LoginResponseDto?> login(LoginRequestDto loginRequest) async {
     try {
       Response response = await _dio.post(
-        'https://15.164.140.55/api/login',
+        'https://gungangazi.site/api/login',
         data: loginRequest.toJson(),
       );
 

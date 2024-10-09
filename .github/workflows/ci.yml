@@ -76,7 +76,7 @@ jobs:
           scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem -r build/web/* ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com:/var/www/myapp/
            # Deploy Spring Boot API
           scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem -r target/*.jar ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com:/var/www/myapp/
-          ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com 'sudo systemctl restart nginx && nohup java -jar /home/ubuntu/myapp/*.jar > /dev/null 2>&1 &'
+          ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com 'sudo systemctl restart nginx && nohup java -jar /var/www/myapp/*.jar > /dev/null 2>&1 &'
 
 
       - name: Cleanup

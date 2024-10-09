@@ -20,7 +20,7 @@ class _SelfDgsState extends State<SelfDgs> {
   }
 
   Future<void> fetchQuestion(int questionNumber) async {
-    final response = await http.get(Uri.parse('http://15.164.140.55/questions/$questionNumber'));
+    final response = await http.get(Uri.parse('https://gungangazi.site/questions/$questionNumber'));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       setState(() {

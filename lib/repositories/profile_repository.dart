@@ -26,7 +26,7 @@ class ProfileRepository {
   Future<bool> updateProfile(String fieldName, String newValue) async {
     try {
       Response response = await _dio.put(
-        'https://15.164.140.55/api/profile/update',
+        'https://gungangazi.site/api/profile/update',
         data: {fieldName: newValue},
       );
 

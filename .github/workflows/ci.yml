@@ -57,6 +57,10 @@ jobs:
 
       - name: Clear cache
         run: flutter clean
+
+      - name: Check working directory
+        run: pwd
+
         
       - name: Build Flutter web app
         run: |

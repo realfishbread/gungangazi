@@ -47,6 +47,15 @@ jobs:
           export PATH="$PATH:$PWD/flutter/bin"
           flutter doctor
 
+      - name: Install Dart SDK
+        run: |
+          sudo apt-get update
+          sudo apt-get install apt-transport-https
+          sudo sh -c 'wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /usr/share/keyrings/dart-archive-keyring.gpg'
+          sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
+          sudo apt-get update
+          sudo apt-get install dart
+
       - name: Grant execute permission for Maven Wrapper
         run: chmod +x ./mvnw
 

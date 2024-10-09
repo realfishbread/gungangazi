@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../dto/profile_dto.dart';
 import '../repositories/profile_repository.dart';
-import 'LoginPge.dart';
+import 'loginPge.dart';
 
 class Profile2 extends StatefulWidget {
   @override

@@ -8,7 +8,7 @@ class ProfileRepository {
   // 프로필 정보 가져오기
   Future<ProfileDto?> fetchProfile() async {
     try {
-      Response response = await _dio.get('https://15.164.140.55/api/User');
+      Response response = await _dio.get('https://gungangazi.site/api/User');
 
       if (response.statusCode == 200) {
         return ProfileDto.fromJson(response.data);

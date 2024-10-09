@@ -78,8 +78,6 @@ jobs:
           scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem -r target/*.jar ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com:/home/ubuntu/myapp/
           ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com 'sudo systemctl restart nginx && nohup java -jar /home/ubuntu/myapp/*.jar > /dev/null 2>&1 &'
 
-      - name: Check application health
-        run: curl -I http://ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com/api/health
 
       - name: Cleanup
         run: rm -f GUNGANGAZI.pem

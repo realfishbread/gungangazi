@@ -1,5 +1,4 @@
-import 'package:gungangazi/ToothCarePage.dart';
-
+import 'ToothCarePage.dart';
 import 'BloodPressure.dart';
 import 'profile2.dart';
 import 'package:flutter/material.dart';

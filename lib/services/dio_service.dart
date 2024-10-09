@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 class DioService {
   Dio getDio() {
     Dio dio = Dio(BaseOptions(
-      baseUrl: 'http://15.164.140.55/api',
+      baseUrl: 'https://15.164.140.55/api',
       connectTimeout: const Duration(seconds: 5), // 수정: int에서 Duration으로 변경
       receiveTimeout: const Duration(seconds: 3), // 수정: int에서 Duration으로 변경
     ));

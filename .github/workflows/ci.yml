@@ -61,7 +61,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
           flutter pub get --verbose
 
       - name: Clear cache
@@ -73,7 +72,6 @@ jobs:
         
       - name: Build Flutter web app
         run: |
-          export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
           flutter build web --release
 
       - name: Install MySQL Client

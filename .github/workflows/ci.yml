@@ -56,6 +56,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install dart
 
+      - name: Enable desktop
+        run: flutter config --enable-web
+
+      - name: Flutter get packages
+        run: flutter pub get
+      
+      - name: Build Runner & version
+        run: flutter packages pub run build_runner build --delete-conflicting-outputs
+
       - name: Grant execute permission for Maven Wrapper
         run: chmod +x ./mvnw
 

@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
       });
       Navigator.pushReplacementNamed(
         context,
-        '/homeApp', // 항상 앱 화면으로 이동
+        kIsWeb ? '/homeWeb' : '/homeApp', // 웹이면 homeWeb, 앱이면 homeApp으로 이동
       );
       return;
     }
@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
         });
         Navigator.pushReplacementNamed(
           context,
-          '/homeApp', // 항상 앱 화면으로 이동
+          kIsWeb ? '/homeWeb' : '/homeApp', // 웹이면 homeWeb, 앱이면 homeApp으로 이동
         );
       } else {
         // 로그인 실패

@@ -30,15 +30,12 @@ class MyApp extends StatelessWidget {
 
       initialRoute: '/splash',
 
-      home: const SplashPage(),
       routes: {
-        '/splash': (context) => const SplashPage(),
         '/login': (context) => const LoginPage(), // 로그인 페이지 경로 추가
         '/homeWeb': (context) => const WebHomePage(), // 웹 전용 페이지
         '/homeApp': (context) => const MobileHomePage(), // 앱 전용 페이지
         
       },
-      debugShowCheckedModeBanner: false,
     );
   }
 

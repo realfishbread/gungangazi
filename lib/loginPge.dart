@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
       _loginFailed = true;
     });
   }
-
+}
 
   @override
   Widget build(BuildContext context) {

@@ -30,9 +30,9 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _loginFailed = false;
       });
-      Navigator.pushReplacementNamed(
-        context,
-        '/homeApp', // 항상 앱 화면으로 이동
+     Navigator.pushReplacementNamed(
+     context,
+     kIsWeb ? '/homeWeb' : '/homeApp', // 웹이면 homeWeb, 앱이면 homeApp으로 이동
       );
       return;
     }

@@ -61,7 +61,6 @@ jobs:
 
       - name: Build Flutter web app
         run: |
-          cd build/web
           flutter build web --release
 
       - name: Build and Test Spring demo

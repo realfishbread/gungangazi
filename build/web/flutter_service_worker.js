@@ -2,7 +2,7 @@
 const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
-const CORE = ["main.dart.js", "index.html", "flutter_bootstrap.js"];
+let CORE = ["main.dart.js", "index.html", "flutter_bootstrap.js"];
 
 
 const RESOURCES = {

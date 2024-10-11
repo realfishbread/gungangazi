@@ -27,13 +27,11 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _controller.forward();
 
-    // 3초 후에 HomePage로 이동
-    Future.delayed(const Duration(seconds: 3), () {
-      if (kIsWeb) {
-        Navigator.pushReplacementNamed(context, '/homeWeb'); // 웹일 경우
-      } else {
-        Navigator.pushReplacementNamed(context, '/homeApp'); // 앱일 경우
-      }
+   Future.delayed(const Duration(seconds: 3), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) =>  const LoginPage()), // 마지막에 loginpage로 변경해
+      );
     });
   }
 

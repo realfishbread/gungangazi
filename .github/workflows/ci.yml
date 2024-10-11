@@ -19,7 +19,7 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: endbackend!
           MYSQL_DATABASE: appdb
-          MYSQL_USER: yh
+          MYSQL_USER: gungangazi
           MYSQL_PASSWORD: endbackend!
         ports:
           - 3306:3306
@@ -61,6 +61,7 @@ jobs:
 
       - name: Build Flutter web app
         run: |
+          cd ./build/web
           flutter build web --release
 
       - name: Build and Test Spring demo

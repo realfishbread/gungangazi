@@ -37,8 +37,6 @@ class MyApp extends StatelessWidget {
         '/homeApp': (context) => const MobileHomePage(), // 앱 전용 페이지
         
       },
-      home: kIsWeb ? const WebHomePage() : const MobileHomePage(), // 웹 또는 앱 구분
-      debugShowCheckedModeBanner: false,
     );
   }
 

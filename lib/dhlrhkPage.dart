@@ -1,4 +1,4 @@
-import 'package:gungangazi/ToothCarePage.dart';
+import 'ToothCarePage.dart';
 
 import 'BloodPressure.dart';
 import 'MealPage.dart';

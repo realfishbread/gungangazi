@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\flutter\zolzak\gungangazi\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\url_launcher_windows.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\flutter\zolzak\gungangazi\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\messages.g.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\flutter\zolzak\gungangazi\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\system_apis.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\flutter\zolzak\gungangazi\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\url_launcher_plugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\flutter\zolzak\gungangazi\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\include\url_launcher_windows\url_launcher_windows.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\flutter\zolzak\gungangazi\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\messages.g.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\flutter\zolzak\gungangazi\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\system_apis.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\flutter\zolzak\gungangazi\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\url_launcher_plugin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\flutter\zolzak\gungangazi\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{6AF2F9FE-8C9A-336C-9D82-23753F4CEC98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{E3B8122C-DE86-3E63-B16A-F514FCD55F3B}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

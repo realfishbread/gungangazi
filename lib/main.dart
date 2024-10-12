@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
 
       initialRoute: '/splash',
 
-      home: const SplashPage(),
+      
       routes: {
         '/splash': (context) => const SplashPage(),
         '/login': (context) => const LoginPage(), // 로그인 페이지 경로 추가

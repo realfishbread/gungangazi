@@ -30,11 +30,9 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _loginFailed = false;
       });
-
-     Navigator.pushReplacementNamed(
-     context,
-     kIsWeb ? '/homeWeb' : '/homeApp', // 웹이면 homeWeb, 앱이면 homeApp으로 이동
-
+      Navigator.pushReplacementNamed(
+        context,
+        '/homeApp',
       );
       return;
     }
@@ -45,34 +43,30 @@ class _LoginPageState extends State<LoginPage> {
       password: password,
     );
 
-   try {
-    LoginResponseDto? loginResponse = await _authRepository.login(loginRequest);
+    try {
+      LoginResponseDto? loginResponse = await _authRepository.login(loginRequest);
 
-
-    if (loginResponse != null) {
-      // 로그인 성공 시 홈 화면으로 이동
-      setState(() {
-        _loginFailed = false;
-      });
-  
-      // 웹과 앱을 구분하여 각각의 홈 페이지로 이동
-      Navigator.pushReplacementNamed(
-        context,
-        kIsWeb ? '/homeWeb' : '/homeApp', // 웹이면 homeWeb, 앱이면 homeApp으로 이동
-      );
-    } else {
-      // 로그인 실패
-
+      if (loginResponse != null) {
+        // 로그인 성공 시 홈 화면으로 이동
+        setState(() {
+          _loginFailed = false;
+        });
+        Navigator.pushReplacementNamed(
+          context,
+          '/homeApp',
+        );
+      } else {
+        // 로그인 실패
+        setState(() {
+          _loginFailed = true;
+        });
+      }
+    } catch (e) {
       setState(() {
         _loginFailed = true;
       });
     }
-  } catch (e) {
-    setState(() {
-      _loginFailed = true;
-    });
   }
-}
 
   @override
   Widget build(BuildContext context) {

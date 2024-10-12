@@ -2,7 +2,6 @@ import 'package:http/http.dart' as http;
 import 'splash/SplashPage.dart';
 import 'package:flutter/material.dart';
 import 'mobile_home_page.dart'; // 앱 전용 페이지
-import 'web_home_page.dart'; // 웹 전용 페이지
 import 'loginPge.dart'; // 통합된 로그인 페이지
 import 'package:flutter/foundation.dart' show kIsWeb; // 웹 구분을 위한 kIsWeb 사용
 
@@ -30,12 +29,15 @@ class MyApp extends StatelessWidget {
 
       initialRoute: '/splash',
 
+      home: const SplashPage(),
       routes: {
+        '/splash': (context) => const SplashPage(),
         '/login': (context) => const LoginPage(), // 로그인 페이지 경로 추가
-        '/homeWeb': (context) => const WebHomePage(), // 웹 전용 페이지
+
         '/homeApp': (context) => const MobileHomePage(), // 앱 전용 페이지
         
       },
+      debugShowCheckedModeBanner: false,
     );
   }
 

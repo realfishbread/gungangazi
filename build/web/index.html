@@ -20,6 +20,25 @@
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="건강아지" content="건강아지 홈페이지 입니다.">
 
+  <!-- Flutter specific scripts -->
+  <script src="flutter_canvas.js" type="module"></script>
+  <script type="text/javascript">
+    // CanvasKit을 초기화하는 코드
+    const loadCanvasKit = async () => {
+      const Module = await import('flutter-canvas-kit');
+      const canvasKit = await Module.CanvasKitInit({});
+      window.CanvasKit = canvasKit;
+    };
+    loadCanvasKit();
+  </script>
+
+  <!-- Optional: Add your service worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('flutter_service_worker.js');
+    }
+  </script>
+  
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -34,20 +53,6 @@
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
-  <script>
-    window.addEventListener('load', function(ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
-            appRunner.runApp();
-          });
-        }
-      });
-    });
-  </script>
+  
 </body>
 </html>

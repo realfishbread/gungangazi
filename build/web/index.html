@@ -21,16 +21,8 @@
   <meta name="건강아지" content="건강아지 홈페이지 입니다.">
 
   <!-- Flutter specific scripts -->
-  <script src="flutter_canvas.js" type="module"></script>
-  <script type="text/javascript">
-    // CanvasKit을 초기화하는 코드
-    const loadCanvasKit = async () => {
-      const Module = await import('flutter-canvas-kit');
-      const canvasKit = await Module.CanvasKitInit({});
-      window.CanvasKit = canvasKit;
-    };
-    loadCanvasKit();
-  </script>
+  <script src="canvaskit/flutter_canvas.js" type="module"></script>
+ 
 
   <!-- Optional: Add your service worker -->
   <script>

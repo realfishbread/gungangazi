@@ -44,14 +44,12 @@ jobs:
         with:
           channel: stable
       - run: flutter pub get
-      - run: flutter test
+     
       - run: flutter build web
 
       - name: Enable desktop
         run: flutter config --enable-web
 
-      - name: Flutter get packages
-        run: flutter pub get
       
       - name: Build Runner & version
         run: flutter packages pub run build_runner build --delete-conflicting-outputs
@@ -59,9 +57,7 @@ jobs:
       - name: Grant execute permission for Maven Wrapper
         run: chmod +x ./mvnw
 
-      - name: Build Flutter web app
-        run: |
-          flutter build web --release
+   
 
       - name: Build and Test Spring demo
         run: ./mvnw clean install

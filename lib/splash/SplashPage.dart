@@ -1,7 +1,9 @@
+import 'package:gungangazi/mobile_home_page.dart';
+
 import '../loginPge.dart';
-import '../main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb; 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // 로그인 상태 확인을 위한 패키지 import
+import '../main.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -13,6 +15,9 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+
+  // FlutterSecureStorage 인스턴스 생성
+  final FlutterSecureStorage storage = FlutterSecureStorage();
 
   @override
   void initState() {
@@ -27,11 +32,22 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _controller.forward();
 
-   Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) =>  const LoginPage()), // 마지막에 loginpage로 변경해
-      );
+    // 애니메이션과 함께 일정 시간 후 로그인 상태 확인
+    Future.delayed(const Duration(seconds: 3), () async {
+      String? token = await storage.read(key: 'authToken');
+      if (token != null) {
+        // 토큰이 있으면 홈 화면으로 이동
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MobileHomePage()), // 로그인 상태일 경우 홈 화면으로 이동
+        );
+      } else {
+        // 토큰이 없으면 로그인 페이지로 이동
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+        );
+      }
     });
   }
 

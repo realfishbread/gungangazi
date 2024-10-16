@@ -1,6 +1,7 @@
+import 'package:gungangazi/SelfDgs.dart';
+
 import 'BloodPressure.dart';
 import 'ToothCarePage.dart';
-
 import 'profile2.dart';
 import 'package:flutter/material.dart';
 import 'PopupHandler.dart';
@@ -10,6 +11,7 @@ import 'WaterDrink.dart';
 import 'MealPage.dart';
 import 'ChatPage.dart';
 import 'loginPge.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // FlutterSecureStorage import
 
 class MobileHomePage extends StatefulWidget {
   const MobileHomePage({super.key});
@@ -22,8 +24,27 @@ class _MobileHomePageState extends State<MobileHomePage> {
   int _selectedIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  final FlutterSecureStorage storage = FlutterSecureStorage(); // storage 인스턴스를 State 클래스에 정의
   List<dynamic> _listData = [];
   late PopupHandler _popupHandler;
+
+  Future<void> _logout() async {
+    try {
+      // 로그인 토큰 삭제
+      await storage.delete(key: 'authToken');
+
+      // 모든 이전 페이지를 제거하고 로그인 페이지로 이동
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+            (Route<dynamic> route) => false,
+      );
+    } catch (e) {
+      // 로그아웃 중 오류가 발생할 경우 로그를 남기거나 사용자에게 오류 메시지 보여주기
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('로그아웃 중 문제가 발생했습니다. 다시 시도해주세요.')),
+      );
+    }
+  }
 
   @override
   void initState() {
@@ -44,7 +65,8 @@ class _MobileHomePageState extends State<MobileHomePage> {
       '식단': const MealPage(),
       '영양제': const SupplementsPage(),
       '혈압':  BloodPressurePage(),
-      '치아건강': ToothCarePage()
+      '치아건강': ToothCarePage(),
+      '자가진단': SelfDgs()
     };
 
     final page = routes[title];
@@ -88,9 +110,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, '/login');
-            },
+            onPressed: _logout, // 로그아웃 함수 호출
           ),
         ],
       ),
@@ -167,6 +187,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
               {'icon': Icons.person, 'title': '치아건강'},
               {'icon': Icons.person, 'title': '혈압'},
               {'icon': Icons.settings, 'title': '상처'},
+              {'icon': Icons.dock, 'title': '자가진단'},
             ],
           ),
         );

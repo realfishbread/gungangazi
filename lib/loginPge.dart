@@ -1,8 +1,9 @@
 import 'SignUp.dart'; // 회원가입 페이지를 불러오기 위해 추가
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import '../../repositories/auth_repository.dart'; // AuthRepository import
 import '../../dto/login_dto.dart'; // Login DTO import
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final AuthRepository _authRepository = AuthRepository();
   bool _loginFailed = false;
 
+  final storage = FlutterSecureStorage();
   // 기본 아이디와 비밀번호 (나중에 쉽게 제거 가능)
   final String _defaultUsername = "testUser";
   final String _defaultPassword = "password123";
@@ -30,6 +32,7 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _loginFailed = false;
       });
+      await saveLoginInfo('dummyToken'); // 기본 아이디일 때도 토큰 저장 (테스트용)
       Navigator.pushReplacementNamed(
         context,
         '/homeApp',
@@ -51,6 +54,7 @@ class _LoginPageState extends State<LoginPage> {
         setState(() {
           _loginFailed = false;
         });
+        await saveLoginInfo(loginResponse.token!); // 로그인 토큰 저장
         Navigator.pushReplacementNamed(
           context,
           '/homeApp',
@@ -66,6 +70,10 @@ class _LoginPageState extends State<LoginPage> {
         _loginFailed = true;
       });
     }
+  }
+
+  Future<void> saveLoginInfo(String token) async {
+    await storage.write(key: 'authToken', value: token);
   }
 
   @override

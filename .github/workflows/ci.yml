@@ -45,7 +45,7 @@ jobs:
           channel: stable
       - run: flutter pub get
      
-      - run: flutter build web
+      - run: flutter build web --web-renderer canvaskit --release
 
       - name: Enable desktop
         run: flutter config --enable-web

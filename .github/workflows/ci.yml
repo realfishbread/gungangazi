@@ -12,18 +12,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:latest
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-        env:
-          MYSQL_ROOT_PASSWORD: endbackend!
-          MYSQL_DATABASE: appdb
-          MYSQL_USER: gungangazi
-          MYSQL_PASSWORD: endbackend!
-        ports:
-          - 3306:3306
-
     steps:
       - uses: actions/checkout@v4
 

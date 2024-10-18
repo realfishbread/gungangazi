@@ -17,6 +17,7 @@ dependencies:
   http: ^1.2.2
   flutter_cube: ^0.1.1
   adaptive_bottom_navigation: ^1.0.7
+  responsive_builder: ^0.7.1
   persistent_bottom_nav_bar: ^6.2.1
   table_calendar: ^3.0.9
   shared_preferences: ^2.3.2

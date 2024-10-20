@@ -21,8 +21,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Clear old builds
-        run: rm -rf build/
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2

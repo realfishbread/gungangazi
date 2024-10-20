@@ -18,7 +18,7 @@ class AuthRepository {
       } else {
         return null;
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       print('Login error: ${e.message}');
       return null;
     }

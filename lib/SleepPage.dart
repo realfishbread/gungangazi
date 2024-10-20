@@ -249,11 +249,11 @@ class _SleepPageState extends State<SleepPage> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _saveSleepDataLocally,
-                child: const Text('로컬에 저장하기'),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                   minimumSize: const Size(140, 40),
                 ),
+                child: const Text('로컬에 저장하기'),
               ),
               const SizedBox(height: 20),
               Expanded(
@@ -264,11 +264,11 @@ class _SleepPageState extends State<SleepPage> {
                 alignment: Alignment.bottomCenter,
                 child: ElevatedButton(
                   onPressed: _saveSleepDataToDatabase,
-                  child: const Text('데이터베이스로 전송하기'),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     minimumSize: const Size(140, 40),
                   ),
+                  child: const Text('데이터베이스로 전송하기'),
                 ),
               ),
             ],

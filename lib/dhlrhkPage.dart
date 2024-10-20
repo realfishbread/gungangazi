@@ -1,14 +1,14 @@
 import 'ToothCarePage.dart';
 
 import 'BloodPressure.dart';
-import 'MealPage.dart';
 import 'SleepPage.dart';
-import 'WaterDrink.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 
 class dhlrhkPage extends StatefulWidget {
+  const dhlrhkPage({super.key});
+
   @override
   _dhlrhkPageState createState() => _dhlrhkPageState();
 }
@@ -43,7 +43,7 @@ class _dhlrhkPageState extends State<dhlrhkPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Health Data Cards'),
+        title: const Text('Health Data Cards'),
       ),
       body: ListView(
         children: [
@@ -60,18 +60,18 @@ class _dhlrhkPageState extends State<dhlrhkPage> {
 class SleepCard extends StatelessWidget {
   final List<SleepData> dataList;
 
-  SleepCard({required this.dataList});
+  const SleepCard({super.key, required this.dataList});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => SleepPage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const SleepPage()));
       },
       child: Container(
         height: 200,  // 카드의 높이
-        margin: EdgeInsets.all(10),
-        child: Card(
+        margin: const EdgeInsets.all(10),
+        child: const Card(
           child: Column(
             children: [
               ListTile(
@@ -90,30 +90,30 @@ class SleepCard extends StatelessWidget {
 class DietCard extends StatelessWidget {
   final List<DietData> dataList;
 
-  DietCard({required this.dataList});
+  const DietCard({super.key, required this.dataList});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ToothCarePage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const ToothCarePage()));
       },
       child: Card(
-        margin: EdgeInsets.all(10),
+        margin: const EdgeInsets.all(10),
         child: Column(
           children: [
-            ListTile(
+            const ListTile(
               title: Text('치아 건강'),
               subtitle: Text('Meal descriptions'),
             ),
             dataList.isEmpty
-                ? Padding(
-              padding: const EdgeInsets.all(16.0),
+                ? const Padding(
+              padding: EdgeInsets.all(16.0),
               child: Text('No diet data available.'),
             )
                 : ListView.builder(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: dataList.length,
               itemBuilder: (context, index) {
                 return ListTile(
@@ -133,30 +133,30 @@ class DietCard extends StatelessWidget {
 class WaterCard extends StatelessWidget {
   final List<WaterData> dataList;
 
-  WaterCard({required this.dataList});
+  const WaterCard({super.key, required this.dataList});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => BloodPressurePage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const BloodPressurePage()));
       },
       child: Card(
-        margin: EdgeInsets.all(10),
+        margin: const EdgeInsets.all(10),
         child: Column(
           children: [
-            ListTile(
+            const ListTile(
               title: Text('혈압'),
               subtitle: Text('Water intake for each day'),
             ),
             dataList.isEmpty
-                ? Padding(
-              padding: const EdgeInsets.all(16.0),
+                ? const Padding(
+              padding: EdgeInsets.all(16.0),
               child: Text('No water intake data available.'),
             )
                 : ListView.builder(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: dataList.length,
               itemBuilder: (context, index) {
                 return ListTile(
@@ -176,7 +176,7 @@ class WaterCard extends StatelessWidget {
 class BarChartWidget extends StatelessWidget {
   final List<double> dataList;
 
-  BarChartWidget({required this.dataList});
+  const BarChartWidget({super.key, required this.dataList});
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +189,7 @@ class BarChartWidget extends StatelessWidget {
       BarChartData(
         borderData: FlBorderData(show: false),
         titlesData: FlTitlesData(
-          leftTitles: AxisTitles(
+          leftTitles: const AxisTitles(
             sideTitles: SideTitles(showTitles: true, reservedSize: 28),
           ),
           bottomTitles: AxisTitles(
@@ -200,28 +200,28 @@ class BarChartWidget extends StatelessWidget {
                 Widget text;
                 switch (value.toInt()) {
                   case 0:
-                    text = Text('Mon', style: style);
+                    text = const Text('Mon', style: style);
                     break;
                   case 1:
-                    text = Text('Tue', style: style);
+                    text = const Text('Tue', style: style);
                     break;
                   case 2:
-                    text = Text('Wed', style: style);
+                    text = const Text('Wed', style: style);
                     break;
                   case 3:
-                    text = Text('Thu', style: style);
+                    text = const Text('Thu', style: style);
                     break;
                   case 4:
-                    text = Text('Fri', style: style);
+                    text = const Text('Fri', style: style);
                     break;
                   case 5:
-                    text = Text('Sat', style: style);
+                    text = const Text('Sat', style: style);
                     break;
                   case 6:
-                    text = Text('Sun', style: style);
+                    text = const Text('Sun', style: style);
                     break;
                   default:
-                    text = Text('', style: style);
+                    text = const Text('', style: style);
                     break;
                 }
                 return SideTitleWidget(axisSide: meta.axisSide, child: text);

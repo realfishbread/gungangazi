@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class SelfDgs extends StatefulWidget {
+  const SelfDgs({super.key});
+
   @override
   _SelfDgsState createState() =>  _SelfDgsState();
 }
@@ -44,7 +46,7 @@ class _SelfDgsState extends State<SelfDgs> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('문항 선택'),
+        title: const Text('문항 선택'),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -62,7 +64,7 @@ class _SelfDgsState extends State<SelfDgs> {
           )),
           ElevatedButton(
             onPressed: selectedOption != null ? goToNextQuestion : null,
-            child: Text('다음'),
+            child: const Text('다음'),
           ),
         ],
       ),

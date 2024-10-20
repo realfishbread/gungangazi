@@ -9,7 +9,6 @@ import 'SleepPage.dart';
 import 'WaterDrink.dart';
 import 'MealPage.dart';
 import 'ChatPage.dart';
-import 'loginPge.dart';
 
 class MobileHomePage extends StatefulWidget {
   const MobileHomePage({super.key});
@@ -22,7 +21,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
   int _selectedIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  List<dynamic> _listData = [];
+  final List<dynamic> _listData = [];
   late PopupHandler _popupHandler;
 
   @override
@@ -43,8 +42,8 @@ class _MobileHomePageState extends State<MobileHomePage> {
       '수분': const WaterDrink(),
       '식단': const MealPage(),
       '영양제': const SupplementsPage(),
-      '혈압':  BloodPressurePage(),
-      '치아건강': ToothCarePage()
+      '혈압':  const BloodPressurePage(),
+      '치아건강': const ToothCarePage()
     };
 
     final page = routes[title];
@@ -71,7 +70,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
     } else if (_selectedIndex == 3) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) =>  Profile2()),//프로필 페이지 바꿔가면서 확인
+        MaterialPageRoute(builder: (context) =>  const Profile2()),//프로필 페이지 바꿔가면서 확인
       );
     }
   }

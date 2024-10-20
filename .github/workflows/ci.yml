@@ -12,18 +12,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:latest
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-        env:
-          MYSQL_ROOT_PASSWORD: endbackend!
-          MYSQL_DATABASE: appdb
-          MYSQL_USER: gungangazi
-          MYSQL_PASSWORD: endbackend!
-        ports:
-          - 3306:3306
-
     steps:
       - uses: actions/checkout@v4
 
@@ -36,41 +24,30 @@ jobs:
       - name: Clear old builds
         run: rm -rf build/
 
-      - name: Install Flutter SDK
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - run: flutter pub get
+
+      - run: flutter build web --web-renderer canvaskit --release
+
+      - name: Update version in index.html and flutter.js
         run: |
-          sudo apt-get update
-          sudo apt-get install -y curl unzip xz-utils
-          curl -LO https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.0-stable.tar.xz
-          tar xf flutter_linux_3.24.0-stable.tar.xz
-          echo "$PWD/flutter/bin" >> $GITHUB_PATH
-          echo "$PWD/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
-          export PATH="$PWD/flutter/bin:$PWD/flutter/bin/cache/dart-sdk/bin:$PATH"
-          flutter doctor
-
-      - name: Enable desktop
-        run: flutter config --enable-web
-
-      - name: Flutter get packages
-        run: flutter pub get
-      
+          VERSION=$(date +%Y%m%d%H%M)
+          sed -i "s/flutter.js/flutter.js?version=$VERSION/g" build/web/index.html
+          sed -i "s/main.dart.js/main.dart.js?version=$VERSION/g" build/web/flutter.js
       - name: Build Runner & version
         run: flutter packages pub run build_runner build --delete-conflicting-outputs
 
       - name: Grant execute permission for Maven Wrapper
         run: chmod +x ./mvnw
 
-      - name: Build Flutter web app
-        run: |
-          flutter build web --release
-
       - name: Build and Test Spring demo
         run: ./mvnw clean install
 
-      - name: Save build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifacts
-          path: build/web
+
 
   deploy:
     runs-on: ubuntu-latest
@@ -79,20 +56,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
+
 
       - name: Deploy to EC2
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > GUNGANGAZI.pem
           chmod 600 GUNGANGAZI.pem
+          # Deploy web files to /var/www/html/
           scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem -r ./build/web/* ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com:/var/www/html/
-           # Deploy Spring Boot API
-          scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem -r target/*.jar ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com:/var/www/html/
-          ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com 'sudo systemctl restart nginx && nohup java -jar /var/www/html/*.jar > /dev/null 2>&1 &'
-
+          ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com 'sudo systemctl restart nginx && nohup java -jar /var/app/*.jar > /dev/null 2>&1 &'
       - name: Cleanup
         run: rm -f GUNGANGAZI.pem
 

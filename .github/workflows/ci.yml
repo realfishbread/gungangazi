@@ -33,11 +33,7 @@ jobs:
 
       - run: flutter build web --web-renderer canvaskit --release
 
-      - name: Update version in index.html and flutter.js
-        run: |
-          VERSION=$(date +%Y%m%d%H%M)
-          sed -i "s/flutter.js/flutter.js?version=$VERSION/g" build/web/index.html
-          sed -i "s/main.dart.js/main.dart.js?version=$VERSION/g" build/web/flutter.js
+     
       - name: Build Runner & version
         run: flutter packages pub run build_runner build --delete-conflicting-outputs
 
@@ -63,7 +59,7 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > GUNGANGAZI.pem
           chmod 600 GUNGANGAZI.pem
           # Deploy web files to /var/www/html/
-          scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem -r ./build/web/* ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com:/var/www/html/
+          scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem -r ./build/* ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com:/var/www/html/
           ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com 'sudo systemctl restart nginx && nohup java -jar /var/app/*.jar > /dev/null 2>&1 &'
       - name: Cleanup
         run: rm -f GUNGANGAZI.pem

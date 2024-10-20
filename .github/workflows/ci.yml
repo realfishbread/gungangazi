@@ -28,7 +28,7 @@ jobs:
           channel: stable
       - run: flutter upgrade
       - run: flutter pub get
-
+      - run: flutter create .
       - run: flutter build web --web-renderer canvaskit --release
 
      

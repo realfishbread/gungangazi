@@ -53,7 +53,7 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > GUNGANGAZI.pem
           chmod 600 GUNGANGAZI.pem
-          scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem -r ./build/web/* ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com:/var/www/html/web
+          scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem -r ./build/web/* ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com:/var/www/html/
           ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com 'sudo systemctl restart nginx && nohup java -jar /var/app/*.jar > /dev/null 2>&1 &'
       - name: Cleanup
         run: rm -f GUNGANGAZI.pem

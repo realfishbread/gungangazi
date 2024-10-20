@@ -16,7 +16,7 @@ class ProfileRepository {
         print('Failed to load profile. Status code: ${response.statusCode}');
         return null;
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       print('Error occurred: $e');
       return null;
     }
@@ -31,7 +31,7 @@ class ProfileRepository {
       );
 
       return response.statusCode == 200;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       print('Error occurred: $e');
       return false;
     }

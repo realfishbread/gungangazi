@@ -4,6 +4,8 @@ import '../repositories/tooth_repository.dart';
 import '../dto/brush_history.dart';
 
 class ToothCarePage extends StatefulWidget {
+  const ToothCarePage({super.key});
+
   @override
   _ToothCarePageState createState() => _ToothCarePageState();
 }
@@ -69,7 +71,7 @@ class _ToothCarePageState extends State<ToothCarePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('이빨 관리'),
+        title: const Text('이빨 관리'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -81,11 +83,11 @@ class _ToothCarePageState extends State<ToothCarePage> {
                 future: _brushHistory,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
-                    return Center(child: Text('데이터를 불러오는 데 실패했습니다.'));
+                    return const Center(child: Text('데이터를 불러오는 데 실패했습니다.'));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text('기록이 없습니다.'));
+                    return const Center(child: Text('기록이 없습니다.'));
                   } else {
                     return ListView.builder(
                       itemCount: snapshot.data!.length,
@@ -101,7 +103,7 @@ class _ToothCarePageState extends State<ToothCarePage> {
                 },
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // 양치 기록 추가 폼
             Form(
@@ -115,15 +117,15 @@ class _ToothCarePageState extends State<ToothCarePage> {
                         _selectedDate == null ? '날짜 선택' : '선택된 날짜: $_selectedDate',
                       ),
                       IconButton(
-                        icon: Icon(Icons.calendar_today),
+                        icon: const Icon(Icons.calendar_today),
                         onPressed: () => _selectDate(context),
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
                   TextFormField(
-                    decoration: InputDecoration(labelText: '양치 시간(분)'),
+                    decoration: const InputDecoration(labelText: '양치 시간(분)'),
                     keyboardType: TextInputType.number,
                     onSaved: (value) => _duration = int.parse(value!),
                     validator: (value) {
@@ -134,13 +136,13 @@ class _ToothCarePageState extends State<ToothCarePage> {
                     },
                   ),
                   SwitchListTile(
-                    title: Text('치실 사용'),
+                    title: const Text('치실 사용'),
                     value: _flossed,
                     onChanged: (value) => setState(() => _flossed = value),
                   ),
                   ElevatedButton(
                     onPressed: _saveData,
-                    child: Text('저장'),
+                    child: const Text('저장'),
                   ),
                 ],
               ),

@@ -4,6 +4,8 @@ import '../repositories/profile_repository.dart';
 import 'loginPge.dart';
 
 class Profile2 extends StatefulWidget {
+  const Profile2({super.key});
+
   @override
   _Profile2State createState() => _Profile2State();
 }
@@ -59,13 +61,13 @@ class _Profile2State extends State<Profile2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('프로필 설정', style: TextStyle(color: Colors.black)),
+        title: const Text('프로필 설정', style: TextStyle(color: Colors.black)),
         backgroundColor: const Color(0xFFFFF9C4),
         elevation: 0,
         centerTitle: true,
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator()) // 데이터 로딩 중일 때 로딩 스피너 표시
+          ? const Center(child: CircularProgressIndicator()) // 데이터 로딩 중일 때 로딩 스피너 표시
           : buildProfileContent(), // 프로필 내용 표시
     );
   }
@@ -75,14 +77,14 @@ class _Profile2State extends State<Profile2> {
     final profile = _profile ?? defaultProfile;
 
     return Container(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
             child: Stack(
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                   radius: 50,
                   backgroundColor: Colors.grey,
                   backgroundImage: AssetImage('assets/profile_placeholder.png'),
@@ -91,7 +93,7 @@ class _Profile2State extends State<Profile2> {
                   bottom: 0,
                   right: 0,
                   child: IconButton(
-                    icon: Icon(Icons.camera_alt, color: Colors.black),
+                    icon: const Icon(Icons.camera_alt, color: Colors.black),
                     onPressed: () {
                       // 사진 변경 기능 추가 예정
                     },
@@ -100,8 +102,8 @@ class _Profile2State extends State<Profile2> {
               ],
             ),
           ),
-          SizedBox(height: 20),
-          Divider(color: Colors.black),
+          const SizedBox(height: 20),
+          const Divider(color: Colors.black),
           _buildProfileItem('아이디', profile.userId, null),
           _buildProfileItem('이름', profile.name, () {
             Navigator.push(
@@ -136,7 +138,7 @@ class _Profile2State extends State<Profile2> {
             );
           }),
           _buildProfileItem('성별', profile.gender, null),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Center(
             child: TextButton(
               onPressed: () {
@@ -145,7 +147,7 @@ class _Profile2State extends State<Profile2> {
                   MaterialPageRoute(builder: (context) => const LoginPage()),
                 );
               },
-              child: Text('로그아웃', style: TextStyle(color: Colors.black)),
+              child: const Text('로그아웃', style: TextStyle(color: Colors.black)),
             ),
           ),
         ],
@@ -161,17 +163,17 @@ class _Profile2State extends State<Profile2> {
         children: [
           Text(
             title,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
           ),
           Row(
             children: [
               Text(
                 value,
-                style: TextStyle(fontSize: 16, color: Colors.black),
+                style: const TextStyle(fontSize: 16, color: Colors.black),
               ),
               if (onEdit != null) // 수정 버튼이 필요한 항목만 표시
                 IconButton(
-                  icon: Icon(Icons.edit, color: Colors.black),
+                  icon: const Icon(Icons.edit, color: Colors.black),
                   onPressed: onEdit,
                 ),
             ],
@@ -188,7 +190,7 @@ class EditPage extends StatefulWidget {
   final String currentValue;
   final Function(String fieldName, String newValue) onSave; // 수정된 값을 저장하는 콜백 함수
 
-  EditPage({required this.fieldName, required this.currentValue, required this.onSave});
+  const EditPage({super.key, required this.fieldName, required this.currentValue, required this.onSave});
 
   @override
   _EditPageState createState() => _EditPageState();
@@ -207,7 +209,7 @@ class _EditPageState extends State<EditPage> {
   Future<void> _saveProfile() async {
     if (_controller.text.isEmpty) {
       // 입력값이 비어있을 때 경고 메시지 표시
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('값을 입력해주세요.'),
         backgroundColor: Colors.red,
       ));
@@ -231,7 +233,7 @@ class _EditPageState extends State<EditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.fieldName} 수정', style: TextStyle(color: Colors.black)),
+        title: Text('${widget.fieldName} 수정', style: const TextStyle(color: Colors.black)),
         backgroundColor: const Color(0xFFFFF9C4),
         elevation: 0,
         centerTitle: true,
@@ -243,19 +245,19 @@ class _EditPageState extends State<EditPage> {
             TextField(
               controller: _controller,
               decoration: InputDecoration(
-                labelText: '${widget.fieldName}',
-                labelStyle: TextStyle(color: Colors.black),
-                border: OutlineInputBorder(),
+                labelText: widget.fieldName,
+                labelStyle: const TextStyle(color: Colors.black),
+                border: const OutlineInputBorder(),
               ),
-              style: TextStyle(color: Colors.black),
+              style: const TextStyle(color: Colors.black),
               onSubmitted: (value) => _saveProfile(), // 엔터키 입력 시 자동 저장
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _isSaving
-                ? CircularProgressIndicator() // 저장 중일 때 로딩 스피너 표시
+                ? const CircularProgressIndicator() // 저장 중일 때 로딩 스피너 표시
                 : TextButton(
               onPressed: _saveProfile,
-              child: Text('저장', style: TextStyle(color: Colors.black)),
+              child: const Text('저장', style: TextStyle(color: Colors.black)),
             ),
           ],
         ),

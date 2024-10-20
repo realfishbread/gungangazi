@@ -121,13 +121,13 @@ class PopupHandler {
   // 부위마다 다른 페이지로 이동하는 함수
   void _navigateToBodyPartPage(BuildContext context) {
     if (_currentBodyPart == 'head') {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => SleepPage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SleepPage()));
     } else if (_currentBodyPart == 'arm') {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => SupplementsPage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SupplementsPage()));
     } else if (_currentBodyPart == 'body') {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => MealPage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MealPage()));
     } else if (_currentBodyPart == 'leg') {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => MealPage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MealPage()));
     }
   }
 

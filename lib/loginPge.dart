@@ -1,6 +1,5 @@
 import 'SignUp.dart'; // 회원가입 페이지를 불러오기 위해 추가
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import '../../repositories/auth_repository.dart'; // AuthRepository import
 import '../../dto/login_dto.dart'; // Login DTO import
 
@@ -91,11 +90,11 @@ class _LoginPageState extends State<LoginPage> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.black26,
                         blurRadius: 10,
-                        offset: const Offset(0, 4),
+                        offset: Offset(0, 4),
                       ),
                     ],
                   ),

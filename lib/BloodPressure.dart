@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';  // 날짜 형식을 위한 패키지
 
 class BloodPressurePage extends StatefulWidget {
+  const BloodPressurePage({super.key});
+
   @override
   _BloodPressurePageState createState() => _BloodPressurePageState();
 }
@@ -12,7 +14,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
   final TextEditingController _heartRateController = TextEditingController();
 
   // 데이터를 저장할 Map (날짜를 키로 사용)
-  Map<String, List<Map<String, String>>> _groupedRecords = {};
+  final Map<String, List<Map<String, String>>> _groupedRecords = {};
 
   void _submitData() {
     final String systolic = _systolicController.text;
@@ -46,11 +48,11 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
       _heartRateController.clear();
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('데이터가 저장되었습니다')),
+        const SnackBar(content: Text('데이터가 저장되었습니다')),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('모든 값을 입력해주세요.')),
+        const SnackBar(content: Text('모든 값을 입력해주세요.')),
       );
     }
   }
@@ -59,7 +61,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('혈압과 심박수 입력'),
+        title: const Text('혈압과 심박수 입력'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -68,38 +70,38 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
             TextField(
               controller: _systolicController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: '최고 혈압 (mmHg)',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextField(
               controller: _diastolicController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: '최저 혈압 (mmHg)',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextField(
               controller: _heartRateController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: '심박수 (bpm)',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             ElevatedButton(
               onPressed: _submitData,
-              child: Text('제출'),
+              child: const Text('제출'),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Expanded(
               child: _groupedRecords.isEmpty
-                  ? Center(child: Text('저장된 데이터가 없습니다.'))
+                  ? const Center(child: Text('저장된 데이터가 없습니다.'))
                   : ListView(
                 children: _groupedRecords.keys.map((date) {
                   return ExpansionTile(

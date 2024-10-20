@@ -1,9 +1,8 @@
-import 'package:http/http.dart' as http;
-import 'splash/SplashPage.dart';
+import '../splash/SplashPage.dart';
 import 'package:flutter/material.dart';
 import 'mobile_home_page.dart'; // 앱 전용 페이지
 import 'loginPge.dart'; // 통합된 로그인 페이지
-import 'package:flutter/foundation.dart' show kIsWeb; // 웹 구분을 위한 kIsWeb 사용
+// 웹 구분을 위한 kIsWeb 사용
 
 
 

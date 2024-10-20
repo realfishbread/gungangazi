@@ -1,39 +1,51 @@
 <!DOCTYPE html>
+<html lang="ko">
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
+  <!-- Base URL 설정 (필요한 경우 경로 수정) -->
   <base href="/">
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="건강아지" content="건강아지 홈페이지 입니다.">
+  <meta name="description" content="건강아지 홈페이지 입니다.">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="gungangazi">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
-  
+
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
+  <!-- 제목 -->
   <title>건강아지</title>
+
+  <!-- Manifest 파일 -->
   <link rel="manifest" href="manifest.json">
+
+  <!-- 서비스 워커 버전 설정 -->
+  <script>
+    var serviceWorkerVersion = '3694318503';
+  </script>
+
+  <!-- Flutter 및 부트스트랩 스크립트 -->
+  <script src="flutter.js" defer></script>
+  <script src="flutter_bootstrap.js" defer></script>
 </head>
 <body>
-  <script src="flutter_bootstrap.js" async></script>
- 
+<script>
+  window.addEventListener('load', function(ev) {
+    _flutter.loader.loadEntrypoint({
+      serviceWorker: {
+        serviceWorkerVersion: serviceWorkerVersion,
+      }
+    }).then(function(engineInitializer) {
+      return engineInitializer.initializeEngine();
+    }).then(function(appRunner) {
+      return appRunner.runApp();
+    });
+  });
+</script>
 </body>
 </html>

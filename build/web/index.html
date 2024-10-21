@@ -24,28 +24,12 @@
   <!-- Manifest 파일 -->
   <link rel="manifest" href="manifest.json">
 
-  <!-- 서비스 워커 버전 설정 -->
-  <script>
-    var serviceWorkerVersion = '3694318503';
-  </script>
 
   <!-- Flutter 및 부트스트랩 스크립트 -->
   <script src="flutter.js" defer></script>
-  <script src="flutter_bootstrap.js" defer></script>
+ 
 </head>
 <body>
-<script>
-  window.addEventListener('load', function(ev) {
-    _flutter.loader.loadEntrypoint({
-      serviceWorker: {
-        serviceWorkerVersion: serviceWorkerVersion,
-      }
-    }).then(function(engineInitializer) {
-      return engineInitializer.initializeEngine();
-    }).then(function(appRunner) {
-      return appRunner.runApp();
-    });
-  });
-</script>
+  <script src="flutter_bootstrap.js" defer></script>
 </body>
 </html>

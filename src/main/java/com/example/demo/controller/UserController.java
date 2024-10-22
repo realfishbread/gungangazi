@@ -47,7 +47,7 @@ public ResponseEntity<?> login(@RequestBody User user) {
     return ResponseEntity.ok(response);
 }
 
-    @GetMapping("/{username}")
+    @GetMapping("/{id}")
 public ResponseEntity<?> getUser(@PathVariable String username) {
     User user = userRepository.findByUsername(username);
     
@@ -60,7 +60,7 @@ public ResponseEntity<?> getUser(@PathVariable String username) {
     return ResponseEntity.ok(user);
 }
 
-    @PutMapping("/{username}")
+    @PutMapping("/{id}")
 public ResponseEntity<?> updateUser(@PathVariable String username, @RequestBody User updatedUser) {
     User existingUser = userRepository.findByUsername(username);
     
@@ -78,7 +78,7 @@ public ResponseEntity<?> updateUser(@PathVariable String username, @RequestBody 
     return ResponseEntity.ok(response);
 }
 
-    @DeleteMapping("/{username}")
+    @DeleteMapping("/{id}")
    public ResponseEntity<?> deleteUser(@PathVariable String username) {
     User existingUser = userRepository.findByUsername(username);
     

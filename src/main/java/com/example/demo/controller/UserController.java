@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = "https://gungangazi.site")
 public class UserController {
 
     @Autowired

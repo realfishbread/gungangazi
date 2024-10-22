@@ -92584,7 +92584,7 @@ A.am8.prototype={
 CP(a){return this.aw3(a)},
 aw3(a){var s=0,r=A.L(t.H),q,p,o
 var $async$CP=A.M(function(b,c){if(b===1)return A.I(c,r)
-while(true)switch(s){case 0:q=A.h5("https://gungangazi.site/api/signup")
+while(true)switch(s){case 0:q=A.h5("https://gungangazi.site/api/users/signup")
 p=t.N
 o=A.as(["Content-Type","application/json; charset=UTF-8"],p,p)
 s=2

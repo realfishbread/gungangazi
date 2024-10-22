@@ -14,7 +14,7 @@ class UserRepository {
       body: jsonEncode(<String, String>{
         'name': user.name,
         'email': user.email,
-        'username': user.id,  // id는 username으로 사용한다고 가정
+        'id': user.id,  // id는 username으로 사용한다고 가정
         'password': user.password,
         'gender': user.gender,
       }),

@@ -13,7 +13,6 @@ public class User {
     @Id // 레코드를 고유하게 식별
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 데이터베이스가 이 필드의 값을 자동으로 설정되게 만듦
     private Long id;
-
     private String username;
     private String password;
     private String email; // 이메일 필드 추가

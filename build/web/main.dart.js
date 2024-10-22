@@ -92495,7 +92495,7 @@ kO(){var s=0,r=A.L(t.Sa),q,p=2,o,n=this,m,l,k,j,i,h,g,f,e,d
 var $async$kO=A.M(function(a,b){if(a===1){o=b
 s=p}while(true)switch(s){case 0:p=4
 s=7
-return A.R(n.a.LC("https://gungangazi.site/api/User",t.z),$async$kO)
+return A.R(n.a.LC("https://gungangazi.site/api/users",t.z),$async$kO)
 case 7:m=b
 if(m.c===200){k=m.a
 j=k.i(0,"userId")
@@ -92588,7 +92588,7 @@ while(true)switch(s){case 0:q=A.h5("https://gungangazi.site/api/users/signup")
 p=t.N
 o=A.as(["Content-Type","application/json; charset=UTF-8"],p,p)
 s=2
-return A.R(A.aMm(q,B.b5.Je(A.as(["name",a.a,"email",a.b,"username",a.c,"password",a.d,"gender",a.e],p,p),null),o),$async$CP)
+return A.R(A.aMm(q,B.b5.Je(A.as(["name",a.a,"email",a.b,"id",a.c,"password",a.d,"gender",a.e],p,p),null),o),$async$CP)
 case 2:if(c.b===200)A.eF("\ud68c\uc6d0\uac00\uc785 \uc131\uacf5")
 else throw A.h(A.dL("\ud68c\uc6d0\uac00\uc785 \uc2e4\ud328"))
 return A.J(null,r)}})

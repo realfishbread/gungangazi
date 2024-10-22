@@ -13,13 +13,15 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    public User login(String username, String password) throws Exception {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new Exception("User not found"));
 
-    public void saveUser(User user) {
-        String username = user.getUsername();  // getUsername 메서드 호출
-        String encryptedPassword = passwordEncoder.encode(user.getPassword());  // getPassword 메서드 호출
-        user.setPassword(encryptedPassword);
-        userRepository.save(user);
+        // 암호화된 비밀번호 사용 시, 패스워드 확인 로직 수정
+        if (!user.getPassword().equals(password)) {
+            throw new Exception("Invalid password");
+        }
+
+        return user;
     }
 }

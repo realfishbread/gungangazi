@@ -3,7 +3,7 @@ import 'dart:convert';
 import '../dto/user_dto.dart';
 
 class UserRepository {
-  final String apiUrl = 'https://gungangazi.site/api/signup';  // API 엔드포인트 URL
+  final String apiUrl = 'https://gungangazi.site/api/users/signup';  // API 엔드포인트 URL
 
   Future<void> registerUser(UserDTO user) async {
     final response = await http.post(

@@ -33,6 +33,29 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _completeSignUp() async {
+    // 유효성 검사
+    if (_nameController.text.isEmpty ||
+        _emailController.text.isEmpty ||
+        _idController.text.isEmpty ||
+        _passwordController.text.isEmpty ||
+        (!_isMaleSelected && !_isFemaleSelected)) {
+      // 경고 메시지 표시
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('입력 오류'),
+          content: const Text('모든 필드를 입력해 주세요.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('확인'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
     String? selectedGender;
     if (_isMaleSelected) {
       selectedGender = '남성';
@@ -49,11 +72,28 @@ class _SignUpPageState extends State<SignUpPage> {
       gender: selectedGender ?? '',
     );
 
-    // 리포지토리를 사용하여 서버에 회원가입 요청
-    await _userRepository.registerUser(user);
+    try {
+      // 리포지토리를 사용하여 서버에 회원가입 요청
+      await _userRepository.registerUser(user);
 
-    // 회원가입 완료 후 로그인 페이지로 돌아가기
-    Navigator.pop(context);
+      // 회원가입 성공 시 로그인 페이지로 이동
+      Navigator.pop(context);
+    } catch (e) {
+      // 오류 처리 (예: 다이얼로그 표시)
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('회원가입 실패'),
+          content: Text('회원가입에 실패했습니다: $e'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('확인'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override

@@ -16,6 +16,7 @@ public class User {
 
     private String username;
     private String password;
+    private String email; // 이메일 필드 추가
 
     // Getters and Setters
     public Long getId() { // id에 대한 getter
@@ -40,6 +41,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() { // 이메일에 대한 getter
+        return email;
+    }
+
+    public void setEmail(String email) { // 이메일에 대한 setter
+        this.email = email;
     }
 }
 

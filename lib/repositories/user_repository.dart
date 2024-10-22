@@ -1,29 +1,31 @@
-// user_repository.dart
-import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '../dto/user_dto.dart';
 
 class UserRepository {
-  final Dio _dio = Dio();
-
-  // 서버의 회원가입 API URL
-  final String _signupUrl = 'https://gungangazi.site/api/signup';
+  final String apiUrl = 'https://gungangazi.site/api/signup';  // API 엔드포인트 URL
 
   Future<void> registerUser(UserDTO user) async {
-    try {
-      // POST 요청으로 회원가입 정보를 서버에 전송
-      final response = await _dio.post(
-        _signupUrl,
-        data: user.toJson(),
-      );
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'name': user.name,
+        'email': user.email,
+        'username': user.id,  // id는 username으로 사용한다고 가정
+        'password': user.password,
+        'gender': user.gender,
+      }),
+    );
 
-      // 서버 응답 처리
-      if (response.statusCode == 200) {
-        print('회원가입 성공: ${response.data}');
-      } else {
-        print('회원가입 실패: ${response.statusCode} - ${response.data}');
-      }
-    } catch (e) {
-      print('회원가입 중 오류 발생: $e');
+    if (response.statusCode == 200) {
+      // 회원가입 성공 처리
+      print('회원가입 성공');
+    } else {
+      // 오류 처리
+      throw Exception('회원가입 실패');
     }
   }
 }

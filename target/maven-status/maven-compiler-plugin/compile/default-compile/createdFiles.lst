@@ -1,9 +1,7 @@
+com\example\demo\config\WebConfig.class
 com\example\demo\DemoApplication.class
-com\example\demo\service\SymptomService.class
+com\example\demo\config\SecurityConfig.class
 com\example\demo\entity\User.class
 com\example\demo\service\UserService.class
-com\example\demo\repository\SymptomRepository.class
 com\example\demo\controller\UserController.class
-com\example\demo\controller\SymptomController.class
-com\example\demo\entity\Symptom.class
 com\example\demo\repository\UserRepository.class

@@ -92204,7 +92204,7 @@ iT(){var s=this
 return A.as(["userId",s.a,"name",s.b,"email",s.c,"height",s.d,"weight",s.e,"gender",s.f],t.N,t.z)}}
 A.ama.prototype={
 iT(){var s=this
-return A.as(["name",s.a,"email",s.b,"id",s.c,"password",s.d,"gender",s.e],t.N,t.z)}}
+return A.as(["username",s.a,"email",s.b,"id",s.c,"password",s.d,"gender",s.e],t.N,t.z)}}
 A.q3.prototype={
 a5(){var s=$.a8()
 return new A.Gd(new A.en(B.b9,s),new A.en(B.b9,s),new A.a27(A.aBQ(null)))}}
@@ -92634,7 +92634,7 @@ while(true)switch(s){case 0:q=A.h5("https://gungangazi.site/api/users/signup")
 p=t.N
 o=A.as(["Content-Type","application/json; charset=UTF-8"],p,p)
 s=2
-return A.R(A.aMq(q,B.aW.Je(A.as(["id",a.c,"password",a.d,"email",a.b,"gender",a.e,"name",a.a],p,p),null),o),$async$CP)
+return A.R(A.aMq(q,B.aW.Je(A.as(["id",a.c,"password",a.d,"email",a.b,"gender",a.e,"username",a.a],p,p),null),o),$async$CP)
 case 2:n=c
 if(n.b===200)A.eF("\ud68c\uc6d0\uac00\uc785 \uc131\uacf5")
 else throw A.h(A.dL(" "+A.l(B.aW.WK(A.b_H(A.aYc(n.e).c.a.i(0,"charset")).ew(n.w),null).i(0,"message"))))

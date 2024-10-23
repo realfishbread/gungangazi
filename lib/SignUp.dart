@@ -65,7 +65,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
     // DTO 객체 생성
     final user = UserDTO(
-      name: _nameController.text,
+      username: _nameController.text,
       email: _emailController.text,
       id: _idController.text,
       password: _passwordController.text,

@@ -16,7 +16,7 @@ class UserRepository {
         'password': user.password,
         'email': user.email,
         'gender': user.gender,
-        'name': user.name,
+        'username': user.username,
       }),
     );
 

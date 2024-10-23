@@ -1,9 +1,7 @@
-C:\Users\Administrator\src\main\java\com\example\demo\entity\Symptom.java
-C:\Users\Administrator\src\main\java\com\example\demo\controller\UserController.java
-C:\Users\Administrator\src\main\java\com\example\demo\DemoApplication.java
-C:\Users\Administrator\src\main\java\com\example\demo\service\SymptomService.java
-C:\Users\Administrator\src\main\java\com\example\demo\entity\User.java
-C:\Users\Administrator\src\main\java\com\example\demo\controller\SymptomController.java
-C:\Users\Administrator\src\main\java\com\example\demo\repository\SymptomRepository.java
-C:\Users\Administrator\src\main\java\com\example\demo\repository\UserRepository.java
-C:\Users\Administrator\src\main\java\com\example\demo\service\UserService.java
+D:\flutter\zolzak\gungangazi\src\main\java\com\example\demo\config\WebConfig.java
+D:\flutter\zolzak\gungangazi\src\main\java\com\example\demo\service\UserService.java
+D:\flutter\zolzak\gungangazi\src\main\java\com\example\demo\config\SecurityConfig.java
+D:\flutter\zolzak\gungangazi\src\main\java\com\example\demo\controller\UserController.java
+D:\flutter\zolzak\gungangazi\src\main\java\com\example\demo\DemoApplication.java
+D:\flutter\zolzak\gungangazi\src\main\java\com\example\demo\entity\User.java
+D:\flutter\zolzak\gungangazi\src\main\java\com\example\demo\repository\UserRepository.java

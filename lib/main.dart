@@ -22,8 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: createMaterialColor(const Color(0xFFFFF9C4)), // 기본 색상 설정
       ),
-      // 통합된 로그인 페이지로 시작
-
+      
       initialRoute: '/splash',
 
       

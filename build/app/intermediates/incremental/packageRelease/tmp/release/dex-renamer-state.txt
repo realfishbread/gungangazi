@@ -1,0 +1,4 @@
+#Wed Oct 23 22:18:44 KST 2024
+base.0=D\:\\flutter\\zolzak\\gungangazi\\build\\app\\intermediates\\dex\\release\\minifyReleaseWithR8\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

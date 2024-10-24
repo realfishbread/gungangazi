@@ -1,0 +1,65 @@
+name: CI/CD Pipeline
+
+on: 
+  push:
+    branches:
+      - successful-build
+  pull_request:
+    branches:
+      - successful-build
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Set up environment
+        run: |
+          echo 'export PATH="$PATH:$HOME/flutter/bin"' >> $GITHUB_ENV
+      - run: flutter pub get
+      - run: flutter build web 
+     
+
+     
+
+      - name: Grant execute permission for Maven Wrapper
+        run: chmod +x ./mvnw
+
+      - name: Build and Test Spring demo
+        run: ./mvnw clean install
+
+
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build  
+
+    steps:
+      - uses: actions/checkout@v4
+
+
+
+      - name: Deploy to EC2
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > GUNGANGAZI.pem
+          chmod 600 GUNGANGAZI.pem
+          scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem -r ./build/web/* ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com:/var/www/html/
+          scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ./target/demo-0.0.1-SNAPSHOT.jar ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com:/var/app/demo.jar
+          ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com 'sudo systemctl restart nginx && nohup java -jar /var/app/demo.jar > /dev/null 2>&1 &'
+      - name: Cleanup
+        run: rm -f GUNGANGAZI.pem
+

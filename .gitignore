@@ -1,0 +1,88 @@
+# 시스템 파일 무시
+NTUSER.DAT
+ntuser.dat.LOG1
+ntuser.dat.LOG2
+ntuser.ini
+AppData/
+Desktop/
+Documents/
+Downloads/
+Favorites/
+Links/
+Music/
+Pictures/
+Videos/
+
+# 개발 환경 파일 무시
+.cache/
+.eclipse/
+.gradle/
+.m2/
+.p2/
+.sts4/
+.vscode/
+eclipse-workspace/
+
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+.android/
+
+
+# Ignore IDE specific files
+.classpath
+.project
+.metadata
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Ignore system-specific files
+NTUSER.DAT*
+
+
+# Ignore Dart tool files
+.dart_tool/
+
+# Other unnecessary files
+*.log
+

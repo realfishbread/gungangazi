@@ -3,10 +3,10 @@ name: CI/CD Pipeline
 on: 
   push:
     branches:
-      - successful-build
+      - nini
   pull_request:
     branches:
-      - successful-build
+      - nini
 
 jobs:
   build:

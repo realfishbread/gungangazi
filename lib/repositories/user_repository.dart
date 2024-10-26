@@ -6,7 +6,7 @@ class UserRepository {
   final Dio _dio;
 
   // 생성자에서 DioService를 통해 Dio 인스턴스를 가져옴
-  UserRepository({String? token}) : _dio = DioService().getDio();  // 회원가입 시에는 토큰 필요 없음
+  UserRepository({String? token}) : _dio = DioService(token: token).getDio();  // 회원가입 시에는 토큰 필요 없음
 
   // 서버에 회원가입 요청을 보내고, 성공하면 토큰을 반환
   Future<String?> registerUser(UserDTO user) async {

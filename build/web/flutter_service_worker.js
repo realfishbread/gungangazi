@@ -61,7 +61,7 @@ const RESOURCES = {"assets/AssetManifest.bin": "b19db820c636e0bf0e6214e78cea26c7
 "assets/assets/person/KakaoTalk_20240928_125154273_04.jpg": "096cdc9d29fc59efdc94c0877a923939",
 "assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
 "assets/fonts/MaterialIcons-Regular.otf": "d83451651e7e839a1e78805dd16574d6",
-"assets/NOTICES": "763923fa4c021e508af97f4b55615cdc",
+"assets/NOTICES": "dae471fdd6c8f9ebf00c00c9313ef4b8",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "e986ebe42ef785b27164c36a9abc7818",
 "assets/shaders/ink_sparkle.frag": "ecc85a2e95f5e9f53123dcaf8cb9b6ce",
 "canvaskit/canvaskit.js": "66177750aff65a66cb07bb44b8c6422b",
@@ -75,10 +75,10 @@ const RESOURCES = {"assets/AssetManifest.bin": "b19db820c636e0bf0e6214e78cea26c7
 "canvaskit/skwasm.wasm": "9f0c0c02b82a910d12ce0543ec130e60",
 "canvaskit/skwasm.worker.js": "89990e8c92bcb123999aa81f7e203b1c",
 "flutter.js": "f393d3c16b631f36852323de8e583132",
-"flutter_bootstrap.js": "b8abbc4e4d420423c33cc013a57ea74e",
+"flutter_bootstrap.js": "1c5977a2ad4da21e1b978e1a6852ffb5",
 "index.html": "61425982e7c99869ff763f5346abb5a9",
 "/": "61425982e7c99869ff763f5346abb5a9",
-"main.dart.js": "51bd0b7134fe55af5674ed1e12d4efb7",
+"main.dart.js": "364bb82dc7b8a3cc894c4bdabc47626f",
 "version.json": "952e01e7a8ca09393941c7becdb8cc0a"};
 // The application shell files that are downloaded before a service worker can
 // start.

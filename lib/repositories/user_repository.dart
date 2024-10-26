@@ -1,14 +1,15 @@
 import 'package:dio/dio.dart';
 import '../dto/user_dto.dart';
-import '../services/dio_service.dart';  // DioService 임포트
+import '../services/dio_service.dart';
 
 class UserRepository {
   final Dio _dio;
 
-  // 생성자에서 DioService를 사용하여 Dio 인스턴스를 가져옴
-  UserRepository() : _dio = DioService().getDio();
+  // 생성자에서 DioService를 통해 Dio 인스턴스를 가져옴
+  UserRepository({String? token}) : _dio = DioService().getDio();  // 회원가입 시에는 토큰 필요 없음
 
-  Future<void> registerUser(UserDTO user) async {
+  // 서버에 회원가입 요청을 보내고, 성공하면 토큰을 반환
+  Future<String?> registerUser(UserDTO user) async {
     try {
       final response = await _dio.post(
         '/signup',
@@ -16,24 +17,15 @@ class UserRepository {
       );
 
       if (response.statusCode == 200) {
-        // 회원가입 성공 처리
-        print('회원가입 성공');
-      } else if (response.statusCode == 400) {
-        print('잘못된 요청: ${response.data}');
-      } else if (response.statusCode == 500) {
-        print('서버 오류: ${response.data}');
+        // 서버에서 받은 토큰 반환 (예: response.data에 토큰이 있다고 가정)
+        return response.data['token'];  // 토큰이 여기에 저장되어 있다고 가정
       } else {
-        // 기타 오류 처리
         print('회원가입 실패: ${response.statusCode}');
+        return null;
       }
     } on DioException catch (e) {
-      if (e.response != null) {
-        print('서버 응답 오류: ${e.response?.data}');
-        throw Exception('회원가입에 실패했습니다: ${e.response?.data['message']}');
-      } else {
-        print('서버에 연결할 수 없습니다: $e');
-        throw Exception('서버에 연결할 수 없습니다.');
-      }
+      print('회원가입 오류: ${e.response?.data}');
+      return null;
     }
   }
 }

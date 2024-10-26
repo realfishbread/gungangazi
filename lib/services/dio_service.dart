@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
 class DioService {
-  final String baseUrl = 'https://gungangazi.site';  // 서버 주소
+  final String baseUrl = 'https://gungangazi.site/api';  // 서버 주소
   String? token;  // 서버에서 받은 토큰을 저장할 변수
 
   // 생성자에서 토큰을 받아서 저장 (토큰이 없다면 null)

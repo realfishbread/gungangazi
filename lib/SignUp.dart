@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mysql1/mysql1.dart'; // MySQL 패키지
 import '../dto/user_dto.dart';
 import '../repositories/user_repository.dart';
-import '../repositories/user_dao.dart'; // UserDAO 임포트
+import '../services/TokenService.dart';  // TokenService 임포트
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -22,106 +21,83 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _isFemaleSelected = false;
 
   final List<String> steps = ['이름', '이메일', '아이디', '비밀번호', '성별'];
-  final UserRepository _userRepository = UserRepository();
-  late final UserDAO _userDAO; // UserDAO 선언
+  final TokenService _tokenService = TokenService();  // 토큰 저장 서비스
 
-  @override
-  void initState() {
-    super.initState();
-    _initializeDatabase(); // MySQL 연결 초기화 함수 호출
-  }
-
-  // MySQL 연결 초기화 함수
-  Future<void> _initializeDatabase() async {
-    final connectionSettings = ConnectionSettings(
-      host: 'database-1.c76iaa8ycok0.ap-northeast-2.rds.amazonaws.com',  // 실제 호스트 정보로 변경
-      port: 3306,         // MySQL 포트
-      user: 'gungangazi', // 사용자명
-      password: 'endbackend!', // 비밀번호
-      db: 'appdb', // 데이터베이스 이름
-    );
-    
-    final mySqlConnection = await MySqlConnection.connect(connectionSettings);
-
-    // UserDAO 인스턴스 생성
-    _userDAO = UserDAO(mySqlConnection);
-  }
-
+  // 다음 단계 버튼 처리
   void _nextStep() {
     setState(() {
       if (_currentStep < steps.length - 1) {
         _currentStep++;
       } else {
-        _completeSignUp();
+        _completeSignUp();  // 회원가입 완료 후 토큰 저장
       }
     });
   }
 
+  // 회원가입 완료 함수
   void _completeSignUp() async {
-    // 유효성 검사
+    if (_isFormValid()) {
+      // 성별 설정
+      String? selectedGender = _isMaleSelected ? '남성' : '여성';
+
+      // DTO 객체 생성
+      final user = UserDTO(
+        username: _nameController.text,
+        email: _emailController.text,
+        id: _idController.text,
+        password: _passwordController.text,
+        gender: selectedGender ?? '',
+      );
+
+      try {
+        // 서버에 회원가입 요청
+        final userRepository = UserRepository();
+        final token = await userRepository.registerUser(user);  // 서버에서 받은 토큰
+
+        if (token != null) {
+          // 토큰 저장
+          await _tokenService.saveToken(token);
+          print('회원가입 성공, 받은 토큰: $token');
+
+          // 회원가입 성공 시 로그인 페이지로 이동
+          Navigator.pop(context);
+        } else {
+          _showErrorDialog('회원가입 실패: 토큰을 받지 못했습니다.');
+        }
+      } catch (e) {
+        _showErrorDialog('회원가입에 실패했습니다: $e');
+      }
+    }
+  }
+
+  // 유효성 검사 함수
+  bool _isFormValid() {
     if (_nameController.text.isEmpty ||
         _emailController.text.isEmpty ||
         _idController.text.isEmpty ||
         _passwordController.text.isEmpty ||
         (!_isMaleSelected && !_isFemaleSelected)) {
-      // 경고 메시지 표시
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('입력 오류'),
-          content: const Text('모든 필드를 입력해 주세요.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('확인'),
-            ),
-          ],
-        ),
-      );
-      return;
+      _showErrorDialog('모든 필드를 입력해 주세요.');
+      return false;
     }
+    return true;
+  }
 
-    String? selectedGender;
-    if (_isMaleSelected) {
-      selectedGender = '남성';
-    } else if (_isFemaleSelected) {
-      selectedGender = '여성';
-    }
-
-    // DTO 객체 생성
-    final user = UserDTO(
-      username: _nameController.text,
-      email: _emailController.text,
-      id: _idController.text,
-      password: _passwordController.text,
-      gender: selectedGender ?? '',
+  // 오류 다이얼로그 표시 함수
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('입력 오류'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('확인'),
+          ),
+        ],
+      ),
     );
-
-    try {
-      // 서버에 회원가입 요청
-      await _userRepository.registerUser(user);
-
-      // 데이터베이스에 사용자 저장
-      await _userDAO.saveUser(user);
-
-      // 회원가입 성공 시 로그인 페이지로 이동
-      Navigator.pop(context);
-    } catch (e) {
-      // 오류 처리 (예: 다이얼로그 표시)
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('회원가입 실패'),
-          content: Text('회원가입에 실패했습니다: $e'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('확인'),
-            ),
-          ],
-        ),
-      );
-    }
   }
 
   @override
@@ -158,27 +134,13 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: Column(
                     children: [
                       if (_currentStep == 0)
-                        _buildTextField(
-                          controller: _nameController,
-                          labelText: '이름',
-                        ),
+                        _buildTextField(_nameController, '이름'),
                       if (_currentStep == 1)
-                        _buildTextField(
-                          controller: _emailController,
-                          labelText: '이메일',
-                          keyboardType: TextInputType.emailAddress,
-                        ),
+                        _buildTextField(_emailController, '이메일', TextInputType.emailAddress),
                       if (_currentStep == 2)
-                        _buildTextField(
-                          controller: _idController,
-                          labelText: '아이디',
-                        ),
+                        _buildTextField(_idController, '아이디'),
                       if (_currentStep == 3)
-                        _buildTextField(
-                          controller: _passwordController,
-                          labelText: '비밀번호',
-                          obscureText: true,
-                        ),
+                        _buildTextField(_passwordController, '비밀번호', TextInputType.text, true),
                       if (_currentStep == 4)
                         _buildGenderSelection(),
                       const SizedBox(height: 16),
@@ -192,7 +154,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       Text('단계: ${steps[_currentStep]} (${_currentStep + 1}/${steps.length})'),
                       TextButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          Navigator.pop(context);  // 로그인 페이지로 돌아가기
                         },
                         child: const Text('로그인 페이지로 돌아가기'),
                       ),
@@ -225,7 +187,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 onChanged: (bool? value) {
                   setState(() {
                     _isMaleSelected = value ?? false;
-                    _isFemaleSelected = !(_isMaleSelected);
+                    _isFemaleSelected = !_isMaleSelected;
                   });
                 },
               ),
@@ -237,7 +199,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 onChanged: (bool? value) {
                   setState(() {
                     _isFemaleSelected = value ?? false;
-                    _isMaleSelected = !(_isFemaleSelected);
+                    _isMaleSelected = !_isFemaleSelected;
                   });
                 },
               ),
@@ -248,12 +210,12 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String labelText,
+  Widget _buildTextField(
+    TextEditingController controller,
+    String labelText, [
     TextInputType keyboardType = TextInputType.text,
     bool obscureText = false,
-  }) {
+  ]) {
     return TextField(
       controller: controller,
       keyboardType: keyboardType,

@@ -92624,7 +92624,7 @@ return A.Q(c.qq("String","auth_token",a),$async$t8)
 case 2:return A.J(null,r)}})
 return A.K($async$t8,r)}}
 A.zx.prototype={
-xm(){var s=A.aGc(A.aFv("https://gungangazi.site/api",B.HH,B.k5)),r=s.Xs$
+xm(){var s=A.aGc(A.aFv("https://gungangazi.site",B.HH,B.k5)),r=s.Xs$
 r.E(r,new A.NC(new A.a5u(this),null,null,null))
 return s}}
 A.a5u.prototype={

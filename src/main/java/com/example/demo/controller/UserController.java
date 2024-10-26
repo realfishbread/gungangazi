@@ -1,11 +1,11 @@
 package com.example.demo.controller;
-
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.JwtTokenProvider;  // JWT 발급 서비스 (새로 추가)
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,21 +22,26 @@ public class UserController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;  // JWT 토큰 발급 서비스 (새로 추가)
+
     // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "아이디가 이미 존재합니다.");
-            return ResponseEntity.badRequest().body(response);
+            return createErrorResponse("아이디가 이미 존재합니다.", 400);
         }
 
-        // 비밀번호 암호화
+        // 비밀번호 암호화 후 저장
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
 
-        Map<String, String> response = new HashMap<>();
+        // 회원가입 후 JWT 토큰 발급
+        String token = jwtTokenProvider.createToken(user.getUsername());
+
+        Map<String, Object> response = new HashMap<>();
         response.put("message", "회원가입 성공");
+        response.put("token", token);
         return ResponseEntity.ok(response);
     }
 
@@ -46,13 +51,15 @@ public class UserController {
         Optional<User> existingUserOptional = userRepository.findByUsername(user.getUsername());
 
         if (existingUserOptional.isEmpty() || !passwordEncoder.matches(user.getPassword(), existingUserOptional.get().getPassword())) {
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "아이디 또는 비밀번호가 잘못되었습니다.");
-            return ResponseEntity.badRequest().body(response);
+            return createErrorResponse("아이디 또는 비밀번호가 잘못되었습니다.", 400);
         }
 
-        Map<String, String> response = new HashMap<>();
+        // 로그인 성공 후 JWT 토큰 발급
+        String token = jwtTokenProvider.createToken(user.getUsername());
+
+        Map<String, Object> response = new HashMap<>();
         response.put("message", "로그인 성공");
+        response.put("token", token);
         return ResponseEntity.ok(response);
     }
 
@@ -62,9 +69,7 @@ public class UserController {
         Optional<User> userOptional = userRepository.findById(id);
 
         if (userOptional.isEmpty()) {
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "사용자를 찾을 수 없습니다.");
-            return ResponseEntity.badRequest().body(response);
+            return createErrorResponse("사용자를 찾을 수 없습니다.", 404);
         }
 
         return ResponseEntity.ok(userOptional.get());
@@ -76,18 +81,14 @@ public class UserController {
         Optional<User> userOptional = userRepository.findById(id);
 
         if (userOptional.isEmpty()) {
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "사용자를 찾을 수 없습니다.");
-            return ResponseEntity.badRequest().body(response);
+            return createErrorResponse("사용자를 찾을 수 없습니다.", 404);
         }
 
         User existingUser = userOptional.get();
-        existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword())); // 비밀번호 암호화
+        existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));  // 비밀번호 암호화
         userRepository.save(existingUser);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "사용자 정보가 업데이트되었습니다.");
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(createSuccessResponse("사용자 정보가 업데이트되었습니다."));
     }
 
     // 사용자 삭제
@@ -96,16 +97,26 @@ public class UserController {
         Optional<User> userOptional = userRepository.findById(id);
 
         if (userOptional.isEmpty()) {
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "사용자를 찾을 수 없습니다.");
-            return ResponseEntity.badRequest().body(response);
+            return createErrorResponse("사용자를 찾을 수 없습니다.", 404);
         }
 
         userRepository.delete(userOptional.get());
 
+        return ResponseEntity.ok(createSuccessResponse("사용자가 삭제되었습니다."));
+    }
+
+    // 성공 응답 생성
+    private Map<String, Object> createSuccessResponse(String message) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", message);
+        return response;
+    }
+
+    // 에러 응답 생성
+    private ResponseEntity<?> createErrorResponse(String message, int status) {
         Map<String, String> response = new HashMap<>();
-        response.put("message", "사용자가 삭제되었습니다.");
-        return ResponseEntity.ok(response);
+        response.put("message", message);
+        return ResponseEntity.status(status).body(response);
     }
 }
 

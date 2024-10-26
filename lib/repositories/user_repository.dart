@@ -1,23 +1,12 @@
 import 'package:dio/dio.dart';
 import '../dto/user_dto.dart';
+import '../services/dio_service.dart';  // DioService 임포트
 
 class UserRepository {
-  final Dio _dio = Dio(BaseOptions(
-    baseUrl: 'https://gungangazi.site/api',  // API 기본 URL
-    connectTimeout: const Duration(seconds: 5000),    // 연결 타임아웃 설정
-    receiveTimeout: const Duration(seconds: 3000),    // 응답 타임아웃 설정
-    headers: {'Content-Type': 'application/json; charset=UTF-8'}, // 기본 헤더 설정
-  )); 
-    // Dio 인스턴스 생성 시에 로그 인터셉터 추가
-    UserRepository() {
-    _dio.interceptors.add(LogInterceptor(
-      request: true,
-      requestBody: true,
-      responseHeader: true,
-      responseBody: true,
-    ));
-  }
+  final Dio _dio;
 
+  // 생성자에서 DioService를 사용하여 Dio 인스턴스를 가져옴
+  UserRepository() : _dio = DioService().getDio();
 
   Future<void> registerUser(UserDTO user) async {
     try {
@@ -34,11 +23,10 @@ class UserRepository {
       } else if (response.statusCode == 500) {
         print('서버 오류: ${response.data}');
       } else {
-        // 오류 처리
+        // 기타 오류 처리
         print('회원가입 실패: ${response.statusCode}');
       }
     } on DioException catch (e) {
-      // DioException을 통해 발생한 오류 처리
       if (e.response != null) {
         print('서버 응답 오류: ${e.response?.data}');
         throw Exception('회원가입에 실패했습니다: ${e.response?.data['message']}');
@@ -48,5 +36,4 @@ class UserRepository {
       }
     }
   }
-
 }

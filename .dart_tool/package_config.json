@@ -470,6 +470,12 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "mysql1",
+      "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/mysql1-0.19.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "nested",
       "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/nested-1.0.0",
       "packageUri": "lib/",
@@ -962,7 +968,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-10-26T08:50:53.950105Z",
+  "generated": "2024-10-26T10:46:33.791376Z",
   "generator": "pub",
   "generatorVersion": "3.5.3",
   "flutterRoot": "file:///C:/Users/Administrator/Desktop/flutter",

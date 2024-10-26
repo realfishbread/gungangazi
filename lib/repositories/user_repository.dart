@@ -3,7 +3,7 @@ import '../dto/user_dto.dart';
 
 class UserRepository {
   final Dio _dio = Dio(BaseOptions(
-    baseUrl: 'https://gungangazi.site/api/users',  // API 기본 URL
+    baseUrl: 'https://gungangazi.site/api',  // API 기본 URL
     connectTimeout: const Duration(seconds: 5),    // 연결 타임아웃 설정
     receiveTimeout: const Duration(seconds: 3),    // 응답 타임아웃 설정
     headers: {'Content-Type': 'application/json; charset=UTF-8'}, // 기본 헤더 설정
@@ -13,18 +13,16 @@ class UserRepository {
     try {
       final response = await _dio.post(
         '/signup',
-        data: {
-          'id': user.id,
-          'username': user.username,
-          'password': user.password,
-          'email': user.email,
-          'gender': user.gender,
-        },
+        data: user.toJson(),
       );
 
       if (response.statusCode == 200) {
         // 회원가입 성공 처리
         print('회원가입 성공');
+      }else if (response.statusCode == 400) {
+        print('잘못된 요청: ${response.data}');
+      } else if (response.statusCode == 500) {
+        print('서버 오류: ${response.data}');
       } else {
         // 오류 처리
         print('회원가입 실패: ${response.statusCode}');

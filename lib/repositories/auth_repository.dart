@@ -19,7 +19,7 @@ class AuthRepository {
         return null;
       }
     } on DioException catch (e) {
-      print('Login error: ${e.message}');
+      print('로그인 오류: ${e.message}');
       return null;
     }
   }

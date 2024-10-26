@@ -92588,7 +92588,7 @@ s=p}while(true)switch(s){case 0:p=4
 s=7
 return A.Q(n.a.KT("/signup",a.i5(),t.z),$async$CR)
 case 7:m=c
-if(m.c===200){k=J.hf(m.a,"token")
+if(m.c===201){k=J.hf(m.a,"token")
 q=k
 s=1
 break}else{A.eb("\ud68c\uc6d0\uac00\uc785 \uc2e4\ud328: "+A.k(m.c))

@@ -16,12 +16,11 @@ class UserRepository {
         data: user.toJson(),
       );
 
-      if (response.statusCode == 200) {
-        // 서버에서 받은 토큰 반환 (예: response.data에 토큰이 있다고 가정)
-        return response.data['token'];  // 토큰이 여기에 저장되어 있다고 가정
+      if (response.statusCode == 201) {  // 201 Created 상태 코드 확인
+      return response.data['token'];  // 성공 시 반환된 토큰
       } else {
-        print('회원가입 실패: ${response.statusCode}');
-        return null;
+          print('회원가입 실패: ${response.statusCode}');
+          return null;
       }
     } on DioException catch (e) {
       print('회원가입 오류: ${e.response?.data}');

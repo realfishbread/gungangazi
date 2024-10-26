@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mysql1/mysql1.dart'; // MySQL 패키지
 import '../dto/user_dto.dart';
 import '../repositories/user_repository.dart';
+import '../repositories/user_dao.dart'; // UserDAO 임포트
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -21,6 +23,29 @@ class _SignUpPageState extends State<SignUpPage> {
 
   final List<String> steps = ['이름', '이메일', '아이디', '비밀번호', '성별'];
   final UserRepository _userRepository = UserRepository();
+  late final UserDAO _userDAO; // UserDAO 선언
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeDatabase(); // MySQL 연결 초기화 함수 호출
+  }
+
+  // MySQL 연결 초기화 함수
+  Future<void> _initializeDatabase() async {
+    final connectionSettings = ConnectionSettings(
+      host: 'database-1.c76iaa8ycok0.ap-northeast-2.rds.amazonaws.com',  // 실제 호스트 정보로 변경
+      port: 3306,         // MySQL 포트
+      user: 'gungangazi', // 사용자명
+      password: 'endbackend!', // 비밀번호
+      db: 'appdb', // 데이터베이스 이름
+    );
+    
+    final mySqlConnection = await MySqlConnection.connect(connectionSettings);
+
+    // UserDAO 인스턴스 생성
+    _userDAO = UserDAO(mySqlConnection);
+  }
 
   void _nextStep() {
     setState(() {
@@ -73,8 +98,11 @@ class _SignUpPageState extends State<SignUpPage> {
     );
 
     try {
-      // 리포지토리를 사용하여 서버에 회원가입 요청
+      // 서버에 회원가입 요청
       await _userRepository.registerUser(user);
+
+      // 데이터베이스에 사용자 저장
+      await _userDAO.saveUser(user);
 
       // 회원가입 성공 시 로그인 페이지로 이동
       Navigator.pop(context);

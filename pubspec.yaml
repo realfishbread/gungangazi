@@ -12,7 +12,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+    
+  mysql1: ^0.19.2
   http: ^1.2.2
   flutter_cube: ^0.1.1
   adaptive_bottom_navigation: ^1.0.7

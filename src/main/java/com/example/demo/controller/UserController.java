@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "https://gungangazi.site")
 @RequestMapping
 public class UserController {
 

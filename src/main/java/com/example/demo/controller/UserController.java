@@ -1,15 +1,23 @@
 package com.example.demo.controller;
-import com.example.demo.entity.User;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.service.JwtTokenProvider;  // JWT 발급 서비스 (새로 추가)
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;  // JWT 발급 서비스 (새로 추가)
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.entity.User;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.service.JwtTokenProvider;
 
 @RestController
 @RequestMapping
@@ -31,11 +39,11 @@ public class UserController {
             return createErrorResponse("아이디가 이미 존재합니다.", 400);
         }
 
-        // 비밀번호 암호화 후 저장
+       // UserDTO를 User 엔티티로 변환하여 저장
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
 
-        // 회원가입 후 JWT 토큰 발급
+        // JWT 토큰 발급
         String token = jwtTokenProvider.createToken(user.getUsername());
 
         Map<String, Object> response = new HashMap<>();

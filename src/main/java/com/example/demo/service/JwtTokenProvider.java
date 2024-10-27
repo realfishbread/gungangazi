@@ -1,13 +1,14 @@
 package com.example.demo.service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtTokenProvider {
@@ -25,7 +26,8 @@ public class JwtTokenProvider {
             .setClaims(claims)
             .setIssuedAt(now)  // 토큰 발행 시간
             .setExpiration(validity)  // 토큰 만료 시간
-            .signWith(SignatureAlgorithm.HS256, secretKey)  // 서명 알고리즘과 비밀 키
+            .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), SignatureAlgorithm.HS256)
+  // 서명 알고리즘과 비밀 키
             .compact();
     }
 }

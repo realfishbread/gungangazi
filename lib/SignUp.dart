@@ -51,17 +51,13 @@ class _SignUpPageState extends State<SignUpPage> {
       try {
         // 서버에 회원가입 요청
         final userRepository = UserRepository();
-        final token = await userRepository.registerUser(user);  // 서버에서 받은 토큰
+        final message = await userRepository.registerUser(user);  // 서버에서 받은 토큰
 
-        if (token != null) {
-          // 토큰 저장
-          await _tokenService.saveToken(token);
-          print('회원가입 성공, 받은 토큰: $token');
-
-          // 회원가입 성공 시 로그인 페이지로 이동
-          Navigator.pop(context);
+         if (message != null) {
+          print(message);  // 회원가입 성공 메시지 출력
+          Navigator.pop(context);  // 로그인 페이지로 이동
         } else {
-          _showErrorDialog('회원가입 실패: 토큰을 받지 못했습니다.');
+          _showErrorDialog('회원가입 실패');
         }
       } catch (e) {
         _showErrorDialog('회원가입에 실패했습니다: $e');

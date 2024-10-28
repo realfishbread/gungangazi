@@ -1,13 +1,22 @@
 package com.example.demo.DTO;
+
 import com.example.demo.entity.User;
 
 public class UserDTO {
+    private String id;
     private String username;
     private String password;
     private String email;
-   
 
     // Getters and Setters
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -32,13 +41,23 @@ public class UserDTO {
         this.email = email;
     }
 
-
     // 데이터를 엔티티로 변환하는 메서드
     public User toEntity() {
         User user = new User();
+        user.setId(this.id);  // id 필드 추가
         user.setUsername(this.username);
         user.setPassword(this.password);
         user.setEmail(this.email);
         return user;
+    }
+
+    // 엔티티를 DTO로 변환하는 메서드
+    public static UserDTO fromEntity(User user) {
+        UserDTO dto = new UserDTO();
+        dto.setId(user.getId());
+        dto.setUsername(user.getUsername());
+        dto.setPassword(user.getPassword());
+        dto.setEmail(user.getEmail());
+        return dto;
     }
 }

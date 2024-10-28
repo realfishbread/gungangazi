@@ -5,7 +5,7 @@ public class UserDTO {
     private String username;
     private String password;
     private String email;
-    private String gender; // 필요하다면 추가
+   
 
     // Getters and Setters
     public String getUsername() {
@@ -32,13 +32,6 @@ public class UserDTO {
         this.email = email;
     }
 
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
 
     // 데이터를 엔티티로 변환하는 메서드
     public User toEntity() {
@@ -46,7 +39,6 @@ public class UserDTO {
         user.setUsername(this.username);
         user.setPassword(this.password);
         user.setEmail(this.email);
-        user.setGender(this.gender);
         return user;
     }
 }

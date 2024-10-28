@@ -17,7 +17,7 @@ class UserRepository {
       );
 
       if (response.statusCode == 201) {  // 201 Created 상태 코드 확인
-      return response.data['token'];  // 성공 시 반환된 토큰
+       return "회원가입 성공";  // 성공 시 반환된 토큰
       } else {
           print('회원가입 실패: ${response.statusCode}');
           return null;

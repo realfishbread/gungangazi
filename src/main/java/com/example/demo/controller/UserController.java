@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.DTO.UserDTO;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.JwtTokenProvider;
@@ -34,12 +35,13 @@ public class UserController {
 
     // 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody User user) {
-        if (userRepository.existsByUsername(user.getUsername())) {
+    public ResponseEntity<?> signUp(@RequestBody UserDTO userDTO) {
+        if (userRepository.existsByUsername(userDTO.getUsername())) {
             return createErrorResponse("아이디가 이미 존재합니다.", 400);
         }
 
        // UserDTO를 User 엔티티로 변환하여 저장
+        User user = userDTO.toEntity();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
 

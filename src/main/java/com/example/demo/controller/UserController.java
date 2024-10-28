@@ -70,37 +70,36 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    // 사용자 정보 조회
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUser(@PathVariable Long id) {
+    public ResponseEntity<?> getUser(@PathVariable String id) {
         Optional<User> userOptional = userRepository.findById(id);
-
+        
         if (userOptional.isEmpty()) {
             return createErrorResponse("사용자를 찾을 수 없습니다.", 404);
         }
-
+        
         return ResponseEntity.ok(userOptional.get());
     }
+    
 
-    // 사용자 정보 업데이트
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
-        Optional<User> userOptional = userRepository.findById(id);
-
-        if (userOptional.isEmpty()) {
-            return createErrorResponse("사용자를 찾을 수 없습니다.", 404);
-        }
-
-        User existingUser = userOptional.get();
-        existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));  // 비밀번호 암호화
-        userRepository.save(existingUser);
-
-        return ResponseEntity.ok(createSuccessResponse("사용자 정보가 업데이트되었습니다."));
+    public ResponseEntity<?> updateUser(@PathVariable String id, @RequestBody User updatedUser) {
+    Optional<User> userOptional = userRepository.findById(id);
+    
+    if (userOptional.isEmpty()) {
+        return createErrorResponse("사용자를 찾을 수 없습니다.", 404);
     }
+    
+    User existingUser = userOptional.get();
+    existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+    userRepository.save(existingUser);
+    
+    return ResponseEntity.ok(createSuccessResponse("사용자 정보가 업데이트되었습니다."));
+}
 
     // 사용자 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<?> deleteUser(@PathVariable String id) {
         Optional<User> userOptional = userRepository.findById(id);
 
         if (userOptional.isEmpty()) {

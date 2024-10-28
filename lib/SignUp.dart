@@ -46,7 +46,6 @@ class _SignUpPageState extends State<SignUpPage> {
         email: _emailController.text,
         id: _idController.text,
         password: _passwordController.text,
-        gender: selectedGender ?? '',
       );
 
       try {

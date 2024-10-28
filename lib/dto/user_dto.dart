@@ -4,14 +4,12 @@ class UserDTO {
   final String email;
   final String id;
   final String password;
-  final String gender;
 
   UserDTO({
     required this.username,
     required this.email,
     required this.id,
     required this.password,
-    required this.gender,
   });
 
   // DTO를 JSON으로 변환하는 메서드
@@ -21,7 +19,6 @@ class UserDTO {
       'email': email,
       'id': id,
       'password': password,
-      'gender': gender,
     };
   }
 }

@@ -12,7 +12,7 @@ public class User {
 
     @Id // 레코드를 고유하게 식별
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 데이터베이스가 이 필드의 값을 자동으로 설정되게 만듦
-    private String id;
+    private long id;
 
     @Column(name = "username", nullable = false, unique = true) // 사용자명은 null이 아니고 고유해야 함
     private String username;
@@ -25,11 +25,11 @@ public class User {
 
 
     // Getters and Setters
-    public String getId() { // id에 대한 getter
+    public long getId() { // id에 대한 getter
         return id;
     }
 
-    public void setId(String id) { // id에 대한 setter
+    public void setId(long id) { // id에 대한 setter
         this.id = id;
     }
 

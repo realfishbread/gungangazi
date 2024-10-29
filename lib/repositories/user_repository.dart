@@ -18,15 +18,17 @@ class UserRepository {
         data: user.toJson(),
       );
 
-      if (response.statusCode == 201) {  // 201 Created 상태 코드 확인
-       return "회원가입 성공";  // 성공 시 반환된 토큰
+      if (response.statusCode == 200 || response.statusCode == 201) {  
+        final responseData = response.data;
+        return responseData['message'];  // "회원가입 성공" 또는 "아이디가 이미 존재합니다." 등의 메시지 반환
       } else {
-          print('회원가입 실패: ${response.statusCode}');
-          return null;
+        print('회원가입 실패: ${response.statusCode}');
+        return null;
       }
     } on DioException catch (e) {
-      print('회원가입 오류: ${e.response?.data}');
-      return null;
+      final errorMessage = e.response?.data['message'] ?? '알 수 없는 오류가 발생했습니다.';
+      print('회원가입 오류: $errorMessage');
+      return errorMessage;  // 오류 메시지 반환
     }
   }
 }

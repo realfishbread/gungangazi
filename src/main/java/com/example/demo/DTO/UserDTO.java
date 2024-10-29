@@ -3,17 +3,17 @@ package com.example.demo.DTO;
 import com.example.demo.entity.User;
 
 public class UserDTO {
-    private String id;
+    private long id;
     private String username;
     private String password;
     private String email;
 
     // Getters and Setters
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 

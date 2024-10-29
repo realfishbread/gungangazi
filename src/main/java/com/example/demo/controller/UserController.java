@@ -50,7 +50,7 @@ public class UserController {
 
         Map<String, Object> response = new HashMap<>();
         response.put("message", "회원가입 성공");
-        response.put("token", token);
+        
         return ResponseEntity.ok(response);
     }
 

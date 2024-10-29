@@ -92150,7 +92150,7 @@ hK(){var s=this
 return A.at(["userId",s.a,"name",s.b,"email",s.c,"height",s.d,"weight",s.e,"gender",s.f],t.N,t.z)}}
 A.ama.prototype={
 hK(){var s=this
-return A.at(["username",s.a,"email",s.b,"id",s.c,"password",s.d],t.N,t.z)}}
+return A.at(["username",s.a,"email",s.b,"realname",s.c,"password",s.d],t.N,t.z)}}
 A.q3.prototype={
 a5(){var s=$.a8()
 return new A.Ge(new A.eo(B.b8,s),new A.eo(B.b8,s),new A.a26(new A.zx(null).xk()))}}

@@ -7,6 +7,7 @@ public class UserDTO {
     private String username;
     private String password;
     private String email;
+    private String realname;
 
     // Getters and Setters
     public long getId() {
@@ -41,6 +42,14 @@ public class UserDTO {
         this.email = email;
     }
 
+    public String getRealname() {
+        return realname;
+    }
+
+    public void setRealname(String realname) {
+        this.realname = realname;
+    }
+
     // 데이터를 엔티티로 변환하는 메서드
     public User toEntity() {
         User user = new User();
@@ -48,6 +57,7 @@ public class UserDTO {
         user.setUsername(this.username);
         user.setPassword(this.password);
         user.setEmail(this.email);
+        user.setRealname(this.realname);
         return user;
     }
 
@@ -58,6 +68,7 @@ public class UserDTO {
         dto.setUsername(user.getUsername());
         dto.setPassword(user.getPassword());
         dto.setEmail(user.getEmail());
+        dto.setRealname(user.getRealname());
         return dto;
     }
 }

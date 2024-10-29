@@ -23,6 +23,9 @@ public class User {
     @Column(name = "email", nullable = false, unique = true) // 이메일은 null이 아니고 고유해야 함
     private String email;
 
+    @Column(name = "realname", nullable = false)
+    private String realname;
+
 
     // Getters and Setters
     public long getId() { // id에 대한 getter
@@ -55,6 +58,14 @@ public class User {
 
     public void setEmail(String email) { // 이메일에 대한 setter
         this.email = email;
+    }
+    
+    public String getRealname() { // 이메일에 대한 getter
+        return realname;
+    }
+
+    public void setRealname(String email) { // 이메일에 대한 setter
+        this.realname = realname;
     }
 
 }

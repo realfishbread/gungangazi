@@ -64,7 +64,7 @@ public class User {
         return realname;
     }
 
-    public void setRealname(String email) { // 이메일에 대한 setter
+    public void setRealname(String realname) { // 이메일에 대한 setter
         this.realname = realname;
     }
 

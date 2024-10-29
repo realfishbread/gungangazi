@@ -58,15 +58,15 @@ public class UserController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
-        Optional<User> existingUserOptional = userRepository.findByUsername(user.getUsername());
+    public ResponseEntity<?> login(@RequestBody UserDTO userDTO) {
+        Optional<User> existingUserOptional = userRepository.findByUsername(userDTO.getUsername());
 
-        if (existingUserOptional.isEmpty() || !passwordEncoder.matches(user.getPassword(), existingUserOptional.get().getPassword())) {
+        if (existingUserOptional.isEmpty() || !passwordEncoder.matches(userDTO.getPassword(), existingUserOptional.get().getPassword())) {
             return createErrorResponse("아이디 또는 비밀번호가 잘못되었습니다.", 400);
         }
 
         // 로그인 성공 후 JWT 토큰 발급
-        String token = jwtTokenProvider.createToken(user.getUsername());
+        String token = jwtTokenProvider.createToken(userDTO.getUsername());
 
         Map<String, Object> response = new HashMap<>();
         response.put("message", "로그인 성공");
@@ -74,9 +74,9 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getUser(@PathVariable String id) {
-        Optional<User> userOptional = userRepository.findById(id);
+    @GetMapping("/{username}")
+    public ResponseEntity<?> getUser(@PathVariable String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
         
         if (userOptional.isEmpty()) {
             return createErrorResponse("사용자를 찾을 수 없습니다.", 404);
@@ -86,9 +86,9 @@ public class UserController {
     }
     
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable String id, @RequestBody User updatedUser) {
-    Optional<User> userOptional = userRepository.findById(id);
+    @PutMapping("/{username}")
+    public ResponseEntity<?> updateUser(@PathVariable String username, @RequestBody User updatedUser) {
+    Optional<User> userOptional = userRepository.findByUsername(username);
     
     if (userOptional.isEmpty()) {
         return createErrorResponse("사용자를 찾을 수 없습니다.", 404);
@@ -102,9 +102,9 @@ public class UserController {
 }
 
     // 사용자 삭제
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable String id) {
-        Optional<User> userOptional = userRepository.findById(id);
+    @DeleteMapping("/{username}")
+    public ResponseEntity<?> deleteUser(@PathVariable String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
 
         if (userOptional.isEmpty()) {
             return createErrorResponse("사용자를 찾을 수 없습니다.", 404);

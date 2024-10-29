@@ -2,13 +2,13 @@
 class UserDTO {
   final String username;
   final String email;
-  final String id;
+  final String realname;
   final String password;
 
   UserDTO({
     required this.username,
     required this.email,
-    required this.id,
+    required this.realname,
     required this.password,
   });
 
@@ -17,7 +17,7 @@ class UserDTO {
     return {
       'username': username,
       'email': email,
-      'id': id,
+      'realname': realname,
       'password': password,
     };
   }

@@ -13,7 +13,7 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _idController = TextEditingController();
+  final TextEditingController _realnameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   int _currentStep = 0;
@@ -44,7 +44,7 @@ class _SignUpPageState extends State<SignUpPage> {
       final user = UserDTO(
         username: _nameController.text,
         email: _emailController.text,
-        id: _idController.text,
+        realname: _realnameController.text,
         password: _passwordController.text,
       );
 
@@ -71,7 +71,7 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _isFormValid() {
     if (_nameController.text.isEmpty ||
         _emailController.text.isEmpty ||
-        _idController.text.isEmpty ||
+        _realnameController.text.isEmpty ||
         _passwordController.text.isEmpty ||
         (!_isMaleSelected && !_isFemaleSelected)) {
       _showErrorDialog('모든 필드를 입력해 주세요.');
@@ -135,7 +135,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       if (_currentStep == 1)
                         _buildTextField(_emailController, '이메일', TextInputType.emailAddress),
                       if (_currentStep == 2)
-                        _buildTextField(_idController, '이름'),
+                        _buildTextField(_realnameController, '이름'),
                       if (_currentStep == 3)
                         _buildTextField(_passwordController, '비밀번호', TextInputType.text, true),
                       if (_currentStep == 4)

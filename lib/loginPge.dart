@@ -11,7 +11,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _idController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final AuthRepository _authRepository = AuthRepository();
   bool _loginFailed = false;
@@ -21,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   final String _defaultPassword = "password123";
 
   Future<void> _login() async {
-    String username = _idController.text;
+    String username = _nameController.text;
     String password = _passwordController.text;
 
     // 기본 아이디와 비밀번호로 검증
@@ -101,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     children: [
                       TextField(
-                        controller: _idController,
+                        controller: _nameController,
                         decoration: const InputDecoration(
                           labelText: '아이디',
                           border: OutlineInputBorder(),

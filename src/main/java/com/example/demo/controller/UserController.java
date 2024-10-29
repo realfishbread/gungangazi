@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;  // JWT 발급 서비스 (새로 추가)
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,9 +38,10 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody UserDTO userDTO) {
         if (userRepository.existsByUsername(userDTO.getUsername())) {
-            return createErrorResponse("아이디가 이미 존재합니다.", 400);
+           Map<String, Object> errorResponse = new HashMap<>();
+           errorResponse.put("message", "아이디가 이미 존재합니다.");
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
-
        // UserDTO를 User 엔티티로 변환하여 저장
         User user = userDTO.toEntity();
         user.setPassword(passwordEncoder.encode(user.getPassword()));

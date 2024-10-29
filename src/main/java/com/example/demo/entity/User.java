@@ -1,8 +1,6 @@
 package com.example.demo.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -11,9 +9,6 @@ import jakarta.persistence.Table;
 public class User {
 
     @Id // 레코드를 고유하게 식별
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // 데이터베이스가 이 필드의 값을 자동으로 설정되게 만듦
-    private long id;
-
     @Column(name = "username", nullable = false, unique = true) // 사용자명은 null이 아니고 고유해야 함
     private String username;
 
@@ -26,15 +21,6 @@ public class User {
     @Column(name = "realname", nullable = false)
     private String realname;
 
-
-    // Getters and Setters
-    public long getId() { // id에 대한 getter
-        return id;
-    }
-
-    public void setId(long id) { // id에 대한 setter
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;

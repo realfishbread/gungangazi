@@ -8,7 +8,7 @@ class ProfileRepository {
   // 프로필 정보 가져오기
   Future<ProfileDto?> fetchProfile() async {
     try {
-      Response response = await _dio.get('https://gungangazi.site/api/users');
+      Response response = await _dio.get('https://gungangazi.site/users');
 
       if (response.statusCode == 200) {
         return ProfileDto.fromJson(response.data);
@@ -26,7 +26,7 @@ class ProfileRepository {
   Future<bool> updateProfile(String fieldName, String newValue) async {
     try {
       Response response = await _dio.put(
-        'https://gungangazi.site/api/profile/update',
+        'https://gungangazi.site/users/update',
         data: {fieldName: newValue},
       );
 

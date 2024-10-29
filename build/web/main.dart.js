@@ -92487,7 +92487,7 @@ kO(){var s=0,r=A.L(t.Sa),q,p=2,o,n=this,m,l,k,j,i,h,g,f,e,d
 var $async$kO=A.M(function(a,b){if(a===1){o=b
 s=p}while(true)switch(s){case 0:p=4
 s=7
-return A.R(n.a.LE("https://gungangazi.site/api/users",t.z),$async$kO)
+return A.R(n.a.LE("https://gungangazi.site/users",t.z),$async$kO)
 case 7:m=b
 if(m.c===200){k=m.a
 j=k.i(0,"userId")
@@ -92525,7 +92525,7 @@ var $async$Dk=A.M(function(c,d){if(c===1){o=d
 s=p}while(true)switch(s){case 0:p=4
 k=t.N
 s=7
-return A.R(n.a.wO("https://gungangazi.site/api/profile/update",null,A.at([a,b],k,k),null,null,A.aBN("PUT",null),null,t.z),$async$Dk)
+return A.R(n.a.wO("https://gungangazi.site/users/update",null,A.at([a,b],k,k),null,null,A.aBN("PUT",null),null,t.z),$async$Dk)
 case 7:m=d
 k=m.c
 q=k===200

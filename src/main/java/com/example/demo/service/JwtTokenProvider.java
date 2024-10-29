@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import java.util.Date;
 
+import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -12,10 +13,19 @@ import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtTokenProvider {
+    // JWT 서명에 사용할 비밀 키를 문자열로 주입받습니다.
     @Value("${jwt.secret}")
-    private String secretKey;  // JWT 서명에 사용할 비밀 키
+    private String secretKeyString;  // 문자열로 주입받은 비밀 키
+
+    private SecretKey secretKey;  // JWT 서명에 사용할 비밀 키// JWT 서명에 사용할 비밀 키
     private final long validityInMilliseconds = 3600000; // 1시간
 
+
+    public JwtTokenProvider() {
+        // 비밀 키 문자열을 사용하여 SecretKey 객체를 생성합니다.
+        this.secretKey = Keys.hmacShaKeyFor(secretKeyString.getBytes());
+    }
+    
     // JWT 토큰 생성
     public String createToken(String username) {
         Claims claims = Jwts.claims().setSubject(username);  // 주체로 username 설정

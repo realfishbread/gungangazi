@@ -52,7 +52,6 @@ public class UserDTO {
     // 데이터를 엔티티로 변환하는 메서드
     public User toEntity() {
         User user = new User();
-        user.setId(this.id); // id 설정
         user.setUsername(this.username);
         user.setPassword(this.password);
         user.setEmail(this.email);

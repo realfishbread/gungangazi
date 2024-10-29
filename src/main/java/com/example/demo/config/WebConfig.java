@@ -13,7 +13,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins(
                     "https://gungangazi.site",
                     "http://localhost:8080",   // 로컬 개발 환경 (백엔드)
-                    "http://localhost:3000"
+                    "http://localhost:3000",
+                    "http://localhost:56272"
                     ) // 허용할 도메인 설정
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메소드
                 .allowedHeaders("*"); // 모든 헤더 허용

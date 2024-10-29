@@ -20,9 +20,18 @@ class DioService {
       onRequest: (options, handler) {
         // 만약에 토큰이 있으면 헤더에 추가!
         if (token != null && token!.isNotEmpty) {
-          options.headers['Authorization'] = 'Bearer $token';  // 'Bearer {토큰}' 형식
+          options.headers['Authorization'] = 'Bearer $token';
         }
-        return handler.next(options);  // 요청을 계속 진행
+        print("Request: ${options.uri}");  // 요청 URL 출력
+        return handler.next(options);
+      },
+      onResponse: (response, handler) {
+        print("Response: ${response.statusCode} - ${response.data}");
+        return handler.next(response);
+      },
+      onError: (DioError e, handler) {
+        print("Error: ${e.response?.statusCode} - ${e.response?.data}");
+        return handler.next(e);
       },
     ));
 

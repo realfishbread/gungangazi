@@ -20,7 +20,7 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _isMaleSelected = false;
   bool _isFemaleSelected = false;
 
-  final List<String> steps = ['이름', '이메일', '아이디', '비밀번호', '성별'];
+  final List<String> steps = ['아이디', '이메일', '이름', '비밀번호', '성별'];
   final TokenService _tokenService = TokenService();  // 토큰 저장 서비스
 
   // 다음 단계 버튼 처리
@@ -55,7 +55,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
           if (message == "아이디가 이미 존재합니다.") {
           _showErrorDialog('아이디가 이미 존재합니다.');
-        } else if (message != null) {
+        } else if (message == "회원가입 성공") {
           print(message);  // 회원가입 성공 메시지 출력
           Navigator.pop(context);  // 로그인 페이지로 이동
         } else {
@@ -131,11 +131,11 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: Column(
                     children: [
                       if (_currentStep == 0)
-                        _buildTextField(_nameController, '이름'),
+                        _buildTextField(_nameController, '아이디'),
                       if (_currentStep == 1)
                         _buildTextField(_emailController, '이메일', TextInputType.emailAddress),
                       if (_currentStep == 2)
-                        _buildTextField(_idController, '아이디'),
+                        _buildTextField(_idController, '이름'),
                       if (_currentStep == 3)
                         _buildTextField(_passwordController, '비밀번호', TextInputType.text, true),
                       if (_currentStep == 4)

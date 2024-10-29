@@ -15,6 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
                     "http://localhost:8080"   // 로컬 개발 환경 (백엔드)
                     ) // 허용할 도메인 설정
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메소드
-                .allowedHeaders("*"); // 모든 헤더
+                .allowedHeaders("*") // 모든 헤더
+                .allowCredentials(true);
     }
 }

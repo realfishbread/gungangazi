@@ -11,6 +11,8 @@ class UserRepository {
   // 서버에 회원가입 요청을 보내고, 성공하면 토큰을 반환
   Future<String?> registerUser(UserDTO user) async {
     try {
+      // 전송할 데이터를 JSON 형태로 출력
+      print('전송할 데이터: ${user.toJson()}');
       final response = await _dio.post(
         '/signup',
         data: user.toJson(),

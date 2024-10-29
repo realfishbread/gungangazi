@@ -21,7 +21,7 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())  // CSRF 보호 비활성화 (필요에 따라 설정)
             .authorizeHttpRequests((authz) -> authz
-                .requestMatchers("/signup").permitAll()  // 회원가입 경로는 인증 없이 허용
+            .requestMatchers("/signup", "/login").permitAll()  // 회원가입 경로는 인증 없이 허용
                 .anyRequest().authenticated()  // 그 외 모든 요청은 인증 필요
             );
         return http.build();

@@ -53,7 +53,9 @@ class _SignUpPageState extends State<SignUpPage> {
         final userRepository = UserRepository();
         final message = await userRepository.registerUser(user);  // 서버에서 받은 토큰
 
-         if (message != null) {
+          if (message == "아이디가 이미 존재합니다.") {
+          _showErrorDialog('아이디가 이미 존재합니다.');
+        } else if (message != null) {
           print(message);  // 회원가입 성공 메시지 출력
           Navigator.pop(context);  // 로그인 페이지로 이동
         } else {

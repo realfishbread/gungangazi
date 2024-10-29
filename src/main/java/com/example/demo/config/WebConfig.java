@@ -12,6 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**") // API 엔드포인트에 CORS 적용
                 .allowedOrigins(
                     "https://gungangazi.site",
+                    "https://gungangazi.site/#/splash",
                     "http://localhost:8080",   // 로컬 개발 환경 (백엔드)
                     "http://localhost:3000",
                     "http://localhost:56272"

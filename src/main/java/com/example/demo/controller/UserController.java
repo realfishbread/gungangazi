@@ -58,15 +58,15 @@ public class UserController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserDTO userDTO) {
-        Optional<User> existingUserOptional = userRepository.findByUsername(userDTO.getUsername());
+    public ResponseEntity<?> login(@RequestBody User user) {
+        Optional<User> existingUserOptional = userRepository.findByUsername(user.getUsername());
 
-        if (existingUserOptional.isEmpty() || !passwordEncoder.matches(userDTO.getPassword(), existingUserOptional.get().getPassword())) {
+        if (existingUserOptional.isEmpty() || !passwordEncoder.matches(user.getPassword(), existingUserOptional.get().getPassword())) {
             return createErrorResponse("아이디 또는 비밀번호가 잘못되었습니다.", 400);
         }
 
         // 로그인 성공 후 JWT 토큰 발급
-        String token = jwtTokenProvider.createToken(userDTO.getUsername());
+        String token = jwtTokenProvider.createToken(user.getUsername());
 
         Map<String, Object> response = new HashMap<>();
         response.put("message", "로그인 성공");

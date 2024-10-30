@@ -53,10 +53,13 @@ class _SignUpPageState extends State<SignUpPage> {
         final userRepository = UserRepository();
         final message = await userRepository.registerUser(user);  // 서버에서 받은 토큰
 
+          // 받은 메시지를 출력
+        print('회원가입 메시지: $message');
           if (message == "아이디가 이미 존재합니다.") {
           _showErrorDialog('아이디가 이미 존재합니다.');
         } else if (message == "회원가입 성공") {
-          print(message);  // 회원가입 성공 메시지 출력
+          print(message); 
+          _showErrorDialog('회원가입 성공'); // 회원가입 성공 메시지 출력
           Navigator.pop(context);  // 로그인 페이지로 이동
         } else {
           _showErrorDialog('회원가입 실패');
@@ -212,6 +215,7 @@ class _SignUpPageState extends State<SignUpPage> {
     String labelText, [
     TextInputType keyboardType = TextInputType.text,
     bool obscureText = false,
+    String? hintText,
   ]) {
     return TextField(
       controller: controller,
@@ -219,6 +223,7 @@ class _SignUpPageState extends State<SignUpPage> {
       obscureText: obscureText,
       decoration: InputDecoration(
         labelText: labelText,
+        hintText: hintText,
         border: const OutlineInputBorder(),
       ),
     );

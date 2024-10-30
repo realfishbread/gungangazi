@@ -38,15 +38,18 @@ class _LoginPageState extends State<LoginPage> {
     try {
       LoginResponseDto? loginResponse = await _authRepository.login(loginRequest);
 
-      if (loginResponse != null) {
-        // 로그인 성공 시 홈 화면으로 이동
-        Navigator.pushReplacementNamed(context, '/homeApp');
-      } else {
-        // 로그인 실패
-        setState(() {
-          _loginFailed = true;
-        });
-      }
+       if (loginResponse != null) {
+            setState(() {
+                _loginFailed = false;
+            });
+            // 로그인 성공 후 토큰 저장 로직 추가
+            // 예: _tokenService.saveToken(loginResponse.token);
+            Navigator.pushReplacementNamed(context, '/homeApp');
+        } else {
+            setState(() {
+                _loginFailed = true; // 로그인 실패 처리
+            });
+        }
     } catch (e) {
       print('로그인 중 에러 발생: $e');  // 에러 로그 출력
       setState(() {

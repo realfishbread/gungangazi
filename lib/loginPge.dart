@@ -16,23 +16,16 @@ class _LoginPageState extends State<LoginPage> {
   final AuthRepository _authRepository = AuthRepository();
   bool _loginFailed = false;
 
-  // 기본 아이디와 비밀번호 (나중에 쉽게 제거 가능)
-  final String _defaultUsername = "testUser";
-  final String _defaultPassword = "password123";
-
+  
   Future<void> _login() async {
     String username = _nameController.text;
     String password = _passwordController.text;
 
-    // 기본 아이디와 비밀번호로 검증
-    if (username == _defaultUsername && password == _defaultPassword) {
+      // 기본 아이디와 비밀번호로 검증 (예시)
+    if (username.isEmpty || password.isEmpty) {
       setState(() {
-        _loginFailed = false;
+        _loginFailed = true; // 입력 필드가 비어있으면 실패 처리
       });
-      Navigator.pushReplacementNamed(
-        context,
-        '/homeApp',
-      );
       return;
     }
 
@@ -47,13 +40,7 @@ class _LoginPageState extends State<LoginPage> {
 
       if (loginResponse != null) {
         // 로그인 성공 시 홈 화면으로 이동
-        setState(() {
-          _loginFailed = false;
-        });
-        Navigator.pushReplacementNamed(
-          context,
-          '/homeApp',
-        );
+        Navigator.pushReplacementNamed(context, '/homeApp');
       } else {
         // 로그인 실패
         setState(() {
@@ -61,6 +48,7 @@ class _LoginPageState extends State<LoginPage> {
         });
       }
     } catch (e) {
+      print('로그인 중 에러 발생: $e');  // 에러 로그 출력
       setState(() {
         _loginFailed = true;
       });

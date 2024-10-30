@@ -13,12 +13,14 @@ class LoginRequestDto {
 
 class LoginResponseDto {
   final String token;
+  final String message;
 
-  LoginResponseDto({required this.token});
+  LoginResponseDto({required this.token, required this.message});
 
   factory LoginResponseDto.fromJson(Map<String, dynamic> json) {
     return LoginResponseDto(
       token: json['token'],
+      message: json['message'],
     );
   }
 }

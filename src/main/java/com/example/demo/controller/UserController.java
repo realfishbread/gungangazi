@@ -64,6 +64,11 @@ public class UserController {
         if (existingUserOptional.isEmpty() || !passwordEncoder.matches(user.getPassword(), existingUserOptional.get().getPassword())) {
             return createErrorResponse("아이디 또는 비밀번호가 잘못되었습니다.", 400);
         }
+        if (userRepository.existsByUsername(user.getUsername())) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", "아이디가 이미 존재합니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+         }
 
         // 로그인 성공 후 JWT 토큰 발급
         String token = jwtTokenProvider.createToken(user.getUsername());

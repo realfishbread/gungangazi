@@ -32,9 +32,14 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
       
+
+      // 로그인 API 호출
       LoginResponseDto? loginResponse = await _authRepository.login(loginRequest);
 
       if (loginResponse != null) {
+        String token = loginResponse.token;
+        String message = loginResponse.message; // 메시지 사용
+        print('로그인 성공, 메시지: $message, 토큰: $token');
         setState(() {
           _loginFailed = false;
         });

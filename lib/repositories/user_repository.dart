@@ -9,7 +9,7 @@ class UserRepository {
   UserRepository({String? token}) : _dio = DioService(token: token).getDio();  // 회원가입 시에는 토큰 필요 없음
 
   // 서버에 회원가입 요청을 보내고, 성공하면 토큰을 반환
-  Future<String?> registerUser(UserDTO user) async {
+  Future<Map<String, String>?> registerUser(UserDTO user) async {
     try {
       // 전송할 데이터를 JSON 형태로 출력
       print('전송할 데이터: ${user.toJson()}');
@@ -17,6 +17,11 @@ class UserRepository {
         '/signup',
         data: user.toJson(),
       );
+
+      
+      // 응답 데이터 출력
+      print('응답 데이터: ${response.data}');
+
 
       if (response.statusCode == 200 || response.statusCode == 201) {  
         final responseData = response.data;

@@ -2,7 +2,7 @@ package com.example.demo.controller;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import com.example.demo.DTO.LoginRequestDto;
+
 import org.springframework.beans.factory.annotation.Autowired;  // JWT 발급 서비스 (새로 추가)
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,15 +58,15 @@ public class UserController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequest) {
-        Optional<User> existingUserOptional = userRepository.findByUsername(loginRequest.getUsername());
+    public ResponseEntity<?> login(@RequestBody User user) {
+        Optional<User> existingUserOptional = userRepository.findByUsername(user.getUsername());
 
-        if (existingUserOptional.isEmpty() || !passwordEncoder.matches(loginRequest.getPassword(), existingUserOptional.get().getPassword())) {
+        if (existingUserOptional.isEmpty() || !passwordEncoder.matches(user.getPassword(), existingUserOptional.get().getPassword())) {
             return createErrorResponse("아이디 또는 비밀번호가 잘못되었습니다.", 400);
         }
 
         // 로그인 성공 후 JWT 토큰 발급
-        String token = jwtTokenProvider.createToken(loginRequest.getUsername());
+        String token = jwtTokenProvider.createToken(user.getUsername());
 
         Map<String, Object> response = new HashMap<>();
         response.put("message", "로그인 성공");

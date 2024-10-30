@@ -16,46 +16,62 @@ class _LoginPageState extends State<LoginPage> {
   final AuthRepository _authRepository = AuthRepository();
   bool _loginFailed = false;
 
-  
   Future<void> _login() async {
-    String username = _nameController.text;
-    String password = _passwordController.text;
-
-      // 기본 아이디와 비밀번호로 검증 (예시)
-    if (username.isEmpty || password.isEmpty) {
-      setState(() {
-        _loginFailed = true; // 입력 필드가 비어있으면 실패 처리
-      });
-      return;
-    }
-
     // 서버로 로그인 요청 보내기
     LoginRequestDto loginRequest = LoginRequestDto(
-      username: username,
-      password: password,
+      username: _nameController.text,
+      password: _passwordController.text,
     );
 
     try {
+      // 기본 아이디와 비밀번호로 검증 (예시)
+      if (_nameController.text.isEmpty || _passwordController.text.isEmpty) {
+        setState(() {
+          _loginFailed = true; // 입력 필드가 비어있으면 실패 처리
+        });
+        return;
+      }
+      
       LoginResponseDto? loginResponse = await _authRepository.login(loginRequest);
 
-       if (loginResponse != null) {
-            setState(() {
-                _loginFailed = false;
-            });
-            // 로그인 성공 후 토큰 저장 로직 추가
-            // 예: _tokenService.saveToken(loginResponse.token);
-            Navigator.pushReplacementNamed(context, '/homeApp');
-        } else {
-            setState(() {
-                _loginFailed = true; // 로그인 실패 처리
-            });
-        }
+      if (loginResponse != null) {
+        setState(() {
+          _loginFailed = false;
+        });
+        // 로그인 성공 후 토큰 저장 로직 추가
+        // 예: _tokenService.saveToken(loginResponse.token);
+        Navigator.pushReplacementNamed(context, '/homeApp');
+      } else {
+        setState(() {
+          _loginFailed = true; // 로그인 실패 처리
+        });
+        _showErrorDialog('로그인 실패: 아이디 또는 비밀번호가 잘못되었습니다.');
+      }
     } catch (e) {
       print('로그인 중 에러 발생: $e');  // 에러 로그 출력
-      setState(() {
-        _loginFailed = true;
-      });
+      _showErrorDialog('로그인 중 오류가 발생했습니다.'); // 실패 알림창 표시
     }
+  }
+
+  // 알림창 표시 함수
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('로그인 오류'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // 알림창 닫기
+              },
+              child: const Text('확인'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -138,3 +154,4 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+

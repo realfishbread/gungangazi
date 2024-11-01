@@ -28,13 +28,13 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User login(String username, String password) throws Exception {
+    public User login(String username, String password){
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new Exception("유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
         // 입력한 비밀번호와 암호화된 비밀번호를 비교 (BCryptPasswordEncoder의 matches 메서드 사용)
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new Exception("사용 불가한 비밀번호입니다.");
+            throw new RuntimeException("사용 불가한 비밀번호입니다.");
         }
 
         return user;

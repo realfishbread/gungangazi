@@ -3,7 +3,8 @@ D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\DemoAppli
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\service\JwtTokenProvider.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\DTO\UserDTO.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\repository\UserRepository.java
-D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\config\WebConfig.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\service\UserService.java
+D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\config\CorsConfig.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\entity\User.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\controller\UserController.java
+D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\DTO\LoginRequestDto.java

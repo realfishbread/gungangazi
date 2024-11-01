@@ -28,7 +28,7 @@ class AuthRepository {
         return null; // 로그인 실패
       }
     } on DioException catch (e) {
-      print('로그인 오류: ${e.message}');
+      print('로그인 오류:  ${e.response?.data ?? e.message}');
       return null; // 예외 발생 시 null 반환
     }
   }

@@ -26,7 +26,10 @@ class UserRepository {
 
       if (response.statusCode == 200 || response.statusCode == 201) {  
         final responseData = response.data;
-        return responseData['message'];  // "회원가입 성공" 또는 "아이디가 이미 존재합니다." 등의 메시지 반환
+        return {
+        'message': responseData['message'],
+        'token': responseData['token'],
+          };  // "회원가입 성공" 또는 "아이디가 이미 존재합니다." 등의 메시지 반환
       } else {
         print('회원가입 실패: ${response.statusCode}');
         return null;

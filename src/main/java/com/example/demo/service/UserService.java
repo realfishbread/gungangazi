@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.DTO.ProfileDto;
 import com.example.demo.DTO.UserDTO;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
@@ -38,5 +39,19 @@ public class UserService {
         }
 
         return user;
+    }
+      // 사용자 정보 업데이트
+      public User updateUser(String username, ProfileDto profileDto) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+    
+        // 업데이트할 필드들 설정
+        user.setRealname(profileDto.getRealname());
+        user.setEmail(profileDto.getEmail());
+        user.setHeight(profileDto.getHeight());
+        user.setWeight(profileDto.getWeight());
+        user.setGender(profileDto.getGender());
+    
+        return userRepository.save(user);  // 업데이트된 사용자 저장
     }
 }

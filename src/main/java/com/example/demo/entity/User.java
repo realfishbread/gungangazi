@@ -1,11 +1,11 @@
 package com.example.demo.entity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
 
 @Entity
 @Table(name = "users") // 데이터베이스의 "users" 테이블과 매핑
@@ -24,9 +24,20 @@ public class User {
     @Column(name = "email", nullable = false, unique = true) // 이메일은 null이 아니고 고유해야 함
     private String email;
 
-    @Column(name = "realname", nullable = false)
+    @Column(name = "realname", nullable = false) // 실명 필드
     private String realname;
 
+    @Column(name = "height", nullable = false) // 키 필드 추가
+    private String height;
+
+    @Column(name = "weight", nullable = false) // 몸무게 필드 추가
+    private String weight;
+
+    @Column(name = "gender", nullable = false) // 성별 필드 추가
+    private String gender;
+
+    @Column(name = "age", nullable = false) // 나이 필드 추가
+    private Integer age;
 
     public long getId() {
         return id;
@@ -35,6 +46,7 @@ public class User {
     public void setId(long id) {
         this.id = id;
     }
+
     public String getUsername() {
         return username;
     }
@@ -58,13 +70,44 @@ public class User {
     public void setEmail(String email) { // 이메일에 대한 setter
         this.email = email;
     }
-    
-    public String getRealname() { // 이메일에 대한 getter
+
+    public String getRealname() { // 실명에 대한 getter
         return realname;
     }
 
-    public void setRealname(String realname) { // 이메일에 대한 setter
+    public void setRealname(String realname) { // 실명에 대한 setter
         this.realname = realname;
     }
 
+    public String getHeight() { // 키에 대한 getter
+        return height;
+    }
+
+    public void setHeight(String height) { // 키에 대한 setter
+        this.height = height;
+    }
+
+    public String getWeight() { // 몸무게에 대한 getter
+        return weight;
+    }
+
+    public void setWeight(String weight) { // 몸무게에 대한 setter
+        this.weight = weight;
+    }
+
+    public String getGender() { // 성별에 대한 getter
+        return gender;
+    }
+
+    public void setGender(String gender) { // 성별에 대한 setter
+        this.gender = gender;
+    }
+
+    public Integer getAge() { // 나이에 대한 getter
+        return age;
+    }
+
+    public void setAge(Integer age) { // 나이에 대한 setter
+        this.age = age;
+    }
 }

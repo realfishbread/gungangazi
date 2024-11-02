@@ -55,25 +55,27 @@ class _MobileHomePageState extends State<MobileHomePage> {
     }
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+ void _onItemTapped(int index) {
+  setState(() {
+    _selectedIndex = index;
+  });
 
-    if (_selectedIndex == 0 || _selectedIndex == 1) {
-      _scaffoldKey.currentState?.openEndDrawer();
-    } else if (_selectedIndex == 2) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const SupplementsPage()),
-      );
-    } else if (_selectedIndex == 3) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) =>  const Profile2()),//프로필 페이지 바꿔가면서 확인
-      );
-    }
+  if (_selectedIndex == 0 || _selectedIndex == 1) {
+    _scaffoldKey.currentState?.openEndDrawer();
+  } else if (_selectedIndex == 2) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SupplementsPage()),
+    );
+  } else if (_selectedIndex == 3) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Profile2(username: '사용자이름'), // 실제 사용자 이름을 전달
+      ),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {

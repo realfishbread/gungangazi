@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;  // JWT 발급 서비스 (새로 추가)
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.DTO.LoginRequestDto;
+import com.example.demo.DTO.ProfileDto;
 import com.example.demo.DTO.UserDTO;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
@@ -77,35 +79,51 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{username}")
-    public ResponseEntity<?> getUser(@PathVariable String username) {
+    @GetMapping("/profile")
+    public ResponseEntity<?> getProfile(Authentication authentication) {
+        String username = authentication.getName(); // 현재 로그인한 사용자의 이름 가져오기
         Optional<User> userOptional = userRepository.findByUsername(username);
-        
+    
         if (userOptional.isEmpty()) {
             return createErrorResponse("사용자를 찾을 수 없습니다.", 404);
         }
-        
-        return ResponseEntity.ok(userOptional.get());
+    
+        User user = userOptional.get();
+        ProfileDto profileDto = new ProfileDto(
+            user.getUsername(),
+            user.getRealname(),
+            user.getEmail(),
+            user.getHeight(),
+            user.getWeight(),
+            user.getGender()
+        );
+    
+        return ResponseEntity.ok(profileDto);
     }
     
 
-    @PutMapping("/{username}")
-    public ResponseEntity<?> updateUser(@PathVariable String username, @RequestBody User updatedUser) {
-    Optional<User> userOptional = userRepository.findByUsername(username);
+    @PutMapping("/{username}/update")
+    public ResponseEntity<?> updateUser(@PathVariable String username, @RequestBody ProfileDto profileDto) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
     
-    if (userOptional.isEmpty()) {
-        return createErrorResponse("사용자를 찾을 수 없습니다.", 404);
+        if (userOptional.isEmpty()) {
+            return createErrorResponse("사용자를 찾을 수 없습니다.", 404);
+        }
+    
+        User existingUser = userOptional.get();
+        existingUser.setRealname(profileDto.getRealname());
+        existingUser.setEmail(profileDto.getEmail());
+        existingUser.setHeight(profileDto.getHeight());
+        existingUser.setWeight(profileDto.getWeight());
+        existingUser.setGender(profileDto.getGender());
+    
+        userRepository.save(existingUser);
+    
+        return ResponseEntity.ok(createSuccessResponse("사용자 정보가 업데이트되었습니다."));
     }
-    
-    User existingUser = userOptional.get();
-    existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
-    userRepository.save(existingUser);
-    
-    return ResponseEntity.ok(createSuccessResponse("사용자 정보가 업데이트되었습니다."));
-}
 
     // 사용자 삭제
-    @DeleteMapping("/{username}")
+    @DeleteMapping("/{username}/delete")
     public ResponseEntity<?> deleteUser(@PathVariable String username) {
         Optional<User> userOptional = userRepository.findByUsername(username);
 

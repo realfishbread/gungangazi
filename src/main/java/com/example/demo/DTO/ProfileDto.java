@@ -15,6 +15,7 @@ public class ProfileDto {
         this.height = height;
         this.weight = weight;
         this.gender = gender;
+        
     }
 
     // Getter와 Setter

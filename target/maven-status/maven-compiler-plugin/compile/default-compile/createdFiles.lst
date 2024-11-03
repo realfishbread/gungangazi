@@ -1,11 +1,13 @@
 com\example\demo\DemoApplication.class
-com\example\demo\config\SecurityConfig.class
 com\example\demo\entity\User.class
+com\example\demo\service\UserService.class
+com\example\demo\service\CustomUserDetailsService.class
+com\example\demo\config\CorsConfig.class
+com\example\demo\repository\UserRepository.class
+com\example\demo\config\JwtAuthenticationFilter.class
+com\example\demo\config\SecurityConfig.class
 com\example\demo\DTO\UserDTO.class
 com\example\demo\DTO\ProfileDto.class
 com\example\demo\service\JwtTokenProvider.class
-com\example\demo\service\UserService.class
 com\example\demo\controller\UserController.class
 com\example\demo\DTO\LoginRequestDto.class
-com\example\demo\config\CorsConfig.class
-com\example\demo\repository\UserRepository.class

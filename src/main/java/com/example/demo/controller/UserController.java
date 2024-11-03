@@ -23,6 +23,7 @@ import com.example.demo.DTO.UserDTO;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.JwtTokenProvider;
+import com.example.demo.service.UserService;
 
 @RestController
 @RequestMapping
@@ -33,6 +34,9 @@ public class UserController {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;  // JWT 토큰 발급 서비스 (새로 추가)
@@ -79,25 +83,12 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    // UserController.java
+
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile(Authentication authentication) {
         String username = authentication.getName(); // 현재 로그인한 사용자의 이름 가져오기
-        Optional<User> userOptional = userRepository.findByUsername(username);
-    
-        if (userOptional.isEmpty()) {
-            return createErrorResponse("사용자를 찾을 수 없습니다.", 404);
-        }
-    
-        User user = userOptional.get();
-        ProfileDto profileDto = new ProfileDto(
-            user.getUsername(),
-            user.getRealname(),
-            user.getEmail(),
-            user.getHeight(),
-            user.getWeight(),
-            user.getGender()
-        );
-    
+        ProfileDto profileDto = userService.getUserProfileByUsername(username);
         return ResponseEntity.ok(profileDto);
     }
     

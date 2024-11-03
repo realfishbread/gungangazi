@@ -52,6 +52,7 @@ public class SecurityConfig {
                 .requestMatchers(new AntPathRequestMatcher("/login", "POST")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/signup", "POST")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/profile", "GET")).authenticated()
+                .requestMatchers(new AntPathRequestMatcher("/{username}/update", "PUT")).authenticated()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가

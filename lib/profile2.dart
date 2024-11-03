@@ -40,7 +40,7 @@ class _Profile2State extends State<Profile2> {
   Future<void> _initialize() async {
     String? token = await _tokenService.getToken(); // TokenService에서 토큰 가져오기
     DioService dioService = DioService(token: token); // Token 전달하여 DioService 초기화
-    _profileRepository = ProfileRepository(dioService: dioService);
+    _profileRepository = ProfileRepository(dioService: dioService, tokenService: _tokenService); // TokenService 전달
     fetchProfile();
   }
 

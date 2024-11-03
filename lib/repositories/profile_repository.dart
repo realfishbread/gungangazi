@@ -1,16 +1,25 @@
 import 'package:dio/dio.dart';
 import '../dto/profile_dto.dart';
 import '../services/dio_service.dart'; // DioService를 임포트하세요.
+import '../services/TokenService.dart';
 
 class ProfileRepository {
   final Dio _dio;
+  final TokenService tokenService; // TokenService 인스턴스 추가
 
-  ProfileRepository({required DioService dioService}) : _dio = dioService.getDio(); // DioService에서 Dio 객체를 가져옵니다.
+  ProfileRepository({required DioService dioService, required this.tokenService}) 
+      : _dio = dioService.getDio(); // DioService에서 Dio 객체를 가져옵니다.
 
   // 프로필 정보 가져오기
   Future<ProfileDto?> fetchProfile(String username) async {
     try {
-      Response response = await _dio.get('/profile');
+      // 토큰을 가져와 Authorization 헤더에 추가
+      String? token = await tokenService.getToken();
+      Response response = await _dio.get(
+        '/profile',
+        options: Options(headers: {"Authorization": "Bearer $token"})
+      );
+
       if (response.statusCode == 200) {
         return ProfileDto.fromJson(response.data);
       } else {
@@ -23,13 +32,15 @@ class ProfileRepository {
     }
   }
 
-
   // 프로필 정보 업데이트
   Future<bool> updateProfile(String username, String fieldName, String newValue) async {
     try {
+      // 토큰을 가져와 Authorization 헤더에 추가
+      String? token = await tokenService.getToken();
       Response response = await _dio.put(
         '/$username/update',
-        data: {fieldName: newValue}, // 서버가 요구하는 형식에 맞는지 확인하세요.
+        data: {fieldName: newValue},
+        options: Options(headers: {"Authorization": "Bearer $token"}) // 헤더에 토큰 추가
       );
 
       return response.statusCode == 200;
@@ -39,3 +50,4 @@ class ProfileRepository {
     }
   }
 }
+

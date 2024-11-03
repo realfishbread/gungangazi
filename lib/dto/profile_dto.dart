@@ -1,19 +1,18 @@
-// models/profile_dto.dart
 class ProfileDto {
-  final String username;
-  final String realname;
-  final String email;
-  final String height;
-  final String weight;
-  final String gender;
+  final String? username;
+  final String? realname;
+  final String? email;
+  final String? height;
+  final String? weight;
+  final String? gender;
 
   ProfileDto({
-    required this.username,
-    required this.realname,
-    required this.email,
-    required this.height,
-    required this.weight,
-    required this.gender,
+    this.username,
+    this.realname,
+    this.email,
+    this.height,
+    this.weight,
+    this.gender,
   });
 
   factory ProfileDto.fromJson(Map<String, dynamic> json) {
@@ -28,13 +27,13 @@ class ProfileDto {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'username': username,
-      'realname': realname,
-      'email': email,
-      'height': height,
-      'weight': weight,
-      'gender': gender,
-    };
+    final data = <String, dynamic>{};
+    if (username != null) data['username'] = username;
+    if (realname != null) data['realname'] = realname;
+    if (email != null) data['email'] = email;
+    if (height != null) data['height'] = height;
+    if (weight != null) data['weight'] = weight;
+    if (gender != null) data['gender'] = gender;
+    return data;
   }
 }

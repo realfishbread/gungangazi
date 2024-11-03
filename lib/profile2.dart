@@ -57,8 +57,7 @@ class _Profile2State extends State<Profile2> {
     });
   }
 
-  
-    // 서버로 수정된 프로필 데이터를 보내는 함수
+  // 서버로 수정된 프로필 데이터를 보내는 함수
   Future<void> saveProfile(String fieldName, String newValue) async {
     bool success = await _profileRepository.updateProfile(widget.username, fieldName, newValue);
     if (success) {
@@ -114,14 +113,14 @@ class _Profile2State extends State<Profile2> {
           ),
           const SizedBox(height: 20),
           const Divider(color: Colors.black),
-          _buildProfileItem('아이디', profile.username, null),
-          _buildProfileItem('이름', profile.realname, () {
+          _buildProfileItem('아이디', profile.username ?? "기본아이디", null),
+          _buildProfileItem('이름', profile.realname ?? "기본이름", () {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => EditPage(
                   fieldName: '이름',
-                  currentValue: profile.realname,
+                  currentValue: profile.realname ?? "기본이름",
                   onSave: (fieldName, newValue) async {
                     await saveProfile(fieldName, newValue);
                   },
@@ -129,13 +128,13 @@ class _Profile2State extends State<Profile2> {
               ),
             );
           }),
-          _buildProfileItem('이메일', profile.email, () {
+          _buildProfileItem('이메일', profile.email ?? "기본이메일@example.com", () {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => EditPage(
                   fieldName: '이메일',
-                  currentValue: profile.email,
+                  currentValue: profile.email ?? "기본이메일@example.com",
                   onSave: (fieldName, newValue) async {
                     await saveProfile(fieldName, newValue);
                   },
@@ -143,13 +142,13 @@ class _Profile2State extends State<Profile2> {
               ),
             );
           }),
-          _buildProfileItem('키', profile.height, () {
+          _buildProfileItem('키', profile.height ?? "170cm", () {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => EditPage(
                   fieldName: '키',
-                  currentValue: profile.height,
+                  currentValue: profile.height ?? "170cm",
                   onSave: (fieldName, newValue) async {
                     await saveProfile(fieldName, newValue);
                   },
@@ -157,13 +156,13 @@ class _Profile2State extends State<Profile2> {
               ),
             );
           }),
-          _buildProfileItem('몸무게', profile.weight, () {
+          _buildProfileItem('몸무게', profile.weight ?? "70kg", () {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => EditPage(
                   fieldName: '몸무게',
-                  currentValue: profile.weight,
+                  currentValue: profile.weight ?? "70kg",
                   onSave: (fieldName, newValue) async {
                     await saveProfile(fieldName, newValue);
                   },
@@ -171,7 +170,7 @@ class _Profile2State extends State<Profile2> {
               ),
             );
           }),
-          _buildProfileItem('성별', profile.gender, null),
+          _buildProfileItem('성별', profile.gender ?? "남성", null),
           const SizedBox(height: 20),
           Center(
             child: TextButton(

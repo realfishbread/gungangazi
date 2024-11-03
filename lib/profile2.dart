@@ -57,13 +57,14 @@ class _Profile2State extends State<Profile2> {
     });
   }
 
-  // 서버로 수정된 프로필 데이터를 보내는 함수
+  
+    // 서버로 수정된 프로필 데이터를 보내는 함수
   Future<void> saveProfile(String fieldName, String newValue) async {
     bool success = await _profileRepository.updateProfile(widget.username, fieldName, newValue);
     if (success) {
-      fetchProfile();
+      await fetchProfile(); // 업데이트 후 프로필 정보를 다시 가져오기
     } else {
-      throw Exception('파일 저장을 실패했습니다');
+      print('파일 저장을 실패했습니다');
     }
   }
 

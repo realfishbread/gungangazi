@@ -10,8 +10,7 @@ class ProfileRepository {
   // 프로필 정보 가져오기
   Future<ProfileDto?> fetchProfile(String username) async {
     try {
-      Response response = await _dio.get('/profile', options: Options(headers: {"Authorization": "Bearer YOUR_JWT_TOKEN"})); // baseUrl이 설정되어 있으므로 경로만 적어줍니다.
-
+      Response response = await _dio.get('/profile');
       if (response.statusCode == 200) {
         return ProfileDto.fromJson(response.data);
       } else {
@@ -23,6 +22,7 @@ class ProfileRepository {
       return null;
     }
   }
+
 
   // 프로필 정보 업데이트
   Future<bool> updateProfile(String username, String fieldName, String newValue) async {

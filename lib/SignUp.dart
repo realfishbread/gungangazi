@@ -57,10 +57,6 @@ class _SignUpPageState extends State<SignUpPage> {
         print('회원가입 메시지: $message');
           if (message == "아이디가 이미 존재합니다.") {
           _showErrorDialog('아이디가 이미 존재합니다.');
-        } else if (message == "회원가입 성공") {
-          print(message); 
-          _showErrorDialog('회원가입 성공'); // 회원가입 성공 메시지 출력
-          Navigator.pop(context);  // 로그인 페이지로 이동
         } else {
           _showErrorDialog('회원가입 실패');
         }

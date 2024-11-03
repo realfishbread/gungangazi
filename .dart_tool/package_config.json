@@ -410,6 +410,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "jwt_decode",
+      "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/jwt_decode-0.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "leak_tracker",
       "rootUri": "file:///C:/Users/Administrator/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker-10.0.5",
       "packageUri": "lib/",
@@ -968,7 +974,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-11-03T12:36:38.041414Z",
+  "generated": "2024-11-03T12:57:42.125663Z",
   "generator": "pub",
   "generatorVersion": "3.5.3",
   "flutterRoot": "file:///D:/flutter_windows_3.24.3-stable/flutter",

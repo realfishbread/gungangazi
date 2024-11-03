@@ -9,6 +9,7 @@ import 'SleepPage.dart';
 import 'WaterDrink.dart';
 import 'MealPage.dart';
 import 'ChatPage.dart';
+import '../services/TokenService.dart'; // TokenService 임포트
 
 class MobileHomePage extends StatefulWidget {
   const MobileHomePage({super.key});
@@ -20,7 +21,7 @@ class MobileHomePage extends StatefulWidget {
 class _MobileHomePageState extends State<MobileHomePage> {
   int _selectedIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  final TokenService _tokenService = TokenService(); // TokenService 인스턴스 생성
   final List<dynamic> _listData = [];
   late PopupHandler _popupHandler;
 
@@ -55,27 +56,32 @@ class _MobileHomePageState extends State<MobileHomePage> {
     }
   }
 
- void _onItemTapped(int index) {
-  setState(() {
-    _selectedIndex = index;
-  });
+    void _onItemTapped(int index) async {
+    setState(() {
+      _selectedIndex = index;
+    });
 
-  if (_selectedIndex == 0 || _selectedIndex == 1) {
-    _scaffoldKey.currentState?.openEndDrawer();
-  } else if (_selectedIndex == 2) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const SupplementsPage()),
-    );
-  } else if (_selectedIndex == 3) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => Profile2(username: '사용자이름'), // 실제 사용자 이름을 전달
-      ),
-    );
+    if (_selectedIndex == 3) {
+      String? username = await _tokenService.getUsername(); // TokenService에서 실제 username을 가져오기
+      if (username != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Profile2(username: username),
+          ),
+        );
+      } else {
+        print('아이디를 찾을 수 없습니다.');
+      }
+    } else if (_selectedIndex == 0 || _selectedIndex == 1) {
+      _scaffoldKey.currentState?.openEndDrawer();
+    } else if (_selectedIndex == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SupplementsPage()),
+      );
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {

@@ -33,14 +33,13 @@ class ProfileRepository {
   }
 
   // 프로필 정보 업데이트
-  Future<bool> updateProfile(String username, String fieldName, String newValue) async {
+  Future<bool> updateProfile(String username, Map<String, dynamic> updatedData) async {
     try {
-      // 토큰을 가져와 Authorization 헤더에 추가
       String? token = await tokenService.getToken();
       Response response = await _dio.put(
         '/$username/update',
-        data: {fieldName: newValue},
-        options: Options(headers: {"Authorization": "Bearer $token"}) // 헤더에 토큰 추가
+        data: updatedData, // updatedData가 Map 형식으로 전송됩니다
+        options: Options(headers: {"Authorization": "Bearer $token"}),
       );
 
       return response.statusCode == 200;

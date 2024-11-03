@@ -59,7 +59,19 @@ class _Profile2State extends State<Profile2> {
 
   // 서버로 수정된 프로필 데이터를 보내는 함수
   Future<void> saveProfile(String fieldName, String newValue) async {
-    bool success = await _profileRepository.updateProfile(widget.username, fieldName, newValue);
+    final updatedProfile = ProfileDto(
+      username: _profile?.username ?? defaultProfile.username,
+      realname: fieldName == '이름' ? newValue : _profile?.realname ?? defaultProfile.realname,
+      email: fieldName == '이메일' ? newValue : _profile?.email ?? defaultProfile.email,
+      height: fieldName == '키' ? newValue : _profile?.height ?? defaultProfile.height,
+      weight: fieldName == '몸무게' ? newValue : _profile?.weight ?? defaultProfile.weight,
+      gender: _profile?.gender ?? defaultProfile.gender,
+    );
+
+    bool success = await _profileRepository.updateProfile(
+    widget.username, 
+    updatedProfile.toJson() // toJson 메서드 사용하여 Map 형식으로 변환
+  );
     if (success) {
       await fetchProfile(); // 업데이트 후 프로필 정보를 다시 가져오기
     } else {
@@ -113,14 +125,14 @@ class _Profile2State extends State<Profile2> {
           ),
           const SizedBox(height: 20),
           const Divider(color: Colors.black),
-          _buildProfileItem('아이디', profile.username ?? "기본아이디", null),
-          _buildProfileItem('이름', profile.realname ?? "기본이름", () {
+          _buildProfileItem('아이디', profile.username ?? '기본아이디', null),
+          _buildProfileItem('이름', profile.realname ?? '기본이름', () {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => EditPage(
                   fieldName: '이름',
-                  currentValue: profile.realname ?? "기본이름",
+                  currentValue: profile.realname ?? '기본이름',
                   onSave: (fieldName, newValue) async {
                     await saveProfile(fieldName, newValue);
                   },
@@ -128,13 +140,13 @@ class _Profile2State extends State<Profile2> {
               ),
             );
           }),
-          _buildProfileItem('이메일', profile.email ?? "기본이메일@example.com", () {
+          _buildProfileItem('이메일', profile.email ?? '기본이메일@example.com', () {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => EditPage(
                   fieldName: '이메일',
-                  currentValue: profile.email ?? "기본이메일@example.com",
+                  currentValue: profile.email ?? '기본이메일@example.com',
                   onSave: (fieldName, newValue) async {
                     await saveProfile(fieldName, newValue);
                   },
@@ -142,13 +154,13 @@ class _Profile2State extends State<Profile2> {
               ),
             );
           }),
-          _buildProfileItem('키', profile.height ?? "170cm", () {
+          _buildProfileItem('키', profile.height ?? '170cm', () {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => EditPage(
                   fieldName: '키',
-                  currentValue: profile.height ?? "170cm",
+                  currentValue: profile.height ?? '170cm',
                   onSave: (fieldName, newValue) async {
                     await saveProfile(fieldName, newValue);
                   },
@@ -156,13 +168,13 @@ class _Profile2State extends State<Profile2> {
               ),
             );
           }),
-          _buildProfileItem('몸무게', profile.weight ?? "70kg", () {
+          _buildProfileItem('몸무게', profile.weight ?? '70kg', () {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => EditPage(
                   fieldName: '몸무게',
-                  currentValue: profile.weight ?? "70kg",
+                  currentValue: profile.weight ?? '70kg',
                   onSave: (fieldName, newValue) async {
                     await saveProfile(fieldName, newValue);
                   },
@@ -170,7 +182,7 @@ class _Profile2State extends State<Profile2> {
               ),
             );
           }),
-          _buildProfileItem('성별', profile.gender ?? "남성", null),
+          _buildProfileItem('성별', profile.gender ?? '남성', null),
           const SizedBox(height: 20),
           Center(
             child: TextButton(

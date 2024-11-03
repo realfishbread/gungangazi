@@ -35,6 +35,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers(new AntPathRequestMatcher("/login", "POST")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/signup", "POST")).permitAll()
+                .requestMatchers("/profile").authenticated()
                 .anyRequest().authenticated()
             );
         return http.build();

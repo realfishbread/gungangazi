@@ -27,16 +27,16 @@ public class User {
     @Column(name = "realname", nullable = false) // 실명 필드
     private String realname;
 
-    @Column(name = "height", nullable = false) // 키 필드 추가
+    @Column(name = "height", nullable = true) // 키 필드 추가
     private String height;
 
-    @Column(name = "weight", nullable = false) // 몸무게 필드 추가
+    @Column(name = "weight", nullable = true) // 몸무게 필드 추가
     private String weight;
 
-    @Column(name = "gender", nullable = false) // 성별 필드 추가
+    @Column(name = "gender", nullable = true) // 성별 필드 추가
     private String gender;
 
-    @Column(name = "age", nullable = false) // 나이 필드 추가
+    @Column(name = "age", nullable = true) // 나이 필드 추가
     private Integer age;
 
     public long getId() {

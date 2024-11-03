@@ -111,11 +111,21 @@ public class UserController {
         }
     
         User existingUser = userOptional.get();
-        existingUser.setRealname(profileDto.getRealname());
-        existingUser.setEmail(profileDto.getEmail());
-        existingUser.setHeight(profileDto.getHeight());
-        existingUser.setWeight(profileDto.getWeight());
-        existingUser.setGender(profileDto.getGender());
+        if (profileDto.getRealname() != null) {
+            existingUser.setRealname(profileDto.getRealname());
+        }
+        if (profileDto.getEmail() != null) {
+            existingUser.setEmail(profileDto.getEmail());
+        }
+        if (profileDto.getHeight() != null) {
+            existingUser.setHeight(profileDto.getHeight());
+        }
+        if (profileDto.getWeight() != null) {
+            existingUser.setWeight(profileDto.getWeight());
+        }
+        if (profileDto.getGender() != null) {
+            existingUser.setGender(profileDto.getGender());
+        }
     
         userRepository.save(existingUser);
     

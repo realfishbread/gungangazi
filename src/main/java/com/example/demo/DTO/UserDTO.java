@@ -9,7 +9,6 @@ public class UserDTO {
     private String email;
     private String realname;
 
-    
     public long getId() {
         return id;
     }
@@ -49,6 +48,7 @@ public class UserDTO {
     public void setRealname(String realname) {
         this.realname = realname;
     }
+
 
     // 데이터를 엔티티로 변환하는 메서드
     public User toEntity() {

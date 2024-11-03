@@ -59,7 +59,7 @@ class _Profile2State extends State<Profile2> {
       fetchProfile();
     } else {
       // 에러 처리
-      throw Exception('Failed to save profile');
+      throw Exception('파일 저장을 실패했습니다');
     }
   }
 

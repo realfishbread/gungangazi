@@ -40,17 +40,40 @@ public class UserService {
 
         return user;
     }
+
+    
+    public ProfileDto getUserProfileByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        
+        // ProfileDto로 필요한 정보만 반환
+        return new ProfileDto(user.getUsername(), user.getRealname(), user.getEmail(), user.getHeight(), user.getWeight(), user.getGender());
+    }
+    
+
+
+
       // 사용자 정보 업데이트
       public User updateUser(String username, ProfileDto profileDto) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     
-        // 업데이트할 필드들 설정
-        user.setRealname(profileDto.getRealname());
-        user.setEmail(profileDto.getEmail());
-        user.setHeight(profileDto.getHeight());
-        user.setWeight(profileDto.getWeight());
-        user.setGender(profileDto.getGender());
+        // 업데이트할 필드들에 대해 개별적인 조건을 추가
+        if (profileDto.getRealname() != null) {
+            user.setRealname(profileDto.getRealname());
+        }
+        if (profileDto.getEmail() != null) {
+            user.setEmail(profileDto.getEmail());
+        }
+        if (profileDto.getHeight() != null) {
+            user.setHeight(profileDto.getHeight());
+        }
+        if (profileDto.getWeight() != null) {
+            user.setWeight(profileDto.getWeight());
+        }
+        if (profileDto.getGender() != null) {
+            user.setGender(profileDto.getGender());
+        }
     
         return userRepository.save(user);  // 업데이트된 사용자 저장
     }

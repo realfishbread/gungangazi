@@ -25,10 +25,10 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _controller.forward();
 
-   Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) =>  const LoginPage()), // 마지막에 loginpage로 변경해
+        MaterialPageRoute(builder: (context) => const LoginPage()), // 마지막에 loginpage로 변경해
       );
     });
   }
@@ -45,9 +45,13 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
       body: Center(
         child: FadeTransition(
           opacity: _animation,
-          child: Icon(Icons.local_hospital_outlined, size: 100, color: Colors.yellow[200]), // 로고
+          child: Image.asset(
+            'assets/splash/splash_image.png', // 로고를 이미지로 변경
+            width: 200,
+            height: 200,
+          ),
         ),
       ),
     );
   }
-} 
+}

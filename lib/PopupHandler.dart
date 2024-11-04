@@ -10,7 +10,7 @@ class PopupHandler {
   int _currentImageIndex = 0;
   late ValueNotifier<int> _imageNotifier;
   Timer? _imageTimer;
-  Duration frameDuration = const Duration(milliseconds: 500);
+  Duration frameDuration = const Duration(milliseconds: 250);
   String _currentBodyPart = 'default';
 
   Rect? _imageRect; // 이미지의 위치와 크기를 저장

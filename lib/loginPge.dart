@@ -15,7 +15,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   final AuthRepository _authRepository = AuthRepository();
   bool _loginFailed = false;
-
+  bool _obscurePassword = true;
+  
   Future<void> _login() async {
     // 서버로 로그인 요청 보내기
     LoginRequestDto loginRequest = LoginRequestDto(
@@ -117,11 +118,21 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(height: 16),
                       TextField(
                         controller: _passwordController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: '비밀번호',
                           border: OutlineInputBorder(),
+                           suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
                         ),
-                        obscureText: true,
+                        obscureText: _obscurePassword,
                       ),
                       const SizedBox(height: 16),
                       if (_loginFailed)

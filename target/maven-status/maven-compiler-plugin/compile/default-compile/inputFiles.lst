@@ -2,12 +2,16 @@ D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\DTO\Profi
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\config\SecurityConfig.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\DemoApplication.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\service\JwtTokenProvider.java
+D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\controller\userHealth\WaterIntakeController.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\config\JwtAuthenticationFilter.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\DTO\UserDTO.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\entity\User.java
+D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\entity\userHealth\WaterIntake.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\controller\UserController.java
+D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\service\userHealth\WaterIntakeService.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\service\CustomUserDetailsService.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\repository\UserRepository.java
+D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\repository\userHealth\WaterIntakeRepository.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\service\UserService.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\config\CorsConfig.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\DTO\LoginRequestDto.java

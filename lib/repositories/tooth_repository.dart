@@ -1,20 +1,39 @@
-// repositories/tooth_repository.dart
+import '../services/dio_service.dart';
 import '../dto/brush_history.dart';
-import '../services/tooth_service.dart';
 
 class ToothRepository {
-  final ToothService toothService = ToothService();
+  final DioService dioService;
 
-  // 양치 기록 가져오기
+  ToothRepository({required this.dioService});
+
+  // 양치 기록 데이터 불러오기
   Future<List<BrushHistoryDTO>> fetchBrushHistory() async {
-    final response = await toothService.getBrushHistory();
-    List data = response.data as List;
-    return data.map((json) => BrushHistoryDTO.fromJson(json)).toList();
+    try {
+      final response = await dioService.getDio().get('/brushHistory');
+      List<BrushHistoryDTO> brushHistoryList = (response.data as List)
+          .map((json) => BrushHistoryDTO.fromJson(json))
+          .toList();
+      return brushHistoryList;
+    } catch (e) {
+      print("양치 기록 불러오기 실패: $e");
+      return [];
+    }
   }
 
-  // 양치 기록 저장하기
-  Future<void> saveBrushData(BrushHistoryDTO brushData) async {
-    final data = brushData.toJson();
-    await toothService.postBrushData(data);
+  // 양치 기록 데이터 저장
+  Future<void> saveBrushData(BrushHistoryDTO data) async {
+    try {
+      final response = await dioService.getDio().post(
+        '/saveBrushData',
+        data: data.toJson(),
+      );
+      if (response.statusCode == 200) {
+        print("양치 데이터가 성공적으로 저장되었습니다.");
+      } else {
+        print("양치 데이터 저장 실패: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("양치 데이터 저장 에러: $e");
+    }
   }
 }

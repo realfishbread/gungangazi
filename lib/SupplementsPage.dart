@@ -20,33 +20,25 @@ class _SupplementsPageState extends State<SupplementsPage> {
   int _periodLength = 5;
   DateTime? _lastMenstruationDate;
   final List<DateTime> _predictedMenstruationDates = [];
-
-  // 알림을 위한 플러그인 인스턴스 생성
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
     super.initState();
-    _initializeNotifications(); // 알림 초기화
-    _loadData(); // 저장된 데이터 불러오기
+    _initializeNotifications();
+    _loadData();
   }
 
-  // 알림 초기화
   Future<void> _initializeNotifications() async {
-    tz.initializeTimeZones(); // 타임존 초기화
-
+    tz.initializeTimeZones();
     const AndroidInitializationSettings initializationSettingsAndroid =
     AndroidInitializationSettings('@mipmap/ic_launcher');
-
     const InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
     );
-
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  // 알림 예약하기
   Future<void> _scheduleNotification(DateTime scheduledDate) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
     AndroidNotificationDetails(
@@ -62,16 +54,14 @@ class _SupplementsPageState extends State<SupplementsPage> {
       0,
       '예정된 생리일 알림',
       '생리 주기를 확인하세요.',
-      tz.TZDateTime.from(scheduledDate, tz.local), // 예약 시간
+      tz.TZDateTime.from(scheduledDate, tz.local),
       platformChannelSpecifics,
       androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation:
-      UILocalNotificationDateInterpretation.absoluteTime,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
   }
 
-  // 데이터 불러오기
   Future<void> _loadData() async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -100,37 +90,6 @@ class _SupplementsPageState extends State<SupplementsPage> {
     setState(() {});
   }
 
-  // 데이터 저장하기
-  Future<void> _saveData() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final supplementData = _supplementTaken.keys
-        .where((date) => _supplementTaken[date] == true)
-        .map((date) => date.toIso8601String())
-        .toList();
-    prefs.setStringList('supplementTaken', supplementData);
-
-    final menstruationData = _menstruationRecorded.keys
-        .where((date) => _menstruationRecorded[date] == true)
-        .map((date) => date.toIso8601String())
-        .toList();
-    prefs.setStringList('menstruationRecorded', menstruationData);
-
-    if (_lastMenstruationDate != null) {
-      prefs.setString('lastMenstruationDate', _lastMenstruationDate!.toIso8601String());
-    } else {
-      prefs.remove('lastMenstruationDate');
-    }
-  }
-
-  // 페이지 나갈 때 데이터 저장
-  @override
-  void dispose() {
-    _saveData();
-    super.dispose();
-  }
-
-  // 생리 주기 예측 및 알림 예약
   void _predictNextMenstruation() {
     if (_lastMenstruationDate != null) {
       _predictedMenstruationDates.clear();
@@ -139,8 +98,6 @@ class _SupplementsPageState extends State<SupplementsPage> {
         for (int j = 0; j < _periodLength; j++) {
           DateTime predictedDate = nextPeriodStart.add(Duration(days: j));
           _predictedMenstruationDates.add(predictedDate);
-
-          // 생리 예측 날짜마다 알림 예약
           _scheduleNotification(predictedDate);
         }
       }
@@ -219,58 +176,6 @@ class _SupplementsPageState extends State<SupplementsPage> {
               });
             },
             child: Text(_menstruationRecorded[_selectedDay] == true ? '생리 기록 취소' : '생리 기록'),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('생리 주기: '),
-              DropdownButton<int>(
-                value: _cycleLength,
-                items: List.generate(11, (index) => 20 + index).map((int value) {
-                  return DropdownMenuItem<int>(
-                    value: value,
-                    child: Text('$value일'),
-                  );
-                }).toList(),
-                onChanged: (int? newValue) {
-                  setState(() {
-                    if (newValue != null) {
-                      _cycleLength = newValue;
-                      if (_lastMenstruationDate != null) {
-                        _predictNextMenstruation();
-                      }
-                    }
-                  });
-                },
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('생리 기간: '),
-              DropdownButton<int>(
-                value: _periodLength,
-                items: List.generate(5, (index) => 3 + index).map((int value) {
-                  return DropdownMenuItem<int>(
-                    value: value,
-                    child: Text('$value일'),
-                  );
-                }).toList(),
-                onChanged: (int? newValue) {
-                  setState(() {
-                    if (newValue != null) {
-                      _periodLength = newValue;
-                      if (_lastMenstruationDate != null) {
-                        _predictNextMenstruation();
-                      }
-                    }
-                  });
-                },
-              ),
-            ],
           ),
         ],
       ),

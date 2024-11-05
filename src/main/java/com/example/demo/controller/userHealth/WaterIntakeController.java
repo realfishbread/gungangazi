@@ -27,14 +27,14 @@ public class WaterIntakeController {
     }
 
     // 유저별 물 섭취 기록 가져오기
-    @GetMapping
+    @GetMapping("/{username}")
     public ResponseEntity<List<WaterIntake>> getAllWaterIntakeByUsername(@PathVariable String username) {
         List<WaterIntake> waterIntakeList = waterIntakeService.getAllWaterIntakeByUsername(username);
         return ResponseEntity.ok(waterIntakeList);
     }
 
     // 유저별 물 섭취 기록 저장하기
-    @PostMapping("/{username}")
+    @PostMapping("/{username}/save")
     public ResponseEntity<Void> saveWaterIntake(
         @PathVariable String username,
         @RequestBody List<Map<String, Object>> waterIntakeData

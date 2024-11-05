@@ -14,9 +14,10 @@ class WaterRepository {
     try {
       // 토큰 가져오기
       String? token = await tokenService.getToken();
+      String? username = await tokenService.getUsername();
       
       final response = await dioService.getDio().get(
-        '/waterIntake',
+        '/waterIntake/$username',
         options: Options(
           headers: {'Authorization': 'Bearer $token'},
         ),
@@ -46,7 +47,7 @@ class WaterRepository {
       }
 
       await dioService.getDio().post(
-        '/waterIntake/$username', // username을 URL에 포함
+        '/waterIntake/$username/save', // username을 URL에 포함
         data: waterIntake.entries
             .map((entry) => {'date': entry.key, 'amount': entry.value})
             .toList(),

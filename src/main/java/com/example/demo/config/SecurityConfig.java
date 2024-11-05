@@ -55,6 +55,8 @@ public class SecurityConfig {
                 .requestMatchers(new AntPathRequestMatcher("/{username}/update", "PUT")).authenticated()
                 .requestMatchers(new AntPathRequestMatcher("/waterIntake", "GET")).authenticated()
                 .requestMatchers(new AntPathRequestMatcher("/waterIntake/{username}", "PUT")).authenticated()
+                .requestMatchers(new AntPathRequestMatcher("/brushHistory/{username}", "GET")).authenticated()
+                .requestMatchers(new AntPathRequestMatcher("/brushHistory/{username}/save", "PUT")).authenticated()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가

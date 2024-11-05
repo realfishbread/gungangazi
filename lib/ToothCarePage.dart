@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // 날짜 포맷을 위한 패키지
-import '../repositories/tooth_repository.dart';
-import '../dto/brush_history.dart';
+import 'repositories/userHealth/tooth_repository.dart';
+import 'dto/userHealth/brush_history.dart';
 import '../services/dio_service.dart';
+import '../services/TokenService.dart';
 
 class ToothCarePage extends StatefulWidget {
   const ToothCarePage({super.key});
@@ -12,7 +13,11 @@ class ToothCarePage extends StatefulWidget {
 }
 
 class _ToothCarePageState extends State<ToothCarePage> {
-  final ToothRepository toothRepository = ToothRepository(dioService: DioService());
+  final ToothRepository toothRepository = ToothRepository(
+    dioService: DioService(),
+    tokenService: TokenService(), // TokenService 전달
+  );
+
   late Future<List<BrushHistoryDTO>> _brushHistory;
 
   final _formKey = GlobalKey<FormState>();
@@ -154,4 +159,5 @@ class _ToothCarePageState extends State<ToothCarePage> {
     );
   }
 }
+
 

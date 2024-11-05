@@ -1,0 +1,40 @@
+package com.example.demo.service.userHealth;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.DTO.userHealth.BrushHistoryDTO;
+import com.example.demo.entity.userHealth.BrushHistory;
+import com.example.demo.repository.userHealth.BrushHistoryRepository;
+
+@Service
+public class BrushHistoryService {
+
+    @Autowired
+    private BrushHistoryRepository brushHistoryRepository;
+
+    public List<BrushHistoryDTO> getBrushHistoryByUsername(String username) {
+        List<BrushHistory> brushHistories = brushHistoryRepository.findByUsername(username);
+        return brushHistories.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    public void saveBrushHistory(String username, BrushHistoryDTO dto) {
+        BrushHistory brushHistory = new BrushHistory();
+        brushHistory.setUsername(username);
+        brushHistory.setDate(dto.getDate());
+        brushHistory.setDuration(dto.getDuration());
+        brushHistory.setFlossed(dto.isFlossed());
+        brushHistoryRepository.save(brushHistory);
+    }
+
+    private BrushHistoryDTO convertToDTO(BrushHistory brushHistory) {
+        BrushHistoryDTO dto = new BrushHistoryDTO();
+        dto.setDate(brushHistory.getDate());
+        dto.setDuration(brushHistory.getDuration());
+        dto.setFlossed(brushHistory.isFlossed());
+        return dto;
+    }
+}

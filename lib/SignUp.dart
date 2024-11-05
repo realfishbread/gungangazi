@@ -58,7 +58,7 @@ class _SignUpPageState extends State<SignUpPage> {
           if (message == "아이디가 이미 존재합니다.") {
           _showErrorDialog('아이디가 이미 존재합니다.');
         } else {
-          _showErrorDialog('회원가입 실패');
+          _showErrorDialog('회원가입 성공');
         }
       } catch (e) {
         _showErrorDialog('회원가입에 실패했습니다: $e');

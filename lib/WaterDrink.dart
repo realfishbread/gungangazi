@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
-import 'repositories/userHealth/water_repository.dart';
+import '../repositories/userHealth/water_repository.dart';
 import '../services/dio_service.dart';
+import '../services/TokenService.dart';
 
 class WaterDrink extends StatefulWidget {
   const WaterDrink({super.key});
@@ -12,7 +14,11 @@ class WaterDrink extends StatefulWidget {
 }
 
 class _WaterDrinkState extends State<WaterDrink> {
-  final WaterRepository waterRepository = WaterRepository(dioService: DioService());
+  final WaterRepository waterRepository = WaterRepository(
+    dioService: DioService(),
+    tokenService: TokenService(), // TokenService 추가
+  );
+
   Map<String, int> _dailyWaterIntake = {};
 
   @override
@@ -26,10 +32,6 @@ class _WaterDrinkState extends State<WaterDrink> {
     setState(() {});
   }
 
-  Future<void> _saveWaterIntake() async {
-    await waterRepository.saveWaterIntake(_dailyWaterIntake);
-  }
-
   void _addWater(int amount) {
     String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
     setState(() {
@@ -38,23 +40,27 @@ class _WaterDrinkState extends State<WaterDrink> {
         _dailyWaterIntake[today] = 0;
       }
     });
-    _saveWaterIntake();
+    waterRepository.saveWaterIntake(_dailyWaterIntake);
   }
 
   List<BarChartGroupData> _generateBarChartData() {
     List<String> dates = _dailyWaterIntake.keys.toList()..sort();
-    return dates.map((date) {
-      return BarChartGroupData(
-        x: dates.indexOf(date),
-        barRods: [
-          BarChartRodData(
-            toY: _dailyWaterIntake[date]?.toDouble() ?? 0,
-            width: 15,
-            color: Colors.blue,
-          )
-        ],
+    List<BarChartGroupData> barGroups = [];
+    for (int i = 0; i < dates.length; i++) {
+      barGroups.add(
+        BarChartGroupData(
+          x: i,
+          barRods: [
+            BarChartRodData(
+              toY: (_dailyWaterIntake[dates[i]] ?? 0).toDouble(),
+              width: 15,
+              color: Colors.blue,
+            )
+          ],
+        ),
       );
-    }).toList();
+    }
+    return barGroups;
   }
 
   @override
@@ -151,4 +157,3 @@ class _WaterDrinkState extends State<WaterDrink> {
     );
   }
 }
-

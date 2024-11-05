@@ -3,12 +3,11 @@ import '../../dto/userHealth/water_dto.dart';
 import '../../services/TokenService.dart'; // TokenService 추가
 import 'package:dio/dio.dart';
 
-
 class WaterRepository {
   final DioService dioService;
-  final TokenService tokenService = TokenService(); // TokenService 인스턴스 생성
+  final TokenService tokenService; // TokenService 인스턴스 필드 추가
 
-  WaterRepository({required this.dioService});
+  WaterRepository({required this.dioService, required this.tokenService});
 
   // 물 섭취 기록 데이터 불러오기
   Future<Map<String, int>> fetchWaterIntake() async {
@@ -40,9 +39,14 @@ class WaterRepository {
     try {
       // 토큰 가져오기
       String? token = await tokenService.getToken();
-      
+      String? username = await tokenService.getUsername();
+
+      if (username == null) {
+        throw Exception("Username is missing");
+      }
+
       await dioService.getDio().post(
-        '/saveWaterIntake',
+        '/waterIntake/$username', // username을 URL에 포함
         data: waterIntake.entries
             .map((entry) => {'date': entry.key, 'amount': entry.value})
             .toList(),

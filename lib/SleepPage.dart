@@ -41,6 +41,7 @@ class _SleepPageState extends State<SleepPage> {
         'wakeUpTime': dto.wakeUpTime,
       }).toList();
     });
+    print('_sleepRecords: $_sleepRecords'); // 디버깅용
   }
 
   // 로컬에 데이터 저장 후 서버로 즉시 전송
@@ -120,7 +121,7 @@ class _SleepPageState extends State<SleepPage> {
     }
   }
 
-  // 수면 기록 그래프 빌드 메서드 추가
+  // 수면 기록 그래프 빌드 메서드
   Widget _buildSleepGraph() {
     if (_sleepRecords.isEmpty) {
       return const Center(child: Text('저장된 수면 기록이 없습니다.'));

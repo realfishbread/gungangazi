@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class EditPage extends StatefulWidget {
   final String fieldName; // 수정할 필드의 이름
-  final String currentValue; // 현재 값
+  final String currentValue; // 현재 값 (숫자만)
   final Function(String fieldName, String newValue) onSave; // 수정된 값을 저장하는 콜백 함수
 
   const EditPage({
@@ -40,7 +40,9 @@ class _EditPageState extends State<EditPage> {
       _isSaving = true; // 저장 중 상태 설정
     });
 
-    await widget.onSave(widget.fieldName, _controller.text); // 수정된 값 저장
+    // 단위를 붙여서 저장
+    String newValue = '${_controller.text}${widget.fieldName == '키' ? 'cm' : 'kg'}';
+    await widget.onSave(widget.fieldName, newValue); // 수정된 값 저장
 
     setState(() {
       _isSaving = false; // 저장 완료 상태로 변경
@@ -62,23 +64,35 @@ class _EditPageState extends State<EditPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
-              controller: _controller,
-              decoration: InputDecoration(
-                labelText: widget.fieldName,
-                labelStyle: const TextStyle(color: Colors.black),
-                border: const OutlineInputBorder(),
-              ),
-              style: const TextStyle(color: Colors.black),
-              onSubmitted: (value) => _saveProfile(), // 엔터키 입력 시 자동 저장
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: widget.fieldName,
+                      labelStyle: const TextStyle(color: Colors.black),
+                      border: const OutlineInputBorder(),
+                    ),
+                    style: const TextStyle(color: Colors.black),
+                    onSubmitted: (value) => _saveProfile(), // 엔터키 입력 시 자동 저장
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  widget.fieldName == '키' ? 'cm' : 'kg', // 단위를 고정 텍스트로 표시
+                  style: const TextStyle(fontSize: 18),
+                ),
+              ],
             ),
             const SizedBox(height: 20),
             _isSaving
                 ? const CircularProgressIndicator() // 저장 중일 때 로딩 스피너 표시
                 : TextButton(
-                    onPressed: _saveProfile,
-                    child: const Text('저장', style: TextStyle(color: Colors.black)),
-                  ),
+              onPressed: _saveProfile,
+              child: const Text('저장', style: TextStyle(color: Colors.black)),
+            ),
           ],
         ),
       ),

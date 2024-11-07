@@ -56,7 +56,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
     }
   }
 
-    void _onItemTapped(int index) async {
+  void _onItemTapped(int index) async {
     setState(() {
       _selectedIndex = index;
     });
@@ -114,6 +114,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
         }),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed, // 추가
         backgroundColor: const Color(0xFFFFF9C4),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -135,7 +136,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.black12,
+        unselectedItemColor: Colors.black45,
         onTap: _onItemTapped,
       ),
       floatingActionButton: FloatingActionButton(

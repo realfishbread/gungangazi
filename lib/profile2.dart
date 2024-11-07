@@ -69,9 +69,9 @@ class _Profile2State extends State<Profile2> {
     );
 
     bool success = await _profileRepository.updateProfile(
-    widget.username, 
-    updatedProfile.toJson() // toJson 메서드 사용하여 Map 형식으로 변환
-  );
+        widget.username,
+        updatedProfile.toJson() // toJson 메서드 사용하여 Map 형식으로 변환
+    );
     if (success) {
       await fetchProfile(); // 업데이트 후 프로필 정보를 다시 가져오기
     } else {
@@ -160,7 +160,7 @@ class _Profile2State extends State<Profile2> {
               MaterialPageRoute(
                 builder: (context) => EditPage(
                   fieldName: '키',
-                  currentValue: profile.height ?? '170cm',
+                  currentValue: (profile.height ?? '170cm').replaceAll('cm', ''), // 'cm' 제거하여 숫자만 전달
                   onSave: (fieldName, newValue) async {
                     await saveProfile(fieldName, newValue);
                   },
@@ -174,7 +174,7 @@ class _Profile2State extends State<Profile2> {
               MaterialPageRoute(
                 builder: (context) => EditPage(
                   fieldName: '몸무게',
-                  currentValue: profile.weight ?? '70kg',
+                  currentValue: (profile.weight ?? '70kg').replaceAll('kg', ''), // 'kg' 제거하여 숫자만 전달
                   onSave: (fieldName, newValue) async {
                     await saveProfile(fieldName, newValue);
                   },
@@ -182,6 +182,7 @@ class _Profile2State extends State<Profile2> {
               ),
             );
           }),
+
           _buildProfileItem('성별', profile.gender ?? '남성', null),
           const SizedBox(height: 20),
           Center(

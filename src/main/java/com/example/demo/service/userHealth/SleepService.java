@@ -16,7 +16,7 @@ public class SleepService {
         return sleepRepository.save(sleep);
     }
 
-    public List<Sleep> getAllSleepData() {
-        return sleepRepository.findAll();
+    public List<Sleep> getSleepDataByUsername(String username) {
+        return sleepRepository.findByUsername(username);
     }
 }

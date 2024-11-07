@@ -50,7 +50,7 @@ class _ChatPageState extends State<ChatPage> {
                   child: TextField(
                     controller: _controller,
                     decoration: const InputDecoration(
-                      labelText: '메시지를 입력하세요',
+                      labelText: '증상을 입력하세요',
                     ),
                   ),
                 ),
@@ -89,7 +89,7 @@ class ChatBubble extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: Image.asset(
-                'assets/dog.png', // 강아지 이미지 경로 설정
+                'assets/dog.jpg', // 강아지 이미지 경로 설정
                 width: 30,
                 height: 30,
               ),

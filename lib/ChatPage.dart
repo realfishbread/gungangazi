@@ -9,7 +9,37 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final List<Map<String, dynamic>> _messages = [];
   final TextEditingController _controller = TextEditingController();
+  bool _isTyping = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _addDogMessage('안녕하세요! 어떤 증상이 있으신가요?'); // 강아지가 첫 메시지를 보냄
+  }
+
+  // 강아지가 한 글자씩 메시지를 보내는 메서드
+  Future<void> _addDogMessage(String fullText) async {
+    setState(() {
+      _isTyping = true;
+      _messages.add({
+        'text': '', // 초기엔 빈 문자열로 추가
+        'isMine': false,
+      });
+    });
+
+    for (int i = 0; i < fullText.length; i++) {
+      await Future.delayed(const Duration(milliseconds: 50)); // 글자 하나당 50ms 지연
+      setState(() {
+        _messages.last['text'] = _messages.last['text'] + fullText[i];
+      });
+    }
+
+    setState(() {
+      _isTyping = false;
+    });
+  }
+
+  // 사용자가 메시지를 보낼 때 호출
   void _sendMessage(bool isMine) {
     if (_controller.text.isNotEmpty) {
       setState(() {
@@ -42,6 +72,11 @@ class _ChatPageState extends State<ChatPage> {
               },
             ),
           ),
+          if (_isTyping) // 강아지가 타이핑 중일 때 인디케이터 표시
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text('강아지가 입력 중...'),
+            ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -60,7 +95,7 @@ class _ChatPageState extends State<ChatPage> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.reply),
-                  onPressed: () => _sendMessage(false),  // 상대방 메시지 (예시용)
+                  onPressed: () => _addDogMessage('알겠습니다!'),  // 예시용 강아지 응답
                 ),
               ],
             ),
@@ -90,8 +125,8 @@ class ChatBubble extends StatelessWidget {
               padding: const EdgeInsets.only(right: 8.0),
               child: Image.asset(
                 'assets/dog.jpg', // 강아지 이미지 경로 설정
-                width: 30,
-                height: 30,
+                width: 50,
+                height: 50,
               ),
             ),
           Container(
@@ -116,5 +151,6 @@ class ChatBubble extends StatelessWidget {
     );
   }
 }
+
 
 

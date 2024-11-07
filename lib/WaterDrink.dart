@@ -67,7 +67,7 @@ class _WaterDrinkState extends State<WaterDrink> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("WaterDrink"),
+        title: const Text("수분 섭취"),
         backgroundColor: const Color(0xFFFFF9C4),
       ),
       body: Column(

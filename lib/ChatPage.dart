@@ -28,7 +28,7 @@ class _ChatPageState extends State<ChatPage> {
     });
 
     for (int i = 0; i < fullText.length; i++) {
-      await Future.delayed(const Duration(milliseconds: 50)); // 글자 하나당 50ms 지연
+      await Future.delayed(const Duration(milliseconds: 100)); // 글자 하나당 100ms 지연
       setState(() {
         _messages.last['text'] = _messages.last['text'] + fullText[i];
       });
@@ -122,7 +122,7 @@ class ChatBubble extends StatelessWidget {
         children: [
           if (!isMine) // 상대방 메시지일 때 강아지 이미지 추가
             Padding(
-              padding: const EdgeInsets.only(right: 8.0),
+              padding: const EdgeInsets.only(right: 8.0, bottom: 8.0), // 이미지를 아래로 내림
               child: Image.asset(
                 'assets/dog.jpg', // 강아지 이미지 경로 설정
                 width: 50,
@@ -151,6 +151,4 @@ class ChatBubble extends StatelessWidget {
     );
   }
 }
-
-
 

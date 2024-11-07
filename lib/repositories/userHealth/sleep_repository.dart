@@ -48,8 +48,15 @@ class SleepRepository {
       final response = await dio.get('/sleep/getSleepData');
 
       if (response.statusCode == 200) {
-        List<dynamic> data = response.data['records'];
-        List<SleepDto> sleepData = data.map((item) => SleepDto.fromJson(item)).toList();
+        List<dynamic> data = response.data['records'] ?? [];
+        List<SleepDto> sleepData = data.map((item) {
+          return SleepDto(
+            date: item['date'] ?? '',
+            sleepTime: item['sleepTime'] ?? '',
+            wakeUpTime: item['wakeUpTime'] ?? '',
+          );
+        }).toList();
+
         print('서버로부터 수면 데이터를 성공적으로 불러왔습니다.');
         return sleepData;
       } else {

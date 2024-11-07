@@ -28,11 +28,11 @@ class _SleepPageState extends State<SleepPage> {
       dioService: DioService(),
       tokenService: TokenService(),
     );
-    _loadSleepDataFromServer(); // 서버 데이터도 초기화 시 불러오기
+    _loadSleepDataFromServer(); // 초기화 시 서버에서 데이터 불러오기
   }
 
+  // 서버에서 수면 데이터를 불러와 _sleepRecords에 추가하는 메서드
   Future<void> _loadSleepDataFromServer() async {
-    // 서버에서 수면 데이터를 가져와 _sleepRecords에 추가
     List<SleepDto> serverData = await sleepRepository.fetchSleepDataFromDatabase();
     setState(() {
       _sleepRecords = serverData.map((dto) => {
@@ -43,6 +43,7 @@ class _SleepPageState extends State<SleepPage> {
     });
   }
 
+  // 로컬에 데이터 저장 후 서버로 즉시 전송
   Future<void> _saveSleepDataLocally() async {
     if (_sleepTime != null && _wakeUpTime != null) {
       String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -83,11 +84,17 @@ class _SleepPageState extends State<SleepPage> {
 
       await prefs.setString('sleepData', json.encode(records));
       print('수면 데이터 로컬에 저장 성공: $records');
+
+      // 로컬에 저장한 데이터를 서버로 바로 전송
+      await _saveSleepDataToDatabase();
+      // 서버에서 최신 데이터를 다시 불러와서 그래프에 반영
+      await _loadSleepDataFromServer();
     } else {
       print('수면 시간 또는 기상 시간이 선택되지 않음');
     }
   }
 
+  // 서버로 로컬 데이터를 전송하는 메서드
   Future<void> _saveSleepDataToDatabase() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? savedData = prefs.getString('sleepData');
@@ -113,19 +120,7 @@ class _SleepPageState extends State<SleepPage> {
     }
   }
 
-  Duration _calculateSleepDuration(TimeOfDay sleepTime, TimeOfDay wakeUpTime) {
-    final now = DateTime.now();
-
-    final sleepDateTime = DateTime(now.year, now.month, now.day, sleepTime.hour, sleepTime.minute);
-    final wakeUpDateTime = DateTime(now.year, now.month, now.day, wakeUpTime.hour, wakeUpTime.minute);
-
-    if (wakeUpDateTime.isBefore(sleepDateTime)) {
-      return wakeUpDateTime.add(const Duration(days: 1)).difference(sleepDateTime);
-    } else {
-      return wakeUpDateTime.difference(sleepDateTime);
-    }
-  }
-
+  // 수면 기록 그래프 빌드 메서드 추가
   Widget _buildSleepGraph() {
     if (_sleepRecords.isEmpty) {
       return const Center(child: Text('저장된 수면 기록이 없습니다.'));
@@ -135,6 +130,7 @@ class _SleepPageState extends State<SleepPage> {
       int index = entry.key;
       Map<String, String> record = entry.value;
 
+      // 수면 시간과 기상 시간을 TimeOfDay 객체로 변환
       TimeOfDay sleepTime = TimeOfDay(
         hour: int.parse(record['sleepTime']!.split(":")[0]),
         minute: int.parse(record['sleepTime']!.split(":")[1]),
@@ -144,6 +140,7 @@ class _SleepPageState extends State<SleepPage> {
         minute: int.parse(record['wakeUpTime']!.split(":")[1]),
       );
 
+      // 수면 지속 시간 계산
       Duration sleepDuration = _calculateSleepDuration(sleepTime, wakeUpTime);
       double sleepHours = sleepDuration.inMinutes / 60.0;
 
@@ -151,7 +148,7 @@ class _SleepPageState extends State<SleepPage> {
         x: index,
         barRods: [
           BarChartRodData(
-            toY: sleepHours.toInt().toDouble(),
+            toY: sleepHours, // 수면 시간을 시간 단위로 설정
             color: Colors.blueAccent,
             width: 20,
           ),
@@ -166,31 +163,42 @@ class _SleepPageState extends State<SleepPage> {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              interval: 4,
-              getTitlesWidget: (value, meta) => Text('${value.toInt()}h'),
+              interval: 4, // Y축 간격을 4시간 단위로 설정
+              getTitlesWidget: (value, meta) => Text('${value.toInt()}h'), // Y축 레이블
             ),
           ),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
               getTitlesWidget: (double value, meta) {
-                return Text(_sleepRecords[value.toInt()]['date'] ?? '');
+                return Text(_sleepRecords[value.toInt()]['date'] ?? ''); // X축 레이블 날짜
               },
             ),
           ),
         ),
-        borderData: FlBorderData(show: false),
-        minY: 0,
-        maxY: 24,
+        borderData: FlBorderData(show: false), // 테두리 비활성화
+        minY: 0, // Y축 최소값
+        maxY: 24, // Y축 최대값 (24시간)
       ),
     );
   }
 
+  // 수면 지속 시간을 계산하는 헬퍼 메서드
+  Duration _calculateSleepDuration(TimeOfDay sleepTime, TimeOfDay wakeUpTime) {
+    final now = DateTime.now();
+
+    final sleepDateTime = DateTime(now.year, now.month, now.day, sleepTime.hour, sleepTime.minute);
+    final wakeUpDateTime = DateTime(now.year, now.month, now.day, wakeUpTime.hour, wakeUpTime.minute);
+
+    if (wakeUpDateTime.isBefore(sleepDateTime)) {
+      return wakeUpDateTime.add(const Duration(days: 1)).difference(sleepDateTime);
+    } else {
+      return wakeUpDateTime.difference(sleepDateTime);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final bool isWeb = screenSize.width > 600;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('수면 정보'),
@@ -198,7 +206,6 @@ class _SleepPageState extends State<SleepPage> {
       ),
       body: Center(
         child: Container(
-          width: isWeb ? 800 : screenSize.width,
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
@@ -228,19 +235,11 @@ class _SleepPageState extends State<SleepPage> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _saveSleepDataLocally,
-                child: const Text('로컬에 저장하기'),
+                child: const Text('로컬에 저장 및 서버 전송'),
               ),
               const SizedBox(height: 20),
               Expanded(
                 child: _buildSleepGraph(),
-              ),
-              const SizedBox(height: 10),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: ElevatedButton(
-                  onPressed: _saveSleepDataToDatabase,
-                  child: const Text('데이터베이스로 전송하기'),
-                ),
               ),
             ],
           ),

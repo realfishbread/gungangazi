@@ -16,7 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   final AuthRepository _authRepository = AuthRepository();
   bool _loginFailed = false;
   bool _obscurePassword = true;
-  
+
   Future<void> _login() async {
     // 서버로 로그인 요청 보내기
     LoginRequestDto loginRequest = LoginRequestDto(
@@ -79,85 +79,90 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: null,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/splash/splash_image.png', // 로고 아이콘을 이미지로 변경
-                  width: 200,
-                  height: 200,
-                ),
-                const SizedBox(height: 24),
-                Container(
-                  constraints: const BoxConstraints(maxWidth: 400),
-                  padding: const EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 10,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
+      body: Container(
+        decoration: const BoxDecoration(
+          color: Color(0xFFFFFAEC),
+        ), // 배경색을 파스텔 옐로우로 설정
+        child: Center(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/splash/splash_image.png', // 로고 아이콘을 이미지로 변경
+                    width: 200,
+                    height: 200,
                   ),
-                  child: Column(
-                    children: [
-                      TextField(
-                        controller: _nameController,
-                        decoration: const InputDecoration(
-                          labelText: '아이디',
-                          border: OutlineInputBorder(),
+                  const SizedBox(height: 24),
+                  Container(
+                    constraints: const BoxConstraints(maxWidth: 400),
+                    padding: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 10,
+                          offset: Offset(0, 4),
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      TextField(
-                        controller: _passwordController,
-                        decoration: InputDecoration(
-                          labelText: '비밀번호',
-                          border: OutlineInputBorder(),
-                           suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscurePassword ? Icons.visibility : Icons.visibility_off,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
-                            },
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        TextField(
+                          controller: _nameController,
+                          decoration: const InputDecoration(
+                            labelText: '아이디',
+                            border: OutlineInputBorder(),
                           ),
                         ),
-                        obscureText: _obscurePassword,
-                      ),
-                      const SizedBox(height: 16),
-                      if (_loginFailed)
-                        const Text(
-                          '로그인 실패: 아이디 또는 비밀번호가 잘못되었습니다.',
-                          style: TextStyle(color: Colors.red),
+                        const SizedBox(height: 16),
+                        TextField(
+                          controller: _passwordController,
+                          decoration: InputDecoration(
+                            labelText: '비밀번호',
+                            border: const OutlineInputBorder(),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscurePassword = !_obscurePassword;
+                                });
+                              },
+                            ),
+                          ),
+                          obscureText: _obscurePassword,
                         ),
-                      ElevatedButton(
-                        onPressed: _login,
-                        child: const Text('로그인'),
-                      ),
-                      const SizedBox(height: 16),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const SignUpPage()),
-                          );
-                        },
-                        child: const Text('회원가입'),
-                      ),
-                    ],
+                        const SizedBox(height: 16),
+                        if (_loginFailed)
+                          const Text(
+                            '로그인 실패: 아이디 또는 비밀번호가 잘못되었습니다.',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ElevatedButton(
+                          onPressed: _login,
+                          child: const Text('로그인'),
+                        ),
+                        const SizedBox(height: 16),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const SignUpPage()),
+                            );
+                          },
+                          child: const Text('회원가입'),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

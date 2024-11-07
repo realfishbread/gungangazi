@@ -87,6 +87,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      backgroundColor: Colors.white, // 여기에 배경색을 흰색으로 설정
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Icon(Icons.local_hospital_outlined, color: Colors.black),

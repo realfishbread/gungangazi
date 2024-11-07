@@ -20,7 +20,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: '건강아지',
       theme: ThemeData(
-        primarySwatch: createMaterialColor(const Color(0xFFFFF9C4)), // 기본 색상 설정
+        primarySwatch: createMaterialColor(const Color(0xFFFFF9C4)),// 기본 색상 설정
+        scaffoldBackgroundColor: Colors.white, // 스캐폴드 배경색을 흰색으로 설정
       ),
       
       initialRoute: '/splash',

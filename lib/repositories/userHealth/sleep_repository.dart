@@ -15,12 +15,16 @@ class SleepRepository {
   Future<void> saveSleepDataToDatabase(List<SleepDto> sleepData) async {
     try {
       String? token = await tokenService.getToken();
+      String? username = await tokenService.getUsername(); // username 추가
       Dio dio = dioService.getDio();
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       final response = await dio.post(
         '/sleep/saveSleepData',
-        data: jsonEncode({'records': sleepData.map((e) => e.toJson()).toList()}),
+        data: {
+          'records': sleepData.map((e) => e.toJson()).toList(),
+          'username': username, // username을 함께 전송
+        },
       );
 
       if (response.statusCode == 200) {
@@ -32,6 +36,7 @@ class SleepRepository {
       print('서버로 데이터를 전송하는 중 오류 발생: $e');
     }
   }
+
 
   // 서버에서 수면 데이터를 가져오는 메서드 (GET)
   Future<List<SleepDto>> fetchSleepDataFromDatabase() async {

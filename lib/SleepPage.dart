@@ -28,7 +28,7 @@ class _SleepPageState extends State<SleepPage> {
       dioService: DioService(),
       tokenService: TokenService(),
     );
-    _loadSleepDataFromServer(); // Fetch initial data from server
+    _loadSleepDataFromServer();
   }
 
   // Fetch sleep data from the server and update _sleepRecords
@@ -150,7 +150,7 @@ class _SleepPageState extends State<SleepPage> {
         x: index,
         barRods: [
           BarChartRodData(
-            toY: sleepHours, // Set sleep duration in hours
+            toY: sleepHours,
             color: Colors.blueAccent,
             width: 20,
           ),
@@ -165,22 +165,22 @@ class _SleepPageState extends State<SleepPage> {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              interval: 4, // Set Y-axis interval to 4 hours
-              getTitlesWidget: (value, meta) => Text('${value.toInt()}h'), // Y-axis labels
+              interval: 4,
+              getTitlesWidget: (value, meta) => Text('${value.toInt()}h'),
             ),
           ),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
               getTitlesWidget: (double value, meta) {
-                return Text(_sleepRecords[value.toInt()]['date'] ?? ''); // X-axis date labels
+                return Text(_sleepRecords[value.toInt()]['date'] ?? '');
               },
             ),
           ),
         ),
-        borderData: FlBorderData(show: false), // Disable border
-        minY: 0, // Y-axis minimum
-        maxY: 24, // Y-axis maximum (24 hours)
+        borderData: FlBorderData(show: false),
+        minY: 0,
+        maxY: 24,
       ),
     );
   }

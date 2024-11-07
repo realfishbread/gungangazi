@@ -30,6 +30,7 @@ class _WaterDrinkState extends State<WaterDrink> {
   Future<void> _loadWaterIntake() async {
     _dailyWaterIntake = await waterRepository.fetchWaterIntake();
     setState(() {});
+    _checkWaterIntake(); // 초기 로딩 시에도 경고 확인
   }
 
   void _addWater(int amount) {
@@ -41,6 +42,36 @@ class _WaterDrinkState extends State<WaterDrink> {
       }
     });
     waterRepository.saveWaterIntake(_dailyWaterIntake);
+    _checkWaterIntake(); // 물 섭취량 확인 후 경고 표시
+  }
+
+  void _checkWaterIntake() {
+    String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    int todayWaterIntake = _dailyWaterIntake[today] ?? 0;
+  
+    if (todayWaterIntake <= 200) {
+      _showWarning();
+    }
+  }
+
+  void _showWarning() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('경고!'),
+          content: const Text('오늘 물을 너무 적게 마셨어요! 더 많이 마셔주세요.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('확인'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   List<BarChartGroupData> _generateBarChartData() {
@@ -130,7 +161,7 @@ class _WaterDrinkState extends State<WaterDrink> {
                     const SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: () => _addWater(200),
-                      child: const Text('+200ml'),
+                      child: const Text('+물 한 컵'),
                     ),
                   ],
                 ),
@@ -145,7 +176,7 @@ class _WaterDrinkState extends State<WaterDrink> {
                     const SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: () => _addWater(500),
-                      child: const Text('+500ml'),
+                      child: const Text('+생수 한 병'),
                     ),
                   ],
                 ),

@@ -219,7 +219,7 @@ class _SleepPageState extends State<SleepPage> {
                     icon: const Icon(Icons.bedtime),
                     label: Text(
                       _sleepTime == null
-                          ? 'Select Sleep Time'
+                          ? '취침 시각 선택'
                           : 'Sleep Time: ${_sleepTime!.format(context)}',
                     ),
                   ),
@@ -228,7 +228,7 @@ class _SleepPageState extends State<SleepPage> {
                     icon: const Icon(Icons.wb_sunny),
                     label: Text(
                       _wakeUpTime == null
-                          ? 'Select Wake-up Time'
+                          ? '기상 시각 선택'
                           : 'Wake-up Time: ${_wakeUpTime!.format(context)}',
                     ),
                   ),

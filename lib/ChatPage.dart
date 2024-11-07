@@ -80,25 +80,38 @@ class ChatBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: isMine ? Alignment.centerRight : Alignment.centerLeft,  // 내 메시지는 오른쪽, 상대방 메시지는 왼쪽
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-        decoration: BoxDecoration(
-          color: isMine ? Colors.yellow[200] : Colors.grey[300],  // 내 메시지는 파란색, 상대방 메시지는 회색
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(15),
-            topRight: const Radius.circular(15),
-            bottomLeft: isMine ? const Radius.circular(15) : const Radius.circular(0),
-            bottomRight: isMine ? const Radius.circular(0) : const Radius.circular(15),
+      alignment: isMine ? Alignment.centerRight : Alignment.centerLeft,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          if (!isMine) // 상대방 메시지일 때 강아지 이미지 추가
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Image.asset(
+                'assets/dog.png', // 강아지 이미지 경로 설정
+                width: 30,
+                height: 30,
+              ),
+            ),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            decoration: BoxDecoration(
+              color: isMine ? Colors.yellow[200] : Colors.grey[300],
+              borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(15),
+                topRight: const Radius.circular(15),
+                bottomLeft: isMine ? const Radius.circular(15) : const Radius.circular(0),
+                bottomRight: isMine ? const Radius.circular(0) : const Radius.circular(15),
+              ),
+            ),
+            child: Text(
+              text,
+              style: const TextStyle(color: Colors.black),
+            ),
           ),
-        ),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: isMine ? Colors.black : Colors.black,
-          ),
-        ),
+        ],
       ),
     );
   }

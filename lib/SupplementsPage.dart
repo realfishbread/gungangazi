@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:gungangazi/services/TokenService.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import '../services/dio_service.dart';
+import '../../repositories/userHealth/supplement_repository.dart';
+import '../dto/userHealth/SupplementDto.dart';
 
 class SupplementsPage extends StatefulWidget {
   const SupplementsPage({super.key});
@@ -16,15 +20,14 @@ class _SupplementsPageState extends State<SupplementsPage> {
   final Map<DateTime, bool> _supplementTaken = {};
   final Map<DateTime, bool> _menstruationRecorded = {};
   DateTime _selectedDay = DateTime.now();
-  int _cycleLength = 28;
-  int _periodLength = 5;
-  DateTime? _lastMenstruationDate;
-  final List<DateTime> _predictedMenstruationDates = [];
+  final DioService dioService = DioService();
+  late final SupplementRepository supplementRepository;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
     super.initState();
+    supplementRepository = SupplementRepository(dioService: dioService,tokenService: TokenService());
     _initializeNotifications();
     _loadData();
   }
@@ -32,7 +35,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
   Future<void> _initializeNotifications() async {
     tz.initializeTimeZones();
     const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     const InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
     );
@@ -41,14 +44,15 @@ class _SupplementsPageState extends State<SupplementsPage> {
 
   Future<void> _scheduleNotification(DateTime scheduledDate) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
-    AndroidNotificationDetails(
-        'your_channel_id', 'your_channel_name',
-        importance: Importance.max,
-        priority: Priority.high,
-        ticker: 'ticker');
+        AndroidNotificationDetails(
+      'your_channel_id', 'your_channel_name',
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+    );
 
     const NotificationDetails platformChannelSpecifics =
-    NotificationDetails(android: androidPlatformChannelSpecifics);
+        NotificationDetails(android: androidPlatformChannelSpecifics);
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
       0,
@@ -62,46 +66,40 @@ class _SupplementsPageState extends State<SupplementsPage> {
     );
   }
 
-  Future<void> _loadData() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final supplementData = prefs.getStringList('supplementTaken');
-    if (supplementData != null) {
-      for (var entry in supplementData) {
-        final date = DateTime.parse(entry);
-        _supplementTaken[date] = true;
-      }
-    }
-
-    final menstruationData = prefs.getStringList('menstruationRecorded');
-    if (menstruationData != null) {
-      for (var entry in menstruationData) {
-        final date = DateTime.parse(entry);
-        _menstruationRecorded[date] = true;
-      }
-    }
-
-    final lastMenstruation = prefs.getString('lastMenstruationDate');
-    if (lastMenstruation != null) {
-      _lastMenstruationDate = DateTime.parse(lastMenstruation);
-      _predictNextMenstruation();
-    }
-
-    setState(() {});
+  Future<void> _saveData() async {
+    SupplementDto dto = SupplementDto(
+      date: _selectedDay,
+      supplementTaken: _supplementTaken[_selectedDay] ?? false,
+      menstruationRecorded: _menstruationRecorded[_selectedDay] ?? false,
+    );
+    await supplementRepository.saveSupplement(dto);
   }
 
-  void _predictNextMenstruation() {
-    if (_lastMenstruationDate != null) {
-      _predictedMenstruationDates.clear();
-      for (int i = 1; i <= 12; i++) {
-        DateTime nextPeriodStart = _lastMenstruationDate!.add(Duration(days: _cycleLength * i));
-        for (int j = 0; j < _periodLength; j++) {
-          DateTime predictedDate = nextPeriodStart.add(Duration(days: j));
-          _predictedMenstruationDates.add(predictedDate);
-          _scheduleNotification(predictedDate);
-        }
-      }
+  Future<void> _loadData() async {
+    final supplements = await supplementRepository.fetchSupplements();
+    for (var supplement in supplements) {
+      setState(() {
+        _supplementTaken[supplement.date] = supplement.supplementTaken;
+        _menstruationRecorded[supplement.date] = supplement.menstruationRecorded;
+      });
     }
+  }
+
+  void _toggleSupplementTaken() {
+    setState(() {
+      _supplementTaken[_selectedDay] = !(_supplementTaken[_selectedDay] ?? false);
+      _saveData();
+    });
+  }
+
+  void _toggleMenstruationRecorded() {
+    setState(() {
+      _menstruationRecorded[_selectedDay] = !(_menstruationRecorded[_selectedDay] ?? false);
+      if (_menstruationRecorded[_selectedDay] == true) {
+        _scheduleNotification(_selectedDay);
+      }
+      _saveData();
+    });
   }
 
   @override
@@ -125,11 +123,20 @@ class _SupplementsPageState extends State<SupplementsPage> {
             },
             calendarBuilders: CalendarBuilders(
               defaultBuilder: (context, date, focusedDay) {
-                if (_predictedMenstruationDates.contains(date)) {
+                if (_supplementTaken[date] == true) {
                   return Container(
                     margin: const EdgeInsets.all(4.0),
                     decoration: BoxDecoration(
-                      color: Colors.blue.withOpacity(0.5),
+                      color: Colors.green.withOpacity(0.5),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(child: Text('${date.day}')),
+                  );
+                } else if (_menstruationRecorded[date] == true) {
+                  return Container(
+                    margin: const EdgeInsets.all(4.0),
+                    decoration: BoxDecoration(
+                      color: Colors.red.withOpacity(0.5),
                       shape: BoxShape.circle,
                     ),
                     child: Center(child: Text('${date.day}')),
@@ -137,49 +144,24 @@ class _SupplementsPageState extends State<SupplementsPage> {
                 }
                 return null;
               },
-              markerBuilder: (context, date, events) {
-                List<Widget> markers = [];
-                if (_supplementTaken[date] == true) {
-                  markers.add(const Icon(Icons.medication, color: Colors.yellow, size: 16));
-                }
-                if (_menstruationRecorded[date] == true) {
-                  markers.add(const Icon(Icons.circle, color: Colors.red, size: 8));
-                }
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: markers,
-                );
-              },
             ),
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _supplementTaken[_selectedDay] = !(_supplementTaken[_selectedDay] ?? false);
-              });
-            },
-            child: Text(_supplementTaken[_selectedDay] == true ? '영양제 복용 취소' : '영양제 복용 기록'),
+            onPressed: _toggleSupplementTaken,
+            child: Text(
+              _supplementTaken[_selectedDay] == true ? '영양제 복용 취소' : '영양제 복용 기록',
+            ),
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _menstruationRecorded[_selectedDay] = !(_menstruationRecorded[_selectedDay] ?? false);
-                if (_menstruationRecorded[_selectedDay] == true) {
-                  _lastMenstruationDate = _selectedDay;
-                  _predictNextMenstruation();
-                } else if (_lastMenstruationDate == _selectedDay) {
-                  _lastMenstruationDate = null;
-                  _predictedMenstruationDates.clear();
-                }
-              });
-            },
-            child: Text(_menstruationRecorded[_selectedDay] == true ? '생리 기록 취소' : '생리 기록'),
+            onPressed: _toggleMenstruationRecorded,
+            child: Text(
+              _menstruationRecorded[_selectedDay] == true ? '생리 기록 취소' : '생리 기록',
+            ),
           ),
         ],
       ),
     );
   }
 }
-

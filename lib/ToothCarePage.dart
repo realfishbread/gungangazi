@@ -77,7 +77,7 @@ class _ToothCarePageState extends State<ToothCarePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('이빨 관리'),
+        title: const Text('치아 관리'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -101,7 +101,7 @@ class _ToothCarePageState extends State<ToothCarePage> {
                         final history = snapshot.data![index];
                         return ListTile(
                           title: Text('날짜: ${history.date}'),
-                          subtitle: Text('시간: ${history.duration}분, 치실 사용: ${history.flossed ? "네" : "아니오"}'),
+                          subtitle: Text('시간: ${history.duration}분, 치실 사용: ${history.flossed ? "O" : "X"}'),
                         );
                       },
                     );

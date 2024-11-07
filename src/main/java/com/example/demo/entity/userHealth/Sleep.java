@@ -14,12 +14,21 @@ public class Sleep {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private String username;
     private LocalDate date;
     private LocalTime sleepTime;
     private LocalTime wakeUpTime;
 
     // Getters and Setters
+    public String getUsername() {
+        return username;
+    }
+
+    public void setd(String username) {
+        this.username = username;
+    }
+
+
     public Long getId() {
         return id;
     }

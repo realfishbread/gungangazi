@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:fl_chart/fl_chart.dart';
+import '../dto/userHealth/sleep_dto.dart';
+import '../repositories/userHealth/sleep_repository.dart';
+import '../services/dio_service.dart';
+import '../services/TokenService.dart';
 
 class SleepPage extends StatefulWidget {
   const SleepPage({super.key});
@@ -16,22 +19,38 @@ class _SleepPageState extends State<SleepPage> {
   TimeOfDay? _sleepTime;
   TimeOfDay? _wakeUpTime;
   List<Map<String, String>> _sleepRecords = [];
+  late final SleepRepository sleepRepository;
 
   @override
   void initState() {
     super.initState();
-    _loadSleepData();
+    sleepRepository = SleepRepository(
+      dioService: DioService(),
+      tokenService: TokenService(),
+    );
+    _loadSleepDataFromServer(); // 서버 데이터도 초기화 시 불러오기
+  }
+
+  Future<void> _loadSleepDataFromServer() async {
+    // 서버에서 수면 데이터를 가져와 _sleepRecords에 추가
+    List<SleepDto> serverData = await sleepRepository.fetchSleepDataFromDatabase();
+    setState(() {
+      _sleepRecords = serverData.map((dto) => {
+        'date': dto.date,
+        'sleepTime': dto.sleepTime,
+        'wakeUpTime': dto.wakeUpTime,
+      }).toList();
+    });
   }
 
   Future<void> _saveSleepDataLocally() async {
     if (_sleepTime != null && _wakeUpTime != null) {
       String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-      // 시간을 24시간 형식으로 저장
       Map<String, String> newRecord = {
         'date': formattedDate,
-        'sleepTime': '${_sleepTime!.hour}:${_sleepTime!.minute}',  // 시간 형식 수정
-        'wakeUpTime': '${_wakeUpTime!.hour}:${_wakeUpTime!.minute}',  // 시간 형식 수정
+        'sleepTime': '${_sleepTime!.hour}:${_sleepTime!.minute}',
+        'wakeUpTime': '${_wakeUpTime!.hour}:${_wakeUpTime!.minute}',
       };
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -64,7 +83,6 @@ class _SleepPageState extends State<SleepPage> {
 
       await prefs.setString('sleepData', json.encode(records));
       print('수면 데이터 로컬에 저장 성공: $records');
-      _loadSleepData();
     } else {
       print('수면 시간 또는 기상 시간이 선택되지 않음');
     }
@@ -77,52 +95,21 @@ class _SleepPageState extends State<SleepPage> {
     if (savedData != null) {
       try {
         List<dynamic> data = json.decode(savedData);
-        List<Map<String, String>> records = data.map((item) {
-          return Map<String, String>.from(item);
+        List<SleepDto> records = data.map((item) {
+          Map<String, String> record = Map<String, String>.from(item);
+          return SleepDto(
+            date: record['date']!,
+            sleepTime: record['sleepTime']!,
+            wakeUpTime: record['wakeUpTime']!,
+          );
         }).toList();
 
-        final response = await http.post(
-          Uri.parse('https://gungangazi.site/saveSleepData'),
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode({'records': records}),
-        );
-
-        if (response.statusCode == 200) {
-          print('수면 데이터가 서버에 성공적으로 저장되었습니다.');
-        } else {
-          print('서버에 데이터 저장 실패: ${response.statusCode}');
-        }
+        await sleepRepository.saveSleepDataToDatabase(records);
       } catch (e) {
         print('서버로 데이터를 전송하는 중 오류 발생: $e');
       }
     } else {
       print('로컬에 저장된 수면 데이터가 없습니다.');
-    }
-  }
-
-  Future<void> _loadSleepData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? savedData = prefs.getString('sleepData');
-
-    if (savedData != null) {
-      try {
-        List<dynamic> data = json.decode(savedData);
-        setState(() {
-          _sleepRecords = data.map((item) {
-            return Map<String, String>.from(item);
-          }).toList();
-        });
-        print('수면 데이터 로드 성공: $_sleepRecords');
-      } catch (e) {
-        print('수면 데이터를 로드하는 중 오류 발생: $e');
-        setState(() {
-          _sleepRecords = [];
-        });
-      }
-    } else {
-      setState(() {
-        _sleepRecords = [];
-      });
     }
   }
 
@@ -164,7 +151,7 @@ class _SleepPageState extends State<SleepPage> {
         x: index,
         barRods: [
           BarChartRodData(
-            toY: sleepHours.toInt().toDouble(), // 소수점 없는 정수 값으로 변환
+            toY: sleepHours.toInt().toDouble(),
             color: Colors.blueAccent,
             width: 20,
           ),
@@ -174,27 +161,27 @@ class _SleepPageState extends State<SleepPage> {
 
     return BarChart(
       BarChartData(
-        barGroups: barGroups, // 막대 데이터 리스트
+        barGroups: barGroups,
         titlesData: FlTitlesData(
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              interval: 4, // y축 레이블 간격 (4시간 단위)
-              getTitlesWidget: (value, meta) => Text('${value.toInt()}h'), // y축 레이블 (0~24시간)
+              interval: 4,
+              getTitlesWidget: (value, meta) => Text('${value.toInt()}h'),
             ),
           ),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
               getTitlesWidget: (double value, meta) {
-                return Text(_sleepRecords[value.toInt()]['date'] ?? ''); // x축 레이블: 날짜
+                return Text(_sleepRecords[value.toInt()]['date'] ?? '');
               },
             ),
           ),
         ),
-        borderData: FlBorderData(show: false), // 테두리 비활성화
-        minY: 0, // y축 최소값 (0시간)
-        maxY: 24, // y축 최대값 (24시간)
+        borderData: FlBorderData(show: false),
+        minY: 0,
+        maxY: 24,
       ),
     );
   }
@@ -226,10 +213,6 @@ class _SleepPageState extends State<SleepPage> {
                           ? '수면 시간 선택'
                           : '수면 시간: ${_sleepTime!.format(context)}',
                     ),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      minimumSize: const Size(140, 40),
-                    ),
                   ),
                   ElevatedButton.icon(
                     onPressed: () => _selectWakeUpTime(context),
@@ -239,20 +222,12 @@ class _SleepPageState extends State<SleepPage> {
                           ? '기상 시간 선택'
                           : '기상 시간: ${_wakeUpTime!.format(context)}',
                     ),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      minimumSize: const Size(140, 40),
-                    ),
                   ),
                 ],
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _saveSleepDataLocally,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                  minimumSize: const Size(140, 40),
-                ),
                 child: const Text('로컬에 저장하기'),
               ),
               const SizedBox(height: 20),
@@ -264,10 +239,6 @@ class _SleepPageState extends State<SleepPage> {
                 alignment: Alignment.bottomCenter,
                 child: ElevatedButton(
                   onPressed: _saveSleepDataToDatabase,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    minimumSize: const Size(140, 40),
-                  ),
                   child: const Text('데이터베이스로 전송하기'),
                 ),
               ),

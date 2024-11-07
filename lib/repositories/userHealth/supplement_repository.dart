@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../../dto/userHealth/SupplementDto.dart';
+import '../../dto/userHealth/supplementDto.dart';
 import '../../services/dio_service.dart';
 import '../../services/TokenService.dart';
 

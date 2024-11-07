@@ -6,8 +6,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import '../services/dio_service.dart';
-import '../../repositories/userHealth/supplement_repository.dart';
-import '../dto/userHealth/SupplementDto.dart';
+import '../repositories/userHealth/supplement_repository.dart';
+import '../dto/userHealth/supplementDto.dart';
 
 class SupplementsPage extends StatefulWidget {
   const SupplementsPage({super.key});

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';  // 날짜 형식을 위한 패키지
+import 'package:gungangazi/services/TokenService.dart';
+import 'package:intl/intl.dart';
+import '../../dto/userHealth/blood_pressure_dto.dart';
+import '../../repositories/userHealth/blood_pressure_repository.dart';
+import '../../services/dio_service.dart';
 
 class BloodPressurePage extends StatefulWidget {
   const BloodPressurePage({super.key});
@@ -12,33 +16,58 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
   final TextEditingController _systolicController = TextEditingController();
   final TextEditingController _diastolicController = TextEditingController();
   final TextEditingController _heartRateController = TextEditingController();
+  final Map<String, List<BloodPressureDTO>> _groupedRecords = {};
+  final BloodPressureRepository bloodPressureRepository = BloodPressureRepository(
+    dioService: DioService(), 
+    tokenService: TokenService(),
+  );
 
-  // 데이터를 저장할 Map (날짜를 키로 사용)
-  final Map<String, List<Map<String, String>>> _groupedRecords = {};
+  @override
+  void initState() {
+    super.initState();
+    _loadDataFromServer();
+  }
 
-  void _submitData() {
+  // 서버에서 데이터를 불러오는 메서드
+  Future<void> _loadDataFromServer() async {
+    List<BloodPressureDTO> records = await bloodPressureRepository.fetchBloodPressureDataFromDatabase();
+    setState(() {
+      for (var record in records) {
+        if (_groupedRecords.containsKey(record.date)) {
+          _groupedRecords[record.date]!.add(record);
+        } else {
+          _groupedRecords[record.date] = [record];
+        }
+      }
+    });
+  }
+
+  // 데이터를 제출하고 서버에 저장하는 메서드
+  Future<void> _submitData() async {
     final String systolic = _systolicController.text;
     final String diastolic = _diastolicController.text;
     final String heartRate = _heartRateController.text;
-    final String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now()); // 현재 날짜
+    final String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    final String? username = await TokenService().getUsername(); // username 가져오기
 
-    if (systolic.isNotEmpty && diastolic.isNotEmpty && heartRate.isNotEmpty) {
-      // 날짜별로 데이터를 저장
+    if (systolic.isNotEmpty && diastolic.isNotEmpty && heartRate.isNotEmpty && username != null) {
+      final newRecord = BloodPressureDTO(
+        systolic: systolic,
+        diastolic: diastolic,
+        heartRate: heartRate,
+        date: currentDate,
+        username: username,
+      );
+
+      // 서버에 데이터 저장
+      await bloodPressureRepository.saveBloodPressureDataToDatabase(newRecord);
+
+      // UI 업데이트
       setState(() {
         if (_groupedRecords.containsKey(currentDate)) {
-          _groupedRecords[currentDate]!.add({
-            'systolic': systolic,
-            'diastolic': diastolic,
-            'heartRate': heartRate,
-          });
+          _groupedRecords[currentDate]!.add(newRecord);
         } else {
-          _groupedRecords[currentDate] = [
-            {
-              'systolic': systolic,
-              'diastolic': diastolic,
-              'heartRate': heartRate,
-            }
-          ];
+          _groupedRecords[currentDate] = [newRecord];
         }
       });
 
@@ -103,19 +132,19 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
               child: _groupedRecords.isEmpty
                   ? const Center(child: Text('저장된 데이터가 없습니다.'))
                   : ListView(
-                children: _groupedRecords.keys.map((date) {
-                  return ExpansionTile(
-                    title: Text('날짜: $date'),
-                    children: _groupedRecords[date]!.map((record) {
-                      return ListTile(
-                        title: Text(
-                            '최고 혈압: ${record['systolic']} / 최저 혈압: ${record['diastolic']}'),
-                        subtitle: Text('심박수: ${record['heartRate']} bpm'),
-                      );
-                    }).toList(),
-                  );
-                }).toList(),
-              ),
+                      children: _groupedRecords.keys.map((date) {
+                        return ExpansionTile(
+                          title: Text('날짜: $date'),
+                          children: _groupedRecords[date]!.map((record) {
+                            return ListTile(
+                              title: Text(
+                                  '최고 혈압: ${record.systolic} / 최저 혈압: ${record.diastolic}'),
+                              subtitle: Text('심박수: ${record.heartRate} bpm'),
+                            );
+                          }).toList(),
+                        );
+                      }).toList(),
+                    ),
             ),
           ],
         ),

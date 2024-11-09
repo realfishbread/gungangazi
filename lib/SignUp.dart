@@ -99,6 +99,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFFFFAEC), // 배경색을 파스텔 옐로우로 설정
       appBar: null,
       body: Center(
         child: SingleChildScrollView(
@@ -107,10 +108,10 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.local_hospital_outlined,
-                  size: 100,
-                  color: Colors.yellow[400],
+                Image.asset(
+                  'assets/splash/splash_image.png', // 로고 아이콘을 이미지로 변경
+                  width: 200,
+                  height: 200,
                 ),
                 const SizedBox(height: 24),
                 Container(
@@ -141,19 +142,28 @@ class _SignUpPageState extends State<SignUpPage> {
                         _buildGenderSelection(),
                       const SizedBox(height: 16),
                       ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.yellow[100], // 버튼 배경색을 검정으로 설정
+                          foregroundColor: Colors.black, // 텍스트 색상을 흰색으로 설정
+                        ),
                         onPressed: _nextStep,
                         child: Text(
                           _currentStep == steps.length - 1 ? '회원가입' : '다음',
                         ),
                       ),
+
                       const SizedBox(height: 16),
                       Text('단계: ${steps[_currentStep]} (${_currentStep + 1}/${steps.length})'),
                       TextButton(
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.black, // 텍스트 색상을 검정으로 설정
+                        ),
                         onPressed: () {
                           Navigator.pop(context);  // 로그인 페이지로 돌아가기
                         },
                         child: const Text('로그인 페이지로 돌아가기'),
                       ),
+
                     ],
                   ),
                 ),

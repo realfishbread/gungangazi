@@ -80,10 +80,11 @@ class _EditPageState extends State<EditPage> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  widget.fieldName == '키' ? 'cm' : 'kg', // 단위를 고정 텍스트로 표시
-                  style: const TextStyle(fontSize: 18),
-                ),
+                if (widget.fieldName != '아이디' && widget.fieldName != '이메일')
+                  Text(
+                    widget.fieldName == '키' ? 'cm' : 'kg',
+                    style: const TextStyle(fontSize: 18),
+                  ),
               ],
             ),
             const SizedBox(height: 20),

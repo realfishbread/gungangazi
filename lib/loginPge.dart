@@ -32,6 +32,16 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
 
+      // 로컬 테스트용 가짜 아이디와 비밀번호 체크
+      if (_nameController.text == 'testUser' && _passwordController.text == 'password123') {
+        print('로컬 로그인 성공, 가짜 유저 로그인');
+        setState(() {
+          _loginFailed = false;
+        });
+        Navigator.pushReplacementNamed(context, '/homeApp');
+        return;
+      }
+
       // 로그인 API 호출
       LoginResponseDto? loginResponse = await _authRepository.login(loginRequest);
 
@@ -145,11 +155,18 @@ class _LoginPageState extends State<LoginPage> {
                             style: TextStyle(color: Colors.red),
                           ),
                         ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.yellow[100], // 버튼 배경색을 검정으로 설정
+                            foregroundColor: Colors.black, // 텍스트 색상을 흰색으로 설정
+                          ),
                           onPressed: _login,
                           child: const Text('로그인'),
                         ),
                         const SizedBox(height: 16),
                         TextButton(
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.black, // 텍스트 색상을 검정으로 설정
+                          ),
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -158,6 +175,7 @@ class _LoginPageState extends State<LoginPage> {
                           },
                           child: const Text('회원가입'),
                         ),
+
                       ],
                     ),
                   ),

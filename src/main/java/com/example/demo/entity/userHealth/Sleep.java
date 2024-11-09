@@ -3,6 +3,7 @@ package com.example.demo.entity.userHealth;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,6 +16,9 @@ public class Sleep {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String username;
+
     private LocalDate date;
     private LocalTime sleepTime;
     private LocalTime wakeUpTime;
@@ -26,6 +30,14 @@ public class Sleep {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public LocalDate getDate() {

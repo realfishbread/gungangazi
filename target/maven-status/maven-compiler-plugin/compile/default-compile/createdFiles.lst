@@ -1,4 +1,5 @@
 com\example\demo\DemoApplication.class
+com\example\demo\controller\userHealth\BloodPressureController.class
 com\example\demo\controller\userHealth\BrushHistoryController.class
 com\example\demo\entity\User.class
 com\example\demo\service\userHealth\SupplementService.class
@@ -6,6 +7,7 @@ com\example\demo\controller\userHealth\SleepController.class
 com\example\demo\repository\userHealth\WaterIntakeRepository.class
 com\example\demo\service\UserService.class
 com\example\demo\entity\userHealth\Sleep.class
+com\example\demo\repository\userHealth\BloodPressureRepository.class
 com\example\demo\config\CorsConfig.class
 com\example\demo\repository\UserRepository.class
 com\example\demo\DTO\userHealth\BrushHistoryDTO.class
@@ -18,9 +20,11 @@ com\example\demo\DTO\LoginRequestDto.class
 com\example\demo\entity\userHealth\BrushHistory.class
 com\example\demo\DTO\userHealth\SupplementDTO.class
 com\example\demo\service\userHealth\SleepService.class
+com\example\demo\entity\userHealth\BloodPressure.class
 com\example\demo\repository\userHealth\BrushHistoryRepository.class
 com\example\demo\service\CustomUserDetailsService.class
 com\example\demo\service\userHealth\WaterIntakeService.class
+com\example\demo\service\userHealth\BloodPressureService.class
 com\example\demo\controller\userHealth\WaterIntakeController.class
 com\example\demo\config\SecurityConfig.class
 com\example\demo\repository\userHealth\SupplementRepository.class

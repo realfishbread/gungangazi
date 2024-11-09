@@ -3,11 +3,13 @@ class SleepDto {
   final String date;
   final String sleepTime;
   final String wakeUpTime;
+  final String username;
 
   SleepDto({
     required this.date,
     required this.sleepTime,
     required this.wakeUpTime,
+    required this.username
   });
 
   factory SleepDto.fromJson(Map<String, dynamic> json) {
@@ -15,6 +17,7 @@ class SleepDto {
       date: json['date'],
       sleepTime: json['sleepTime'],
       wakeUpTime: json['wakeUpTime'],
+      username: json['username']
     );
   }
 
@@ -23,6 +26,7 @@ class SleepDto {
       'date': date,
       'sleepTime': sleepTime,
       'wakeUpTime': wakeUpTime,
+      'username': username
     };
   }
 }

@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import '../../dto/userHealth/sleep_dto.dart';
@@ -21,10 +20,7 @@ class SleepRepository {
 
       final response = await dio.post(
         '/sleep/saveSleepData',
-        data: {
-          'records': sleepData.map((e) => e.toJson()).toList(),
-          'username': username, // username을 함께 전송
-        },
+        data: sleepData.map((e) => e.toJson()).toList(), // records 키 제거
       );
 
       if (response.statusCode == 200) {
@@ -37,7 +33,6 @@ class SleepRepository {
     }
   }
 
-
   // 서버에서 수면 데이터를 가져오는 메서드 (GET)
   Future<List<SleepDto>> fetchSleepDataFromDatabase() async {
     try {
@@ -48,8 +43,16 @@ class SleepRepository {
       final response = await dio.get('/sleep/getSleepData');
 
       if (response.statusCode == 200) {
-        List<dynamic> data = response.data['records'];
-        List<SleepDto> sleepData = data.map((item) => SleepDto.fromJson(item)).toList();
+        List<dynamic> data = response.data; // JSON 데이터 목록 가져오기
+        List<SleepDto> sleepData = data.map((item) {
+          return SleepDto(
+            date: item['date'] ?? '',
+            sleepTime: item['sleepTime'] ?? '',
+            wakeUpTime: item['wakeUpTime'] ?? '',
+            username: item['username'] ?? '',
+          );
+        }).toList();
+
         print('서버로부터 수면 데이터를 성공적으로 불러왔습니다.');
         return sleepData;
       } else {

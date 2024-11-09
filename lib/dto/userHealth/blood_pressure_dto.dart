@@ -1,0 +1,37 @@
+class BloodPressureDTO {
+  final String systolic;
+  final String diastolic;
+  final String heartRate;
+  final String date;
+  final String username;
+
+  BloodPressureDTO({
+    required this.systolic,
+    required this.diastolic,
+    required this.heartRate,
+    required this.date,
+    required this.username
+  });
+
+  // 서버로 보낼 때 사용되는 Map 변환 메서드
+  Map<String, dynamic> toJson() {
+    return {
+      'systolic': systolic,
+      'diastolic': diastolic,
+      'heartRate': heartRate,
+      'date': date,
+      'username': username
+    };
+  }
+
+  // 서버에서 가져올 때 사용되는 생성자
+  factory BloodPressureDTO.fromJson(Map<String, dynamic> json) {
+    return BloodPressureDTO(
+      systolic: json['systolic'],
+      diastolic: json['diastolic'],
+      heartRate: json['heartRate'],
+      date: json['date'],
+      username: json['username']
+    );
+  }
+}

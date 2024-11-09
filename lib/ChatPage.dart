@@ -57,6 +57,7 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('채팅 페이지'),
+        backgroundColor: const Color(0xFFFFF9C4),
       ),
       body: Column(
         children: [
@@ -130,6 +131,9 @@ class ChatBubble extends StatelessWidget {
               ),
             ),
           Container(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.6, // 텍스트 너비를 화면의 70%로 제한
+            ),
             margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
             decoration: BoxDecoration(
@@ -144,6 +148,7 @@ class ChatBubble extends StatelessWidget {
             child: Text(
               text,
               style: const TextStyle(color: Colors.black),
+              softWrap: true, // 텍스트 줄바꿈 허용
             ),
           ),
         ],

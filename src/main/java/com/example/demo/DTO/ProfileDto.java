@@ -7,6 +7,7 @@ public class ProfileDto {
     private String height;
     private String weight;
     private String gender;
+    private String profileImage;
 
     public ProfileDto(String username, String realname, String email, String height, String weight, String gender) {
         this.username = username;
@@ -16,6 +17,14 @@ public class ProfileDto {
         this.weight = weight;
         this.gender = gender;
         
+        
+    }
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
     // Getter와 Setter

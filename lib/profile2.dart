@@ -5,6 +5,11 @@ import '../services/dio_service.dart';
 import '../services/TokenService.dart'; // TokenService를 임포트
 import 'loginPge.dart';
 import 'EditPage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'dart:convert'; // base64Encode 및 base64Decode를 위한 패키지
+import 'dart:typed_data'; // Uint8List 타입을 위해 추가
+ 
 
 class Profile2 extends StatefulWidget {
   final String username;
@@ -16,10 +21,12 @@ class Profile2 extends StatefulWidget {
 }
 
 class _Profile2State extends State<Profile2> {
+  Uint8List? _imageData; // 디코딩된 프로필 이미지 데이터를 저장할 변수
   late ProfileRepository _profileRepository;
   final TokenService _tokenService = TokenService(); // TokenService 인스턴스 생성
   ProfileDto? _profile;
   bool isLoading = true;
+  File? _imageFile; // 선택한 이미지를 저장할 변수
 
   final ProfileDto defaultProfile = ProfileDto(
     username: '기본아이디',
@@ -29,6 +36,8 @@ class _Profile2State extends State<Profile2> {
     weight: '70kg',
     gender: '남성',
   );
+
+  final ImagePicker _picker = ImagePicker(); // ImagePicker 인스턴스 생성
 
   @override
   void initState() {
@@ -44,6 +53,43 @@ class _Profile2State extends State<Profile2> {
     fetchProfile();
   }
 
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+        _imageData = null; // 갤러리에서 새로운 이미지를 선택한 경우 _imageData를 null로 설정
+      });
+    }
+  }
+
+  // 서버로 이미지 업로드
+  Future<void> _uploadProfileImage() async {
+    if (_imageFile == null) return;
+
+    // 이미지를 Base64로 인코딩하여 서버에 전송
+    final imageBytes = await _imageFile!.readAsBytes();
+    final base64Image = base64Encode(imageBytes);
+    
+    // 업데이트할 프로필 데이터 생성
+    final updatedData = {
+      'username': _profile?.username ?? defaultProfile.username,
+      'profileImage': base64Image, // Base64 인코딩된 이미지 추가
+    };
+
+    // 서버로 데이터 전송
+    bool success = await _profileRepository.updateProfile(
+        widget.username,
+        updatedData
+    );
+
+    if (success) {
+      await fetchProfile(); // 업데이트 후 프로필 정보를 다시 가져오기
+    } else {
+      print('이미지 업로드 실패');
+    }
+  }
+
   // 서버에서 프로필 정보를 가져오는 함수
   Future<void> fetchProfile() async {
     setState(() {
@@ -53,6 +99,10 @@ class _Profile2State extends State<Profile2> {
     ProfileDto? profile = await _profileRepository.fetchProfile(widget.username);
     setState(() {
       _profile = profile ?? defaultProfile;
+      if (_profile?.profileImage != null) {
+        _imageData = base64Decode(_profile!.profileImage!); // Base64 인코딩된 이미지를 디코딩하여 저장
+        _imageFile = null; // 서버에서 받은 이미지가 있을 때 _imageFile을 null로 설정
+      }
       isLoading = false;
     });
   }
@@ -105,18 +155,23 @@ class _Profile2State extends State<Profile2> {
           Center(
             child: Stack(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 50,
                   backgroundColor: Colors.grey,
-                  backgroundImage: AssetImage('assets/profile_placeholder.png'),
+                  backgroundImage: _imageFile != null
+                      ? FileImage(_imageFile!) // 갤러리에서 선택된 이미지
+                      : _imageData != null
+                          ? MemoryImage(_imageData!) // 서버에서 받은 이미지
+                          : AssetImage('assets/place_holder.png') as ImageProvider,
                 ),
                 Positioned(
                   bottom: 0,
                   right: 0,
                   child: IconButton(
                     icon: const Icon(Icons.camera_alt, color: Colors.black),
-                    onPressed: () {
-                      // 사진 변경 기능 추가 예정
+                    onPressed: () async {
+                      await _pickImage(); // 이미지 선택
+                      await _uploadProfileImage(); // 서버로 이미지 업로드
                     },
                   ),
                 ),
@@ -182,7 +237,6 @@ class _Profile2State extends State<Profile2> {
               ),
             );
           }),
-
           _buildProfileItem('성별', profile.gender ?? '남성', null),
           const SizedBox(height: 20),
           Center(

@@ -39,6 +39,9 @@ public class User {
     @Column(name = "age", nullable = true) // 나이 필드 추가
     private Integer age;
 
+    @Column(name = "profile_image", columnDefinition = "TEXT") // Base64 인코딩된 이미지 저장
+    private String profileImage;
+
     public long getId() {
         return id;
     }
@@ -109,5 +112,12 @@ public class User {
 
     public void setAge(Integer age) { // 나이에 대한 setter
         this.age = age;
+    }
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 }

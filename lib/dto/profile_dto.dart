@@ -1,3 +1,4 @@
+import 'dart:convert';
 class ProfileDto {
   final String? username;
   final String? realname;
@@ -5,6 +6,7 @@ class ProfileDto {
   final String? height;
   final String? weight;
   final String? gender;
+  final String? profileImage;
 
   ProfileDto({
     this.username,
@@ -13,6 +15,7 @@ class ProfileDto {
     this.height,
     this.weight,
     this.gender,
+    this.profileImage,
   });
 
   factory ProfileDto.fromJson(Map<String, dynamic> json) {
@@ -23,6 +26,7 @@ class ProfileDto {
       height: json['height'],
       weight: json['weight'],
       gender: json['gender'],
+      profileImage: json['profileImage'],
     );
   }
 
@@ -34,6 +38,7 @@ class ProfileDto {
     if (height != null) data['height'] = height;
     if (weight != null) data['weight'] = weight;
     if (gender != null) data['gender'] = gender;
+    if (profileImage != null) data['profileImage'] = profileImage;
     return data;
   }
 }

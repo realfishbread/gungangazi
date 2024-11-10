@@ -74,6 +74,9 @@ public class UserService {
         if (profileDto.getGender() != null) {
             user.setGender(profileDto.getGender());
         }
+         if (profileDto.getProfileImage() != null) {
+            user.setProfileImage(profileDto.getProfileImage()); // Base64 이미지 저장
+        }
     
         return userRepository.save(user);  // 업데이트된 사용자 저장
     }

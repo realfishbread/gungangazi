@@ -147,7 +147,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
           );
         },
         backgroundColor: const Color(0xFFFFF9C4),
-        child: const Icon(Icons.local_hospital_outlined),
+        child: const Icon(FontAwesomeIcons.commentMedical),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
@@ -175,7 +175,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
             [
               {'icon': FontAwesomeIcons.tooth, 'title': '치아건강'},
               {'icon': FontAwesomeIcons.heartPulse, 'title': '혈압'},
-              {'icon': FontAwesomeIcons.bandage, 'title': '상처'},
+              {'icon': FontAwesomeIcons.bandage, 'title': ' 상처'},
             ],
           ),
         );
@@ -185,28 +185,36 @@ class _MobileHomePageState extends State<MobileHomePage> {
   }
 
   List<Widget> _buildDrawerItems(String title, List<Map<String, dynamic>> items) {
-    return <Widget>[
-      ListTile(
-        title: Text(
-          title,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+  return <Widget>[
+    ListTile(
+      title: Text(
+        title,
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
         ),
       ),
-      const Divider(color: Colors.black),
-      ...items.map((item) {
-        return ListTile(
-          leading: Icon(item['icon'], color: Colors.black),
-          title: Text(item['title'], style: const TextStyle(color: Colors.black)),
-          onTap: () {
-            Navigator.pop(context);
-            _navigateToPage(context, item['title'] as String);
-          },
-        );
-      }),
-    ];
+    ),
+    const Divider(color: Colors.black),
+    ...items.map((item) {
+      return Column(
+        children: [
+          ListTile(
+            leading: Icon(item['icon'], color: Colors.black),
+            title: Text(
+              item['title'],
+              style: const TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              _navigateToPage(context, item['title'] as String);
+            },
+          ),
+          const SizedBox(height: 8), // 각 항목 사이의 간격을 추가
+        ],
+      );
+    }).toList(),
+  ];
   }
 }

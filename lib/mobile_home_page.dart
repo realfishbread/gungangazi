@@ -146,7 +146,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
             MaterialPageRoute(builder: (context) => const ChatPage()),
           );
         },
-        backgroundColor: const Color(0xFFFFF9C4),
+        backgroundColor: const Color.fromARGB(255, 187, 194, 223),
         child: const Icon(FontAwesomeIcons.commentMedical),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,

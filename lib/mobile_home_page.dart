@@ -1,6 +1,6 @@
 import 'BloodPressure.dart';
 import 'ToothCarePage.dart';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'profile2.dart';
 import 'package:flutter/material.dart';
 import 'PopupHandler.dart';
@@ -162,7 +162,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
             '내과',
             [
               {'icon': Icons.dark_mode, 'title': '수면'},
-              {'icon': Icons.person, 'title': '식단'},
+              {'icon': Icons.restaurant, 'title': '식단'},
               {'icon': Icons.water_drop_outlined, 'title': '수분'},
             ],
           ),
@@ -173,9 +173,9 @@ class _MobileHomePageState extends State<MobileHomePage> {
           children: _buildDrawerItems(
             '외과',
             [
-              {'icon': Icons.person, 'title': '치아건강'},
-              {'icon': Icons.person, 'title': '혈압'},
-              {'icon': Icons.settings, 'title': '상처'},
+              {'icon': FontAwesomeIcons.tooth, 'title': '치아건강'},
+              {'icon': FontAwesomeIcons.heartPulse, 'title': '혈압'},
+              {'icon': FontAwesomeIcons.bandage, 'title': '상처'},
             ],
           ),
         );

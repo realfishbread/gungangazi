@@ -42,6 +42,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFFFF9C4), // 원하는 배경색으로 설정 (예: 연한 노란색)
       body: Center(
         child: FadeTransition(
           opacity: _animation,

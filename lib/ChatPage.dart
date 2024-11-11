@@ -81,7 +81,8 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
           final String resultText = predictions.map((pred) {
             return pred['disease'];
           }).join('\n');
-          _showDiagnosisDialog(resultText); // 진단 결과를 다이얼로그로 표시
+          
+          _addDogMessage(resultText); // 개가 진단 결과를 말하는 방식으로 출력
 
           setState(() {
             selectedSymptoms.clear(); // 진단 후 선택한 증상 초기화
@@ -180,7 +181,7 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
               );
             }).toList(),
           ),
-          if (relatedSymptoms.isNotEmpty) ...[
+          if (relatedSymptoms.isNotEmpty) ...[ 
             Wrap(
               children: relatedSymptoms.map((symptom) {
                 return Padding(

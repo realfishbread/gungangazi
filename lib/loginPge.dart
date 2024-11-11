@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('로그인 오류'),
+          title: const Text('로그인'),
           content: Text(message),
           actions: <Widget>[
             TextButton(

@@ -12,12 +12,13 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
   final List<Map<String, dynamic>> _messages = [];
   final TextEditingController _controller = TextEditingController();
   List<String> relatedSymptoms = [];
-  final Set<String> selectedSymptoms = {}; // Set 사용으로 중복 방지
-  final Dio _dio = Dio(); // Dio instance 생성
+  final Set<String> selectedSymptoms = {};
+  final List<String> recentSymptoms = []; // 최근 검색된 증상 리스트
+  final Dio _dio = Dio();
   bool _isTyping = false;
 
   // 서버 IP 주소 설정 (호스트 PC의 IP로 변경)
-  final String serverUrl = 'http://127.0.0.1:5000';
+  final String serverUrl = 'http://15.164.140.55:5000';
 
   @override
   void initState() {
@@ -25,7 +26,6 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
     _addDogMessage('안녕하세요! 어떤 증상이 있으신가요?');
   }
 
-  // 강아지가 한 글자씩 메시지를 보내는 메서드
   Future<void> _addDogMessage(String fullText) async {
     setState(() {
       _isTyping = true;
@@ -36,7 +36,7 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
     });
 
     for (int i = 0; i < fullText.length; i++) {
-      await Future.delayed(const Duration(milliseconds: 100)); // 글자 하나당 100ms 지연
+      await Future.delayed(const Duration(milliseconds: 100));
       setState(() {
         _messages.last['text'] = _messages.last['text'] + fullText[i];
       });
@@ -70,53 +70,45 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
   Future<void> diagnoseDisease() async {
     try {
       if (selectedSymptoms.isNotEmpty) {
-        setState(() {
-          _messages.add({
-            'text': '입력된 증상: ${selectedSymptoms.join(', ')}',
-            'isMine': true,
+        final response = await _dio.post(
+          '$serverUrl/predict_disease',
+          options: Options(headers: {'Content-Type': 'application/json'}),
+          data: json.encode({'symptoms': selectedSymptoms.toList()}),
+        );
+
+        if (response.statusCode == 200) {
+          final predictions = response.data['predictions'];
+          final String resultText = predictions.map((pred) {
+            return pred['disease'];
+          }).join('\n');
+          _showDiagnosisDialog(resultText); // 진단 결과를 다이얼로그로 표시
+
+          setState(() {
+            selectedSymptoms.clear(); // 진단 후 선택한 증상 초기화
           });
-        });
-      }
-
-      final response = await _dio.post(
-        '$serverUrl/predict_disease',
-        options: Options(headers: {'Content-Type': 'application/json'}),
-        data: json.encode({'symptoms': selectedSymptoms.toList()}),
-      );
-
-      if (response.statusCode == 200) {
-        final predictions = response.data['predictions'];
-        final showWarning = selectedSymptoms.length <= 2;
-
-        setState(() {
-          if (predictions.length == 1) {
-            final disease = predictions[0]['disease'];
-            _messages.add({
-              'text': '해당 증상으로는 다음 질환이 의심됩니다:\n$disease' +
-                  (showWarning ? '\n\n증상이 적을 경우 정확한 진단이 어려울 수 있습니다' : ''),
-              'isMine': false,
-            });
-          } else {
-            final diagnosisText = predictions.map((pred) {
-              final disease = pred['disease'];
-              return '$disease';
-            }).join('\n');
-
-            _messages.add({
-              'text': '다음 질환들이 의심됩니다:\n$diagnosisText' +
-                  (showWarning ? '\n\n증상이 적을 경우 정확한 진단이 어려울 수 있습니다' : ''),
-              'isMine': false,
-            });
-          }
-
-          selectedSymptoms.clear();
-        });
-      } else {
-        print("Error: ${response.statusCode}");
+        } else {
+          print("Error: ${response.statusCode}");
+        }
       }
     } catch (e) {
       print("Error: $e");
     }
+  }
+
+  void _showDiagnosisDialog(String resultText) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('진단 결과'),
+        content: Text(resultText),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('확인'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _sendMessage(bool isMine) {
@@ -134,6 +126,12 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
 
   void addSymptom(String symptom) {
     setState(() {
+      if (!recentSymptoms.contains(symptom)) {
+        recentSymptoms.insert(0, symptom); // 최근 검색된 증상 리스트에 추가
+        if (recentSymptoms.length > 5) {
+          recentSymptoms.removeLast(); // 최대 5개까지만 유지
+        }
+      }
       selectedSymptoms.add(symptom);
       _controller.clear();
       relatedSymptoms = [];
@@ -149,7 +147,6 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
       ),
       body: Column(
         children: [
-          // 채팅 메시지 목록
           Expanded(
             child: ListView.builder(
               itemCount: _messages.length,
@@ -162,7 +159,7 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
               },
             ),
           ),
-          if (_isTyping) // 강아지가 타이핑 중일 때 인디케이터 표시
+          if (_isTyping)
             const Padding(
               padding: EdgeInsets.all(8.0),
               child: Text('강아지가 입력 중...'),
@@ -198,6 +195,28 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
               }).toList(),
             ),
           ],
+          if (recentSymptoms.isNotEmpty) ...[
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text('최근 검색된 증상들:'),
+            ),
+            Wrap(
+              children: recentSymptoms.map((symptom) {
+                return Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Chip(
+                    label: Text(symptom),
+                    backgroundColor: Colors.lightBlue[100],
+                    onDeleted: () {
+                      setState(() {
+                        recentSymptoms.remove(symptom);
+                      });
+                    },
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -225,13 +244,17 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
                   },
                   child: const Text("진단하기"),
                 ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      selectedSymptoms.clear();
+                    });
+                  },
+                  child: const Text("증상 목록 초기화"),
+                ),
                 IconButton(
                   icon: const Icon(Icons.send),
                   onPressed: () => _sendMessage(true),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.reply),
-                  onPressed: () => _addDogMessage('알겠습니다!'),
                 ),
               ],
             ),
@@ -256,7 +279,7 @@ class ChatBubble extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          if (!isMine) // 상대방 메시지일 때 강아지 이미지 추가
+          if (!isMine)
             Padding(
               padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
               child: Image.asset(

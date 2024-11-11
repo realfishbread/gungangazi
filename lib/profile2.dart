@@ -69,7 +69,7 @@ class _Profile2State extends State<Profile2> {
     // 이미지를 Base64로 인코딩하여 서버에 전송
     final imageBytes = await _imageFile!.readAsBytes();
     final base64Image = base64Encode(imageBytes);
-    
+
     final updatedData = {
       'username': _profile?.username ?? defaultProfile.username,
       'profileImage': base64Image, // Base64 인코딩된 이미지 추가
@@ -277,3 +277,4 @@ class _Profile2State extends State<Profile2> {
     );
   }
 }
+

@@ -18,7 +18,7 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
   bool _isTyping = false;
 
   // 서버 IP 주소 설정 (호스트 PC의 IP로 변경)
-  final String serverUrl = 'https://gungangazi.site:5000';
+  final String serverUrl = 'https://gungangazi.site';
 
   @override
   void initState() {

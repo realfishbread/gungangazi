@@ -78,7 +78,7 @@ class _Profile2State extends State<Profile2> {
     };
 
     bool success = await _profileRepository.updateProfile(widget.username, updatedData);
-
+    print("Profile Update - Success: $success");
     if (success) {
       await fetchProfile();
     } else {
@@ -91,6 +91,9 @@ class _Profile2State extends State<Profile2> {
     setState(() {
       isLoading = true;
     });
+
+    String? token = await _tokenService.getToken();
+    print("fetchProfile - Token: $token");
 
     ProfileDto? profile = await _profileRepository.fetchProfile(widget.username);
     setState(() {

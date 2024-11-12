@@ -22,7 +22,7 @@ class Profile2 extends StatefulWidget {
 }
 
 class _Profile2State extends State<Profile2> {
-  Uint8List? _imageData; // 서버에서 받은 Base64 이미지 데이터를 저장할 변수
+  Uint8List? _imageData;
   late ProfileRepository _profileRepository;
   final TokenService _tokenService = TokenService();
   ProfileDto? _profile;
@@ -43,7 +43,6 @@ class _Profile2State extends State<Profile2> {
     _initialize();
   }
 
-  // 비동기 초기화 함수
   Future<void> _initialize() async {
     String? token = await _tokenService.getToken();
     DioService dioService = DioService(token: token);
@@ -63,50 +62,11 @@ class _Profile2State extends State<Profile2> {
         });
       }
     }
-    await _uploadProfileImage();
+    await updateProfileData(); // 이미지 선택 후 데이터 업데이트
   }
 
-  // 서버로 이미지 업로드
-  Future<void> _uploadProfileImage() async {
-    if (_imageData == null) return;
-
-    final base64Image = base64Encode(_imageData!);
-
-    final updatedData = {
-      'username': _profile?.username ?? defaultProfile.username,
-      'profileImage': base64Image,
-    };
-
-    bool success = await _profileRepository.updateProfile(widget.username, updatedData);
-    print("Profile Update - Success: $success");
-    if (success) {
-      await fetchProfile();
-    } else {
-      print('이미지 업로드 실패');
-    }
-  }
-
-  // 서버에서 프로필 정보를 가져오는 함수
-  Future<void> fetchProfile() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    String? token = await _tokenService.getToken();
-    print("fetchProfile - Token: $token");
-
-    ProfileDto? profile = await _profileRepository.fetchProfile(widget.username);
-    setState(() {
-      _profile = profile ?? defaultProfile;
-      if (_profile?.profileImage != null) {
-        _imageData = base64Decode(_profile!.profileImage!); // Base64 인코딩된 이미지를 디코딩하여 저장
-      }
-      isLoading = false;
-    });
-  }
-
-  // 프로필 데이터 저장 함수
-  Future<void> saveProfile(String fieldName, String newValue) async {
+  // 통합된 프로필 데이터 저장 함수 (텍스트 필드와 이미지 모두 포함)
+  Future<void> updateProfileData({String? fieldName, String? newValue}) async {
     final updatedProfile = ProfileDto(
       username: _profile?.username ?? defaultProfile.username,
       realname: fieldName == '이름' ? newValue : _profile?.realname ?? defaultProfile.realname,
@@ -114,15 +74,31 @@ class _Profile2State extends State<Profile2> {
       height: fieldName == '키' ? newValue : _profile?.height ?? defaultProfile.height,
       weight: fieldName == '몸무게' ? newValue : _profile?.weight ?? defaultProfile.weight,
       gender: _profile?.gender ?? defaultProfile.gender,
-      profileImage: _profile?.profileImage, // 이미지 데이터 포함
+      profileImage: _imageData != null ? base64Encode(_imageData!) : _profile?.profileImage,
     );
 
     bool success = await _profileRepository.updateProfile(widget.username, updatedProfile.toJson());
+
     if (success) {
-      await fetchProfile();
+      await fetchProfile(); // 업데이트 후 프로필을 다시 가져옴
     } else {
       print('프로필 업데이트 실패');
     }
+  }
+
+  Future<void> fetchProfile() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    ProfileDto? profile = await _profileRepository.fetchProfile(widget.username);
+    setState(() {
+      _profile = profile ?? defaultProfile;
+      if (_profile?.profileImage != null) {
+        _imageData = base64Decode(_profile!.profileImage!);
+      }
+      isLoading = false;
+    });
   }
 
   @override
@@ -155,7 +131,7 @@ class _Profile2State extends State<Profile2> {
                   radius: 50,
                   backgroundColor: const Color.fromARGB(255, 240, 240, 240),
                   backgroundImage: _imageData != null
-                      ? MemoryImage(_imageData!) 
+                      ? MemoryImage(_imageData!)
                       : AssetImage('assets/place_holder.png') as ImageProvider,
                 ),
                 Positioned(
@@ -180,7 +156,7 @@ class _Profile2State extends State<Profile2> {
                   fieldName: '이름',
                   currentValue: profile.realname ?? '기본이름',
                   onSave: (fieldName, newValue) async {
-                    await saveProfile(fieldName, newValue);
+                    await updateProfileData(fieldName: fieldName, newValue: newValue);
                   },
                 ),
               ),
@@ -194,7 +170,7 @@ class _Profile2State extends State<Profile2> {
                   fieldName: '이메일',
                   currentValue: profile.email ?? '기본이메일@example.com',
                   onSave: (fieldName, newValue) async {
-                    await saveProfile(fieldName, newValue);
+                    await updateProfileData(fieldName: fieldName, newValue: newValue);
                   },
                 ),
               ),
@@ -208,7 +184,7 @@ class _Profile2State extends State<Profile2> {
                   fieldName: '키',
                   currentValue: (profile.height ?? '170cm').replaceAll('cm', ''),
                   onSave: (fieldName, newValue) async {
-                    await saveProfile(fieldName, newValue);
+                    await updateProfileData(fieldName: fieldName, newValue: newValue);
                   },
                 ),
               ),
@@ -222,7 +198,7 @@ class _Profile2State extends State<Profile2> {
                   fieldName: '몸무게',
                   currentValue: (profile.weight ?? '70kg').replaceAll('kg', ''),
                   onSave: (fieldName, newValue) async {
-                    await saveProfile(fieldName, newValue);
+                    await updateProfileData(fieldName: fieldName, newValue: newValue);
                   },
                 ),
               ),

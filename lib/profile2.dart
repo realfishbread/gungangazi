@@ -77,6 +77,7 @@ class _Profile2State extends State<Profile2> {
       gender: _profile?.gender ?? defaultProfile.gender,
       profileImage: _imageData != null ? base64Encode(_imageData!) : _profile?.profileImage,
     );
+    print("Sending data to server: ${jsonEncode(updatedProfile.toJson())}");
 
     bool success = await _profileRepository.updateProfile(widget.username, updatedProfile.toJson());
 

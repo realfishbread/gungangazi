@@ -96,11 +96,14 @@ class PopupHandler {
             // 추가 이미지 경로
           ],
           'thirsty': [
-            'assets/person/jindan_sad1.jpg',
-            'assets/person/jindan_sad3.jpg',
-            'assets/person/jindan_sad5.jpg',
-            'assets/person/jindan_sad7.jpg',
-            'assets/person/jindan_sad9.jpg',
+            'assets/person/th1.jpg',
+            'assets/person/th2.jpg',
+            'assets/person/th3.jpg',
+            'assets/person/th4.jpg',
+            'assets/person/th4.jpg',
+            'assets/person/th3.jpg',
+            'assets/person/th2.jpg',
+            'assets/person/th1.jpg',
           ],
         } {
     _imageNotifier = ValueNotifier<int>(_currentImageIndex);

@@ -285,8 +285,8 @@ class ChatBubble extends StatelessWidget {
               padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
               child: Image.asset(
                 'assets/dog.jpg',
-                width: 50,
-                height: 50,
+                width: 70,
+                height: 70,
               ),
             ),
           Container(

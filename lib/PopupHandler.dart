@@ -180,6 +180,10 @@ class PopupHandler {
       double legEndHeight = imageHeight * 0.90;
       double armWidth = imageWidth * 0.3;
 
+      // 물 부족 상태일 때 팝업 메시지 설정
+    if (_currentBodyPart == 'thirsty') {
+      popupMessage = '목이 말라요... 물을 주세요!';
+    } else {
       // 부위별 팝업 메시지 설정
       if (relativeY < headHeight) {
         popupMessage = '머리가 아프신가요?';
@@ -196,6 +200,7 @@ class PopupHandler {
         popupMessage = '다리가 아프신가요?';
         _currentBodyPart = 'leg';
       }
+    }
 
       // 말풍선 형태의 팝업 표시
       showMenu(

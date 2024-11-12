@@ -10,7 +10,7 @@ class PopupHandler {
   int _currentImageIndex = 0;
   late ValueNotifier<int> _imageNotifier;
   Timer? _imageTimer;
-  Duration frameDuration = const Duration(milliseconds: 250);
+  Duration frameDuration = const Duration(milliseconds: 300);
   String _currentBodyPart = 'default';
   int waterLevel = 100; // 수분 상태 변수 추가
 
@@ -31,6 +31,18 @@ class PopupHandler {
     'assets/person/10.jpg',
     'assets/person/11.jpg',
     'assets/person/12.jpg',
+    'assets/person/12.jpg',
+    'assets/person/11.jpg',
+    'assets/person/10.jpg',
+    'assets/person/9.jpg',
+    'assets/person/8.jpg',
+    'assets/person/7.jpg',
+    'assets/person/6.jpg',
+    'assets/person/5.jpg',
+    'assets/person/4.jpg',
+    'assets/person/3.jpg',
+    'assets/person/2.jpg',
+    'assets/person/1.jpg',
   ];
 
   PopupHandler({required this.listData})

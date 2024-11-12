@@ -3,6 +3,7 @@ import 'SleepPage.dart';
 import 'WaterDrink.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'PopupHandler.dart';
 
 
 // Main screen: SorhkPage
@@ -17,6 +18,7 @@ class _SorhkPageState extends State<SorhkPage> {
   List<SleepData> sleepDataList = [];
   List<DietData> dietDataList = [];
   List<WaterData> waterDataList = [];
+  late PopupHandler popupHandler;
 
   @override
   void initState() {
@@ -49,7 +51,7 @@ class _SorhkPageState extends State<SorhkPage> {
         children: [
           SleepCard(dataList: sleepDataList),  // 수면 카드
           DietCard(dataList: dietDataList),    // 식단 카드
-          WaterCard(dataList: waterDataList),  // 수분 카드
+          WaterCard(dataList: waterDataList, popupHandler: popupHandler),  // 수분 카드
         ],
       ),
     );
@@ -139,14 +141,16 @@ class DietCard extends StatelessWidget {
 // WaterCard: 수분 데이터를 보여주는 위젯
 class WaterCard extends StatelessWidget {
   final List<WaterData> dataList;
-
-  const WaterCard({super.key, required this.dataList});
-
+  final PopupHandler popupHandler; // PopupHandler 추가
+  const WaterCard({super.key, required this.dataList, required this.popupHandler});
+  
+  
+  
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const WaterDrink()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => WaterDrink(popupHandler: popupHandler)));
       },
       child: Card(
         margin: const EdgeInsets.all(10),

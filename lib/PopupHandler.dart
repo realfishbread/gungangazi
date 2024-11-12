@@ -12,93 +12,104 @@ class PopupHandler {
   Timer? _imageTimer;
   Duration frameDuration = const Duration(milliseconds: 250);
   String _currentBodyPart = 'default';
+  int waterLevel = 100; // 수분 상태 변수 추가
 
-  Rect? _imageRect; // 이미지의 위치와 크기를 저장
   final GlobalKey _imageKey = GlobalKey(); // 이미지를 위한 GlobalKey 선언
+  Rect? _imageRect;
 
   // 기본 이미지 리스트 (애니메이션을 위해 여러 장)
   final List<String> defaultImagePaths = [
-    'assets/person/jindan_N1.jpg',
-    'assets/person/jindan_N3.jpg',
-    'assets/person/jindan_N5.jpg',
-    'assets/person/jindan_N7.jpg',
-    'assets/person/jindan_N9.jpg',
-    'assets/person/jindan_N10.jpg',
-    'assets/person/jindan_N12.jpg',
-    'assets/person/jindan_N10.jpg',
-    'assets/person/jindan_N9.jpg',
-    'assets/person/jindan_N7.jpg',
-    'assets/person/jindan_N5.jpg',
-    'assets/person/jindan_N3.jpg',
-    'assets/person/jindan_N1.jpg',
+    'assets/person/1.jpg',
+    'assets/person/2.jpg',
+    'assets/person/3.jpg',
+    'assets/person/4.jpg',
+    'assets/person/5.jpg',
+    'assets/person/6.jpg',
+    'assets/person/7.jpg',
+    'assets/person/8.jpg',
+    'assets/person/9.jpg',
+    'assets/person/10.jpg',
+    'assets/person/11.jpg',
+    'assets/person/12.jpg',
   ];
 
   PopupHandler({required this.listData})
       : imagePathsByBodyPart = {
-    'head': [
-      'assets/person/jindan_sad1.jpg',
-      'assets/person/jindan_sad3.jpg',
-      'assets/person/jindan_sad5.jpg',
-      'assets/person/jindan_sad7.jpg',
-      'assets/person/jindan_sad9.jpg',
-
-    ],
-    'body': [
-      'assets/person/jindan_stomach1.jpg',
-      'assets/person/jindan_stomach2.jpg',
-      'assets/person/jindan_stomach3.jpg',
-      'assets/person/jindan_stomach4.jpg',
-      'assets/person/jindan_stomach5.jpg',
-      'assets/person/jindan_stomach6.jpg',
-      'assets/person/jindan_stomach7.jpg',
-      'assets/person/jindan_stomach6.jpg',
-      'assets/person/jindan_stomach5.jpg',
-      'assets/person/jindan_stomach4.jpg',
-      'assets/person/jindan_stomach3.jpg',
-      'assets/person/jindan_stomach2.jpg',
-      'assets/person/jindan_stomach1.jpg',
-    ],
-    'arm': [
-      'assets/person/jindan_armsick1.jpg',
-      'assets/person/jindan_armsick3.jpg',
-      'assets/person/jindan_armsick5.jpg',
-      'assets/person/jindan_armsick7.jpg',
-      'assets/person/jindan_armsick9.jpg',
-      'assets/person/jindan_armsick11.jpg',
-      'assets/person/jindan_armsick13.jpg',
-      'assets/person/jindan_armsick16.jpg',
-      'assets/person/jindan_armsick13.jpg',
-      'assets/person/jindan_armsick11.jpg',
-      'assets/person/jindan_armsick9.jpg',
-      'assets/person/jindan_armsick7.jpg',
-      'assets/person/jindan_armsick5.jpg',
-      'assets/person/jindan_armsick3.jpg',
-      'assets/person/jindan_armsick1.jpg',
-    ],
-
-    'leg': [
-      'assets/person/leg1.jpg',
-      'assets/person/leg2.jpg',
-    ],
-  } {
+          'head': [
+            'assets/person/jindan_sad.jpg',
+            'assets/person/jindan_sad1.jpg',
+            'assets/person/jindan_sad2.jpg',
+            'assets/person/jindan_sad3.jpg',
+            'assets/person/jindan_sad4.jpg',
+            'assets/person/jindan_sad5.jpg',
+            'assets/person/jindan_sad6.jpg',
+            'assets/person/jindan_sad7.jpg',
+            'assets/person/jindan_sad8.jpg',
+            'assets/person/jindan_sad9.jpg',
+          ],
+          'body': [
+            'assets/person/jindan_stomach1.jpg',
+            'assets/person/jindan_stomach2.jpg',
+            'assets/person/jindan_stomach3.jpg',
+            'assets/person/jindan_stomach4.jpg',
+            'assets/person/jindan_stomach5.jpg',
+            'assets/person/jindan_stomach6.jpg',
+            'assets/person/jindan_stomach7.jpg',
+          ],
+          'arm': [
+            'assets/person/jindan_armsick1.jpg',
+            'assets/person/jindan_armsick2.jpg',
+            'assets/person/jindan_armsick3.jpg',
+            'assets/person/jindan_armsick4.jpg',
+            'assets/person/jindan_armsick5.jpg',
+            'assets/person/jindan_armsick6.jpg',
+            'assets/person/jindan_armsick7.jpg',
+            'assets/person/jindan_armsick8.jpg',
+            'assets/person/jindan_armsick9.jpg',
+            'assets/person/jindan_armsick10.jpg',
+            'assets/person/jindan_armsick11.jpg',
+            'assets/person/jindan_armsick12.jpg',
+            'assets/person/jindan_armsick13.jpg',
+            'assets/person/jindan_armsick16.jpg',
+          ],
+          'leg': [
+            'assets/person/leg1.jpg',
+            // 추가 이미지 경로
+          ],
+          'thirsty': [
+            'assets/person/sad.jpg',
+            'assets/person/sad1.jpg',
+            'assets/person/sad2.jpg',
+            'assets/person/sad3.jpg',
+            'assets/person/sad4.jpg',
+            'assets/person/sad5.jpg',
+            'assets/person/sad6.jpg',
+            'assets/person/sad7.jpg',
+            'assets/person/sad8.jpg',
+            'assets/person/sad9.jpg', 
+          ],
+        } {
     _imageNotifier = ValueNotifier<int>(_currentImageIndex);
+  }
+
+  // 수분 상태에 따른 애니메이션 전환
+  void updateWaterLevel(int newWaterLevel) {
+    waterLevel = newWaterLevel;
+    if (waterLevel <= 200) {
+      _currentBodyPart = 'thirsty'; // 수분이 부족할 때 'thirsty' 애니메이션으로 전환
+    } else {
+      _currentBodyPart = 'default'; // 기본 상태로 복귀
+    }
+    startImageAnimation(); // 애니메이션 업데이트
   }
 
   // 이미지 애니메이션 시작
   void startImageAnimation() {
-
-    // 기존 타이머가 있으면 중지
-    if (_imageTimer != null && _imageTimer!.isActive) {
-      _imageTimer!.cancel();
-    }
+    _imageTimer?.cancel(); // 기존 타이머 중지
 
     _imageTimer = Timer.periodic(frameDuration, (timer) {
-      if (_currentBodyPart == 'default') {
-        _currentImageIndex = (_currentImageIndex + 1) % defaultImagePaths.length;
-      } else {
-        _currentImageIndex =
-            (_currentImageIndex + 1) % imagePathsByBodyPart[_currentBodyPart]!.length;
-      }
+      _currentImageIndex = (_currentImageIndex + 1) %
+          (imagePathsByBodyPart[_currentBodyPart]?.length ?? defaultImagePaths.length);
       _imageNotifier.value = _currentImageIndex;
     });
   }
@@ -112,9 +123,9 @@ class PopupHandler {
   void _calculateImageRect() {
     final RenderBox? box = _imageKey.currentContext?.findRenderObject() as RenderBox?;
     if (box != null) {
-      Offset position = box.localToGlobal(Offset.zero); // 이미지의 위치
-      Size size = box.size; // 이미지의 크기
-      _imageRect = position & size; // 위치와 크기를 Rect로 저장
+      Offset position = box.localToGlobal(Offset.zero);
+      Size size = box.size;
+      _imageRect = position & size;
     }
   }
 
@@ -131,15 +142,14 @@ class PopupHandler {
     }
   }
 
-
-
+  // 터치 이벤트 및 팝업
   void showPopupForCoordinates(
       BuildContext context, Offset tapPosition, Function(String) onImageSelected) {
-    if (_imageRect == null) return; // 이미지 크기가 설정되지 않은 경우 무시
+    if (_imageRect == null) return;
 
     String popupMessage = '';
 
-    // 터치가 이미지 범위 내에 있는지 확인
+    // 터치 위치가 이미지 범위 내에 있는지 확인
     if (_imageRect!.contains(tapPosition)) {
       double relativeY = tapPosition.dy - _imageRect!.top;
       double relativeX = tapPosition.dx - _imageRect!.left;
@@ -197,12 +207,12 @@ class PopupHandler {
                     },
                   ),
                 )
-                    : const SizedBox(), // 데이터가 없을 때는 빈 위젯으로 대체
+                    : const SizedBox(),
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop(); // 말풍선 닫기
-                    _navigateToBodyPartPage(context); // 다른 페이지로 이동
+                    Navigator.of(context).pop();
+                    _navigateToBodyPartPage(context);
                   },
                   child: const Text('다른 페이지로 이동'),
                 ),
@@ -222,8 +232,8 @@ class PopupHandler {
       builder: (context, constraints) {
         return GestureDetector(
           onTapDown: (TapDownDetails details) {
-            _calculateImageRect(); // 이미지 렌더링 후 위치와 크기 계산
-            final tapPosition = details.globalPosition; // globalPosition 사용
+            _calculateImageRect();
+            final tapPosition = details.globalPosition;
             showPopupForCoordinates(context, tapPosition, onImageSelected);
           },
           child: ValueListenableBuilder<int>(
@@ -234,8 +244,8 @@ class PopupHandler {
                     ? defaultImagePaths[value]
                     : imagePathsByBodyPart[_currentBodyPart]![value],
                 fit: BoxFit.cover,
-                key: _imageKey, // GlobalKey를 사용하여 이미지 위치 계산
-                gaplessPlayback: true, // 깜박임 방지를 위해 추가
+                key: _imageKey,
+                gaplessPlayback: true,
               );
             },
           ),

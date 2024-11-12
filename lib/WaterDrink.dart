@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import '../repositories/userHealth/water_repository.dart';
 import '../services/dio_service.dart';
 import '../services/TokenService.dart';
+import 'PopupHandler.dart'; // PopupHandler 임포트
 
 class WaterDrink extends StatefulWidget {
-  const WaterDrink({super.key});
+  final PopupHandler popupHandler; // PopupHandler 인스턴스를 받도록 설정
+
+  const WaterDrink({Key? key, required this.popupHandler}) : super(key: key);
 
   @override
   _WaterDrinkState createState() => _WaterDrinkState();
@@ -16,7 +18,7 @@ class WaterDrink extends StatefulWidget {
 class _WaterDrinkState extends State<WaterDrink> {
   final WaterRepository waterRepository = WaterRepository(
     dioService: DioService(),
-    tokenService: TokenService(), // TokenService 추가
+    tokenService: TokenService(),
   );
 
   Map<String, int> _dailyWaterIntake = {};
@@ -30,7 +32,7 @@ class _WaterDrinkState extends State<WaterDrink> {
   Future<void> _loadWaterIntake() async {
     _dailyWaterIntake = await waterRepository.fetchWaterIntake();
     setState(() {});
-    _checkWaterIntake(); // 초기 로딩 시에도 경고 확인
+    _checkWaterIntake(); // 초기 로딩 시에도 수분 상태 확인
   }
 
   void _addWater(int amount) {
@@ -42,13 +44,16 @@ class _WaterDrinkState extends State<WaterDrink> {
       }
     });
     waterRepository.saveWaterIntake(_dailyWaterIntake);
-    _checkWaterIntake(); // 물 섭취량 확인 후 경고 표시
+    _checkWaterIntake(); // 물 섭취량 확인 후 상태 업데이트
   }
 
   void _checkWaterIntake() {
     String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
     int todayWaterIntake = _dailyWaterIntake[today] ?? 0;
-  
+
+    // PopupHandler에 수분 상태 전달
+    widget.popupHandler.updateWaterLevel(todayWaterIntake);
+
     if (todayWaterIntake <= 200) {
       _showWarning();
     }

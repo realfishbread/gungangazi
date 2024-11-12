@@ -43,6 +43,7 @@ class _Profile2State extends State<Profile2> {
     _initialize();
   }
 
+  // 초기화 함수
   Future<void> _initialize() async {
     String? token = await _tokenService.getToken();
     DioService dioService = DioService(token: token);
@@ -65,7 +66,7 @@ class _Profile2State extends State<Profile2> {
     await updateProfileData(); // 이미지 선택 후 데이터 업데이트
   }
 
-  // 통합된 프로필 데이터 저장 함수 (텍스트 필드와 이미지 모두 포함)
+  // 프로필 데이터 저장 (텍스트 필드와 이미지 포함)
   Future<void> updateProfileData({String? fieldName, String? newValue}) async {
     final updatedProfile = ProfileDto(
       username: _profile?.username ?? defaultProfile.username,
@@ -80,7 +81,7 @@ class _Profile2State extends State<Profile2> {
     bool success = await _profileRepository.updateProfile(widget.username, updatedProfile.toJson());
 
     if (success) {
-      await fetchProfile(); // 업데이트 후 프로필을 다시 가져옴
+      await fetchProfile(); // 업데이트 후 프로필 다시 가져옴
     } else {
       print('프로필 업데이트 실패');
     }

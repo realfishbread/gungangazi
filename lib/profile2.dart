@@ -5,10 +5,12 @@ import '../services/dio_service.dart';
 import '../services/TokenService.dart';
 import 'loginPge.dart';
 import 'EditPage.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-import 'dart:convert'; // Base64 인코딩 및 디코딩을 위해 필요
+import 'conditional_imports.dart'; // 조건부 임포트 파일 추가
 import 'dart:typed_data'; // Uint8List 타입을 위해 추가
+import 'dart:convert'; // Base64 인코딩 및 디코딩을 위해 필요
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'image_picker_web.dart';
+import 'image_picker_mobile.dart';
 
 class Profile2 extends StatefulWidget {
   final String username;
@@ -25,7 +27,6 @@ class _Profile2State extends State<Profile2> {
   final TokenService _tokenService = TokenService();
   ProfileDto? _profile;
   bool isLoading = true;
-  XFile? _imageFile; // 갤러리에서 선택한 이미지를 저장할 변수
 
   final ProfileDto defaultProfile = ProfileDto(
     username: '기본아이디',
@@ -35,8 +36,6 @@ class _Profile2State extends State<Profile2> {
     weight: '70kg',
     gender: '남성',
   );
-
-  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -53,22 +52,25 @@ class _Profile2State extends State<Profile2> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = XFile(pickedFile.path);
-        _imageData = null; // 새로운 이미지를 선택한 경우 서버에서 받은 _imageData를 null로 설정
-      });
+    if (kIsWeb) {
+      _imageData = await pickImageWeb();
+    } else {
+      final pickedFile = await pickImageMobile();
+      if (pickedFile != null) {
+        final imageBytes = await pickedFile.readAsBytes();
+        setState(() {
+          _imageData = imageBytes;
+        });
+      }
     }
+    await _uploadProfileImage();
   }
 
   // 서버로 이미지 업로드
   Future<void> _uploadProfileImage() async {
-    if (_imageFile == null) return;
+    if (_imageData == null) return;
 
-    // 이미지를 Base64로 인코딩하여 서버에 전송
-    final imageBytes = await _imageFile!.readAsBytes();
-    final base64Image = base64Encode(imageBytes);
+    final base64Image = base64Encode(_imageData!);
 
     final updatedData = {
       'username': _profile?.username ?? defaultProfile.username,
@@ -95,13 +97,12 @@ class _Profile2State extends State<Profile2> {
       _profile = profile ?? defaultProfile;
       if (_profile?.profileImage != null) {
         _imageData = base64Decode(_profile!.profileImage!); // Base64 인코딩된 이미지를 디코딩하여 저장
-        _imageFile = null; // 서버에서 받은 이미지가 있을 때 _imageFile을 null로 설정
       }
       isLoading = false;
     });
   }
 
-  // 서버로 수정된 프로필 데이터를 보내는 함수
+  // 프로필 데이터 저장 함수
   Future<void> saveProfile(String fieldName, String newValue) async {
     final updatedProfile = ProfileDto(
       username: _profile?.username ?? defaultProfile.username,
@@ -152,21 +153,16 @@ class _Profile2State extends State<Profile2> {
                 CircleAvatar(
                   radius: 50,
                   backgroundColor: const Color.fromARGB(255, 240, 240, 240),
-                  backgroundImage: _imageFile != null
-                      ? FileImage(File(_imageFile!.path)) // 갤러리에서 선택된 이미지
-                      : _imageData != null
-                          ? MemoryImage(_imageData!) // 서버에서 받은 이미지
-                          : AssetImage('assets/place_holder.png') as ImageProvider,
+                  backgroundImage: _imageData != null
+                      ? MemoryImage(_imageData!) // 서버에서 받은 이미지 또는 웹에서 선택한 이미지
+                      : AssetImage('assets/place_holder.png') as ImageProvider,
                 ),
                 Positioned(
                   bottom: 0,
                   right: 0,
                   child: IconButton(
                     icon: const Icon(Icons.camera_alt, color: Colors.black),
-                    onPressed: () async {
-                      await _pickImage(); // 이미지 선택
-                      await _uploadProfileImage(); // 서버로 이미지 업로드
-                    },
+                    onPressed: _pickImage, // 이미지 선택
                   ),
                 ),
               ],
@@ -277,4 +273,3 @@ class _Profile2State extends State<Profile2> {
     );
   }
 }
-

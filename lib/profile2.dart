@@ -5,9 +5,9 @@ import '../services/dio_service.dart';
 import '../services/TokenService.dart';
 import 'loginPge.dart';
 import 'EditPage.dart';
-import 'conditional_imports.dart'; // 조건부 임포트 파일 추가
-import 'dart:typed_data'; // Uint8List 타입을 위해 추가
-import 'dart:convert'; // Base64 인코딩 및 디코딩을 위해 필요
+import 'conditional_imports.dart';
+import 'dart:typed_data';
+import 'dart:convert';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'image_picker_web.dart';
 import 'image_picker_mobile.dart';
@@ -74,13 +74,13 @@ class _Profile2State extends State<Profile2> {
 
     final updatedData = {
       'username': _profile?.username ?? defaultProfile.username,
-      'profileImage': base64Image, // Base64 인코딩된 이미지 추가
+      'profileImage': base64Image,
     };
 
     bool success = await _profileRepository.updateProfile(widget.username, updatedData);
 
     if (success) {
-      await fetchProfile(); // 업데이트 후 프로필 정보를 다시 가져오기
+      await fetchProfile();
     } else {
       print('이미지 업로드 실패');
     }
@@ -111,16 +111,14 @@ class _Profile2State extends State<Profile2> {
       height: fieldName == '키' ? newValue : _profile?.height ?? defaultProfile.height,
       weight: fieldName == '몸무게' ? newValue : _profile?.weight ?? defaultProfile.weight,
       gender: _profile?.gender ?? defaultProfile.gender,
+      profileImage: _profile?.profileImage, // 이미지 데이터 포함
     );
 
-    bool success = await _profileRepository.updateProfile(
-        widget.username,
-        updatedProfile.toJson()
-    );
+    bool success = await _profileRepository.updateProfile(widget.username, updatedProfile.toJson());
     if (success) {
-      await fetchProfile(); // 업데이트 후 프로필 정보를 다시 가져오기
+      await fetchProfile();
     } else {
-      print('파일 저장을 실패했습니다');
+      print('프로필 업데이트 실패');
     }
   }
 
@@ -154,7 +152,7 @@ class _Profile2State extends State<Profile2> {
                   radius: 50,
                   backgroundColor: const Color.fromARGB(255, 240, 240, 240),
                   backgroundImage: _imageData != null
-                      ? MemoryImage(_imageData!) // 서버에서 받은 이미지 또는 웹에서 선택한 이미지
+                      ? MemoryImage(_imageData!) 
                       : AssetImage('assets/place_holder.png') as ImageProvider,
                 ),
                 Positioned(
@@ -162,7 +160,7 @@ class _Profile2State extends State<Profile2> {
                   right: 0,
                   child: IconButton(
                     icon: const Icon(Icons.camera_alt, color: Colors.black),
-                    onPressed: _pickImage, // 이미지 선택
+                    onPressed: _pickImage,
                   ),
                 ),
               ],

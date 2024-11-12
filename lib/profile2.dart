@@ -25,7 +25,7 @@ class _Profile2State extends State<Profile2> {
   final TokenService _tokenService = TokenService();
   ProfileDto? _profile;
   bool isLoading = true;
-  File? _imageFile; // 갤러리에서 선택한 이미지를 저장할 변수
+  XFile? _imageFile; // 갤러리에서 선택한 이미지를 저장할 변수
 
   final ProfileDto defaultProfile = ProfileDto(
     username: '기본아이디',
@@ -56,7 +56,7 @@ class _Profile2State extends State<Profile2> {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        _imageFile = File(pickedFile.path);
+        _imageFile = XFile(pickedFile.path);
         _imageData = null; // 새로운 이미지를 선택한 경우 서버에서 받은 _imageData를 null로 설정
       });
     }
@@ -153,7 +153,7 @@ class _Profile2State extends State<Profile2> {
                   radius: 50,
                   backgroundColor: const Color.fromARGB(255, 240, 240, 240),
                   backgroundImage: _imageFile != null
-                      ? FileImage(_imageFile!) // 갤러리에서 선택된 이미지
+                      ? FileImage(File(_imageFile!.path)) // 갤러리에서 선택된 이미지
                       : _imageData != null
                           ? MemoryImage(_imageData!) // 서버에서 받은 이미지
                           : AssetImage('assets/place_holder.png') as ImageProvider,

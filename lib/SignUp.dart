@@ -54,12 +54,16 @@ class _SignUpPageState extends State<SignUpPage> {
         final message = await userRepository.registerUser(user);  // 서버에서 받은 토큰
 
           // 받은 메시지를 출력
-        print('회원가입 메시지: $message');
           if (message == "아이디가 이미 존재합니다.") {
           _showErrorDialog('아이디가 이미 존재합니다.');
         } else {
           _showErrorDialog('회원가입 성공');
-        }
+
+          // 1초 뒤에 로그인 페이지로 이동
+          Future.delayed(Duration(seconds: 1), () {
+            Navigator.pushReplacementNamed(context, '/login');
+          });
+        } 
       } catch (e) {
         _showErrorDialog('회원가입에 실패했습니다: $e');
       }
@@ -84,7 +88,7 @@ class _SignUpPageState extends State<SignUpPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('입력 오류'),
+        title: const Text('알림'),
         content: Text(message),
         actions: [
           TextButton(

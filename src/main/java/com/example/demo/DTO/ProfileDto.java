@@ -9,14 +9,14 @@ public class ProfileDto {
     private String gender;
     private String profileImage;
 
-    public ProfileDto(String username, String realname, String email, String height, String weight, String gender) {
+    public ProfileDto(String username, String realname, String email, String height, String weight, String gender, String profileImage) {
         this.username = username;
         this.realname = realname;
         this.email = email;
         this.height = height;
         this.weight = weight;
         this.gender = gender;
-        
+        this.profileImage = profileImage;
         
     }
     public String getProfileImage() {

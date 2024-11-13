@@ -131,29 +131,43 @@ void _toggleMenstruationRecorded() async {
               });
             },
             calendarBuilders: CalendarBuilders(
-            defaultBuilder: (context, date, focusedDay) {
-              DateTime dateOnly = DateTime(date.year, date.month, date.day);
-              if (_supplementTaken[dateOnly] == true) {
-                return Container(
-                  margin: const EdgeInsets.all(4.0),
-                  decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(0.5),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(child: Text('${date.day}')),
-                );
-              } else if (_menstruationRecorded[dateOnly] == true) {
-                return Container(
-                  margin: const EdgeInsets.all(4.0),
-                  decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.5),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(child: Text('${date.day}')),
-                );
-              }
-              return null;
-            },
+              defaultBuilder: (context, date, focusedDay) {
+                DateTime dateOnly = DateTime(date.year, date.month, date.day);
+                
+                if (_supplementTaken[dateOnly] == true && _menstruationRecorded[dateOnly] == true) {
+                  // 둘 다 기록된 경우
+                  return Container(
+                    margin: const EdgeInsets.all(4.0),
+                    decoration: BoxDecoration(
+                      color: Colors.purple.withOpacity(0.5),  // 보라색으로 표시
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(child: Text('${date.day}')),
+                  );
+                } else if (_supplementTaken[dateOnly] == true) {
+                  // 영양제 복용만 기록된 경우
+                  return Container(
+                    margin: const EdgeInsets.all(4.0),
+                    decoration: BoxDecoration(
+                      color: Colors.green.withOpacity(0.5),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(child: Text('${date.day}')),
+                  );
+                } else if (_menstruationRecorded[dateOnly] == true) {
+                  // 생리 기록만 기록된 경우
+                  return Container(
+                    margin: const EdgeInsets.all(4.0),
+                    decoration: BoxDecoration(
+                      color: Colors.red.withOpacity(0.5),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(child: Text('${date.day}')),
+                  );
+                }
+                return null;
+              },
+
 
             ),
           ),

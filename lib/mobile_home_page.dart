@@ -9,7 +9,7 @@ import 'SleepPage.dart';
 import 'WaterDrink.dart';
 import 'MealPage.dart';
 import 'ChatPage.dart';
-import '../services/TokenService.dart'; // TokenService 임포트
+import '../services/TokenService.dart';
 
 class MobileHomePage extends StatefulWidget {
   const MobileHomePage({super.key});
@@ -21,9 +21,13 @@ class MobileHomePage extends StatefulWidget {
 class _MobileHomePageState extends State<MobileHomePage> {
   int _selectedIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final TokenService _tokenService = TokenService(); // TokenService 인스턴스 생성
+  final TokenService _tokenService = TokenService();
   final List<dynamic> _listData = [];
   late PopupHandler _popupHandler;
+
+  double sleepProgress = 0.75;
+  double mealProgress = 0.50;
+  double waterProgress = 0.90;
 
   @override
   void initState() {
@@ -43,7 +47,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
       '수분': WaterDrink(popupHandler: _popupHandler),
       '식단': const MealPage(),
       '영양제': const SupplementsPage(),
-      '혈압':  const BloodPressurePage(),
+      '혈압': const BloodPressurePage(),
       '치아건강': const ToothCarePage()
     };
 
@@ -62,7 +66,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
     });
 
     if (_selectedIndex == 3) {
-      String? username = await _tokenService.getUsername(); // TokenService에서 실제 username을 가져오기
+      String? username = await _tokenService.getUsername();
       if (username != null) {
         Navigator.push(
           context,
@@ -83,11 +87,39 @@ class _MobileHomePageState extends State<MobileHomePage> {
     }
   }
 
+  Widget _buildStatusBar(String title, double progress, Color color) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: [
+          Text(
+            title,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: LinearProgressIndicator(
+              value: progress,
+              color: color,
+              backgroundColor: Colors.grey[300],
+              minHeight: 8,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            '${(progress * 100).toInt()}%',
+            style: const TextStyle(fontSize: 12),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Colors.white, // 여기에 배경색을 흰색으로 설정
+      backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Icon(Icons.local_hospital_outlined, color: Colors.black),
@@ -108,13 +140,32 @@ class _MobileHomePageState extends State<MobileHomePage> {
           child: _getDrawerContent(),
         ),
       ),
-      body: Center(
-        child: _popupHandler.buildImageAnimationWithTouch(context, (newImagePath) {
-          setState(() {});
-        }),
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          // 캐릭터 이미지
+          Center(
+            child: _popupHandler.buildImageAnimationWithTouch(context, (newImagePath) {
+              setState(() {});
+            }),
+          ),
+          // 이미지 위에 막대 그래프 표시
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.2,
+            left: 16,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildStatusBar('수면', sleepProgress, Colors.blue),
+                _buildStatusBar('식단', mealProgress, Colors.green),
+                _buildStatusBar('수분', waterProgress, Colors.blueAccent),
+              ],
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed, // 추가
+        type: BottomNavigationBarType.fixed,
         backgroundColor: const Color(0xFFFFF9C4),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -175,7 +226,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
             [
               {'icon': FontAwesomeIcons.tooth, 'title': '치아건강'},
               {'icon': FontAwesomeIcons.heartPulse, 'title': '혈압'},
-              {'icon': FontAwesomeIcons.bandage, 'title': ' 상처'},
+              {'icon': FontAwesomeIcons.bandage, 'title': '상처'},
             ],
           ),
         );
@@ -185,36 +236,37 @@ class _MobileHomePageState extends State<MobileHomePage> {
   }
 
   List<Widget> _buildDrawerItems(String title, List<Map<String, dynamic>> items) {
-  return <Widget>[
-    ListTile(
-      title: Text(
-        title,
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
+    return <Widget>[
+      ListTile(
+        title: Text(
+          title,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-    ),
-    const Divider(color: Colors.black),
-    ...items.map((item) {
-      return Column(
-        children: [
-          ListTile(
-            leading: Icon(item['icon'], color: Colors.black),
-            title: Text(
-              item['title'],
-              style: const TextStyle(color: Colors.black, fontSize: 16),
+      const Divider(color: Colors.black),
+      ...items.map((item) {
+        return Column(
+          children: [
+            ListTile(
+              leading: Icon(item['icon'], color: Colors.black),
+              title: Text(
+                item['title'],
+                style: const TextStyle(color: Colors.black, fontSize: 16),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                _navigateToPage(context, item['title'] as String);
+              },
             ),
-            onTap: () {
-              Navigator.pop(context);
-              _navigateToPage(context, item['title'] as String);
-            },
-          ),
-          const SizedBox(height: 8), // 각 항목 사이의 간격을 추가
-        ],
-      );
-    }).toList(),
-  ];
+            const SizedBox(height: 8),
+          ],
+        );
+      }).toList(),
+    ];
   }
 }
+

@@ -186,14 +186,14 @@ class PopupHandler {
     } else {
       // 부위별 팝업 메시지 설정
       if (relativeY < headHeight) {
-        popupMessage = '머리가 아프신가요?';
+        popupMessage = '잘 주무셨나요?';
         _currentBodyPart = 'head';
       } else if (relativeY >= headHeight && relativeY < legStartHeight) {
         if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
           popupMessage = '팔이 아프신가요?';
           _currentBodyPart = 'arm';
         } else {
-          popupMessage = '몸이 아프신가요?';
+          popupMessage = '식사 하셨나요?';
           _currentBodyPart = 'body';
         }
       } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {

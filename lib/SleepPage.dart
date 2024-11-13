@@ -122,69 +122,85 @@ class _SleepPageState extends State<SleepPage> {
     }
   }
 
-  // Build sleep records graph
   Widget _buildSleepGraph() {
-    if (_sleepRecords.isEmpty) {
-      return const Center(child: Text('No saved sleep records.'));
-    }
-
-    List<BarChartGroupData> barGroups = _sleepRecords.asMap().entries.map((entry) {
-      int index = entry.key;
-      Map<String, String> record = entry.value;
-
-      // Convert sleep and wake-up times to TimeOfDay
-      TimeOfDay sleepTime = TimeOfDay(
-        hour: int.parse(record['sleepTime']!.split(":")[0]),
-        minute: int.parse(record['sleepTime']!.split(":")[1]),
-      );
-      TimeOfDay wakeUpTime = TimeOfDay(
-        hour: int.parse(record['wakeUpTime']!.split(":")[0]),
-        minute: int.parse(record['wakeUpTime']!.split(":")[1]),
-      );
-
-      // Calculate sleep duration
-      Duration sleepDuration = _calculateSleepDuration(sleepTime, wakeUpTime);
-      double sleepHours = sleepDuration.inMinutes / 60.0;
-
-      return BarChartGroupData(
-        x: index,
-        barRods: [
-          BarChartRodData(
-            toY: sleepHours,
-            color: Colors.blueAccent,
-            width: 20,
-          ),
-        ],
-      );
-    }).toList();
-
-    return BarChart(
-      BarChartData(
-        barGroups: barGroups,
-        titlesData: FlTitlesData(
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              interval: 4,
-              getTitlesWidget: (value, meta) => Text('${value.toInt()}h'),
-            ),
-          ),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              getTitlesWidget: (double value, meta) {
-                return Text(_sleepRecords[value.toInt()]['date'] ?? '');
-              },
-            ),
-          ),
-        ),
-        borderData: FlBorderData(show: false),
-        minY: 0,
-        maxY: 24,
-      ),
-    );
+  if (_sleepRecords.isEmpty) {
+    return const Center(child: Text('저장된 수면 기록이 없습니다.'));
   }
 
+  List<BarChartGroupData> barGroups = _sleepRecords.asMap().entries.map((entry) {
+    int index = entry.key;
+    Map<String, String> record = entry.value;
+
+    // 수면 및 기상 시간을 TimeOfDay로 변환
+    TimeOfDay sleepTime = TimeOfDay(
+      hour: int.parse(record['sleepTime']!.split(":")[0]),
+      minute: int.parse(record['sleepTime']!.split(":")[1]),
+    );
+    TimeOfDay wakeUpTime = TimeOfDay(
+      hour: int.parse(record['wakeUpTime']!.split(":")[0]),
+      minute: int.parse(record['wakeUpTime']!.split(":")[1]),
+    );
+
+    // 수면 시간 계산
+    Duration sleepDuration = _calculateSleepDuration(sleepTime, wakeUpTime);
+    double sleepHours = sleepDuration.inMinutes / 60.0;
+
+    return BarChartGroupData(
+      x: index,
+      barRods: [
+        BarChartRodData(
+          toY: sleepHours,
+          color: Colors.blueAccent,
+          width: 20,
+        ),
+      ],
+    );
+  }).toList();
+
+  // 권장 수면 시간 (예: 8시간)
+  double recommendedSleepHours = 8.0;
+
+  return BarChart(
+    BarChartData(
+      barGroups: barGroups,
+      titlesData: FlTitlesData(
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            interval: 4,
+            getTitlesWidget: (value, meta) => Text('${value.toInt()}h'),
+          ),
+        ),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: (double value, meta) {
+              return Text(_sleepRecords[value.toInt()]['date'] ?? '');
+            },
+          ),
+        ),
+      ),
+      borderData: FlBorderData(show: false),
+      minY: 0,
+      maxY: 24,
+      extraLinesData: ExtraLinesData(
+        horizontalLines: [
+          HorizontalLine(
+            y: recommendedSleepHours,
+            color: Colors.red,
+            strokeWidth: 2,
+            dashArray: [5, 5],
+            label: HorizontalLineLabel(
+              show: true,
+              alignment: Alignment.topLeft,
+              labelResolver: (line) => '권장 수면 시간: ${recommendedSleepHours.toInt()}h',
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
   // Helper method to calculate sleep duration
   Duration _calculateSleepDuration(TimeOfDay sleepTime, TimeOfDay wakeUpTime) {
     final now = DateTime.now();

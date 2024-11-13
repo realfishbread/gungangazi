@@ -37,7 +37,7 @@ class _MealPageState extends State<MealPage> {
     try {
       List<MealDTO> meals = await _mealRepository.fetchMealsByDate(currentDate);
       setState(() {
-        _mealsByDate[currentDate] = meals.map((meal) => meal.mealContent).toList();
+        _mealsByDate[currentDate] = meals.map((meal) => meal.meal).toList();
       });
     } catch (e) {
       print('Error loading meals: $e');
@@ -52,7 +52,7 @@ class _MealPageState extends State<MealPage> {
       String? username = await TokenService().getUsername();  // username을 가져옴
       final MealDTO newMeal = MealDTO(
         date: currentDate,
-        mealContent: mealContent,
+        meal: mealContent,  // mealContent를 사용
         username: username ?? '',  // username을 추가
       );
 

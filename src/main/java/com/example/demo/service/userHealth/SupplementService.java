@@ -18,10 +18,10 @@ public class SupplementService {
 
     public void saveSupplement(SupplementDTO supplementDto) {
         Supplement supplement = new Supplement();
+        supplement.setUsername(supplementDto.getUsername());
         supplement.setDate(supplementDto.getDate());
         supplement.setSupplementTaken(supplementDto.isSupplementTaken());
         supplement.setMenstruationRecorded(supplementDto.isMenstruationRecorded());
-        supplement.setUsername(supplementDto.getUsername());
         supplementRepository.save(supplement);
     }
 

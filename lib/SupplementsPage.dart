@@ -68,32 +68,33 @@ class _SupplementsPageState extends State<SupplementsPage> {
     );
   }
 
-  Future<void> _saveData() async {
-     String? username = await tokenService.getUsername();
-      if (username == null) {
-        print("Username을 가져올 수 없습니다.");
-        return;
-      }
-    SupplementDto dto = SupplementDto(
-      date: _selectedDay,
-      supplementTaken: _supplementTaken[_selectedDay] ?? false,
-      menstruationRecorded: _menstruationRecorded[_selectedDay] ?? false,
-      username: username,
-    );
-    await supplementRepository.saveSupplement(dto);
+ Future<void> _saveData() async {
+  String? username = await tokenService.getUsername();
+  if (username == null) {
+    print("Username을 가져올 수 없습니다.");
+    return;
   }
+  SupplementDto dto = SupplementDto(
+    date: _selectedDay,
+    supplementTaken: _supplementTaken[_selectedDay] ?? false,
+    menstruationRecorded: _menstruationRecorded[_selectedDay] ?? false,
+    username: username,
+  );
+  print('Saving data: ${dto.date}, ${dto.supplementTaken}, ${dto.menstruationRecorded}'); // 디버깅용
+  await supplementRepository.saveSupplement(dto);
+}
 
   Future<void> _loadData() async {
-   final supplements = await supplementRepository.fetchSupplements();
-  setState(() {
-    for (var supplement in supplements) {
-      _supplementTaken[supplement.date] = supplement.supplementTaken;
-      _menstruationRecorded[supplement.date] = supplement.menstruationRecorded;
-    }
-  });
-  print('Loaded supplement data: $_supplementTaken'); // 디버깅용 로그
-  print('Loaded menstruation data: $_menstruationRecorded'); // 디버깅용 로그
-}
+    final supplements = await supplementRepository.fetchSupplements();
+    setState(() {
+      for (var supplement in supplements) {
+        _supplementTaken[supplement.date] = supplement.supplementTaken;
+        _menstruationRecorded[supplement.date] = supplement.menstruationRecorded;
+      }
+    });
+    print('Loaded supplement data: $_supplementTaken');
+    print('Loaded menstruation data: $_menstruationRecorded');
+  }
 
  void _toggleSupplementTaken() async {
   // 날짜의 시간 부분을 제거하여 날짜만 비교하도록 수정

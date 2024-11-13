@@ -14,7 +14,15 @@ class MealRepository {
     try {
       final Dio dio = dioService.getDio();
       String? username = await tokenService.getUsername();  // username 가져오기
-      final response = await dio.get('/meals/get', queryParameters: {'date': date, 'username': username});
+      final response = await dio.get(
+        '/meals/get',
+        queryParameters: {'date': date, 'username': username},
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer ${await tokenService.getToken()}',
+          },
+        ),
+      );
       if (response.statusCode == 200) {
         List<dynamic> data = response.data;
         return data.map((meal) => MealDTO.fromJson(meal)).toList();
@@ -30,9 +38,18 @@ class MealRepository {
   Future<void> addMeal(MealDTO meal) async {
     try {
       final Dio dio = dioService.getDio();
+      String? username = await tokenService.getUsername();  // username 가져오기
       final response = await dio.post(
         '/meals/post',
-        data: meal.toJson(),  // meal에 username 포함
+        data: {
+          ...meal.toJson(),  // 기존 meal 데이터
+          'username': username,  // username 추가
+        },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer ${await tokenService.getToken()}',
+          },
+        ),
       );
       if (response.statusCode != 201) {
         throw Exception('Failed to add meal');

@@ -29,32 +29,24 @@ class _SupplementsPageState extends State<SupplementsPage> {
   @override
   void initState() {
     super.initState();
-    supplementRepository = SupplementRepository(dioService: dioService,tokenService: TokenService());
+    supplementRepository = SupplementRepository(dioService: dioService, tokenService: tokenService);
     _initializeNotifications();
     _loadData();
   }
 
+  // 알림 초기화
   Future<void> _initializeNotifications() async {
     tz.initializeTimeZones();
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    const InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-    );
+    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const InitializationSettings initializationSettings = InitializationSettings(android: initializationSettingsAndroid);
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
+  // 알림 스케줄 설정
   Future<void> _scheduleNotification(DateTime scheduledDate) async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      'your_channel_id', 'your_channel_name',
-      importance: Importance.max,
-      priority: Priority.high,
-      ticker: 'ticker',
-    );
-
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
+    const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'your_channel_id', 'your_channel_name', importance: Importance.max, priority: Priority.high, ticker: 'ticker');
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
       0,
@@ -68,39 +60,34 @@ class _SupplementsPageState extends State<SupplementsPage> {
     );
   }
 
- Future<void> _saveData() async {
-  String? username = await tokenService.getUsername();
-  if (username == null) {
-    print("Username을 가져올 수 없습니다.");
-    return;
+  // 데이터 저장
+  Future<void> _saveData() async {
+    String? username = await tokenService.getUsername();
+    if (username == null) {
+      print("Username을 가져올 수 없습니다.");
+      return;
+    }
+
+    DateTime dateOnly = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+    bool supplementTaken = _supplementTaken[dateOnly] ?? false;
+    bool menstruationRecorded = _menstruationRecorded[dateOnly] ?? false;
+
+    print("Saving data: date=$dateOnly, supplementTaken=$supplementTaken, menstruationRecorded=$menstruationRecorded");
+
+    SupplementDto dto = SupplementDto(
+      date: dateOnly,
+      supplementTaken: supplementTaken,
+      menstruationRecorded: menstruationRecorded,
+      username: username,
+    );
+
+    print("DTO before save: $dto");
+    await supplementRepository.saveSupplement(dto);
+
+    await _loadData();
   }
 
-  // 날짜가 설정된 상태인지 확인
-  DateTime dateOnly = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
-
-  // 복용 상태와 생리 기록 상태를 상태값으로 설정
-  bool supplementTaken = _supplementTaken[dateOnly] ?? false;
-  bool menstruationRecorded = _menstruationRecorded[dateOnly] ?? false;
-
-  print("Saving data: date=${dateOnly}, supplementTaken=$supplementTaken, menstruationRecorded=$menstruationRecorded");
-
-  // SupplementDto 객체 생성
-  SupplementDto dto = SupplementDto(
-    date: dateOnly,
-    supplementTaken: supplementTaken,
-    menstruationRecorded: menstruationRecorded,
-    username: username,
-  );
-
-  print("DTO before save: $dto");
-  
-  // Supplement 데이터 저장
-  await supplementRepository.saveSupplement(dto);
-
-  // 다시 데이터를 불러와서 상태를 갱신
-  await _loadData();
-}
-
+  // 데이터 로딩
   Future<void> _loadData() async {
     final supplements = await supplementRepository.fetchSupplements();
     setState(() {
@@ -113,31 +100,29 @@ class _SupplementsPageState extends State<SupplementsPage> {
     print('Loaded menstruation data: $_menstruationRecorded');
   }
 
- void _toggleSupplementTaken() async {
-  DateTime dateOnly = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
-  
-  setState(() {
-    _supplementTaken[dateOnly] = !(_supplementTaken[dateOnly] ?? false); // 토글 방식 변경
-  });
+  // 영양제 복용 버튼 토글
+  void _toggleSupplementTaken() async {
+    DateTime dateOnly = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+    setState(() {
+      _supplementTaken[dateOnly] = !(_supplementTaken[dateOnly] ?? false);
+    });
 
-  await _saveData();
-}
-
-void _toggleMenstruationRecorded() async {
-  DateTime dateOnly = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
-
-  setState(() {
-    _menstruationRecorded[dateOnly] = !(_menstruationRecorded[dateOnly] ?? false); // 토글 방식 변경
-  });
-
-  if (_menstruationRecorded[dateOnly] == true) {
-    await _scheduleNotification(dateOnly); // 알림 설정
+    await _saveData();
   }
 
-  await _saveData(); 
-}
+  // 생리 기록 버튼 토글
+  void _toggleMenstruationRecorded() async {
+    DateTime dateOnly = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+    setState(() {
+      _menstruationRecorded[dateOnly] = !(_menstruationRecorded[dateOnly] ?? false);
+    });
 
+    if (_menstruationRecorded[dateOnly] == true) {
+      await _scheduleNotification(dateOnly); // 알림 설정
+    }
 
+    await _saveData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -161,19 +146,18 @@ void _toggleMenstruationRecorded() async {
             calendarBuilders: CalendarBuilders(
               defaultBuilder: (context, date, focusedDay) {
                 DateTime dateOnly = DateTime(date.year, date.month, date.day);
-                
+
+                // 상태에 따라 날짜 색상 변경
                 if (_supplementTaken[dateOnly] == true && _menstruationRecorded[dateOnly] == true) {
-                  // 둘 다 기록된 경우
                   return Container(
                     margin: const EdgeInsets.all(4.0),
                     decoration: BoxDecoration(
-                      color: Colors.purple.withOpacity(0.5),  // 보라색으로 표시
+                      color: Colors.purple.withOpacity(0.5),
                       shape: BoxShape.circle,
                     ),
                     child: Center(child: Text('${date.day}')),
                   );
                 } else if (_supplementTaken[dateOnly] == true) {
-                  // 영양제 복용만 기록된 경우
                   return Container(
                     margin: const EdgeInsets.all(4.0),
                     decoration: BoxDecoration(
@@ -183,7 +167,6 @@ void _toggleMenstruationRecorded() async {
                     child: Center(child: Text('${date.day}')),
                   );
                 } else if (_menstruationRecorded[dateOnly] == true) {
-                  // 생리 기록만 기록된 경우
                   return Container(
                     margin: const EdgeInsets.all(4.0),
                     decoration: BoxDecoration(
@@ -195,8 +178,6 @@ void _toggleMenstruationRecorded() async {
                 }
                 return null;
               },
-
-
             ),
           ),
           const SizedBox(height: 20),

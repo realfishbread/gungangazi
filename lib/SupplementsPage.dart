@@ -88,24 +88,25 @@ class _SupplementsPageState extends State<SupplementsPage> {
 }
 
  void _toggleSupplementTaken() async {
+  // 날짜의 시간 부분을 제거하여 날짜만 비교하도록 수정
+  DateTime dateOnly = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
   setState(() {
-    _supplementTaken[_selectedDay] = !(_supplementTaken[_selectedDay] ?? false);
+    _supplementTaken[dateOnly] = !(_supplementTaken[dateOnly] ?? false);
   });
-  await _saveData();  // 저장 후
-  await _loadData();  // 데이터를 다시 불러와 업데이트
-  print('Supplement taken status on $_selectedDay: ${_supplementTaken[_selectedDay]}');
+  await _saveData();
+  await _loadData();
 }
 
 void _toggleMenstruationRecorded() async {
+  DateTime dateOnly = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
   setState(() {
-    _menstruationRecorded[_selectedDay] = !(_menstruationRecorded[_selectedDay] ?? false);
+    _menstruationRecorded[dateOnly] = !(_menstruationRecorded[dateOnly] ?? false);
   });
-  if (_menstruationRecorded[_selectedDay] == true) {
-    await _scheduleNotification(_selectedDay);
+  if (_menstruationRecorded[dateOnly] == true) {
+    await _scheduleNotification(dateOnly);
   }
-  await _saveData();  // 저장 후
-  await _loadData();  // 데이터를 다시 불러와 업데이트
-  print('Menstruation recorded status on $_selectedDay: ${_menstruationRecorded[_selectedDay]}');
+  await _saveData();
+  await _loadData();
 }
 
 
@@ -130,28 +131,30 @@ void _toggleMenstruationRecorded() async {
               });
             },
             calendarBuilders: CalendarBuilders(
-              defaultBuilder: (context, date, focusedDay) {
-                if (_supplementTaken[date] == true) {
-                  return Container(
-                    margin: const EdgeInsets.all(4.0),
-                    decoration: BoxDecoration(
-                      color: Colors.green.withOpacity(0.5),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(child: Text('${date.day}')),
-                  );
-                } else if (_menstruationRecorded[date] == true) {
-                  return Container(
-                    margin: const EdgeInsets.all(4.0),
-                    decoration: BoxDecoration(
-                      color: Colors.red.withOpacity(0.5),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(child: Text('${date.day}')),
-                  );
-                }
-                return null;
-              },
+            defaultBuilder: (context, date, focusedDay) {
+              DateTime dateOnly = DateTime(date.year, date.month, date.day);
+              if (_supplementTaken[dateOnly] == true) {
+                return Container(
+                  margin: const EdgeInsets.all(4.0),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withOpacity(0.5),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(child: Text('${date.day}')),
+                );
+              } else if (_menstruationRecorded[dateOnly] == true) {
+                return Container(
+                  margin: const EdgeInsets.all(4.0),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.5),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(child: Text('${date.day}')),
+                );
+              }
+              return null;
+            },
+
             ),
           ),
           const SizedBox(height: 20),

@@ -75,20 +75,29 @@ class _SupplementsPageState extends State<SupplementsPage> {
     return;
   }
 
-  print("Saving data: date=${_selectedDay}, supplementTaken=${_supplementTaken[_selectedDay]}, menstruationRecorded=${_menstruationRecorded[_selectedDay]}");
+  // 날짜가 설정된 상태인지 확인
+  DateTime dateOnly = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
 
+  // 복용 상태와 생리 기록 상태를 상태값으로 설정
+  bool supplementTaken = _supplementTaken[dateOnly] ?? false;
+  bool menstruationRecorded = _menstruationRecorded[dateOnly] ?? false;
+
+  print("Saving data: date=${dateOnly}, supplementTaken=$supplementTaken, menstruationRecorded=$menstruationRecorded");
+
+  // SupplementDto 객체 생성
   SupplementDto dto = SupplementDto(
-    date: _selectedDay,
-    supplementTaken: _supplementTaken[_selectedDay] ?? false,
-    menstruationRecorded: _menstruationRecorded[_selectedDay] ?? false,
+    date: dateOnly,
+    supplementTaken: supplementTaken,
+    menstruationRecorded: menstruationRecorded,
     username: username,
   );
 
   print("DTO before save: $dto");
   
+  // Supplement 데이터 저장
   await supplementRepository.saveSupplement(dto);
 
-  // 다시 로드하여 저장된 데이터를 확인
+  // 다시 데이터를 불러와서 상태를 갱신
   await _loadData();
 }
 

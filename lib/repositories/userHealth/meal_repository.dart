@@ -13,7 +13,7 @@ class MealRepository {
   Future<List<MealDTO>> fetchMealsByDate(String date) async {
     try {
       final Dio dio = dioService.getDio();
-      final response = await dio.get('/meals?date=$date');
+      final response = await dio.get('/meals/get');
       if (response.statusCode == 200) {
         List<dynamic> data = response.data;
         return data.map((meal) => MealDTO.fromJson(meal)).toList();
@@ -30,7 +30,7 @@ class MealRepository {
     try {
       final Dio dio = dioService.getDio();
       final response = await dio.post(
-        '/meals',
+        '/meals/post',
         data: meal.toJson(),
       );
       if (response.statusCode != 201) {

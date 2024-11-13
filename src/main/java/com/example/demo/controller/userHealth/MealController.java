@@ -26,13 +26,13 @@ public class MealController {
     }
 
     // 날짜별 식사 기록 조회
-    @GetMapping
+    @GetMapping("/get")
     public List<MealDTO> getMealsByDate(@RequestParam String date) {
         return mealService.getMealsByDate(date);
     }
 
     // 새로운 식사 기록 추가
-    @PostMapping
+    @PostMapping("/post")
     public void addMeal(@RequestBody MealDTO mealDTO) {
         mealService.addMeal(mealDTO);
     }

@@ -93,7 +93,12 @@ class PopupHandler {
           ],
           'leg': [
             'assets/person/leg1.jpg',
-            // 추가 이미지 경로
+            'assets/person/leg2.jpg',
+            'assets/person/leg3.jpg',
+            'assets/person/leg4.jpg',
+            'assets/person/leg3.jpg',
+            'assets/person/leg2.jpg',
+            'assets/person/leg1.jpg',
           ],
           'thirsty': [
             'assets/person/th1.jpg',

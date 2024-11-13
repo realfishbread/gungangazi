@@ -98,25 +98,32 @@ class _SupplementsPageState extends State<SupplementsPage> {
  void _toggleSupplementTaken() async {
   // 날짜의 시간 부분을 제거하여 날짜만 비교하도록 수정
   DateTime dateOnly = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+  
+  // 상태 값을 true로 설정
   setState(() {
-    _supplementTaken[dateOnly] = !(_supplementTaken[dateOnly] ?? false);
+    _supplementTaken[dateOnly] = true;
   });
-  await _saveData();
-  await _loadData();
+
+  await _saveData(); // 변경된 상태 저장
+  await _loadData(); // 데이터를 다시 불러와서 업데이트
 }
 
 void _toggleMenstruationRecorded() async {
+  // 날짜의 시간 부분을 제거하여 날짜만 비교하도록 수정
   DateTime dateOnly = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+  
+  // 상태 값을 true로 설정
   setState(() {
-    _menstruationRecorded[dateOnly] = !(_menstruationRecorded[dateOnly] ?? false);
+    _menstruationRecorded[dateOnly] = true;
   });
-  if (_menstruationRecorded[dateOnly] == true) {
-    await _scheduleNotification(dateOnly);
-  }
-  await _saveData();
-  await _loadData();
-}
 
+  if (_menstruationRecorded[dateOnly] == true) {
+    await _scheduleNotification(dateOnly); // 생리 알림 설정
+  }
+
+  await _saveData(); // 변경된 상태 저장
+  await _loadData(); // 데이터를 다시 불러와서 업데이트
+}
 
 
   @override

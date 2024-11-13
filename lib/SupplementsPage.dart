@@ -74,14 +74,22 @@ class _SupplementsPageState extends State<SupplementsPage> {
     print("Username을 가져올 수 없습니다.");
     return;
   }
+
+  print("Saving data: date=${_selectedDay}, supplementTaken=${_supplementTaken[_selectedDay]}, menstruationRecorded=${_menstruationRecorded[_selectedDay]}");
+
   SupplementDto dto = SupplementDto(
     date: _selectedDay,
     supplementTaken: _supplementTaken[_selectedDay] ?? false,
     menstruationRecorded: _menstruationRecorded[_selectedDay] ?? false,
     username: username,
   );
-  print('Saving data: ${dto.date}, ${dto.supplementTaken}, ${dto.menstruationRecorded}'); // 디버깅용
+
+  print("DTO before save: $dto");
+  
   await supplementRepository.saveSupplement(dto);
+
+  // 다시 로드하여 저장된 데이터를 확인
+  await _loadData();
 }
 
   Future<void> _loadData() async {

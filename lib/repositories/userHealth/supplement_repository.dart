@@ -15,6 +15,7 @@ class SupplementRepository {
       String? token = await tokenService.getToken();
       String? username = await tokenService.getUsername();
       Dio dio = dioService.getDio();
+      print("Sending data: ${supplementDto.toJson()}");
 
       // 요청 헤더에 Authorization 추가
       dio.options.headers['Authorization'] = 'Bearer $token';
@@ -37,7 +38,6 @@ class SupplementRepository {
     try {
       // 토큰을 가져와 요청 헤더에 추가
       String? token = await tokenService.getToken();
-      String? username = await tokenService.getUsername();
       Dio dio = dioService.getDio();
       dio.options.headers['Authorization'] = 'Bearer $token';
 

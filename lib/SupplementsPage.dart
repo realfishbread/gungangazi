@@ -83,24 +83,32 @@ class _SupplementsPageState extends State<SupplementsPage> {
       _menstruationRecorded[supplement.date] = supplement.menstruationRecorded;
     }
   });
+  print('Loaded supplement data: $_supplementTaken'); // 디버깅용 로그
+  print('Loaded menstruation data: $_menstruationRecorded'); // 디버깅용 로그
 }
 
-  void _toggleSupplementTaken() {
-    setState(() {
-      _supplementTaken[_selectedDay] = !(_supplementTaken[_selectedDay] ?? false);
-      _saveData();
-    });
-  }
+ void _toggleSupplementTaken() async {
+  setState(() {
+    _supplementTaken[_selectedDay] = !(_supplementTaken[_selectedDay] ?? false);
+  });
+  await _saveData();  // 저장 후
+  await _loadData();  // 데이터를 다시 불러와 업데이트
+  print('Supplement taken status on $_selectedDay: ${_supplementTaken[_selectedDay]}');
+}
 
-  void _toggleMenstruationRecorded() {
-    setState(() {
-      _menstruationRecorded[_selectedDay] = !(_menstruationRecorded[_selectedDay] ?? false);
-      if (_menstruationRecorded[_selectedDay] == true) {
-        _scheduleNotification(_selectedDay);
-      }
-      _saveData();
-    });
+void _toggleMenstruationRecorded() async {
+  setState(() {
+    _menstruationRecorded[_selectedDay] = !(_menstruationRecorded[_selectedDay] ?? false);
+  });
+  if (_menstruationRecorded[_selectedDay] == true) {
+    await _scheduleNotification(_selectedDay);
   }
+  await _saveData();  // 저장 후
+  await _loadData();  // 데이터를 다시 불러와 업데이트
+  print('Menstruation recorded status on $_selectedDay: ${_menstruationRecorded[_selectedDay]}');
+}
+
+
 
   @override
   Widget build(BuildContext context) {

@@ -59,8 +59,8 @@ public class SecurityConfig {
                 .requestMatchers(new AntPathRequestMatcher("/brushHistory/{username}/save", "PUT")).authenticated()
                 .requestMatchers(new AntPathRequestMatcher("/sleep/getSleepData", "GET")).authenticated()
                 .requestMatchers(new AntPathRequestMatcher("/sleep/saveSleepData", "POST")).authenticated()
-                .requestMatchers(new AntPathRequestMatcher("/meals", "POST")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/meals", "PUT")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/meals/post", "POST")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/meals/put", "PUT")).permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가

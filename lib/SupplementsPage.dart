@@ -76,20 +76,13 @@ class _SupplementsPageState extends State<SupplementsPage> {
   }
 
   Future<void> _loadData() async {
-  final supplements = await supplementRepository.fetchSupplements();
-  for (var supplement in supplements) {
-    DateTime date;
-    try {
-      DateTime date = supplement.date;
-    } catch (e) {
-      print('날짜 변환 오류: $e');
-      continue;
-    }
-    setState(() {
-       _supplementTaken[supplement.date] = supplement.supplementTaken;
+   final supplements = await supplementRepository.fetchSupplements();
+  setState(() {
+    for (var supplement in supplements) {
+      _supplementTaken[supplement.date] = supplement.supplementTaken;
       _menstruationRecorded[supplement.date] = supplement.menstruationRecorded;
-    });
-  }
+    }
+  });
 }
 
   void _toggleSupplementTaken() {

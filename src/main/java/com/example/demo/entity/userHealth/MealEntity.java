@@ -12,7 +12,7 @@ public class MealEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private String username;  // username 필드 추가
     private String date;
     private String meal;
 
@@ -20,9 +20,10 @@ public class MealEntity {
     public MealEntity() {}
 
     // 매개변수 있는 생성자
-    public MealEntity(String date, String meal) {
+    public MealEntity(String date, String meal, String username) {
         this.date = date;
         this.meal = meal;
+        this.username = username;  // 생성자에 username 추가
     }
 
     // Getter 및 Setter 메소드
@@ -49,4 +50,13 @@ public class MealEntity {
     public void setMeal(String meal) {
         this.meal = meal;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }
+

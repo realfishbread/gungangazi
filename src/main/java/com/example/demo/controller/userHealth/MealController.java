@@ -2,7 +2,6 @@ package com.example.demo.controller.userHealth;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,15 +19,15 @@ public class MealController {
 
     private final MealService mealService;
 
-    @Autowired
     public MealController(MealService mealService) {
         this.mealService = mealService;
     }
 
     // 날짜별 식사 기록 조회
     @GetMapping("/get")
-    public List<MealDTO> getMealsByDate(@RequestParam String date) {
-        return mealService.getMealsByDate(date);
+    public List<MealDTO> getMealsByDate(@RequestParam String date, @RequestParam String username) {
+        // Flutter에서 보내준 username과 date를 이용해 데이터를 조회
+        return mealService.getMealsByDate(date, username);  
     }
 
     // 새로운 식사 기록 추가

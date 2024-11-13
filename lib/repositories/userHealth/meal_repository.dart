@@ -13,7 +13,8 @@ class MealRepository {
   Future<List<MealDTO>> fetchMealsByDate(String date) async {
     try {
       final Dio dio = dioService.getDio();
-      final response = await dio.get('/meals/get');
+      String? username = await tokenService.getUsername();  // username 가져오기
+      final response = await dio.get('/meals/get', queryParameters: {'date': date, 'username': username});
       if (response.statusCode == 200) {
         List<dynamic> data = response.data;
         return data.map((meal) => MealDTO.fromJson(meal)).toList();
@@ -31,7 +32,7 @@ class MealRepository {
       final Dio dio = dioService.getDio();
       final response = await dio.post(
         '/meals/post',
-        data: meal.toJson(),
+        data: meal.toJson(),  // meal에 username 포함
       );
       if (response.statusCode != 201) {
         throw Exception('Failed to add meal');

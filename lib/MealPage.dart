@@ -49,7 +49,12 @@ class _MealPageState extends State<MealPage> {
     final String mealContent = _mealController.text.trim();
     if (mealContent.isNotEmpty) {
       final String currentDate = _getFormattedDate();
-      final MealDTO newMeal = MealDTO(date: currentDate, mealContent: mealContent);
+      String? username = await TokenService().getUsername();  // username을 가져옴
+      final MealDTO newMeal = MealDTO(
+        date: currentDate,
+        mealContent: mealContent,
+        username: username ?? '',  // username을 추가
+      );
 
       try {
         await _mealRepository.addMeal(newMeal);
@@ -114,3 +119,4 @@ class _MealPageState extends State<MealPage> {
     );
   }
 }
+

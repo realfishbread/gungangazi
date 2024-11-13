@@ -3,6 +3,7 @@ package com.example.demo.controller.userHealth;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +26,10 @@ public class SupplementController {
     }
 
     @GetMapping("/all")
-    public List<SupplementDTO> getAllSupplements() {
-        return supplementService.getAllSupplements();
+    public List<SupplementDTO> getSupplementsByUsername(Authentication authentication) {
+        String username = authentication.getName(); // 인증된 사용자의 username 가져오기
+        return supplementService.getSupplementsByUsername(username);
     }
+
 }
+

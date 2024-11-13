@@ -61,6 +61,8 @@ public class SecurityConfig {
                 .requestMatchers(new AntPathRequestMatcher("/sleep/saveSleepData", "POST")).authenticated()
                 .requestMatchers(new AntPathRequestMatcher("/meals/post", "POST")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/meals/put", "PUT")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/supplements/save", "POST")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/supplements/all", "GET")).permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가

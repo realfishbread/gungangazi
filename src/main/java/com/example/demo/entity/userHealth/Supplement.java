@@ -1,20 +1,34 @@
 package com.example.demo.entity.userHealth;
 
+import java.time.LocalDate;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "supplements")
 public class Supplement {
 
     @Id
-    private LocalDate date;
-    private boolean supplementTaken;
-    private boolean menstruationRecorded;
+    private String username;  // 사용자 이름 (기본키)
+
+    @Column(nullable = false)
+    private LocalDate date;  // 날짜
+
+    private boolean supplementTaken;  // 영양제 복용 여부
+    private boolean menstruationRecorded;  // 생리 기록 여부
 
     // Getters and Setters
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public LocalDate getDate() {
         return date;
     }

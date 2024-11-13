@@ -8,6 +8,7 @@ import 'package:timezone/timezone.dart' as tz;
 import '../services/dio_service.dart';
 import '../repositories/userHealth/supplement_repository.dart';
 import '../dto/userHealth/supplementDto.dart';
+import '../services/TokenService.dart';
 
 class SupplementsPage extends StatefulWidget {
   const SupplementsPage({super.key});
@@ -21,6 +22,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
   final Map<DateTime, bool> _menstruationRecorded = {};
   DateTime _selectedDay = DateTime.now();
   final DioService dioService = DioService();
+  final TokenService tokenService = TokenService(); 
   late final SupplementRepository supplementRepository;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -67,10 +69,16 @@ class _SupplementsPageState extends State<SupplementsPage> {
   }
 
   Future<void> _saveData() async {
+     String? username = await tokenService.getUsername();
+      if (username == null) {
+        print("Username을 가져올 수 없습니다.");
+        return;
+      }
     SupplementDto dto = SupplementDto(
       date: _selectedDay,
       supplementTaken: _supplementTaken[_selectedDay] ?? false,
       menstruationRecorded: _menstruationRecorded[_selectedDay] ?? false,
+      username: username,
     );
     await supplementRepository.saveSupplement(dto);
   }

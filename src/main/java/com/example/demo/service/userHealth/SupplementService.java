@@ -21,16 +21,21 @@ public class SupplementService {
         supplement.setDate(supplementDto.getDate());
         supplement.setSupplementTaken(supplementDto.isSupplementTaken());
         supplement.setMenstruationRecorded(supplementDto.isMenstruationRecorded());
+        supplement.setUsername(supplementDto.getUsername());
         supplementRepository.save(supplement);
     }
 
-    public List<SupplementDTO> getAllSupplements() {
-        return supplementRepository.findAll().stream().map(supplement -> {
-            SupplementDTO dto = new SupplementDTO();
-            dto.setDate(supplement.getDate());
-            dto.setSupplementTaken(supplement.isSupplementTaken());
-            dto.setMenstruationRecorded(supplement.isMenstruationRecorded());
-            return dto;
-        }).collect(Collectors.toList());
+    public List<SupplementDTO> getSupplementsByUsername(String username) {
+        return supplementRepository.findByUsername(username)
+            .stream()
+            .map(supplement -> {
+                SupplementDTO dto = new SupplementDTO();
+                dto.setDate(supplement.getDate());
+                dto.setSupplementTaken(supplement.isSupplementTaken());
+                dto.setMenstruationRecorded(supplement.isMenstruationRecorded());
+                dto.setUsername(supplement.getUsername());
+                return dto;
+            })
+            .collect(Collectors.toList());
     }
 }

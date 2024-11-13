@@ -37,6 +37,7 @@ class SupplementRepository {
     try {
       // 토큰을 가져와 요청 헤더에 추가
       String? token = await tokenService.getToken();
+      String? username = await tokenService.getUsername();
       Dio dio = dioService.getDio();
       dio.options.headers['Authorization'] = 'Bearer $token';
 

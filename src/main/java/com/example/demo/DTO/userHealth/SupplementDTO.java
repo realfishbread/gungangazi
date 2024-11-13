@@ -1,10 +1,12 @@
 package com.example.demo.DTO.userHealth;
+
 import java.time.LocalDate;
 
 public class SupplementDTO {
     private LocalDate date;
     private boolean supplementTaken;
     private boolean menstruationRecorded;
+    private String username;
 
     // Getters and Setters
     public LocalDate getDate() {
@@ -29,5 +31,13 @@ public class SupplementDTO {
 
     public void setMenstruationRecorded(boolean menstruationRecorded) {
         this.menstruationRecorded = menstruationRecorded;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

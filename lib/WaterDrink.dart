@@ -148,6 +148,21 @@ class _WaterDrinkState extends State<WaterDrink> {
                   ),
                   borderData: FlBorderData(show: false),
                   barTouchData: BarTouchData(enabled: true),
+                  extraLinesData: ExtraLinesData(
+                    horizontalLines: [
+                      HorizontalLine(
+                        y: 2000, // 권장 수분 섭취량 (예: 2000ml)
+                        color: Colors.red,
+                        strokeWidth: 2,
+                        dashArray: [5, 5],
+                        label: HorizontalLineLabel(
+                          show: true,
+                          alignment: Alignment.topLeft,
+                          labelResolver: (line) => '권장 섭취량: 2000ml',
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -46,96 +46,44 @@ class _SleepPageState extends State<SleepPage> {
     print('_sleepRecords: $_sleepRecords'); // Debugging print
   }
 
-  // Save sleep data locally and send it to the server
-  Future<void> _saveSleepDataLocally() async {
-    if (_sleepTime != null && _wakeUpTime != null) {
-      String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  // Save sleep data directly to the server
+Future<void> _saveSleepDataToServer() async {
+  if (_sleepTime != null && _wakeUpTime != null) {
+    String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-      Map<String, String> newRecord = {
-        'date': formattedDate,
-        'sleepTime': '${_sleepTime!.hour}:${_sleepTime!.minute}',
-        'wakeUpTime': '${_wakeUpTime!.hour}:${_wakeUpTime!.minute}',
-      };
+    Duration sleepDuration = _calculateSleepDuration(_sleepTime!, _wakeUpTime!);
+    double sleepHours = sleepDuration.inMinutes / 60.0;
 
-      Duration sleepDuration = _calculateSleepDuration(_sleepTime!, _wakeUpTime!);
-      double sleepHours = sleepDuration.inMinutes / 60.0;
-
-      // 수면 시간이 5시간 이상일 때 PopupHandler의 sleepLevel을 증가
-      if (sleepHours >= 5.0) {
-        widget.popupHandler.updateStatus(
-          newWaterLevel: widget.popupHandler.waterLevel,
-          newMealLevel: widget.popupHandler.mealLevel,
-          newSleepLevel: widget.popupHandler.sleepLevel + 200,
-        );
-      }
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? savedData = prefs.getString('sleepData');
-      List<Map<String, String>> records = [];
-
-      if (savedData != null) {
-        try {
-          List<dynamic> decodedData = json.decode(savedData);
-          records = decodedData.map((item) {
-            return Map<String, String>.from(item);
-          }).toList();
-        } catch (e) {
-          print('Error loading saved data: $e');
-        }
-      }
-
-      bool recordExists = false;
-      for (int i = 0; i < records.length; i++) {
-        if (records[i]['date'] == formattedDate) {
-          records[i] = newRecord;
-          recordExists = true;
-          break;
-        }
-      }
-
-      if (!recordExists) {
-        records.add(newRecord);
-      }
-
-      await prefs.setString('sleepData', json.encode(records));
-      print('Successfully saved sleep data locally: $records');
-
-      // Send saved local data to server
-      await _saveSleepDataToDatabase();
-      // Reload latest data from server for graph
-      await _loadSleepDataFromServer();
-    } else {
-      print('Sleep time or wake-up time is not selected');
+    // 수면 시간이 5시간 이상일 때 PopupHandler의 sleepLevel을 증가
+    if (sleepHours >= 5.0) {
+      widget.popupHandler.updateStatus(
+        newWaterLevel: widget.popupHandler.waterLevel,
+        newMealLevel: widget.popupHandler.mealLevel,
+        newSleepLevel: widget.popupHandler.sleepLevel + 200,
+      );
     }
-  }
 
-  // Send local data to the server
-  Future<void> _saveSleepDataToDatabase() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? savedData = prefs.getString('sleepData');
+    // 서버에 저장할 SleepDto 데이터 생성
+    String? username = await TokenService().getUsername();
+    SleepDto newSleepRecord = SleepDto(
+      date: formattedDate,
+      sleepTime: '${_sleepTime!.hour}:${_sleepTime!.minute}',
+      wakeUpTime: '${_wakeUpTime!.hour}:${_wakeUpTime!.minute}',
+      username: username ?? 'defaultUser', // Replace with actual username
+    );
 
-    if (savedData != null) {
-      try {
-        List<dynamic> data = json.decode(savedData);
-        String? username = await TokenService().getUsername();
-        List<SleepDto> records = data.map((item) {
-          Map<String, String> record = Map<String, String>.from(item);
-          return SleepDto(
-            date: record['date']!,
-            sleepTime: record['sleepTime']!,
-            wakeUpTime: record['wakeUpTime']!,
-            username: username ?? 'defaultUser', // Replace with actual username
-          );
-        }).toList();
-
-        await sleepRepository.saveSleepDataToDatabase(records);
-      } catch (e) {
-        print('Error sending data to the server: $e');
-      }
-    } else {
-      print('No sleep data saved locally.');
+    try {
+      // 서버에 데이터 저장
+      await sleepRepository.saveSleepDataToDatabase([newSleepRecord]);
+      print('Successfully saved sleep data to the server');
+    } catch (e) {
+      print('Error sending data to the server: $e');
     }
+  } else {
+    print('Sleep time or wake-up time is not selected');
   }
+}
+
 
   Widget _buildSleepGraph() {
   if (_sleepRecords.isEmpty) {
@@ -267,7 +215,7 @@ class _SleepPageState extends State<SleepPage> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _saveSleepDataLocally,
+                onPressed: _saveSleepDataToServer,
                 child: const Text('저장'),
               ),
               const SizedBox(height: 20),

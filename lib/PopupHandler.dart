@@ -3,9 +3,13 @@ import 'SleepPage.dart';
 import 'SupplementsPage.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
+import '../services/dio_service.dart'; // DioService 추가
+import '../services/TokenService.dart';
 
 class PopupHandler {
   final List<dynamic> listData;
+  final DioService dioService; // DioService 인스턴스
+  final TokenService tokenService; // TokenService 인스턴스
   final Map<String, List<String>> imagePathsByBodyPart;
   int _currentImageIndex = 0;
   late ValueNotifier<int> _imageNotifier;
@@ -15,6 +19,8 @@ class PopupHandler {
   int waterLevel = 100; // 수분 상태 변수 추가
   int mealLevel = 100;
   int sleepLevel = 100; // 수면 상태 변수
+  
+
 
   final GlobalKey _imageKey = GlobalKey(); // 이미지를 위한 GlobalKey 선언
   Rect? _imageRect;
@@ -47,7 +53,7 @@ class PopupHandler {
     'assets/person/1.jpg',
   ];
 
-  PopupHandler({required this.listData})
+  PopupHandler({required this.listData, required this.dioService, required this.tokenService})
       : imagePathsByBodyPart = {
           'head': [
             'assets/person/jindan_sad1.jpg',
@@ -164,38 +170,81 @@ class PopupHandler {
             'assets/person/yee.jpg',
           ],
           'thirsty_and_dizzy': [
-            'assets/person/yeet,jpg',
+            'assets/person/yeet,jpg'
           ]
 
         } {
     _imageNotifier = ValueNotifier<int>(_currentImageIndex);
+    loadStatusFromServer();
   }
 
-   void updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) {
+   /// 서버에 현재 상태 저장
+  Future<void> saveStatusToServer() async {
+    try {
+      String? username = await TokenService().getUsername();
+      await DioService().getDio().post('/character/status', data: {
+        'username': username,
+        'water_level': waterLevel,
+        'meal_level': mealLevel,
+        'sleep_level': sleepLevel,
+      });
+      print('Status saved to server successfully');
+    } catch (e) {
+      print('Failed to save status to server: $e');
+    }
+  }
+
+  /// 서버에서 현재 상태 불러오기
+  Future<void> loadStatusFromServer() async {
+    try {
+      String? username = await TokenService().getUsername();
+      final response = await DioService().getDio().get('/character/status', queryParameters: {
+        'username': username,
+      });
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        waterLevel = data['water_level'] ?? 100;
+        mealLevel = data['meal_level'] ?? 100;
+        sleepLevel = data['sleep_level'] ?? 100;
+        setBodyPartStatus();
+        print('Status loaded from server successfully');
+      }
+    } catch (e) {
+      print('Failed to load status from server: $e');
+    }
+  }
+
+  void updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) async {
     waterLevel = newWaterLevel;
     mealLevel = newMealLevel;
     sleepLevel = newSleepLevel;
 
-      // 세 가지 상태의 조합에 따른 상태 설정
-    if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel <= 200) {
-      _currentBodyPart = 'thirsty_and_hungry_dizzy'; // 세 가지 모두 부족한 상태
-    } else if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel > 200) {
-      _currentBodyPart = 'thirsty_and_hungry'; // 수분과 식사 부족, 수면은 충족
-    } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel <= 200) {
-      _currentBodyPart = 'thirsty_and_dizzy'; // 수분과 수면 부족, 식사는 충족
-    } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel <= 200) {
-      _currentBodyPart = 'hungry_and_dizzy'; // 식사와 수면 부족, 수분은 충족
-    } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel > 200) {
-      _currentBodyPart = 'thirsty'; // 수분만 부족한 상태
-    } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel > 200) {
-      _currentBodyPart = 'hungry'; // 식사만 부족한 상태
-    } else if (waterLevel > 200 && mealLevel > 200 && sleepLevel <= 200) {
-      _currentBodyPart = 'dizzy'; // 수면만 부족한 상태
-    } else {
-      _currentBodyPart = 'default'; // 모든 상태가 충족
-    }
-
+    // 상태 업데이트 후 서버에 저장
+    await saveStatusToServer();
+    setBodyPartStatus();
     startImageAnimation();
+  }
+
+  void setBodyPartStatus() {
+    // 세 가지 상태의 조합에 따른 상태 설정
+    if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel <= 200) {
+      _currentBodyPart = 'thirsty_and_hungry_dizzy';
+    } else if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel > 200) {
+      _currentBodyPart = 'thirsty_and_hungry';
+    } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel <= 200) {
+      _currentBodyPart = 'thirsty_and_dizzy';
+    } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel <= 200) {
+      _currentBodyPart = 'hungry_and_dizzy';
+    } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel > 200) {
+      _currentBodyPart = 'thirsty';
+    } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel > 200) {
+      _currentBodyPart = 'hungry';
+    } else if (waterLevel > 200 && mealLevel > 200 && sleepLevel <= 200) {
+      _currentBodyPart = 'dizzy';
+    } else {
+      _currentBodyPart = 'default';
+    }
   }
 
   // 이미지 애니메이션 시작

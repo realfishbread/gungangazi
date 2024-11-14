@@ -10,6 +10,7 @@ import 'WaterDrink.dart';
 import 'MealPage.dart';
 import 'ChatPage.dart';
 import '../services/TokenService.dart';
+import '../services/dio_service.dart';
 
 class MobileHomePage extends StatefulWidget {
   const MobileHomePage({super.key});
@@ -24,6 +25,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
   final TokenService _tokenService = TokenService();
   final List<dynamic> _listData = [];
   late PopupHandler _popupHandler;
+  final DioService _dioService = DioService(token: 'your-auth-token');
 
   double sleepProgress = 0.75;
   double mealProgress = 0.50;
@@ -32,7 +34,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
   @override
   void initState() {
     super.initState();
-    _popupHandler = PopupHandler(listData: _listData);
+    _popupHandler = PopupHandler(listData: _listData, tokenService: _tokenService, dioService: _dioService);
   }
 
   @override

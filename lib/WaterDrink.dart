@@ -53,12 +53,13 @@ class _WaterDrinkState extends State<WaterDrink> {
     int todayWaterIntake = _dailyWaterIntake[today] ?? 0;
     int todayMealLevel = widget.popupHandler.mealLevel; // 현재 mealLevel 가져오기
 
-    // PopupHandler에 수분 및 식사 상태 전달
-    widget.popupHandler.updateStatus(
-      newWaterLevel: todayWaterIntake,
-      newMealLevel: todayMealLevel,
-      newSleepLevel: widget.popupHandler.sleepLevel
-    );
+    // WaterDrink의 _addWater 메서드에 상태 업데이트
+  widget.popupHandler.updateStatus(
+    newWaterLevel: todayWaterIntake,
+    newMealLevel: todayMealLevel,
+    newSleepLevel: widget.popupHandler.sleepLevel
+  );
+  print("Water added and PopupHandler status updated - Water Level: $todayWaterIntake");
 
     if (todayWaterIntake <= 200) {
       _showWarning('물');

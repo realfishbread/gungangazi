@@ -57,11 +57,12 @@ Future<void> _saveSleepDataToServer() async {
     // 수면 시간이 5시간 이상일 때 PopupHandler의 sleepLevel을 증가
     if (sleepHours >= 5.0) {
       widget.popupHandler.updateStatus(
-        newWaterLevel: widget.popupHandler.waterLevel,
-        newMealLevel: widget.popupHandler.mealLevel,
-        newSleepLevel: widget.popupHandler.sleepLevel + 200,
-      );
-    }
+      newWaterLevel: widget.popupHandler.waterLevel,
+      newMealLevel: widget.popupHandler.mealLevel,
+      newSleepLevel: widget.popupHandler.sleepLevel + 200,
+  );
+  print("Sleep saved and PopupHandler status updated - Sleep Level: ${widget.popupHandler.sleepLevel}");
+}
 
     // 서버에 저장할 SleepDto 데이터 생성
     String? username = await TokenService().getUsername();

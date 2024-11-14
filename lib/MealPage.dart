@@ -69,40 +69,48 @@ class _MealPageState extends State<MealPage> {
     );
   }
 
-  // 새로운 식사 기록 추가 시 PopupHandler 상태 업데이트
   void _addMeal() async {
-    final String meal = _mealController.text.trim();
-    final int? calories = int.tryParse(_caloriesController.text.trim());
-    if (meal.isNotEmpty && calories != null) {
-      final String currentDate = _getFormattedDate();
-      String? username = await TokenService().getUsername();
-      final MealDTO newMeal = MealDTO(
-        date: currentDate,
-        meal: meal,
-        username: username ?? '',
-        calories: calories,
-        mealType: _selectedMealType, // 식사/간식 구분 추가
-      );
+  final String meal = _mealController.text.trim();
+  final int? calories = int.tryParse(_caloriesController.text.trim());
+  if (meal.isNotEmpty && calories != null) {
+    final String currentDate = _getFormattedDate();
+    String? username = await TokenService().getUsername();
+    final MealDTO newMeal = MealDTO(
+      date: currentDate,
+      meal: meal,
+      username: username ?? '',
+      calories: calories,
+      mealType: _selectedMealType, // 식사/간식 구분 추가
+    );
 
-      try {
-        await _mealRepository.addMeal(newMeal);
-        setState(() {
-          String mealEntry = '$_selectedMealType - $meal ($calories kcal)';
-          if (_mealsByDate.containsKey(currentDate)) {
-            _mealsByDate[currentDate]?.add(mealEntry);
-          } else {
-            _mealsByDate[currentDate] = [mealEntry];
-          }
-          _mealLevel += 200; // 식사 추가 시 mealLevel 200 증가
-          _mealController.clear();
-          _caloriesController.clear();
-        });
-        _checkMealStatus();
-      } catch (e) {
-        print('Error adding meal: $e');
-      }
+    try {
+      await _mealRepository.addMeal(newMeal);
+      setState(() {
+        String mealEntry = '$_selectedMealType - $meal ($calories kcal)';
+        if (_mealsByDate.containsKey(currentDate)) {
+          _mealsByDate[currentDate]?.add(mealEntry);
+        } else {
+          _mealsByDate[currentDate] = [mealEntry];
+        }
+        _mealLevel += 200; // 식사 추가 시 mealLevel 200 증가
+        _mealController.clear();
+        _caloriesController.clear();
+      });
+
+      // 다마고치 상태 업데이트 및 로그 추가
+      widget.popupHandler.updateStatus(
+        newWaterLevel: widget.popupHandler.waterLevel,
+        newMealLevel: _mealLevel,
+        newSleepLevel: widget.popupHandler.sleepLevel,
+      );
+      print("Meal added and PopupHandler status updated - Meal Level: $_mealLevel");
+
+      _checkMealStatus(); // 상태 반영 확인
+    } catch (e) {
+      print('Error adding meal: $e');
     }
   }
+}
 
   @override
   Widget build(BuildContext context) {

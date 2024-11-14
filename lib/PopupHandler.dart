@@ -214,16 +214,17 @@ class PopupHandler {
       print('Failed to load status from server: $e');
     }
   }
-
   void updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) async {
+    print("Updating status - Water: $newWaterLevel, Meal: $newMealLevel, Sleep: $newSleepLevel");
     waterLevel = newWaterLevel;
     mealLevel = newMealLevel;
     sleepLevel = newSleepLevel;
 
     // 상태 업데이트 후 서버에 저장
     await saveStatusToServer();
-    setBodyPartStatus();
-    startImageAnimation();
+    setBodyPartStatus(); // 새로운 상태에 따라 이미지 경로 설정
+    startImageAnimation(); // 애니메이션 다시 시작
+    print("Status updated and animation started - Current Body Part: $_currentBodyPart");
   }
 
   void setBodyPartStatus() {
@@ -245,6 +246,7 @@ class PopupHandler {
     } else {
       _currentBodyPart = 'default';
     }
+    print("Body part status set to $_currentBodyPart based on Water: $waterLevel, Meal: $mealLevel, Sleep: $sleepLevel");
   }
 
   // 이미지 애니메이션 시작

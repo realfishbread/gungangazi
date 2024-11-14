@@ -35,14 +35,19 @@ class _MealPageState extends State<MealPage> {
     return DateFormat('yyyy-MM-dd').format(DateTime.now());
   }
 
-  // 서버에서 식사 기록 가져오기
+  // 서버에서 모든 식사 기록 가져오기
   void _fetchMeals() async {
-    final String currentDate = _getFormattedDate();
     try {
-      List<MealDTO> meals = await _mealRepository.fetchMealsByDate(currentDate);
+      List<MealDTO> meals = await _mealRepository.fetchAllMeals(); // 모든 날짜의 기록 가져오기
       setState(() {
-        _mealsByDate[currentDate] = meals.map((meal) => meal.meal).toList();
-        _mealLevel = _mealsByDate[currentDate]!.length * 200; // 기록된 식사 수에 따라 mealLevel 설정
+        for (var meal in meals) {
+          if (_mealsByDate.containsKey(meal.date)) {
+            _mealsByDate[meal.date]?.add(meal.meal);
+          } else {
+            _mealsByDate[meal.date] = [meal.meal];
+          }
+        }
+        _mealLevel = _mealsByDate[_getFormattedDate()]?.length ?? 0 * 200;
       });
       _checkMealStatus();
     } catch (e) {

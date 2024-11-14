@@ -21,16 +21,16 @@ public class MealService {
     }
 
     // 날짜별 식사 기록 조회
-    public List<MealDTO> getMealsByDate(String date, String username) {
-        List<MealEntity> mealEntities = mealRepository.findByDateAndUsername(date, username);  // username도 필터링
-        return mealEntities.stream()
-                .map(entity -> new MealDTO(entity.getDate(), entity.getMeal(), entity.getUsername()))
-                .collect(Collectors.toList());
-    }
+    public List<MealDTO> getAllMealsByUsername(String username) {
+        List<MealEntity> meals = mealRepository.findByUsername(username);
+        return meals.stream().map(MealDTO::fromEntity).collect(Collectors.toList());
+}
 
     // 새로운 식사 기록 추가
     public void addMeal(MealDTO mealDTO) {
         MealEntity mealEntity = new MealEntity(mealDTO.getDate(), mealDTO.getMeal(), mealDTO.getUsername());  // username 포함
         mealRepository.save(mealEntity);
     }
+    
+ 
 }

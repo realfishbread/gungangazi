@@ -9,5 +9,6 @@ import com.example.demo.entity.userHealth.MealEntity;
 
 @Repository
 public interface MealRepository extends JpaRepository<MealEntity, Long> {
-    List<MealEntity> findByDateAndUsername(String date, String username);
+    List<MealEntity> findByUsername(String username);
 }
+

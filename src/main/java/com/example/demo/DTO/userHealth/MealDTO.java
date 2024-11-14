@@ -1,4 +1,5 @@
 package com.example.demo.DTO.userHealth;
+import com.example.demo.entity.userHealth.MealEntity;
 
 public class MealDTO {
     private String date;
@@ -38,5 +39,12 @@ public class MealDTO {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+    public static MealDTO fromEntity(MealEntity mealEntity) {
+        MealDTO dto = new MealDTO();
+        dto.setDate(mealEntity.getDate());
+        dto.setMeal(mealEntity.getMeal());
+        dto.setUsername(mealEntity.getUsername());
+        return dto;
     }
 }

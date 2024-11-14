@@ -23,16 +23,19 @@ public class MealController {
         this.mealService = mealService;
     }
 
-    // 날짜별 식사 기록 조회
-    @GetMapping("/get")
-    public List<MealDTO> getMealsByDate(@RequestParam String date, @RequestParam String username) {
-        // Flutter에서 보내준 username과 date를 이용해 데이터를 조회
-        return mealService.getMealsByDate(date, username);  
-    }
+    
 
     // 새로운 식사 기록 추가
     @PostMapping("/post")
     public void addMeal(@RequestBody MealDTO mealDTO) {
         mealService.addMeal(mealDTO);
     }
+
+    @GetMapping("/get")
+    public List<MealDTO> getAllMealsByUsername(@RequestParam String username) {
+    // username을 이용해 특정 사용자의 모든 식사 기록을 조회
+        return mealService.getAllMealsByUsername(username);
+    }
+
+
 }

@@ -9,14 +9,13 @@ class MealRepository {
 
   MealRepository({required this.dioService, required this.tokenService});
 
-  // 날짜별 식사 기록 가져오기
-  Future<List<MealDTO>> fetchMealsByDate(String date) async {
+    Future<List<MealDTO>> fetchAllMeals() async {
     try {
       final Dio dio = dioService.getDio();
-      String? username = await tokenService.getUsername();  // username 가져오기
+      String? username = await tokenService.getUsername(); // username 가져오기
       final response = await dio.get(
         '/meals/get',
-        queryParameters: {'date': date, 'username': username},
+        queryParameters: {'username': username},
         options: Options(
           headers: {
             'Authorization': 'Bearer ${await tokenService.getToken()}',
@@ -58,4 +57,6 @@ class MealRepository {
       throw Exception('Error adding meal: $e');
     }
   }
+
+   
 }

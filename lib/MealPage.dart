@@ -18,10 +18,10 @@ class MealPage extends StatefulWidget {
 class _MealPageState extends State<MealPage> {
   final Map<String, List<String>> _mealsByDate = {};
   final TextEditingController _mealController = TextEditingController();
-  final TextEditingController _caloriesController = TextEditingController(); // 칼로리 입력 컨트롤러 추가
+  final TextEditingController _caloriesController = TextEditingController();
   late MealRepository _mealRepository;
-  int _mealLevel = 0;
-  String _selectedMealType = '식사'; // 기본값을 "식사"로 설정
+  int _mealLevel = 0; // 초기 mealLevel 설정
+  String _selectedMealType = "식사"; // 기본 식사 타입 선택
 
   @override
   void initState() {
@@ -40,14 +40,13 @@ class _MealPageState extends State<MealPage> {
   // 서버에서 모든 식사 기록 가져오기
   void _fetchMeals() async {
     try {
-      List<MealDTO> meals = await _mealRepository.fetchAllMeals();
+      List<MealDTO> meals = await _mealRepository.fetchAllMeals(); // 모든 날짜의 기록 가져오기
       setState(() {
         for (var meal in meals) {
-          String mealEntry = '${meal.mealType} - ${meal.meal} (${meal.calories} kcal)';
           if (_mealsByDate.containsKey(meal.date)) {
-            _mealsByDate[meal.date]?.add(mealEntry);
+            _mealsByDate[meal.date]?.add(meal.meal);
           } else {
-            _mealsByDate[meal.date] = [mealEntry];
+            _mealsByDate[meal.date] = [meal.meal];
           }
         }
         _mealLevel = _mealsByDate[_getFormattedDate()]?.length ?? 0 * 200;
@@ -60,10 +59,13 @@ class _MealPageState extends State<MealPage> {
 
   // 식사 상태 확인하여 PopupHandler 업데이트
   void _checkMealStatus() {
+    String today = _getFormattedDate();
+    int todayMealLevel = _mealsByDate[today]?.length ?? 0;
+
     widget.popupHandler.updateStatus(
       newWaterLevel: widget.popupHandler.waterLevel,
       newMealLevel: _mealLevel,
-      newSleepLevel: widget.popupHandler.sleepLevel,
+      newSleepLevel: widget.popupHandler.sleepLevel
     );
   }
 
@@ -79,7 +81,7 @@ class _MealPageState extends State<MealPage> {
         meal: meal,
         username: username ?? '',
         calories: calories,
-        mealType: _selectedMealType,
+        mealType: _selectedMealType, // 식사/간식 구분 추가
       );
 
       try {
@@ -91,7 +93,7 @@ class _MealPageState extends State<MealPage> {
           } else {
             _mealsByDate[currentDate] = [mealEntry];
           }
-          _mealLevel += 200;
+          _mealLevel += 200; // 식사 추가 시 mealLevel 200 증가
           _mealController.clear();
           _caloriesController.clear();
         });
@@ -113,36 +115,50 @@ class _MealPageState extends State<MealPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
-            DropdownButton<String>(
-              value: _selectedMealType,
-              items: ['식사', '간식'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedMealType = newValue!;
-                });
-              },
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _mealController,
-              decoration: const InputDecoration(
-                labelText: '식사/간식 내용 입력',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _caloriesController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: '칼로리 입력 (kcal)',
-                border: OutlineInputBorder(),
-              ),
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: DropdownButton<String>(
+                    value: _selectedMealType,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedMealType = newValue!;
+                      });
+                    },
+                    items: <String>['식사', '간식']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  flex: 2,
+                  child: TextField(
+                    controller: _mealController,
+                    decoration: const InputDecoration(
+                      labelText: '식사/간식 내용 입력',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  flex: 2,
+                  child: TextField(
+                    controller: _caloriesController,
+                    decoration: const InputDecoration(
+                      labelText: '칼로리 입력 (kcal)',
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 10),
             ElevatedButton(
@@ -177,7 +193,7 @@ class _MealPageState extends State<MealPage> {
   @override
   void dispose() {
     _mealController.dispose();
-    _caloriesController.dispose(); // 칼로리 입력 컨트롤러 해제
+    _caloriesController.dispose();
     super.dispose();
   }
 }

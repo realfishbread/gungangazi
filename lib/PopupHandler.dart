@@ -160,7 +160,13 @@ class PopupHandler {
             'assets/person/th2.jpg',
             'assets/person/th1.jpg',
           ],
-          
+          'hungry': [
+            'assets/person/yee.jpg',
+          ],
+          'thirsty_and_dizzy': [
+            'assets/person/yeet,jpg',
+          ]
+
         } {
     _imageNotifier = ValueNotifier<int>(_currentImageIndex);
   }

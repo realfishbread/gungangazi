@@ -182,6 +182,7 @@ class PopupHandler {
   Future<void> saveStatusToServer() async {
     try {
       String? username = await TokenService().getUsername();
+      print('Saving status - Username: $username, Water Level: $waterLevel, Meal Level: $mealLevel, Sleep Level: $sleepLevel'); // 확인용 로그
       await DioService().getDio().post('/character/status', data: {
         'username': username,
         'water_level': waterLevel,

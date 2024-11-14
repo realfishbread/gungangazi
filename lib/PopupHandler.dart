@@ -50,7 +50,6 @@ class PopupHandler {
   PopupHandler({required this.listData})
       : imagePathsByBodyPart = {
           'head': [
-            'assets/person/jindan_sad.jpg',
             'assets/person/jindan_sad1.jpg',
             'assets/person/jindan_sad2.jpg',
             'assets/person/jindan_sad3.jpg',
@@ -126,6 +125,40 @@ class PopupHandler {
             'assets/person/headache3.jpg',
             'assets/person/headache2.jpg',
             'assets/person/headache1.jpg',
+          ],
+          'thirsty_and_hungry_dizzy':[
+            'assets/person/dizzy1.jpg',
+            'assets/person/dizzy2.jpg',
+            'assets/person/dizzy3.jpg',
+            'assets/person/dizzy4.jpg',
+            'assets/person/dizzy3.jpg',
+            'assets/person/dizzy2.jpg',
+            'assets/person/dizzy1.jpg',
+          ],
+          'hungry_and_dizzy': [
+            'assets/person/jindan_stomach1.jpg',
+            'assets/person/jindan_stomach2.jpg',
+            'assets/person/jindan_stomach3.jpg',
+            'assets/person/jindan_stomach4.jpg',
+            'assets/person/jindan_stomach5.jpg',
+            'assets/person/jindan_stomach6.jpg',
+            'assets/person/jindan_stomach7.jpg',
+            'assets/person/jindan_stomach6.jpg',
+            'assets/person/jindan_stomach5.jpg',
+            'assets/person/jindan_stomach4.jpg',
+            'assets/person/jindan_stomach3.jpg',
+            'assets/person/jindan_stomach2.jpg',
+            'assets/person/jindan_stomach1.jpg',
+          ],
+          'dizzy':[
+            'assets/person/th1.jpg',
+            'assets/person/th2.jpg',
+            'assets/person/th3.jpg',
+            'assets/person/th4.jpg',
+            'assets/person/th4.jpg',
+            'assets/person/th3.jpg',
+            'assets/person/th2.jpg',
+            'assets/person/th1.jpg',
           ]
         } {
     _imageNotifier = ValueNotifier<int>(_currentImageIndex);

@@ -5,15 +5,19 @@ public class MealDTO {
     private String date;
     private String meal;
     private String username;  // username 추가
+    private int calories;  // 칼로리 필드 추가
+    private String mealType;  // 식사/간식 구분 필드 추가
 
     // 기본 생성자
     public MealDTO() {}
 
     // 매개변수 있는 생성자
-    public MealDTO(String date, String meal, String username) {
+    public MealDTO(String date, String meal, String username,int calories, String mealType) {
         this.date = date;
         this.meal = meal;
         this.username = username;  // 생성자에 username 추가
+        this.calories = calories;
+        this.mealType = mealType;
     }
 
     // Getter 및 Setter 메소드
@@ -40,11 +44,28 @@ public class MealDTO {
     public void setUsername(String username) {
         this.username = username;
     }
+    public String getMealType() {
+        return mealType;
+    }
+
+    public void setMealType(String mealType) {
+        this.mealType = mealType;
+    }
+
+    public int getCalories() {
+        return calories;
+    }
+
+    public void setCalories(int calories) {
+        this.calories = calories;
+    }
     public static MealDTO fromEntity(MealEntity mealEntity) {
         MealDTO dto = new MealDTO();
         dto.setDate(mealEntity.getDate());
         dto.setMeal(mealEntity.getMeal());
         dto.setUsername(mealEntity.getUsername());
+        dto.setCalories(mealEntity.getCalories());
+        dto.setMealType(mealEntity.getMealType());
         return dto;
     }
 }

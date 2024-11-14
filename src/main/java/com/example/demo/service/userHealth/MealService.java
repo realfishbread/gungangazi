@@ -28,9 +28,15 @@ public class MealService {
 
     // 새로운 식사 기록 추가
     public void addMeal(MealDTO mealDTO) {
-        MealEntity mealEntity = new MealEntity(mealDTO.getDate(), mealDTO.getMeal(), mealDTO.getUsername());  // username 포함
+        MealEntity mealEntity = new MealEntity();
+        mealEntity.setDate(mealDTO.getDate());
+        mealEntity.setMeal(mealDTO.getMeal());
+        mealEntity.setUsername(mealDTO.getUsername());
+        mealEntity.setCalories(mealDTO.getCalories());  // 칼로리 설정
+        mealEntity.setMealType(mealDTO.getMealType());  // 식사/간식 구분 설정
         mealRepository.save(mealEntity);
     }
+}
     
  
-}
+

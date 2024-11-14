@@ -1,5 +1,6 @@
 package com.example.demo.entity.userHealth;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,14 +17,23 @@ public class MealEntity {
     private String date;
     private String meal;
 
+    @Column(name = "calories")
+    private int calories;  // 칼로리 필드 추가
+
+    @Column(name = "meal_type")
+    private String mealType;  // 식사/간식 구분 필드 추가
+
+
     // 기본 생성자
     public MealEntity() {}
 
     // 매개변수 있는 생성자
-    public MealEntity(String date, String meal, String username) {
+    public MealEntity(String date, String meal, String username, int calories, String mealType) {
         this.date = date;
         this.meal = meal;
-        this.username = username;  // 생성자에 username 추가
+        this.username = username; 
+        this.calories = calories; 
+        this.mealType = mealType;
     }
 
     // Getter 및 Setter 메소드
@@ -57,6 +67,21 @@ public class MealEntity {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+    public String getMealType() {
+        return mealType;
+    }
+
+    public void setMealType(String mealType) {
+        this.mealType = mealType;
+    }
+
+    public int getCalories() {
+        return calories;
+    }
+
+    public void setCalories(int calories) {
+        this.calories = calories;
     }
 }
 

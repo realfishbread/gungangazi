@@ -117,13 +117,14 @@ class _SleepPageState extends State<SleepPage> {
     if (savedData != null) {
       try {
         List<dynamic> data = json.decode(savedData);
+        String? username = await TokenService().getUsername();
         List<SleepDto> records = data.map((item) {
           Map<String, String> record = Map<String, String>.from(item);
           return SleepDto(
             date: record['date']!,
             sleepTime: record['sleepTime']!,
             wakeUpTime: record['wakeUpTime']!,
-            username: 'exampleUser', // Replace with actual username
+            username: username ?? 'defaultUser', // Replace with actual username
           );
         }).toList();
 

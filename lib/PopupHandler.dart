@@ -185,9 +185,9 @@ class PopupHandler {
       print('Saving status - Username: $username, Water Level: $waterLevel, Meal Level: $mealLevel, Sleep Level: $sleepLevel'); // 확인용 로그
       await DioService().getDio().post('/character/status', data: {
         'username': username,
-        'water_level': waterLevel,
-        'meal_level': mealLevel,
-        'sleep_level': sleepLevel,
+        'waterLevel': waterLevel,
+        'mealLevel': mealLevel,
+        'sleepLevel': sleepLevel,
       });
       print('Status saved to server successfully');
     } catch (e) {
@@ -205,9 +205,9 @@ class PopupHandler {
 
       if (response.statusCode == 200) {
         final data = response.data;
-        waterLevel = data['water_level'] ?? 100;
-        mealLevel = data['meal_level'] ?? 100;
-        sleepLevel = data['sleep_level'] ?? 100;
+        waterLevel = data['waterLevel'] ?? 100;
+        mealLevel = data['mealLevel'] ?? 100;
+        sleepLevel = data['sleepLevel'] ?? 100;
         setBodyPartStatus();
         print('Status loaded from server successfully');
       }

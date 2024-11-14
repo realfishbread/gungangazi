@@ -43,7 +43,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
 
   void _navigateToPage(BuildContext context, String title) {
     final routes = {
-      '수면': const SleepPage(),
+      '수면': SleepPage(popupHandler: _popupHandler),
       '수분': WaterDrink(popupHandler: _popupHandler),
       '식단': MealPage(popupHandler: _popupHandler),
       '영양제': const SupplementsPage(),

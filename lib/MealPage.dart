@@ -57,39 +57,40 @@ class _MealPageState extends State<MealPage> {
 
     widget.popupHandler.updateStatus(
       newWaterLevel: widget.popupHandler.waterLevel,
-      newMealLevel: _mealLevel, // 현재 mealLevel 반영
+      newMealLevel: _mealLevel,
+      newSleepLevel: widget.popupHandler.sleepLevel
     );
   }
 
   // 새로운 식사 기록 추가 시 PopupHandler 상태 업데이트
   void _addMeal() async {
-    final String meal = _mealController.text.trim();
-    if (meal.isNotEmpty) {
-      final String currentDate = _getFormattedDate();
-      String? username = await TokenService().getUsername();
-      final MealDTO newMeal = MealDTO(
-        date: currentDate,
-        meal: meal,
-        username: username ?? '',
-      );
+  final String meal = _mealController.text.trim();
+  if (meal.isNotEmpty) {
+    final String currentDate = _getFormattedDate();
+    String? username = await TokenService().getUsername();
+    final MealDTO newMeal = MealDTO(
+      date: currentDate,
+      meal: meal,
+      username: username ?? '',
+    );
 
-      try {
-        await _mealRepository.addMeal(newMeal);
-        setState(() {
-          if (_mealsByDate.containsKey(currentDate)) {
-            _mealsByDate[currentDate]?.add(meal);
-          } else {
-            _mealsByDate[currentDate] = [meal];
-          }
-          _mealLevel += 200; // 식사 추가 시 mealLevel 200 증가
-          _mealController.clear();
-        });
-        _checkMealStatus(); // 업데이트된 mealLevel 적용
-      } catch (e) {
-        print('Error adding meal: $e');
-      }
+    try {
+      await _mealRepository.addMeal(newMeal);
+      setState(() {
+        if (_mealsByDate.containsKey(currentDate)) {
+          _mealsByDate[currentDate]?.add(meal);
+        } else {
+          _mealsByDate[currentDate] = [meal];
+        }
+        _mealLevel += 200; // 식사 추가 시 mealLevel 200 증가
+        _mealController.clear();
+      });
+      _checkMealStatus(); // 업데이트된 mealLevel 적용
+    } catch (e) {
+      print('Error adding meal: $e');
     }
   }
+}
 
   @override
   Widget build(BuildContext context) {

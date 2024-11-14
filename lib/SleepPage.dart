@@ -7,10 +7,12 @@ import '../dto/userHealth/sleep_dto.dart';
 import '../repositories/userHealth/sleep_repository.dart';
 import '../services/dio_service.dart';
 import '../services/TokenService.dart';
+import 'PopupHandler.dart';
 
 class SleepPage extends StatefulWidget {
-  const SleepPage({super.key});
-
+  final PopupHandler popupHandler;
+  
+   const SleepPage({Key? key, required this.popupHandler}) : super(key: key);
   @override
   _SleepPageState createState() => _SleepPageState();
 }
@@ -54,6 +56,18 @@ class _SleepPageState extends State<SleepPage> {
         'sleepTime': '${_sleepTime!.hour}:${_sleepTime!.minute}',
         'wakeUpTime': '${_wakeUpTime!.hour}:${_wakeUpTime!.minute}',
       };
+
+      Duration sleepDuration = _calculateSleepDuration(_sleepTime!, _wakeUpTime!);
+      double sleepHours = sleepDuration.inMinutes / 60.0;
+
+      // 수면 시간이 5시간 이상일 때 PopupHandler의 sleepLevel을 증가
+      if (sleepHours >= 5.0) {
+        widget.popupHandler.updateStatus(
+          newWaterLevel: widget.popupHandler.waterLevel,
+          newMealLevel: widget.popupHandler.mealLevel,
+          newSleepLevel: widget.popupHandler.sleepLevel + 200,
+        );
+      }
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? savedData = prefs.getString('sleepData');

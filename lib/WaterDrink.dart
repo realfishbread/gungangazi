@@ -57,6 +57,7 @@ class _WaterDrinkState extends State<WaterDrink> {
     widget.popupHandler.updateStatus(
       newWaterLevel: todayWaterIntake,
       newMealLevel: todayMealLevel,
+      newSleepLevel: widget.popupHandler.sleepLevel
     );
 
     if (todayWaterIntake <= 200) {
@@ -181,30 +182,16 @@ class _WaterDrinkState extends State<WaterDrink> {
                   children: [
                     ElevatedButton(
                       onPressed: () => _addWater(-200),
-                      child: const Text('-200ml'),
+                      child: const Text('-물 한 잔 취소'),
                     ),
                     const SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: () => _addWater(200),
-                      child: const Text('+물 한 컵'),
+                      child: const Text('+물 한 잔 200ml'),
                     ),
                   ],
                 ),
                 const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () => _addWater(-500),
-                      child: const Text('-500ml'),
-                    ),
-                    const SizedBox(width: 20),
-                    ElevatedButton(
-                      onPressed: () => _addWater(500),
-                      child: const Text('+생수 한 병'),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),

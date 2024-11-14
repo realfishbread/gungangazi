@@ -14,6 +14,7 @@ class PopupHandler {
   String _currentBodyPart = 'default';
   int waterLevel = 100; // 수분 상태 변수 추가
   int mealLevel = 100;
+  int sleepLevel = 100; // 수면 상태 변수
 
   final GlobalKey _imageKey = GlobalKey(); // 이미지를 위한 GlobalKey 선언
   Rect? _imageRect;
@@ -130,19 +131,28 @@ class PopupHandler {
     _imageNotifier = ValueNotifier<int>(_currentImageIndex);
   }
 
-   void updateStatus({required int newWaterLevel, required int newMealLevel}) {
+   void updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) {
     waterLevel = newWaterLevel;
     mealLevel = newMealLevel;
+    sleepLevel = newSleepLevel;
 
-    // 두 가지 상태를 모두 고려하여 상태 설정
-    if (waterLevel <= 200 && mealLevel <= 200) {
-      _currentBodyPart = 'thirsty_and_hungry'; // 둘 다 부족한 상태
-    } else if (waterLevel <= 200) {
+      // 세 가지 상태의 조합에 따른 상태 설정
+    if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel <= 200) {
+      _currentBodyPart = 'thirsty_and_hungry_dizzy'; // 세 가지 모두 부족한 상태
+    } else if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel > 200) {
+      _currentBodyPart = 'thirsty_and_hungry'; // 수분과 식사 부족, 수면은 충족
+    } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel <= 200) {
+      _currentBodyPart = 'thirsty_and_dizzy'; // 수분과 수면 부족, 식사는 충족
+    } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel <= 200) {
+      _currentBodyPart = 'hungry_and_dizzy'; // 식사와 수면 부족, 수분은 충족
+    } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel > 200) {
       _currentBodyPart = 'thirsty'; // 수분만 부족한 상태
-    } else if (mealLevel <= 200) {
+    } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel > 200) {
       _currentBodyPart = 'hungry'; // 식사만 부족한 상태
+    } else if (waterLevel > 200 && mealLevel > 200 && sleepLevel <= 200) {
+      _currentBodyPart = 'dizzy'; // 수면만 부족한 상태
     } else {
-      _currentBodyPart = 'default'; // 정상 상태
+      _currentBodyPart = 'default'; // 모든 상태가 충족
     }
 
     startImageAnimation();
@@ -200,7 +210,15 @@ class PopupHandler {
       // 물 부족 상태일 때 팝업 메시지 설정
     if (_currentBodyPart == 'thirsty') {
       popupMessage = '목이 말라요... 물을 주세요!';
-    } else {
+    } else if (_currentBodyPart == 'hungry') {
+        popupMessage = '배고파요... 식사를 해주세요!!';
+      } else if (_currentBodyPart == 'thirsty_and_dizzy') {
+        popupMessage = '충분한 숙면을 취하지 못했어요, 목도 말라요.';
+      } else if (_currentBodyPart == 'thirsty_and_hungry_dizzy') {
+        popupMessage = '건강을 챙겨주세요';
+      } else if (_currentBodyPart == 'thirsty_and_hungry') {
+        popupMessage = '목도 마르고 배도 고파요... 물과 식사가 필요해요!';
+      } else {
       // 부위별 팝업 메시지 설정
       if (relativeY < headHeight) {
         popupMessage = '잘 주무셨나요?';

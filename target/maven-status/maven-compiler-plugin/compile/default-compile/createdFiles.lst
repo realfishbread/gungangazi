@@ -3,6 +3,8 @@ com\example\demo\controller\userHealth\BloodPressureController.class
 com\example\demo\controller\userHealth\BrushHistoryController.class
 com\example\demo\entity\User.class
 com\example\demo\service\userHealth\SupplementService.class
+com\example\demo\controller\StatusController.class
+com\example\demo\repository\StatusRepository.class
 com\example\demo\controller\userHealth\SleepController.class
 com\example\demo\repository\userHealth\WaterIntakeRepository.class
 com\example\demo\service\UserService.class
@@ -29,6 +31,7 @@ com\example\demo\entity\userHealth\BloodPressure.class
 com\example\demo\repository\userHealth\BrushHistoryRepository.class
 com\example\demo\service\CustomUserDetailsService.class
 com\example\demo\service\userHealth\WaterIntakeService.class
+com\example\demo\entity\Status.class
 com\example\demo\service\userHealth\BloodPressureService.class
 com\example\demo\service\userHealth\MealService.class
 com\example\demo\controller\userHealth\WaterIntakeController.class
@@ -38,4 +41,5 @@ com\example\demo\DTO\UserDTO.class
 com\example\demo\DTO\ProfileDto.class
 com\example\demo\repository\userHealth\SleepRepository.class
 com\example\demo\service\userHealth\BrushHistoryService.class
+com\example\demo\service\StatusService.class
 com\example\demo\controller\userHealth\SupplementController.class

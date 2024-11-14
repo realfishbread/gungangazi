@@ -63,6 +63,8 @@ public class SecurityConfig {
                 .requestMatchers(new AntPathRequestMatcher("/meals/put", "PUT")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/supplements/save", "POST")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/supplements/all", "GET")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/character/status", "POST")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/character/status", "GET")).permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가

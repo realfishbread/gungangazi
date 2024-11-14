@@ -27,7 +27,9 @@ D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\service\u
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\entity\userHealth\WaterIntake.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\controller\UserController.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\controller\userHealth\BloodPressureController.java
+D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\repository\StatusRepository.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\repository\userHealth\MealRepository.java
+D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\service\StatusService.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\controller\userHealth\MealController.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\DTO\userHealth\MealDTO.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\controller\userHealth\SupplementController.java
@@ -37,5 +39,7 @@ D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\DTO\userH
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\repository\UserRepository.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\service\UserService.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\config\CorsConfig.java
+D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\controller\StatusController.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\service\userHealth\MealService.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\DTO\LoginRequestDto.java
+D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\entity\Status.java

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import '../services/dio_service.dart'; // DioService 추가
 import '../services/TokenService.dart';
+import 'package:dio/dio.dart';
 
 class PopupHandler {
   final List<dynamic> listData;
@@ -179,42 +180,64 @@ class PopupHandler {
   }
 
    /// 서버에 현재 상태 저장
-  Future<void> saveStatusToServer() async {
-    try {
-      String? username = await TokenService().getUsername();
-      print('Saving status - Username: $username, Water Level: $waterLevel, Meal Level: $mealLevel, Sleep Level: $sleepLevel'); // 확인용 로그
-      await DioService().getDio().post('/character/status', data: {
+Future<void> saveStatusToServer() async {
+  try {
+    String? username = await TokenService().getUsername();
+    String? jwtToken = await TokenService().getToken(); // 토큰 가져오기
+
+    print('Saving status - Username: $username, Water Level: $waterLevel, Meal Level: $mealLevel, Sleep Level: $sleepLevel'); // 확인용 로그
+
+    await DioService().getDio().post(
+      '/character/status',
+      data: {
         'username': username,
         'waterLevel': waterLevel,
         'mealLevel': mealLevel,
         'sleepLevel': sleepLevel,
-      });
-      print('Status saved to server successfully');
-    } catch (e) {
-      print('Failed to save status to server: $e');
-    }
-  }
+      },
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $jwtToken', // JWT 토큰 헤더 추가
+        },
+      ),
+    );
 
-  /// 서버에서 현재 상태 불러오기
-  Future<void> loadStatusFromServer() async {
-    try {
-      String? username = await TokenService().getUsername();
-      final response = await DioService().getDio().get('/character/status', queryParameters: {
+    print('Status saved to server successfully');
+  } catch (e) {
+    print('Failed to save status to server: $e');
+  }
+}
+
+/// 서버에서 현재 상태 불러오기
+Future<void> loadStatusFromServer() async {
+  try {
+    String? username = await TokenService().getUsername();
+    String? jwtToken = await TokenService().getToken(); // 토큰 가져오기
+
+    final response = await DioService().getDio().get(
+      '/character/status',
+      queryParameters: {
         'username': username,
-      });
+      },
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $jwtToken', // JWT 토큰 헤더 추가
+        },
+      ),
+    );
 
-      if (response.statusCode == 200) {
-        final data = response.data;
-        waterLevel = data['waterLevel'] ?? 100;
-        mealLevel = data['mealLevel'] ?? 100;
-        sleepLevel = data['sleepLevel'] ?? 100;
-        setBodyPartStatus();
-        print('Status loaded from server successfully');
-      }
-    } catch (e) {
-      print('Failed to load status from server: $e');
+    if (response.statusCode == 200) {
+      final data = response.data;
+      waterLevel = data['waterLevel'] ?? 100;
+      mealLevel = data['mealLevel'] ?? 100;
+      sleepLevel = data['sleepLevel'] ?? 100;
+      setBodyPartStatus();
+      print('Status loaded from server successfully');
     }
+  } catch (e) {
+    print('Failed to load status from server: $e');
   }
+}
   void updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) async {
     print("Updating status - Water: $newWaterLevel, Meal: $newMealLevel, Sleep: $newSleepLevel");
     waterLevel = newWaterLevel;

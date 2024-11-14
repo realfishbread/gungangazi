@@ -152,7 +152,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
                   return Container(
                     margin: const EdgeInsets.all(4.0),
                     decoration: BoxDecoration(
-                      color: Colors.purple.withOpacity(0.5),
+                      color: Color(0xFFA39BEF).withOpacity(0.5),
                       shape: BoxShape.circle,
                     ),
                     child: Center(child: Text('${date.day}')),
@@ -161,7 +161,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
                   return Container(
                     margin: const EdgeInsets.all(4.0),
                     decoration: BoxDecoration(
-                      color: Colors.green.withOpacity(0.5),
+                      color: Color(0xFF9ADCFF).withOpacity(0.5),
                       shape: BoxShape.circle,
                     ),
                     child: Center(child: Text('${date.day}')),

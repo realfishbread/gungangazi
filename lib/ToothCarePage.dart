@@ -78,6 +78,7 @@ class _ToothCarePageState extends State<ToothCarePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('치아 관리'),
+        backgroundColor: const Color(0xFFFFF9C4),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

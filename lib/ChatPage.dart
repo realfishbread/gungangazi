@@ -245,10 +245,6 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
                   },
                   child: const Text("진단하기"),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.send),
-                  onPressed: () => _sendMessage(true),
-                ),
               ],
             ),
           ),

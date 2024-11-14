@@ -40,8 +40,10 @@ class _EditPageState extends State<EditPage> {
       _isSaving = true; // 저장 중 상태 설정
     });
 
-    // 단위를 붙여서 저장
-    String newValue = '${_controller.text}${widget.fieldName == '키' ? 'cm' : 'kg'}';
+    // 단위를 붙여서 저장 (이름과 이메일에는 단위 붙이지 않음)
+    String newValue = widget.fieldName == '키' || widget.fieldName == '몸무게'
+        ? '${_controller.text}${widget.fieldName == '키' ? 'cm' : 'kg'}'
+        : _controller.text;
     await widget.onSave(widget.fieldName, newValue); // 수정된 값 저장
 
     setState(() {

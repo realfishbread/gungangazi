@@ -45,7 +45,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
     final routes = {
       '수면': const SleepPage(),
       '수분': WaterDrink(popupHandler: _popupHandler),
-      '식단': const MealPage(),
+      '식단': MealPage(popupHandler: _popupHandler),
       '영양제': const SupplementsPage(),
       '혈압': const BloodPressurePage(),
       '치아건강': const ToothCarePage()
@@ -87,33 +87,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
     }
   }
 
-  Widget _buildStatusBar(String title, double progress, Color color) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        children: [
-          Text(
-            title,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: LinearProgressIndicator(
-              value: progress,
-              color: color,
-              backgroundColor: Colors.grey[300],
-              minHeight: 8,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            '${(progress * 100).toInt()}%',
-            style: const TextStyle(fontSize: 12),
-          ),
-        ],
-      ),
-    );
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -148,19 +122,6 @@ class _MobileHomePageState extends State<MobileHomePage> {
             child: _popupHandler.buildImageAnimationWithTouch(context, (newImagePath) {
               setState(() {});
             }),
-          ),
-          // 이미지 위에 막대 그래프 표시
-          Positioned(
-            top: MediaQuery.of(context).size.height * 0.2,
-            left: 16,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildStatusBar('수면', sleepProgress, Colors.blue),
-                _buildStatusBar('식단', mealProgress, Colors.green),
-                _buildStatusBar('수분', waterProgress, Colors.blueAccent),
-              ],
-            ),
           ),
         ],
       ),

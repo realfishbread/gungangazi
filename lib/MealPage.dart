@@ -4,9 +4,12 @@ import '../../dto/userHealth/meal_dto.dart';
 import '../../repositories/userHealth/meal_repository.dart';
 import '../../services/dio_service.dart';
 import '../../services/TokenService.dart';
+import 'PopupHandler.dart';
 
 class MealPage extends StatefulWidget {
-  const MealPage({super.key});
+  final PopupHandler popupHandler;
+
+  const MealPage({Key? key, required this.popupHandler}) : super(key: key);
 
   @override
   _MealPageState createState() => _MealPageState();
@@ -16,6 +19,7 @@ class _MealPageState extends State<MealPage> {
   final Map<String, List<String>> _mealsByDate = {};
   final TextEditingController _mealController = TextEditingController();
   late MealRepository _mealRepository;
+  int _mealLevel = 0; // 초기 mealLevel 설정
 
   @override
   void initState() {
@@ -24,7 +28,7 @@ class _MealPageState extends State<MealPage> {
       dioService: DioService(),
       tokenService: TokenService(),
     );
-    _fetchMeals(); // 앱 시작 시 오늘 날짜의 식사 기록을 불러옴
+    _fetchMeals();
   }
 
   String _getFormattedDate() {
@@ -38,34 +42,49 @@ class _MealPageState extends State<MealPage> {
       List<MealDTO> meals = await _mealRepository.fetchMealsByDate(currentDate);
       setState(() {
         _mealsByDate[currentDate] = meals.map((meal) => meal.meal).toList();
+        _mealLevel = _mealsByDate[currentDate]!.length * 200; // 기록된 식사 수에 따라 mealLevel 설정
       });
+      _checkMealStatus();
     } catch (e) {
       print('Error loading meals: $e');
     }
   }
 
-  // 새로운 식사 기록을 추가하고 서버에 저장하는 함수
+  // 식사 상태 확인하여 PopupHandler 업데이트
+  void _checkMealStatus() {
+    String today = _getFormattedDate();
+    int todayMealLevel = _mealsByDate[today]?.length ?? 0;
+
+    widget.popupHandler.updateStatus(
+      newWaterLevel: widget.popupHandler.waterLevel,
+      newMealLevel: _mealLevel, // 현재 mealLevel 반영
+    );
+  }
+
+  // 새로운 식사 기록 추가 시 PopupHandler 상태 업데이트
   void _addMeal() async {
-    final String mealContent = _mealController.text.trim();
-    if (mealContent.isNotEmpty) {
+    final String meal = _mealController.text.trim();
+    if (meal.isNotEmpty) {
       final String currentDate = _getFormattedDate();
-      String? username = await TokenService().getUsername();  // username을 가져옴
+      String? username = await TokenService().getUsername();
       final MealDTO newMeal = MealDTO(
         date: currentDate,
-        meal: mealContent,  // mealContent를 사용
-        username: username ?? '',  // username을 추가
+        meal: meal,
+        username: username ?? '',
       );
 
       try {
         await _mealRepository.addMeal(newMeal);
         setState(() {
           if (_mealsByDate.containsKey(currentDate)) {
-            _mealsByDate[currentDate]?.add(mealContent);
+            _mealsByDate[currentDate]?.add(meal);
           } else {
-            _mealsByDate[currentDate] = [mealContent];
+            _mealsByDate[currentDate] = [meal];
           }
+          _mealLevel += 200; // 식사 추가 시 mealLevel 200 증가
           _mealController.clear();
         });
+        _checkMealStatus(); // 업데이트된 mealLevel 적용
       } catch (e) {
         print('Error adding meal: $e');
       }
@@ -77,6 +96,7 @@ class _MealPageState extends State<MealPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('날짜별 식단 기록'),
+        backgroundColor: const Color(0xFFFFF9C4),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -118,5 +138,10 @@ class _MealPageState extends State<MealPage> {
       ),
     );
   }
-}
 
+  @override
+  void dispose() {
+    _mealController.dispose();
+    super.dispose();
+  }
+}

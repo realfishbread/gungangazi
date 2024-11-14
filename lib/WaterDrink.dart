@@ -32,7 +32,7 @@ class _WaterDrinkState extends State<WaterDrink> {
   Future<void> _loadWaterIntake() async {
     _dailyWaterIntake = await waterRepository.fetchWaterIntake();
     setState(() {});
-    _checkWaterIntake(); // 초기 로딩 시에도 수분 상태 확인
+    _checkStatus(); // 초기 로딩 시에도 수분 상태와 식사 상태 확인
   }
 
   void _addWater(int amount) {
@@ -44,28 +44,33 @@ class _WaterDrinkState extends State<WaterDrink> {
       }
     });
     waterRepository.saveWaterIntake(_dailyWaterIntake);
-    _checkWaterIntake(); // 물 섭취량 확인 후 상태 업데이트
+    _checkStatus(); // 물 섭취량 확인 후 상태 업데이트
   }
 
-  void _checkWaterIntake() {
+  // 수분 및 식사 상태 확인
+  void _checkStatus() {
     String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
     int todayWaterIntake = _dailyWaterIntake[today] ?? 0;
+    int todayMealLevel = widget.popupHandler.mealLevel; // 현재 mealLevel 가져오기
 
-    // PopupHandler에 수분 상태 전달
-    widget.popupHandler.updateWaterLevel(todayWaterIntake);
+    // PopupHandler에 수분 및 식사 상태 전달
+    widget.popupHandler.updateStatus(
+      newWaterLevel: todayWaterIntake,
+      newMealLevel: todayMealLevel,
+    );
 
     if (todayWaterIntake <= 200) {
-      _showWarning();
+      _showWarning('물');
     }
   }
 
-  void _showWarning() {
+  void _showWarning(String type) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('경고!'),
-          content: const Text('오늘 물을 너무 적게 마셨어요! 더 많이 마셔주세요.'),
+          content: Text('오늘 $type을 너무 적게 섭취했어요! 더 많이 섭취해주세요.'),
           actions: [
             TextButton(
               onPressed: () {
@@ -208,3 +213,4 @@ class _WaterDrinkState extends State<WaterDrink> {
     );
   }
 }
+

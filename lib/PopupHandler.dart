@@ -13,6 +13,7 @@ class PopupHandler {
   Duration frameDuration = const Duration(milliseconds: 300);
   String _currentBodyPart = 'default';
   int waterLevel = 100; // 수분 상태 변수 추가
+  int mealLevel = 100;
 
   final GlobalKey _imageKey = GlobalKey(); // 이미지를 위한 GlobalKey 선언
   Rect? _imageRect;
@@ -110,19 +111,41 @@ class PopupHandler {
             'assets/person/th2.jpg',
             'assets/person/th1.jpg',
           ],
+          'thirsty_and_hungry': [
+            'assets/person/headache1.jpg',
+            'assets/person/headache2.jpg',
+            'assets/person/headache3.jpg',
+            'assets/person/headache4.jpg',
+            'assets/person/headache5.jpg',
+            'assets/person/headache6.jpg',
+            'assets/person/headache7.jpg',
+            'assets/person/headache6.jpg',
+            'assets/person/headache5.jpg',
+            'assets/person/headache4.jpg',
+            'assets/person/headache3.jpg',
+            'assets/person/headache2.jpg',
+            'assets/person/headache1.jpg',
+          ]
         } {
     _imageNotifier = ValueNotifier<int>(_currentImageIndex);
   }
 
-  // 수분 상태에 따른 애니메이션 전환
-  void updateWaterLevel(int newWaterLevel) {
+   void updateStatus({required int newWaterLevel, required int newMealLevel}) {
     waterLevel = newWaterLevel;
-    if (waterLevel <= 200) {
-      _currentBodyPart = 'thirsty'; // 수분이 부족할 때 'thirsty' 애니메이션으로 전환
+    mealLevel = newMealLevel;
+
+    // 두 가지 상태를 모두 고려하여 상태 설정
+    if (waterLevel <= 200 && mealLevel <= 200) {
+      _currentBodyPart = 'thirsty_and_hungry'; // 둘 다 부족한 상태
+    } else if (waterLevel <= 200) {
+      _currentBodyPart = 'thirsty'; // 수분만 부족한 상태
+    } else if (mealLevel <= 200) {
+      _currentBodyPart = 'hungry'; // 식사만 부족한 상태
     } else {
-      _currentBodyPart = 'default'; // 기본 상태로 복귀
+      _currentBodyPart = 'default'; // 정상 상태
     }
-    startImageAnimation(); // 애니메이션 업데이트
+
+    startImageAnimation();
   }
 
   // 이미지 애니메이션 시작
@@ -151,18 +174,7 @@ class PopupHandler {
     }
   }
 
-  // 부위마다 다른 페이지로 이동하는 함수
-  void _navigateToBodyPartPage(BuildContext context) {
-    if (_currentBodyPart == 'head') {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SleepPage()));
-    } else if (_currentBodyPart == 'arm') {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SupplementsPage()));
-    } else if (_currentBodyPart == 'body') {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MealPage()));
-    } else if (_currentBodyPart == 'leg') {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MealPage()));
-    }
-  }
+ 
 
   // 터치 이벤트 및 팝업
   void showPopupForCoordinates(
@@ -239,7 +251,6 @@ class PopupHandler {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    _navigateToBodyPartPage(context);
                   },
                   child: const Text('다른 페이지로 이동'),
                 ),

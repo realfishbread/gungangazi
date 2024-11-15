@@ -333,6 +333,8 @@ Future<void> loadStatusFromServer() async {
         popupMessage = '건강을 챙겨주세요';
       } else if (_currentBodyPart == 'thirsty_and_hungry') {
         popupMessage = '목도 마르고 배도 고파요... 물과 식사가 필요해요!';
+      } else if (_currentBodyPart == 'hungry_and_dizzy') {
+        popupMessage = '충분한 숙면과 밥을 챙겨주세요';
       } else {
       // 부위별 팝업 메시지 설정
       if (relativeY < headHeight) {

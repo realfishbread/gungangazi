@@ -22,6 +22,10 @@ public class StatusController {
     // 상태 저장 API
     @PostMapping
     public ResponseEntity<String> saveStatus(@RequestBody Status status) {
+        System.out.println("Received Status - Username: " + status.getUsername() + 
+        ", Water Level: " + status.getWater_level() + 
+        ", Meal Level: " + status.getMeal_level() + 
+        ", Sleep Level: " + status.getSleep_level());
         statusService.saveStatus(status);
         return ResponseEntity.ok("Status saved successfully");
     }

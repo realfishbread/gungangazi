@@ -9,35 +9,53 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "status")
 public class Status {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String username;
-    private int waterLevel;
-    private int mealLevel;
-    private int sleepLevel;
+    private int water_level;
+    private int meal_level;
+    private int sleep_level;
 
-    // 기본 생성자
-    public Status() {}
-
-    // 생성자
-    public Status(String username, int waterLevel, int mealLevel, int sleepLevel) {
-        this.username = username;
-        this.waterLevel = waterLevel;
-        this.mealLevel = mealLevel;
-        this.sleepLevel = sleepLevel;
+    // Getters and Setters
+    public Long getId() {
+        return id;
     }
 
-    // Getter와 Setter
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
-    public int getWaterLevel() { return waterLevel; }
-    public void setWaterLevel(int waterLevel) { this.waterLevel = waterLevel; }
-    public int getMealLevel() { return mealLevel; }
-    public void setMealLevel(int mealLevel) { this.mealLevel = mealLevel; }
-    public int getSleepLevel() { return sleepLevel; }
-    public void setSleepLevel(int sleepLevel) { this.sleepLevel = sleepLevel; }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public int getWater_level() {
+        return water_level;
+    }
+
+    public void setWater_level(int water_level) {
+        this.water_level = water_level;
+    }
+
+    public int getMeal_level() {
+        return meal_level;
+    }
+
+    public void setMeal_level(int meal_level) {
+        this.meal_level = meal_level;
+    }
+
+    public int getSleep_level() {
+        return sleep_level;
+    }
+
+    public void setSleep_level(int sleep_level) {
+        this.sleep_level = sleep_level;
+    }
 }

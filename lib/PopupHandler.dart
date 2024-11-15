@@ -191,9 +191,9 @@ Future<void> saveStatusToServer() async {
       '/character/status',
       data: {
         'username': username,
-        'waterLevel': waterLevel,
-        'mealLevel': mealLevel,
-        'sleepLevel': sleepLevel,
+        'water_level': waterLevel,
+        'meal_level': mealLevel,
+        'sleep_level': sleepLevel,
       },
       options: Options(
         headers: {
@@ -228,9 +228,9 @@ Future<void> loadStatusFromServer() async {
 
     if (response.statusCode == 200) {
       final data = response.data;
-      waterLevel = data['waterLevel'] ?? 100;
-      mealLevel = data['mealLevel'] ?? 100;
-      sleepLevel = data['sleepLevel'] ?? 100;
+      waterLevel = data['water_level'] ?? 100;
+      mealLevel = data['meal_level'] ?? 100;
+      sleepLevel = data['sleep_level'] ?? 100;
       setBodyPartStatus();
       print('Status loaded from server successfully');
     }

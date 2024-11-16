@@ -101,11 +101,11 @@ Widget build(BuildContext context) {
           _popupHandler.sleepLevel > _popupHandler.sleepLevelThreshold) {
         // 각각의 상태에 따라 다른 애니메이션 실행
         if (_popupHandler.waterLevel > _popupHandler.waterLevelThreshold) {
-          _popupHandler.triggerAnimation('drinkwater');
+          _popupHandler.triggerAnimation('drinkwater', delayMilliseconds: 3000);
         } else if (_popupHandler.mealLevel > _popupHandler.mealLevelThreshold) {
-          _popupHandler.triggerAnimation('eatingmeal');
+          _popupHandler.triggerAnimation('eatingmeal', delayMilliseconds: 3000);
         } else if (_popupHandler.sleepLevel > _popupHandler.sleepLevelThreshold) {
-          _popupHandler.triggerAnimation('sleeping');
+          _popupHandler.triggerAnimation('sleeping', delayMilliseconds: 3000);
         }
       } else {
         print("No significant change in status, no animation triggered.");

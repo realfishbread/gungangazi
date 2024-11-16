@@ -211,12 +211,12 @@ class PopupHandler {
       await saveStatusToServer();
       // 물 상태가 증가했다면 물 마시는 행동 실행
       if (isWaterIncreased) {
-        triggerAnimation('drinkwater');
+        triggerAnimation('drinkwater', delayMilliseconds: 3000);
       } // 밥 상태가 증가했을 때
       else if (isMealIncreased) {
-        triggerAnimation('eatingmeal');
+        triggerAnimation('eatingmeal', delayMilliseconds: 3000);
       } else if (isSleepIncreased) {
-      triggerAnimation('sleeping');
+      triggerAnimation('sleeping', delayMilliseconds: 3000);
       }
 
       

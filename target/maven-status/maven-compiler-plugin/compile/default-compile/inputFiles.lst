@@ -21,6 +21,7 @@ D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\DTO\userH
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\config\SecurityConfig.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\DemoApplication.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\service\JwtTokenProvider.java
+D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\config\JacksonConfig.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\config\JwtAuthenticationFilter.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\DTO\UserDTO.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\repository\userHealth\BrushHistoryRepository.java

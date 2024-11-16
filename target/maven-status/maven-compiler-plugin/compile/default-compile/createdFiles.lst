@@ -1,4 +1,5 @@
 com\example\demo\DemoApplication.class
+com\example\demo\config\JacksonConfig.class
 com\example\demo\controller\userHealth\BloodPressureController.class
 com\example\demo\controller\userHealth\BrushHistoryController.class
 com\example\demo\entity\User.class

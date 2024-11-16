@@ -206,12 +206,10 @@ class PopupHandler {
       await saveStatusToServer();
       // 물 상태가 증가했다면 물 마시는 행동 실행
       if (isWaterIncreased) {
-        _currentBodyPart = 'drinkwater';
-        triggerAnimation();
+        triggerAnimation('drinkwater');
       } // 밥 상태가 증가했을 때
       else if (isMealIncreased) {
-        _currentBodyPart = 'eatingmeal';
-        triggerAnimation();
+        triggerAnimation('eatingmeal');
       }
 
       
@@ -329,26 +327,32 @@ Future<void> loadStatusFromServer() async {
   }
 
    /// 특정 상태에 맞는 애니메이션 실행
-  void triggerAnimation() {
-    print("Triggering animation for: $_currentBodyPart");
+  void triggerAnimation(String bodyPart, {int delayMilliseconds = 2000}) {
+    print("Triggering animation for: $bodyPart");
 
-    // 리스트가 비어있는 경우 기본 상태 유지
-    if (imagePathsByBodyPart[_currentBodyPart]?.isEmpty ?? true) {
-      print("No images available for body part: $_currentBodyPart");
+    if (imagePathsByBodyPart[bodyPart]?.isEmpty ?? true) {
+      print("No images available for body part: $bodyPart");
       return;
     }
 
     _imageTimer?.cancel(); // 기존 타이머 중지
     _imageNotifier.value = 0; // 애니메이션 초기화
+    _currentBodyPart = bodyPart; // 현재 애니메이션 상태 설정
 
+    // 타이머 시작
     _imageTimer = Timer.periodic(frameDuration, (timer) {
-      _currentImageIndex = (_currentImageIndex + 1) % imagePathsByBodyPart[_currentBodyPart]!.length;
+      _currentImageIndex = (_currentImageIndex + 1) % imagePathsByBodyPart[bodyPart]!.length;
       _imageNotifier.value = _currentImageIndex;
 
       // 애니메이션 종료 조건
-      if (_currentImageIndex == imagePathsByBodyPart[_currentBodyPart]!.length - 1) {
-        print("Animation for $_currentBodyPart completed");
+      if (_currentImageIndex == imagePathsByBodyPart[bodyPart]!.length - 1) {
+        print("Animation for $bodyPart completed");
         timer.cancel();
+
+        // 딜레이 후 원래 상태 복구
+        Future.delayed(Duration(milliseconds: delayMilliseconds), () {
+          print("Character state restored to $_currentBodyPart");
+        });
       }
     });
   }

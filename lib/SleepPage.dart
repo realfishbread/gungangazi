@@ -80,6 +80,7 @@ Future<void> _saveSleepDataToServer() async {
       // 서버에 데이터 저장
       await sleepRepository.saveSleepDataToDatabase([newSleepRecord]);
       print('Successfully saved sleep data to the server');
+      await _loadSleepDataFromServer();
     } catch (e) {
       print('Error sending data to the server: $e');
     }

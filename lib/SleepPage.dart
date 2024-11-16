@@ -180,8 +180,20 @@ Future<void> _saveSleepDataToServer() async {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+Widget build(BuildContext context) {
+  return WillPopScope(
+    onWillPop: () async {
+      // 수면 상태가 증가했는지 확인하고 애니메이션 실행
+      if (widget.popupHandler.sleepLevel > widget.popupHandler.sleepLevelThreshold) {
+        widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 2000);
+      } else {
+        print("No significant sleep level change, no animation triggered.");
+      }
+
+      // 뒤로 가기 동작 허용
+      return true;
+    },
+    child: Scaffold(
       appBar: AppBar(
         title: const Text('수면'),
         backgroundColor: const Color(0xFFFFF9C4),
@@ -227,30 +239,32 @@ Future<void> _saveSleepDataToServer() async {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
-  Future<void> _selectSleepTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-    if (picked != null && picked != _sleepTime) {
-      setState(() {
-        _sleepTime = picked;
-      });
-    }
+Future<void> _selectSleepTime(BuildContext context) async {
+  final TimeOfDay? picked = await showTimePicker(
+    context: context,
+    initialTime: TimeOfDay.now(),
+  );
+  if (picked != null && picked != _sleepTime) {
+    setState(() {
+      _sleepTime = picked;
+    });
   }
+}
 
-  Future<void> _selectWakeUpTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-    if (picked != null && picked != _wakeUpTime) {
-      setState(() {
-        _wakeUpTime = picked;
-      });
-    }
+Future<void> _selectWakeUpTime(BuildContext context) async {
+  final TimeOfDay? picked = await showTimePicker(
+    context: context,
+    initialTime: TimeOfDay.now(),
+  );
+  if (picked != null && picked != _wakeUpTime) {
+    setState(() {
+      _wakeUpTime = picked;
+    });
   }
+}
+
 }

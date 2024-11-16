@@ -51,23 +51,22 @@ class _MealPageState extends State<MealPage> {
         }
         _mealLevel = _mealsByDate[_getFormattedDate()]?.length ?? 0 * 200;
       });
-      _checkMealStatus();
+      _updatePopupHandler();
     } catch (e) {
       print('Error loading meals: $e');
     }
   }
 
-  // 식사 상태 확인하여 PopupHandler 업데이트
-  void _checkMealStatus() {
-    String today = _getFormattedDate();
-    int todayMealLevel = _mealsByDate[today]?.length ?? 0;
-
+  // PopupHandler 상태 업데이트
+  void _updatePopupHandler() {
     widget.popupHandler.updateStatus(
       newWaterLevel: widget.popupHandler.waterLevel,
       newMealLevel: _mealLevel,
-      newSleepLevel: widget.popupHandler.sleepLevel
+      newSleepLevel: widget.popupHandler.sleepLevel,
     );
+    print("Meal Level updated: $_mealLevel");
   }
+
 
   void _addMeal() async {
   final String meal = _mealController.text.trim();
@@ -103,9 +102,10 @@ class _MealPageState extends State<MealPage> {
         newMealLevel: _mealLevel,
         newSleepLevel: widget.popupHandler.sleepLevel,
       );
-      print("Meal added and PopupHandler status updated - Meal Level: $_mealLevel");
+      
 
-      _checkMealStatus(); // 상태 반영 확인
+      _updatePopupHandler();
+      print("Meal added and PopupHandler status updated - Meal Level: $_mealLevel");
     } catch (e) {
       print('Error adding meal: $e');
     }

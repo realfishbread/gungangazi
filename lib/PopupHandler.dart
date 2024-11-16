@@ -194,7 +194,31 @@ class PopupHandler {
     _imageNotifier = ValueNotifier<int>(_currentImageIndex);
     loadStatusFromServer();
   }
+  void updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) async {
+      print("Updating status - Water: $newWaterLevel, Meal: $newMealLevel, Sleep: $newSleepLevel");
+      bool isWaterIncreased = newWaterLevel > waterLevel;
+      bool isMealIncreased = newMealLevel > mealLevel;
+      waterLevel = newWaterLevel;
+      mealLevel = newMealLevel;
+      sleepLevel = newSleepLevel;
 
+      // 상태 업데이트 후 서버에 저장
+      await saveStatusToServer();
+      // 물 상태가 증가했다면 물 마시는 행동 실행
+      if (isWaterIncreased) {
+        _currentBodyPart = 'drinkwater';
+        triggerAnimation();
+      } // 밥 상태가 증가했을 때
+      else if (isMealIncreased) {
+        _currentBodyPart = 'eatingmeal';
+        triggerAnimation();
+      }
+
+      
+      setBodyPartStatus(); // 새로운 상태에 따라 이미지 경로 설정
+      startImageAnimation(); // 애니메이션 다시 시작
+      print("Status updated and animation started - Current Body Part: $_currentBodyPart");
+    }
    /// 서버에 현재 상태 저장
 Future<void> saveStatusToServer() async {
   try {
@@ -254,31 +278,7 @@ Future<void> loadStatusFromServer() async {
     print('Failed to load status from server: $e');
   }
 }
-  void updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) async {
-    print("Updating status - Water: $newWaterLevel, Meal: $newMealLevel, Sleep: $newSleepLevel");
-    bool isWaterIncreased = newWaterLevel > waterLevel;
-    bool isMealIncreased = newMealLevel > mealLevel;
-    waterLevel = newWaterLevel;
-    mealLevel = newMealLevel;
-    sleepLevel = newSleepLevel;
-
-    // 상태 업데이트 후 서버에 저장
-    await saveStatusToServer();
-    // 물 상태가 증가했다면 물 마시는 행동 실행
-    if (isWaterIncreased) {
-      _currentBodyPart = 'drinkwater';
-      triggerAnimation();
-    } // 밥 상태가 증가했을 때
-    else if (isMealIncreased) {
-      _currentBodyPart = 'eatingmeal';
-      triggerAnimation();
-    }
-
-    
-    setBodyPartStatus(); // 새로운 상태에 따라 이미지 경로 설정
-    startImageAnimation(); // 애니메이션 다시 시작
-    print("Status updated and animation started - Current Body Part: $_currentBodyPart");
-  }
+ 
 
   void setBodyPartStatus() {
     // 세 가지 상태의 조합에 따른 상태 설정

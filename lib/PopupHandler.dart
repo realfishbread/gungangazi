@@ -356,7 +356,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 2000}) {
 
       // 일정 시간 후 기본 상태로 복구
       Future.delayed(Duration(milliseconds: delayMilliseconds), () {
-        _currentBodyPart = 'default';
+        setBodyPartStatus();
         _imageNotifier.value = 0;
         print("Character state restored to $_currentBodyPart");
       });

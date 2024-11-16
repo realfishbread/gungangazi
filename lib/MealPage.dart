@@ -113,8 +113,20 @@ class _MealPageState extends State<MealPage> {
 }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+Widget build(BuildContext context) {
+  return WillPopScope(
+    onWillPop: () async {
+      // 조건에 따라 애니메이션 실행
+      if (widget.popupHandler.mealLevel > widget.popupHandler.mealLevelThreshold) {
+        widget.popupHandler.triggerAnimation('eatingmeal', delayMilliseconds: 2000);
+      } else {
+        print("No significant meal level change, no animation triggered.");
+      }
+
+      // 뒤로 가기 허용
+      return true;
+    },
+    child: Scaffold(
       appBar: AppBar(
         title: const Text('날짜별 식단 기록'),
         backgroundColor: const Color(0xFFFFF9C4),
@@ -195,14 +207,14 @@ class _MealPageState extends State<MealPage> {
           ],
         ),
       ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _mealController.dispose();
-    _caloriesController.dispose();
-    super.dispose();
-  }
+    ),
+  );
 }
 
+@override
+void dispose() {
+  _mealController.dispose();
+  _caloriesController.dispose();
+  super.dispose();
+}
+}

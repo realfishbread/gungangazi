@@ -1,16 +1,21 @@
 package com.example.demo.controller.userHealth;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.DTO.userHealth.SleepDto;
 import com.example.demo.entity.userHealth.Sleep;
+import com.example.demo.repository.userHealth.SleepRepository;
 import com.example.demo.service.userHealth.SleepService;
 
 @RestController
@@ -19,14 +24,21 @@ public class SleepController {
 
     @Autowired
     private SleepService sleepService;
+    private SleepRepository sleepRepository;
 
     // 수면 데이터 저장 (POST)
     @PostMapping("/saveSleepData")
-    public Sleep saveSleepData(@RequestBody Sleep sleep, Principal principal) {
-        // 로그인된 사용자의 username을 sleep 객체에 설정
-        sleep.setUsername(principal.getName());
-        return sleepService.saveSleepData(sleep);
-    }
+    public ResponseEntity<?> saveSleepData(@RequestBody List<SleepDto> sleepData) {
+    sleepData.forEach(data -> {
+        Sleep sleep = new Sleep();
+        sleep.setUsername(data.getUsername());
+        sleep.setDate(LocalDate.parse(data.getDate())); // String -> LocalDate
+        sleep.setSleepTime(LocalTime.parse(data.getSleepTime())); // String -> LocalTime
+        sleep.setWakeUpTime(LocalTime.parse(data.getWakeUpTime())); // String -> LocalTime
+        sleepRepository.save(sleep);
+    });
+    return ResponseEntity.ok("Data saved successfully");
+}
 
     // 현재 로그인된 사용자의 모든 수면 데이터 가져오기 (GET)
     @GetMapping("/getSleepData")

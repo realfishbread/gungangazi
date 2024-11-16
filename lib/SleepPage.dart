@@ -69,8 +69,8 @@ Future<void> _saveSleepDataToServer() async {
     String? username = await TokenService().getUsername();
     SleepDto newSleepRecord = SleepDto(
       date: formattedDate,
-      sleepTime: '${_sleepTime!.hour}:${_sleepTime!.minute}',
-      wakeUpTime: '${_wakeUpTime!.hour}:${_wakeUpTime!.minute}',
+      sleepTime: '${_sleepTime!.hour}:${_sleepTime!.minute}:00',
+      wakeUpTime: '${_wakeUpTime!.hour}:${_wakeUpTime!.minute}:00',
       username: username ?? 'defaultUser', // Replace with actual username
     );
 

@@ -107,9 +107,22 @@ class _WaterDrinkState extends State<WaterDrink> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+Widget build(BuildContext context) {
+  return WillPopScope(
+    onWillPop: () async {
+      // 물 상태가 증가했는지 확인하고 애니메이션 실행
+      if (widget.popupHandler.waterLevel > widget.popupHandler.waterLevelThreshold) {
+        widget.popupHandler.triggerAnimation('drinkwater', delayMilliseconds: 2000);
+      } else {
+        print("No significant water level change, no animation triggered.");
+      }
+
+      // 뒤로가기 동작 허용
+      return true;
+    },
+    child: Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: true,
         title: const Text("수분 섭취"),
         backgroundColor: const Color(0xFFFFF9C4),
       ),
@@ -198,7 +211,8 @@ class _WaterDrinkState extends State<WaterDrink> {
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 }
 

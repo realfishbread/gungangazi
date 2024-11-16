@@ -200,9 +200,11 @@ class PopupHandler {
   }
   void updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) async {
       print("Updating status - Water: $newWaterLevel, Meal: $newMealLevel, Sleep: $newSleepLevel");
-      bool isWaterIncreased = newWaterLevel > waterLevel;
-      bool isMealIncreased = newMealLevel > mealLevel;
-      bool isSleepIncreased = newSleepLevel > sleepLevel;
+
+      
+
+
+
       waterLevel = newWaterLevel;
       mealLevel = newMealLevel;
       sleepLevel = newSleepLevel;
@@ -210,14 +212,7 @@ class PopupHandler {
       // 상태 업데이트 후 서버에 저장
       await saveStatusToServer();
       // 물 상태가 증가했다면 물 마시는 행동 실행
-      if (isWaterIncreased) {
-        triggerAnimation('drinkwater', delayMilliseconds: 3000);
-      } // 밥 상태가 증가했을 때
-      else if (isMealIncreased) {
-        triggerAnimation('eatingmeal', delayMilliseconds: 3000);
-      } else if (isSleepIncreased) {
-      triggerAnimation('sleeping', delayMilliseconds: 3000);
-      }
+      
 
       
       setBodyPartStatus(); // 새로운 상태에 따라 이미지 경로 설정
@@ -334,35 +329,41 @@ Future<void> loadStatusFromServer() async {
   }
 
    /// 특정 상태에 맞는 애니메이션 실행
-  void triggerAnimation(String bodyPart, {int delayMilliseconds = 2000}) {
-    print("Triggering animation for: $bodyPart");
+void triggerAnimation(String bodyPart, {int delayMilliseconds = 2000}) {
+  print("Triggering animation for: $bodyPart");
 
-    if (imagePathsByBodyPart[bodyPart]?.isEmpty ?? true) {
-      print("No images available for body part: $bodyPart");
-      return;
-    }
-
-    _imageTimer?.cancel(); // 기존 타이머 중지
-    _imageNotifier.value = 0; // 애니메이션 초기화
-    _currentBodyPart = bodyPart; // 현재 애니메이션 상태 설정
-
-    // 타이머 시작
-    _imageTimer = Timer.periodic(frameDuration, (timer) {
-      _currentImageIndex = (_currentImageIndex + 1) % imagePathsByBodyPart[bodyPart]!.length;
-      _imageNotifier.value = _currentImageIndex;
-
-      // 애니메이션 종료 조건
-      if (_currentImageIndex == imagePathsByBodyPart[bodyPart]!.length - 1) {
-        print("Animation for $bodyPart completed");
-        timer.cancel();
-
-        // 딜레이 후 원래 상태 복구
-        Future.delayed(Duration(milliseconds: delayMilliseconds), () {
-          print("Character state restored to $_currentBodyPart");
-        });
-      }
-    });
+  // 해당 bodyPart에 대한 이미지가 있는지 확인
+  if (imagePathsByBodyPart[bodyPart]?.isEmpty ?? true) {
+    print("No images available for body part: $bodyPart");
+    return;
   }
+
+  // 기존 타이머를 중지하고 초기화
+  _imageTimer?.cancel();
+  _imageNotifier.value = 0; // 애니메이션 초기화
+  _currentBodyPart = bodyPart; // 현재 애니메이션 상태 설정
+
+  // 애니메이션 실행을 위한 타이머 시작
+  _imageTimer = Timer.periodic(frameDuration, (timer) {
+    // 이미지 인덱스를 업데이트
+    _currentImageIndex = (_currentImageIndex + 1) % imagePathsByBodyPart[bodyPart]!.length;
+    _imageNotifier.value = _currentImageIndex;
+
+    // 마지막 이미지에 도달했을 때 타이머 중지
+    if (_currentImageIndex == imagePathsByBodyPart[bodyPart]!.length - 1) {
+      print("Animation for $bodyPart completed");
+      timer.cancel();
+
+      // 일정 시간 후 기본 상태로 복구
+      Future.delayed(Duration(milliseconds: delayMilliseconds), () {
+        _currentBodyPart = 'default';
+        _imageNotifier.value = 0;
+        print("Character state restored to $_currentBodyPart");
+      });
+    }
+  });
+}
+
 
  
 

@@ -74,6 +74,8 @@ Future<void> _saveSleepDataToServer() async {
       username: username ?? 'defaultUser', // Replace with actual username
     );
 
+    print('Prepared SleepDto for server: ${newSleepRecord.toJson()}');
+
     try {
       // 서버에 데이터 저장
       await sleepRepository.saveSleepDataToDatabase([newSleepRecord]);
@@ -85,7 +87,7 @@ Future<void> _saveSleepDataToServer() async {
     print('Sleep time or wake-up time is not selected');
   }
 }
-
+  
 
   Widget _buildSleepGraph() {
   if (_sleepRecords.isEmpty) {

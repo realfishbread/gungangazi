@@ -41,6 +41,7 @@ class _SleepPageState extends State<SleepPage> {
         'date': dto.date,
         'sleepTime': dto.sleepTime,
         'wakeUpTime': dto.wakeUpTime,
+        'username': dto.username,
       }).toList();
     });
     print('_sleepRecords: $_sleepRecords'); // Debugging print
@@ -185,7 +186,7 @@ Widget build(BuildContext context) {
     onWillPop: () async {
       // 수면 상태가 증가했는지 확인하고 애니메이션 실행
       if (widget.popupHandler.sleepLevel > widget.popupHandler.sleepLevelThreshold) {
-        widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 2000);
+        widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 1000);
       } else {
         print("No significant sleep level change, no animation triggered.");
       }

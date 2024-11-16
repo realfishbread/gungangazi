@@ -112,7 +112,7 @@ Widget build(BuildContext context) {
     onWillPop: () async {
       // 물 상태가 증가했는지 확인하고 애니메이션 실행
       if (widget.popupHandler.waterLevel > widget.popupHandler.waterLevelThreshold) {
-        widget.popupHandler.triggerAnimation('drinkwater', delayMilliseconds: 2000);
+        widget.popupHandler.triggerAnimation('drinkwater', delayMilliseconds: 1000);
       } else {
         print("No significant water level change, no animation triggered.");
       }

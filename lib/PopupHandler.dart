@@ -172,6 +172,22 @@ class PopupHandler {
           ],
           'thirsty_and_dizzy': [
             'assets/person/yeet,jpg'
+          ],
+          'drinkwater': [
+            'assets/person/drinkwater1.jpg',
+            'assets/person/drinkwater2.jpg',
+            'assets/person/drinkwater3.jpg',
+            'assets/person/drinkwater3.jpg',
+            'assets/person/drinkwater2.jpg',
+            'assets/person/drinkwater1.jpg',
+          ],
+          'eatingmeal': [
+            'assets/person/eatingmeal1.jpg',
+            'assets/person/eatingmeal2.jpg',
+            'assets/person/eatingmeal3.jpg',
+            'assets/person/eatingmeal3.jpg',
+            'assets/person/eatingmeal2.jpg',
+            'assets/person/eatingmeal1.jpg',
           ]
 
         } {
@@ -240,9 +256,20 @@ Future<void> loadStatusFromServer() async {
 }
   void updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) async {
     print("Updating status - Water: $newWaterLevel, Meal: $newMealLevel, Sleep: $newSleepLevel");
+    bool isWaterIncreased = newWaterLevel > waterLevel;
+    bool isMealIncreased = newMealLevel > mealLevel;
     waterLevel = newWaterLevel;
     mealLevel = newMealLevel;
     sleepLevel = newSleepLevel;
+
+    // 물 상태가 증가했다면 물 마시는 행동 실행
+    if (isWaterIncreased) {
+      triggerDrinkingWaterAnimation();
+    } 
+    
+    if (isMealIncreased) {
+      triggerMealAnimation();
+    }
 
     // 상태 업데이트 후 서버에 저장
     await saveStatusToServer();
@@ -298,6 +325,46 @@ Future<void> loadStatusFromServer() async {
       _imageRect = position & size;
     }
   }
+
+  void triggerDrinkingWaterAnimation() {
+  print("Triggering water drinking animation");
+
+  // 물 마시는 이미지 시퀀스 설정
+  _currentBodyPart = 'drinkwater';
+  _imageNotifier.value = 0; // 애니메이션 초기화
+
+  Timer.periodic(frameDuration, (timer) {
+    _currentImageIndex = (_currentImageIndex + 1) %
+        (imagePathsByBodyPart['drinkwater']?.length ?? defaultImagePaths.length);
+    _imageNotifier.value = _currentImageIndex;
+
+    // 애니메이션 종료 조건
+    if (_currentImageIndex == imagePathsByBodyPart['drinkwater']!.length - 1) {
+      timer.cancel(); // 타이머 중지
+      startImageAnimation(); 
+    }
+  });
+}
+
+void triggerMealAnimation() {
+  print("밥 애니");
+
+  // 물 마시는 이미지 시퀀스 설정
+  _currentBodyPart = 'eatingmeal';
+  _imageNotifier.value = 0; // 애니메이션 초기화
+
+  Timer.periodic(frameDuration, (timer) {
+    _currentImageIndex = (_currentImageIndex + 1) %
+        (imagePathsByBodyPart['eatingmeal']?.length ?? defaultImagePaths.length);
+    _imageNotifier.value = _currentImageIndex;
+
+    // 애니메이션 종료 조건
+    if (_currentImageIndex == imagePathsByBodyPart['eatingmeal']!.length - 1) {
+      timer.cancel(); // 타이머 중지
+      startImageAnimation(); 
+    }
+  });
+}
 
  
 

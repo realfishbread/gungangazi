@@ -264,11 +264,12 @@ Future<void> loadStatusFromServer() async {
 
     // 물 상태가 증가했다면 물 마시는 행동 실행
     if (isWaterIncreased) {
-      triggerDrinkingWaterAnimation();
-    } 
-    
-    if (isMealIncreased) {
-      triggerMealAnimation();
+      _currentBodyPart = 'drinkwater';
+      triggerAnimation();
+    } // 밥 상태가 증가했을 때
+    else if (isMealIncreased) {
+      _currentBodyPart = 'eatingmeal';
+      triggerAnimation();
     }
 
     // 상태 업데이트 후 서버에 저장
@@ -326,45 +327,30 @@ Future<void> loadStatusFromServer() async {
     }
   }
 
-  void triggerDrinkingWaterAnimation() {
-  print("Triggering water drinking animation");
+   /// 특정 상태에 맞는 애니메이션 실행
+  void triggerAnimation() {
+    print("Triggering animation for: $_currentBodyPart");
 
-  // 물 마시는 이미지 시퀀스 설정
-  _currentBodyPart = 'drinkwater';
-  _imageNotifier.value = 0; // 애니메이션 초기화
+    _imageTimer?.cancel(); // 기존 타이머 중지
+    _imageNotifier.value = 0; // 애니메이션 초기화
 
-  Timer.periodic(frameDuration, (timer) {
-    _currentImageIndex = (_currentImageIndex + 1) %
-        (imagePathsByBodyPart['drinkwater']?.length ?? defaultImagePaths.length);
-    _imageNotifier.value = _currentImageIndex;
+    Timer.periodic(frameDuration, (timer) {
+      if (imagePathsByBodyPart[_currentBodyPart]?.isEmpty ?? true) {
+        print("No images available for body part: $_currentBodyPart");
+        timer.cancel();
+        return;
+      }
 
-    // 애니메이션 종료 조건
-    if (_currentImageIndex == imagePathsByBodyPart['drinkwater']!.length - 1) {
-      timer.cancel(); // 타이머 중지
-      startImageAnimation(); 
-    }
-  });
-}
+      _currentImageIndex = (_currentImageIndex + 1) % imagePathsByBodyPart[_currentBodyPart]!.length;
+      _imageNotifier.value = _currentImageIndex;
 
-void triggerMealAnimation() {
-  print("밥 애니");
-
-  // 물 마시는 이미지 시퀀스 설정
-  _currentBodyPart = 'eatingmeal';
-  _imageNotifier.value = 0; // 애니메이션 초기화
-
-  Timer.periodic(frameDuration, (timer) {
-    _currentImageIndex = (_currentImageIndex + 1) %
-        (imagePathsByBodyPart['eatingmeal']?.length ?? defaultImagePaths.length);
-    _imageNotifier.value = _currentImageIndex;
-
-    // 애니메이션 종료 조건
-    if (_currentImageIndex == imagePathsByBodyPart['eatingmeal']!.length - 1) {
-      timer.cancel(); // 타이머 중지
-      startImageAnimation(); 
-    }
-  });
-}
+      // 애니메이션이 끝났는지 확인
+      if (_currentImageIndex == imagePathsByBodyPart[_currentBodyPart]!.length - 1) {
+        print("Animation for $_currentBodyPart completed");
+        timer.cancel();
+      }
+    });
+  }
 
  
 

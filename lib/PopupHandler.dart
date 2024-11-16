@@ -262,6 +262,8 @@ Future<void> loadStatusFromServer() async {
     mealLevel = newMealLevel;
     sleepLevel = newSleepLevel;
 
+    // 상태 업데이트 후 서버에 저장
+    await saveStatusToServer();
     // 물 상태가 증가했다면 물 마시는 행동 실행
     if (isWaterIncreased) {
       _currentBodyPart = 'drinkwater';
@@ -272,8 +274,7 @@ Future<void> loadStatusFromServer() async {
       triggerAnimation();
     }
 
-    // 상태 업데이트 후 서버에 저장
-    await saveStatusToServer();
+    
     setBodyPartStatus(); // 새로운 상태에 따라 이미지 경로 설정
     startImageAnimation(); // 애니메이션 다시 시작
     print("Status updated and animation started - Current Body Part: $_currentBodyPart");
@@ -331,20 +332,20 @@ Future<void> loadStatusFromServer() async {
   void triggerAnimation() {
     print("Triggering animation for: $_currentBodyPart");
 
+    // 리스트가 비어있는 경우 기본 상태 유지
+    if (imagePathsByBodyPart[_currentBodyPart]?.isEmpty ?? true) {
+      print("No images available for body part: $_currentBodyPart");
+      return;
+    }
+
     _imageTimer?.cancel(); // 기존 타이머 중지
     _imageNotifier.value = 0; // 애니메이션 초기화
 
-    Timer.periodic(frameDuration, (timer) {
-      if (imagePathsByBodyPart[_currentBodyPart]?.isEmpty ?? true) {
-        print("No images available for body part: $_currentBodyPart");
-        timer.cancel();
-        return;
-      }
-
+    _imageTimer = Timer.periodic(frameDuration, (timer) {
       _currentImageIndex = (_currentImageIndex + 1) % imagePathsByBodyPart[_currentBodyPart]!.length;
       _imageNotifier.value = _currentImageIndex;
 
-      // 애니메이션이 끝났는지 확인
+      // 애니메이션 종료 조건
       if (_currentImageIndex == imagePathsByBodyPart[_currentBodyPart]!.length - 1) {
         print("Animation for $_currentBodyPart completed");
         timer.cancel();

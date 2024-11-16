@@ -92,8 +92,27 @@ class _MobileHomePageState extends State<MobileHomePage> {
  
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+Widget build(BuildContext context) {
+  return WillPopScope(
+    onWillPop: () async {
+      // 애니메이션 실행 조건 추가
+      if (_popupHandler.waterLevel > _popupHandler.waterLevelThreshold ||
+          _popupHandler.mealLevel > _popupHandler.mealLevelThreshold ||
+          _popupHandler.sleepLevel > _popupHandler.sleepLevelThreshold) {
+        // 각각의 상태에 따라 다른 애니메이션 실행
+        if (_popupHandler.waterLevel > _popupHandler.waterLevelThreshold) {
+          _popupHandler.triggerAnimation('drinkwater');
+        } else if (_popupHandler.mealLevel > _popupHandler.mealLevelThreshold) {
+          _popupHandler.triggerAnimation('eatingmeal');
+        } else if (_popupHandler.sleepLevel > _popupHandler.sleepLevelThreshold) {
+          _popupHandler.triggerAnimation('sleeping');
+        }
+      } else {
+        print("No significant change in status, no animation triggered.");
+      }
+      return true; // true를 반환하면 뒤로가기 동작 수행
+    },
+    child: Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -119,7 +138,6 @@ class _MobileHomePageState extends State<MobileHomePage> {
       body: Stack(
         alignment: Alignment.center,
         children: [
-          // 캐릭터 이미지
           Center(
             child: _popupHandler.buildImageAnimationWithTouch(context, (newImagePath) {
               setState(() {});
@@ -164,8 +182,9 @@ class _MobileHomePageState extends State<MobileHomePage> {
         child: const Icon(FontAwesomeIcons.commentMedical),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-    );
-  }
+    ),
+  );
+}
 
   Widget _getDrawerContent() {
     switch (_selectedIndex) {

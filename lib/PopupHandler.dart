@@ -20,9 +20,13 @@ class PopupHandler {
   int waterLevel = 100; // 수분 상태 변수 추가
   int mealLevel = 100;
   int sleepLevel = 100; // 수면 상태 변수
+
+  
   
 
-
+  final int waterLevelThreshold = 200; 
+  final int mealLevelThreshold = 200; // 식사 기준 값
+  final int sleepLevelThreshold = 200;
   final GlobalKey _imageKey = GlobalKey(); // 이미지를 위한 GlobalKey 선언
   Rect? _imageRect;
 
@@ -198,6 +202,7 @@ class PopupHandler {
       print("Updating status - Water: $newWaterLevel, Meal: $newMealLevel, Sleep: $newSleepLevel");
       bool isWaterIncreased = newWaterLevel > waterLevel;
       bool isMealIncreased = newMealLevel > mealLevel;
+      bool isSleepIncreased = newSleepLevel > sleepLevel;
       waterLevel = newWaterLevel;
       mealLevel = newMealLevel;
       sleepLevel = newSleepLevel;
@@ -210,6 +215,8 @@ class PopupHandler {
       } // 밥 상태가 증가했을 때
       else if (isMealIncreased) {
         triggerAnimation('eatingmeal');
+      } else if (isSleepIncreased) {
+      triggerAnimation('sleeping');
       }
 
       

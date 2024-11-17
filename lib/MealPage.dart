@@ -56,6 +56,7 @@ class _MealPageState extends State<MealPage> {
         _mealLevel = ((_mealsByDate[_getFormattedDate()]?.length) ?? 0) * 200; // MealLevel 계산
         print("Updated MealLevel: $_mealLevel");
         _isLoading = false; // 로딩 완료
+        _updatePopupHandler();
       });
     } catch (e) {
       print('Error loading meals: $e');

@@ -49,7 +49,6 @@ class _MealPageState extends State<MealPage> {
             _mealsByDate[meal.date] = [meal.meal];
           }
         }
-        _mealLevel = (_mealsByDate[_getFormattedDate()]?.length ?? 0) * 200;
       });
     } catch (e) {
       print('Error loading meals: $e');

@@ -55,15 +55,21 @@ Future<void> _saveSleepDataToServer() async {
     Duration sleepDuration = _calculateSleepDuration(_sleepTime!, _wakeUpTime!);
     double sleepHours = sleepDuration.inMinutes / 60.0;
 
-    // 수면 시간이 5시간 이상일 때 PopupHandler의 sleepLevel을 증가
+    // 새로운 sleepLevel 계산
+    int currentSleepLevel = widget.popupHandler.sleepLevel;
+    int newSleepLevel = currentSleepLevel; // 기본적으로 변화 없음을 가정
     if (sleepHours >= 5.0) {
-      widget.popupHandler.updateStatus(
+      newSleepLevel = currentSleepLevel + 200; // 수면 시간이 충분할 경우 증가
+    }
+
+    // sleepLevel 업데이트 (애니메이션 실행은 하지 않음)
+    widget.popupHandler.updateStatus(
       newWaterLevel: widget.popupHandler.waterLevel,
       newMealLevel: widget.popupHandler.mealLevel,
-      newSleepLevel: widget.popupHandler.sleepLevel + 200,
-  );
-  print("Sleep saved and PopupHandler status updated - Sleep Level: ${widget.popupHandler.sleepLevel}");
-}
+      newSleepLevel: newSleepLevel,
+    );
+    print("Sleep Level updated to: $newSleepLevel");
+
 
     // 서버에 저장할 SleepDto 데이터 생성
     String? username = await TokenService().getUsername();
@@ -187,14 +193,18 @@ Future<void> _saveSleepDataToServer() async {
 Widget build(BuildContext context) {
   return WillPopScope(
     onWillPop: () async {
-      // 수면 상태가 증가했는지 확인하고 애니메이션 실행
-      if (widget.popupHandler.sleepLevel > widget.popupHandler.sleepLevelThreshold) {
+       // 이전 sleepLevel 값 저장
+      int previousSleepLevel = widget.popupHandler.sleepLevelThreshold;
+
+      // sleepLevel이 증가했는지 확인
+      if (widget.popupHandler.sleepLevel > previousSleepLevel) {
         widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 1000);
+        print('Triggering sleeping animation for sleep level: ${widget.popupHandler.sleepLevel}');
       } else {
         print("No significant sleep level change, no animation triggered.");
       }
 
-      // 뒤로 가기 동작 허용
+      // 뒤로 가기 허용
       return true;
     },
     child: Scaffold(

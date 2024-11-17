@@ -215,28 +215,21 @@ class PopupHandler {
   void updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) async {
     print("Updating status - Water: $newWaterLevel, Meal: $newMealLevel, Sleep: $newSleepLevel");
 
-    // 수치 변화 여부 확인
-    bool isWaterChanged = waterLevel != newWaterLevel;
-    bool isMealChanged = mealLevel != newMealLevel;
-    bool isSleepChanged = sleepLevel != newSleepLevel;
+  
+   
+      waterLevel = newWaterLevel;
+      mealLevel = newMealLevel;
+      sleepLevel = newSleepLevel;
 
-    // 현재 상태 업데이트
-    waterLevel = newWaterLevel;
-    mealLevel = newMealLevel;
-    sleepLevel = newSleepLevel;
+      // 상태 업데이트 후 서버에 저장
+      await saveStatusToServer();
+      // 물 상태가 증가했다면 물 마시는 행동 실행
+      
 
-    // 상태 업데이트 후 서버에 저장
-    await saveStatusToServer();
-
-    // 상태가 변한 경우에만 애니메이션 실행
-    if (isWaterChanged || isMealChanged || isSleepChanged) {
-      print("Status changed, triggering animation...");
+      
       setBodyPartStatus(); // 새로운 상태에 따라 이미지 경로 설정
       startImageAnimation(); // 애니메이션 다시 시작
-      print("Animation started - Current Body Part: $_currentBodyPart");
-    } else {
-      print("No status changes, animation not triggered.");
-    }
+      print("Status updated and animation started - Current Body Part: $_currentBodyPart");
 }
    /// 서버에 현재 상태 저장
 Future<void> saveStatusToServer() async {

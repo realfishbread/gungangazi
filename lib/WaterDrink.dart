@@ -28,7 +28,7 @@ class _WaterDrinkState extends State<WaterDrink> {
   void initState() {
     super.initState();
     _loadWaterIntake();
-    _currentWaterLevel = widget.popupHandler.sleepLevel;
+    _currentWaterLevel = widget.popupHandler.waterLevel;
   }
 
   Future<void> _loadWaterIntake() async {

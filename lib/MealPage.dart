@@ -116,7 +116,7 @@ Widget build(BuildContext context) {
   return WillPopScope(
     onWillPop: () async {
       // 조건에 따라 애니메이션 실행
-      if (widget.popupHandler.mealLevel > widget.popupHandler.mealLevelThreshold) {
+      if (widget.popupHandler.mealLevel == widget.popupHandler.mealLevelThreshold) {
         widget.popupHandler.triggerAnimation('eatingmeal', delayMilliseconds: 2000);
       } else {
         print("No significant meal level change, no animation triggered.");

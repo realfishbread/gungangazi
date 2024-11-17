@@ -17,7 +17,7 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
   final Dio _dio = Dio();
   bool _isTyping = false;
 
-  // 서버 IP 주소 설정 (호스트 PC의 IP로 변경)
+  // 로컬 서버 URL 설정
   final String serverUrl = 'https://gungangazi.site';
 
   @override
@@ -27,24 +27,29 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
   }
 
   Future<void> _addDogMessage(String fullText) async {
-    setState(() {
-      _isTyping = true;
-      _messages.add({
-        'text': '',
-        'isMine': false,
-      });
-    });
-
-    for (int i = 0; i < fullText.length; i++) {
-      await Future.delayed(const Duration(milliseconds: 100));
+    if (fullText.length <= 20) {
+      // 짧은 메시지는 애니메이션 유지
       setState(() {
-        _messages.last['text'] = _messages.last['text'] + fullText[i];
+        _isTyping = true;
+        _messages.add({'text': '', 'isMine': false});
+      });
+
+      for (int i = 0; i < fullText.length; i++) {
+        await Future.delayed(const Duration(milliseconds: 30)); // 딜레이 단축
+        setState(() {
+          _messages.last['text'] = _messages.last['text'] + fullText[i];
+        });
+      }
+
+      setState(() {
+        _isTyping = false;
+      });
+    } else {
+      // 긴 메시지는 즉시 출력
+      setState(() {
+        _messages.add({'text': fullText, 'isMine': false});
       });
     }
-
-    setState(() {
-      _isTyping = false;
-    });
   }
 
   Future<void> fetchRelatedSymptoms(String symptom) async {
@@ -68,8 +73,15 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
   }
 
   Future<void> diagnoseDisease() async {
-    try {
-      if (selectedSymptoms.isNotEmpty) {
+    if (selectedSymptoms.isNotEmpty) {
+      setState(() {
+        _messages.add({
+          'text': '입력된 증상: ${selectedSymptoms.join(', ')}',
+          'isMine': true,
+        });
+      });
+
+      try {
         final response = await _dio.post(
           '$serverUrl/predict_disease',
           options: Options(headers: {'Content-Type': 'application/json'}),
@@ -78,38 +90,33 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
 
         if (response.statusCode == 200) {
           final predictions = response.data['predictions'];
-          final String resultText = predictions.map((pred) {
-            return pred['disease'];
-          }).join('\n');
-          
-          _addDogMessage(resultText); // 개가 진단 결과를 말하는 방식으로 출력
+          final showWarning = selectedSymptoms.length <= 2;
 
-          setState(() {
-            selectedSymptoms.clear(); // 진단 후 선택한 증상 초기화
-          });
+          if (predictions.isNotEmpty) {
+            final diagnosisText = predictions.map((pred) {
+              final disease = pred['disease'];
+              final probability = (pred['probability'] * 100).toStringAsFixed(1);
+              return '$disease ($probability%)';
+            }).join('\n');
+
+            final resultMessage = '다음 질환들이 의심됩니다:\n$diagnosisText' +
+                (showWarning ? '\n\n증상이 적을 경우 정확한 진단이 어려울 수 있습니다' : '');
+
+            _addDogMessage(resultMessage);
+          } else {
+            _addDogMessage('입력된 증상으로는 진단할 수 있는 질환이 없습니다.');
+          }
         } else {
           print("Error: ${response.statusCode}");
         }
+      } catch (e) {
+        print("Error: $e");
       }
-    } catch (e) {
-      print("Error: $e");
-    }
-  }
 
-  void _showDiagnosisDialog(String resultText) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('진단 결과'),
-        content: Text(resultText),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('확인'),
-          ),
-        ],
-      ),
-    );
+      setState(() {
+        selectedSymptoms.clear();
+      });
+    }
   }
 
   void _sendMessage(bool isMine) {
@@ -144,8 +151,9 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
     return Scaffold(
       appBar: AppBar(
         title: const Text('증상 채팅'),
-        backgroundColor: const Color(0xFFFFF9C4),
+        backgroundColor: const Color(0xFFFFF9C4), // 기존 AppBar 배경색 유지
       ),
+      backgroundColor: Colors.white, // 배경색을 흰색으로 설정
       body: Column(
         children: [
           Expanded(
@@ -181,38 +189,17 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
               );
             }).toList(),
           ),
-          if (relatedSymptoms.isNotEmpty) ...[ 
+          if (relatedSymptoms.isNotEmpty) ...[
             Wrap(
               children: relatedSymptoms.map((symptom) {
                 return Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
+                    key: ValueKey(symptom), // 고유한 키 추가
                     onPressed: () {
                       addSymptom(symptom);
                     },
                     child: Text(symptom),
-                  ),
-                );
-              }).toList(),
-            ),
-          ],
-          if (recentSymptoms.isNotEmpty) ...[
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text('최근 검색된 증상들:'),
-            ),
-            Wrap(
-              children: recentSymptoms.map((symptom) {
-                return Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Chip(
-                    label: Text(symptom),
-                    backgroundColor: Colors.lightBlue[100],
-                    onDeleted: () {
-                      setState(() {
-                        recentSymptoms.remove(symptom);
-                      });
-                    },
                   ),
                 );
               }).toList(),

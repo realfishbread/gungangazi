@@ -25,7 +25,7 @@ class PopupHandler {
   
 
   final int waterLevelThreshold = 100; 
-  final int mealLevelThreshold = 100; // 식사 기준 값
+  final int mealLevelThreshold = 1; // 식사 기준 값
   final int sleepLevelThreshold = 100;
   final GlobalKey _imageKey = GlobalKey(); // 이미지를 위한 GlobalKey 선언
   Rect? _imageRect;

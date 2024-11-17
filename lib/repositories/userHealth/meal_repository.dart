@@ -57,6 +57,26 @@ class MealRepository {
       throw Exception('Error adding meal: $e');
     }
   }
+  
+   Future<void> deleteMeal(String mealId) async {
+  try {
+    final Dio dio = dioService.getDio(); // Dio 객체 가져오기
+    final response = await dio.delete(
+      '/meals/$mealId',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer ${await tokenService.getToken()}',
+        },
+      ),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete meal: ${response.data}');
+    }
+  } catch (e) {
+    throw Exception('Error during deleteMeal: $e');
+  }
+}
+
 
    
 }

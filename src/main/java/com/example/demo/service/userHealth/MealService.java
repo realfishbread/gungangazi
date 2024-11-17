@@ -36,6 +36,13 @@ public class MealService {
         mealEntity.setMealType(mealDTO.getMealType());  // 식사/간식 구분 설정
         mealRepository.save(mealEntity);
     }
+
+    public void deleteMeal(Long mealId) {
+        if (!mealRepository.existsById(mealId)) {
+            throw new IllegalArgumentException("Meal not found");
+        }
+        mealRepository.deleteById(mealId);
+    }
 }
     
  

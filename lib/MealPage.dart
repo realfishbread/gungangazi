@@ -53,7 +53,6 @@ class _MealPageState extends State<MealPage> {
         // 현재 날짜 기준으로 mealLevel 계산
         _mealLevel = (_mealsByDate[_getFormattedDate()]?.length ?? 0) * 200;
       });
-      _updatePopupHandler();
     } catch (e) {
       print('Error loading meals: $e');
     }
@@ -77,6 +76,7 @@ class _MealPageState extends State<MealPage> {
     final String currentDate = _getFormattedDate();
     String? username = await TokenService().getUsername();
     final MealDTO newMeal = MealDTO(
+      id: '',
       date: currentDate,
       meal: meal,
       username: username ?? '',
@@ -116,6 +116,33 @@ class _MealPageState extends State<MealPage> {
     }
   }
 }
+void _deleteMeal(String date, int index) async {
+  try {
+    // 서버로 삭제 요청
+    final mealId = "meal-id"; // 해당 기록의 ID를 서버에서 가져와야 함
+    await _mealRepository.deleteMeal(mealId);
+
+    // UI에서 기록 삭제
+    setState(() {
+      _mealsByDate[date]?.removeAt(index);
+      if (_mealsByDate[date]?.isEmpty ?? true) {
+        _mealsByDate.remove(date);
+      }
+
+      // mealLevel 업데이트
+      _mealLevel = (_mealsByDate[_getFormattedDate()]?.length ?? 0) * 200;
+    });
+
+    // PopupHandler 상태 업데이트
+    _updatePopupHandler();
+
+    print("Meal deleted and PopupHandler status updated - Meal Level: $_mealLevel");
+  } catch (e) {
+    print('Error deleting meal: $e');
+  }
+}
+
+
 
   @override
 Widget build(BuildContext context) {
@@ -201,10 +228,20 @@ Widget build(BuildContext context) {
                         return ExpansionTile(
                           title: Text(date),
                           children: _mealsByDate[date]!
-                              .map((meal) => ListTile(
-                                    title: Text(meal),
-                                  ))
-                              .toList(),
+                              .asMap()
+                  .entries
+                  .map((entry) {
+                final int index = entry.key;
+                final String meal = entry.value;
+
+                return ListTile(
+                  title: Text(meal),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => _deleteMeal(date, index),
+                  ),
+                );
+              }).toList(),
                         );
                       }).toList(),
                     ),

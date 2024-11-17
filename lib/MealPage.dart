@@ -115,31 +115,31 @@ class _MealPageState extends State<MealPage> {
     }
   }
 
-  Future<void> _deleteMeal(String date, int index) async {
-  try {
-    // 서버로 삭제 요청
-    final mealId = "meal-id"; // 서버에서 받은 meal ID 사용
-    await _mealRepository.deleteMeal(mealId);
+ Future<void> _deleteMeal(String date, int index) async {
+    try {
+      // 서버로 삭제 요청 (mealId를 서버에서 제공받아야 함)
+      final mealId = "meal-id"; // 서버에서 받은 meal ID 사용
+      await _mealRepository.deleteMeal(mealId);
 
-    // UI에서 기록 삭제
-    setState(() {
-      _mealsByDate[date]?.removeAt(index);
-      if (_mealsByDate[date]?.isEmpty ?? true) {
-        _mealsByDate.remove(date);
-      }
+      // UI에서 기록 삭제
+      setState(() {
+        _mealsByDate[date]?.removeAt(index);
+        if (_mealsByDate[date]?.isEmpty ?? true) {
+          _mealsByDate.remove(date);
+        }
 
-      // mealLevel 업데이트
-      _mealLevel = (_mealsByDate[_getFormattedDate()]?.length ?? 0) * 200;
-    });
+        // mealLevel 업데이트
+        _mealLevel = (_mealsByDate[_getFormattedDate()]?.length ?? 0) * 200;
+      });
 
-    // PopupHandler 상태 업데이트
-    _updatePopupHandler();
+      // PopupHandler 상태 업데이트
+      _updatePopupHandler();
 
-    print("Meal deleted and PopupHandler status updated - Meal Level: $_mealLevel");
-  } catch (e) {
-    print('Error deleting meal: $e');
+      print("Meal deleted and PopupHandler status updated - Meal Level: $_mealLevel");
+    } catch (e) {
+      print('Error deleting meal: $e');
+    }
   }
-}
 
   @override
 Widget build(BuildContext context) {
@@ -249,13 +249,5 @@ Widget build(BuildContext context) {
       ),
     ),
   );
-}
-
-
-@override
-void dispose() {
-  _mealController.dispose();
-  _caloriesController.dispose();
-  super.dispose();
 }
 }

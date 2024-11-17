@@ -38,7 +38,7 @@ class _MealPageState extends State<MealPage> {
   }
 
   // 서버에서 모든 식사 기록 가져오기
-  void _fetchMeals() async {
+  Future<void> _fetchMeals() async {
     try {
       List<MealDTO> meals = await _mealRepository.fetchAllMeals(); // 모든 날짜의 기록 가져오기
       setState(() {
@@ -49,7 +49,7 @@ class _MealPageState extends State<MealPage> {
             _mealsByDate[meal.date] = [meal.meal];
           }
         }
-        _mealLevel = _mealsByDate[_getFormattedDate()]?.length ?? 0 * 200;
+        _mealLevel = (_mealsByDate[_getFormattedDate()]?.length ?? 0) * 200;
       });
     } catch (e) {
       print('Error loading meals: $e');
@@ -83,16 +83,17 @@ class _MealPageState extends State<MealPage> {
 
     try {
       await _mealRepository.addMeal(newMeal);
-
+      
       // 저장 후 데이터를 새로고침
-      _fetchMeals(); // 최신 데이터 가져오기
+      await _fetchMeals(); // 최신 데이터 가져오기
       setState(() {
         _mealController.clear();
         _caloriesController.clear();
+        _mealLevel += 200; // 식사 추가 시 mealLevel 200 증가
       });
 
       
-      _mealLevel += 200; // 식사 추가 시 mealLevel 200 증가
+      
 
       _updatePopupHandler();
       print("Meal added and PopupHandler status updated - Meal Level: $_mealLevel");

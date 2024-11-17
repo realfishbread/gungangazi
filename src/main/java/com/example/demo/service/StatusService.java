@@ -33,7 +33,7 @@ public class StatusService {
     }
 
     // 매일 자정(00:00)에 실행
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?", zone = "Asia/Seoul")
     public void resetDailyLevels() {
         try {
             // 모든 캐릭터의 상태 초기화

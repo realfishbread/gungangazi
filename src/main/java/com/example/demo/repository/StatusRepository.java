@@ -13,6 +13,6 @@ public interface StatusRepository extends JpaRepository<Status, Long> {
     Optional<Status> findByUsername(String username);
 
     @Modifying
-    @Query("UPDATE Status u SET u.waterLevel = 0, u.mealLevel = 0, u.sleepLevel = 0")
+    @Query("UPDATE Status u SET u.water_level = 0, u.meal_level = 0, u.sleep_level = 0")
     void resetDailyLevels();
 }

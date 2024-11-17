@@ -95,12 +95,7 @@ class _MealPageState extends State<MealPage> {
         _caloriesController.clear();
       });
 
-      // 다마고치 상태 업데이트 및 로그 추가
-      widget.popupHandler.updateStatus(
-        newWaterLevel: widget.popupHandler.waterLevel,
-        newMealLevel: _mealLevel,
-        newSleepLevel: widget.popupHandler.sleepLevel,
-      );
+      
       
 
       _updatePopupHandler();
@@ -116,7 +111,7 @@ Widget build(BuildContext context) {
   return WillPopScope(
     onWillPop: () async {
       // 조건에 따라 애니메이션 실행
-      if (widget.popupHandler.mealLevel == widget.popupHandler.mealLevelThreshold) {
+      if (widget.popupHandler.mealLevel > widget.popupHandler.mealLevelThreshold) {
         widget.popupHandler.triggerAnimation('eatingmeal', delayMilliseconds: 2000);
       } else {
         print("No significant meal level change, no animation triggered.");

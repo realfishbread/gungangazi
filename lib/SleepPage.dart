@@ -22,6 +22,7 @@ class _SleepPageState extends State<SleepPage> {
   TimeOfDay? _wakeUpTime;
   List<Map<String, String>> _sleepRecords = [];
   late final SleepRepository sleepRepository;
+  int _currentSleepLevel = 0; // 현재 sleepLevel 저장
 
   @override
   void initState() {
@@ -56,10 +57,11 @@ Future<void> _saveSleepDataToServer() async {
     double sleepHours = sleepDuration.inMinutes / 60.0;
 
     // 새로운 sleepLevel 계산
-    int currentSleepLevel = widget.popupHandler.sleepLevel;
-    int newSleepLevel = currentSleepLevel; // 기본적으로 변화 없음을 가정
+    
+    int newSleepLevel = widget.popupHandler.sleepLevel;
+    _currentSleepLevel =widget.popupHandler.sleepLevel;
     if (sleepHours >= 5.0) {
-      newSleepLevel = currentSleepLevel + 200; // 수면 시간이 충분할 경우 증가
+      newSleepLevel = widget.popupHandler.sleepLevel + 200; // 수면 시간이 충분할 경우 증가
     }
 
     // sleepLevel 업데이트 (애니메이션 실행은 하지 않음)
@@ -193,11 +195,10 @@ Future<void> _saveSleepDataToServer() async {
 Widget build(BuildContext context) {
   return WillPopScope(
     onWillPop: () async {
-       // 이전 sleepLevel 값 저장
-      int previousSleepLevel = widget.popupHandler.sleepLevelThreshold;
+       
 
       // sleepLevel이 증가했는지 확인
-      if (widget.popupHandler.sleepLevel > previousSleepLevel) {
+      if (widget.popupHandler.sleepLevel > _currentSleepLevel) {
         widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 1000);
         print('Triggering sleeping animation for sleep level: ${widget.popupHandler.sleepLevel}');
       } else {

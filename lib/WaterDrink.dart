@@ -16,17 +16,19 @@ class WaterDrink extends StatefulWidget {
 }
 
 class _WaterDrinkState extends State<WaterDrink> {
+   
   final WaterRepository waterRepository = WaterRepository(
     dioService: DioService(),
     tokenService: TokenService(),
   );
-
+  int _currentWaterLevel = 0; //
   Map<String, int> _dailyWaterIntake = {};
 
   @override
   void initState() {
     super.initState();
     _loadWaterIntake();
+    _currentWaterLevel = widget.popupHandler.sleepLevel;
   }
 
   Future<void> _loadWaterIntake() async {
@@ -52,6 +54,8 @@ class _WaterDrinkState extends State<WaterDrink> {
     String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
     int todayWaterIntake = _dailyWaterIntake[today] ?? 0;
     int todayMealLevel = widget.popupHandler.mealLevel; // 현재 mealLevel 가져오기
+
+    
 
     // WaterDrink의 _addWater 메서드에 상태 업데이트
   widget.popupHandler.updateStatus(
@@ -111,7 +115,7 @@ Widget build(BuildContext context) {
   return WillPopScope(
     onWillPop: () async {
       // 물 상태가 증가했는지 확인하고 애니메이션 실행
-      if (widget.popupHandler.waterLevel > widget.popupHandler.waterLevelThreshold) {
+      if (widget.popupHandler.waterLevel > _currentWaterLevel ) {
         widget.popupHandler.triggerAnimation('drinkwater', delayMilliseconds: 1000);
       } else {
         print("No significant water level change, no animation triggered.");

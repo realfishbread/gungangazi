@@ -32,6 +32,7 @@ class _SleepPageState extends State<SleepPage> {
       tokenService: TokenService(),
     );
     _loadSleepDataFromServer();
+     _currentSleepLevel = widget.popupHandler.sleepLevel;
   }
 
   // Fetch sleep data from the server and update _sleepRecords

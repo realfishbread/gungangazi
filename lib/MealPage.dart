@@ -59,7 +59,7 @@ class _MealPageState extends State<MealPage> {
   void _updatePopupHandler() {
     widget.popupHandler.updateStatus(
       newWaterLevel: widget.popupHandler.waterLevel,
-      newMealLevel: _mealLevel,
+      newMealLevel: _mealLevel +200,
       newSleepLevel: widget.popupHandler.sleepLevel,
     );
     print("Meal Level updated: $_mealLevel");
@@ -88,7 +88,6 @@ class _MealPageState extends State<MealPage> {
       setState(() {
         _mealController.clear();
         _caloriesController.clear();
-        _mealLevel += 200; // 식사 추가 시 mealLevel 200 증가
       });
 
       

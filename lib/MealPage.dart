@@ -51,7 +51,6 @@ class _MealPageState extends State<MealPage> {
         }
         _mealLevel = _mealsByDate[_getFormattedDate()]?.length ?? 0 * 200;
       });
-      _updatePopupHandler();
     } catch (e) {
       print('Error loading meals: $e');
     }

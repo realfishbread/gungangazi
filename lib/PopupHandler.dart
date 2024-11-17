@@ -162,14 +162,9 @@ class PopupHandler {
             'assets/person/jindan_stomach1.jpg',
           ],
           'dizzy':[
-            'assets/person/th1.jpg',
-            'assets/person/th2.jpg',
-            'assets/person/th3.jpg',
-            'assets/person/th4.jpg',
-            'assets/person/th4.jpg',
-            'assets/person/th3.jpg',
-            'assets/person/th2.jpg',
-            'assets/person/th1.jpg',
+            'assets/person/tired1.jpg',
+            'assets/person/tired2.jpg',
+            'assets/person/tired3.jpg',
           ],
           'hungry': [
             'assets/person/yee.jpg',
@@ -206,6 +201,11 @@ class PopupHandler {
             'assets/person/sleeping3.jpg',
             'assets/person/sleeping2.jpg',
             'assets/person/sleeping1.jpg',
+          ],
+          '0am': [
+            'assets/person/0am.jpg',
+            'assets/person/0am1.jpg',
+            'assets/person/0am2.jpg',
           ]
 
         } {

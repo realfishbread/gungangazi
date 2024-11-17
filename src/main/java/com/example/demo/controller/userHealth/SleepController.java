@@ -8,6 +8,7 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,27 +27,37 @@ public class SleepController {
 
     @Autowired
     private SleepService sleepService;
-    
+
     @Autowired
     private SleepRepository sleepRepository;
 
     // 수면 데이터 저장 (POST)
     @PostMapping("/saveSleepData")
-    public ResponseEntity<?> saveSleepData(@RequestBody List<SleepDto> sleepData) {
-    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("H:mm:ss"); // 유연한 시간 처리
-    sleepData.forEach(data -> {
+public ResponseEntity<?> saveSleepData(@RequestBody List<SleepDto> sleepData) {
+    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("H:mm:ss");
+
+    for (SleepDto data : sleepData) {
+        // 중복 체크
+        boolean exists = sleepRepository.existsByUsernameAndDate(data.getUsername(), LocalDate.parse(data.getDate()));
+        if (exists) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                                 .body("수면 데이터가 이미 저장되어 있습니다: " + data.getDate());
+        }
+
+        // 데이터 저장
         Sleep sleep = new Sleep();
         sleep.setUsername(data.getUsername());
-        sleep.setDate(LocalDate.parse(data.getDate())); // String -> LocalDate
+        sleep.setDate(LocalDate.parse(data.getDate()));
         try {
             sleep.setSleepTime(LocalTime.parse(data.getSleepTime(), timeFormatter));
             sleep.setWakeUpTime(LocalTime.parse(data.getWakeUpTime(), timeFormatter));
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Invalid time format: " + e.getMessage());
+            throw new IllegalArgumentException("잘못된 시간 형식: " + e.getMessage());
         }
         sleepRepository.save(sleep);
-    });
-    return ResponseEntity.ok("Data saved successfully");
+    }
+
+    return ResponseEntity.ok("데이터가 성공적으로 저장되었습니다.");
 }
 
     // 현재 로그인된 사용자의 모든 수면 데이터 가져오기 (GET)

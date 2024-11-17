@@ -83,20 +83,16 @@ class _MealPageState extends State<MealPage> {
 
     try {
       await _mealRepository.addMeal(newMeal);
+
+      // 저장 후 데이터를 새로고침
+      _fetchMeals(); // 최신 데이터 가져오기
       setState(() {
-        String mealEntry = '$_selectedMealType - $meal ($calories kcal)';
-        if (_mealsByDate.containsKey(currentDate)) {
-          _mealsByDate[currentDate]?.add(mealEntry);
-        } else {
-          _mealsByDate[currentDate] = [mealEntry];
-        }
-        _mealLevel += 200; // 식사 추가 시 mealLevel 200 증가
         _mealController.clear();
         _caloriesController.clear();
       });
 
       
-      
+      _mealLevel += 200; // 식사 추가 시 mealLevel 200 증가
 
       _updatePopupHandler();
       print("Meal added and PopupHandler status updated - Meal Level: $_mealLevel");

@@ -115,145 +115,147 @@ class _MealPageState extends State<MealPage> {
     }
   }
 
-  void _deleteMeal(String date, int index) async {
-    try {
-      // 서버로 삭제 요청 (mealId를 서버에서 제공받아야 함)
-      final mealId = "meal-id"; // 서버에서 받은 meal ID 사용
-      await _mealRepository.deleteMeal(mealId);
+  Future<void> _deleteMeal(String date, int index) async {
+  try {
+    // 서버로 삭제 요청
+    final mealId = "meal-id"; // 서버에서 받은 meal ID 사용
+    await _mealRepository.deleteMeal(mealId);
 
-      // UI에서 기록 삭제
-      setState(() {
-        _mealsByDate[date]?.removeAt(index);
-        if (_mealsByDate[date]?.isEmpty ?? true) {
-          _mealsByDate.remove(date);
-        }
+    // UI에서 기록 삭제
+    setState(() {
+      _mealsByDate[date]?.removeAt(index);
+      if (_mealsByDate[date]?.isEmpty ?? true) {
+        _mealsByDate.remove(date);
+      }
 
-        // mealLevel 업데이트
-        _mealLevel = (_mealsByDate[_getFormattedDate()]?.length ?? 0) * 200;
-      });
+      // mealLevel 업데이트
+      _mealLevel = (_mealsByDate[_getFormattedDate()]?.length ?? 0) * 200;
+    });
 
-      // PopupHandler 상태 업데이트
-      _updatePopupHandler();
+    // PopupHandler 상태 업데이트
+    _updatePopupHandler();
 
-      print("Meal deleted and PopupHandler status updated - Meal Level: $_mealLevel");
-    } catch (e) {
-      print('Error deleting meal: $e');
-    }
+    print("Meal deleted and PopupHandler status updated - Meal Level: $_mealLevel");
+  } catch (e) {
+    print('Error deleting meal: $e');
   }
+}
 
   @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        // 조건에 따라 애니메이션 실행
-        if (widget.popupHandler.mealLevel > widget.popupHandler.mealLevelThreshold) {
-          widget.popupHandler.triggerAnimation('eatingmeal', delayMilliseconds: 1000);
-        } else {
-          print("No significant meal level change, no animation triggered.");
-        }
+Widget build(BuildContext context) {
+  return WillPopScope(
+    onWillPop: () async {
+      // 조건에 따라 애니메이션 실행
+      if (widget.popupHandler.mealLevel > widget.popupHandler.mealLevelThreshold) {
+        widget.popupHandler.triggerAnimation('eatingmeal', delayMilliseconds: 1000);
+      } else {
+        print("No significant meal level change, no animation triggered.");
+      }
+      // 뒤로 가기 허용
+      return true;
+    },
+    child: Scaffold(
+      appBar: AppBar(
+        title: const Text('날짜별 식단 기록'),
+        backgroundColor: const Color(0xFFFFF9C4),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: DropdownButton<String>(
+                    value: _selectedMealType,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedMealType = newValue!;
+                      });
+                    },
+                    items: <String>['식사', '간식']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  flex: 2,
+                  child: TextField(
+                    controller: _mealController,
+                    decoration: const InputDecoration(
+                      labelText: '식사/간식 내용 입력',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  flex: 2,
+                  child: TextField(
+                    controller: _caloriesController,
+                    decoration: const InputDecoration(
+                      labelText: '칼로리 입력 (kcal)',
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: _addMeal,
+              child: const Text('기록 추가'),
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: _mealsByDate.isEmpty
+                  ? const Center(
+                      child: Text('기록된 식사가 없습니다.'),
+                    )
+                  : ListView(
+                      children: _mealsByDate.keys.map((date) {
+                        return ExpansionTile(
+                          title: Text(date),
+                          children: _mealsByDate[date]!
+                              .asMap()
+                              .entries
+                              .map((entry) {
+                                final int index = entry.key;
+                                final String meal = entry.value;
 
-        // 뒤로 가기 허용
-        return true;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('날짜별 식단 기록'),
-          backgroundColor: const Color(0xFFFFF9C4),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: <Widget>[
-              Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: DropdownButton<String>(
-                      value: _selectedMealType,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedMealType = newValue!;
-                        });
-                      },
-                      items: <String>['식사', '간식']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
+                                return ListTile(
+                                  title: Text(meal),
+                                  trailing: IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    onPressed: () async {
+                                      _deleteMeal(date, index); // 삭제 메서드 호출
+                                    },
+                                  ),
+                                );
+                              }).toList(),
                         );
                       }).toList(),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    flex: 2,
-                    child: TextField(
-                      controller: _mealController,
-                      decoration: const InputDecoration(
-                        labelText: '식사/간식 내용 입력',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    flex: 2,
-                    child: TextField(
-                      controller: _caloriesController,
-                      decoration: const InputDecoration(
-                        labelText: '칼로리 입력 (kcal)',
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: _addMeal,
-                child: const Text('기록 추가'),
-              ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: _mealsByDate.isEmpty
-                    ? const Center(
-                        child: Text('기록된 식사가 없습니다.'),
-                      )
-                    : ListView(
-                        children: _mealsByDate.keys.map((date) {
-                          return ExpansionTile(
-                            title: Text(date),
-                            children: _mealsByDate[date]!
-                                .asMap()
-                                .entries
-                                .map((entry) {
-                                  final int index = entry.key;
-                                  final String meal = entry.value;
-
-                                  return ListTile(
-                                    title: Text(meal),
-                                    trailing: IconButton(
-                                      icon: const Icon(Icons.delete),
-                                      onPressed: () => _deleteMeal(date, index),
-                                    ),
-                                  );
-                                }).toList(),
-                          );
-                        }).toList(),
-                      ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
-  @override
-  void dispose() {
-    _mealController.dispose();
-    _caloriesController.dispose();
-    super.dispose();
-  }
+
+@override
+void dispose() {
+  _mealController.dispose();
+  _caloriesController.dispose();
+  super.dispose();
+}
 }

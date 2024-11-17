@@ -49,7 +49,9 @@ class _MealPageState extends State<MealPage> {
             _mealsByDate[meal.date] = [meal.meal];
           }
         }
-        _mealLevel = _mealsByDate[_getFormattedDate()]?.length ?? 0 * 200;
+
+        // 현재 날짜 기준으로 mealLevel 계산
+        _mealLevel = (_mealsByDate[_getFormattedDate()]?.length ?? 0) * 200;
       });
       _updatePopupHandler();
     } catch (e) {
@@ -91,7 +93,10 @@ class _MealPageState extends State<MealPage> {
         } else {
           _mealsByDate[currentDate] = [mealEntry];
         }
-        _mealLevel += 200; // 식사 추가 시 mealLevel 200 증가
+
+        // 현재 날짜 기준 식사 개수를 기반으로 mealLevel 계산
+        _mealLevel = (_mealsByDate[currentDate]?.length ?? 0) * 200;
+
         _mealController.clear();
         _caloriesController.clear();
       });

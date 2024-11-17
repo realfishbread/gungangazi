@@ -250,4 +250,11 @@ Widget build(BuildContext context) {
     ),
   );
 }
+
+@override
+void dispose() {
+  _mealController.dispose();
+  _caloriesController.dispose();
+  super.dispose();
+}
 }

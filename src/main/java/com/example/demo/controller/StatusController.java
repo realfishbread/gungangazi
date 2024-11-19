@@ -37,9 +37,5 @@ public class StatusController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-    @PostMapping("/reset-daily-levels")
-    public ResponseEntity<Void> resetDailyLevels() {
-        statusService.resetDailyLevels();
-        return ResponseEntity.ok().build();
-    }
+
 }

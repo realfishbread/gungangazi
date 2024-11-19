@@ -3,14 +3,14 @@ class MealDTO {
   final String meal;
   final String username;
   final int calories;
-  final String mealType; // "식사" 또는 "간식" 구분
+  final String meal_type; // "식사" 또는 "간식" 구분
 
   MealDTO({
     required this.date,
     required this.meal,
     required this.username,
     required this.calories,
-    required this.mealType,
+    required this.meal_type,
   });
 
   factory MealDTO.fromJson(Map<String, dynamic> json) {
@@ -19,7 +19,7 @@ class MealDTO {
       meal: json['meal'],
       username: json['username'],
       calories: json['calories'],
-      mealType: json['mealType'], // JSON에서 mealType 가져오기
+      meal_type: json['meal_type'], // JSON에서 mealType 가져오기
     );
   }
 
@@ -29,7 +29,7 @@ class MealDTO {
       'meal': meal,
       'username': username,
       'calories': calories,
-      'mealType': mealType, // JSON에 mealType 포함
+      'meal_type': meal_type, // JSON에 mealType 포함
     };
   }
 }

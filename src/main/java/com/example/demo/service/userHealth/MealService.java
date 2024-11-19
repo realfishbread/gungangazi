@@ -33,7 +33,7 @@ public class MealService {
         mealEntity.setMeal(mealDTO.getMeal());
         mealEntity.setUsername(mealDTO.getUsername());
         mealEntity.setCalories(mealDTO.getCalories());  // 칼로리 설정
-        mealEntity.setMealType(mealDTO.getMealType());  // 식사/간식 구분 설정
+        mealEntity.setMealType(mealDTO.getMeal_type());  // 식사/간식 구분 설정
         mealRepository.save(mealEntity);
     }
 

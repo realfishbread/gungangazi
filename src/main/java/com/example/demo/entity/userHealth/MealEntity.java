@@ -21,19 +21,19 @@ public class MealEntity {
     private int calories;  // 칼로리 필드 추가
 
     @Column(name = "meal_type")
-    private String mealType;  // 식사/간식 구분 필드 추가
+    private String meal_type;  // 식사/간식 구분 필드 추가
 
 
     // 기본 생성자
     public MealEntity() {}
 
     // 매개변수 있는 생성자
-    public MealEntity(String date, String meal, String username, int calories, String mealType) {
+    public MealEntity(String date, String meal, String username, int calories, String meal_type) {
         this.date = date;
         this.meal = meal;
         this.username = username; 
         this.calories = calories; 
-        this.mealType = mealType;
+        this.meal_type = meal_type;
     }
 
     // Getter 및 Setter 메소드
@@ -68,12 +68,12 @@ public class MealEntity {
     public void setUsername(String username) {
         this.username = username;
     }
-    public String getMealType() {
-        return mealType;
+    public String getMeal_type() {
+        return meal_type;
     }
 
-    public void setMealType(String mealType) {
-        this.mealType = mealType;
+    public void setMealType(String meal_type) {
+        this.meal_type = meal_type;
     }
 
     public int getCalories() {

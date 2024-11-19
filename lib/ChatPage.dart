@@ -95,8 +95,7 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
           if (predictions.isNotEmpty) {
             final diagnosisText = predictions.map((pred) {
               final disease = pred['disease'];
-              final probability = (pred['probability'] * 100).toStringAsFixed(1);
-              return '$disease ($probability%)';
+              return '$disease';
             }).join('\n');
 
             final resultMessage = '다음 질환들이 의심됩니다:\n$diagnosisText' +
@@ -106,6 +105,7 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
           } else {
             _addDogMessage('입력된 증상으로는 진단할 수 있는 질환이 없습니다.');
           }
+
         } else {
           print("Error: ${response.statusCode}");
         }

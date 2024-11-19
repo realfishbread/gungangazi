@@ -91,7 +91,7 @@ class _MealPageState extends State<MealPage> {
         meal: meal,
         username: username ?? '',
         calories: calories,
-        mealType: _selectedMealType,
+        meal_type: _selectedMealType,
       );
 
       try {

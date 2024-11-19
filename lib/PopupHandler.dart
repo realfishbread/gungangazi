@@ -341,14 +341,13 @@ Future<void> loadStatusFromServer() async {
     } else if (waterLevel > 200 && mealLevel > 200 && sleepLevel <= 200) {
       _currentBodyPart = 'dizzy';
     } else {
-      _currentBodyPart = 'default';
+      updateCharacterStatusBasedOnTime();
     }
     print("Body part status set to $_currentBodyPart based on Water: $waterLevel, Meal: $mealLevel, Sleep: $sleepLevel");
   }
 
   // 이미지 애니메이션 시작
   void startImageAnimation() {
-    updateCharacterStatusBasedOnTime();
     _imageTimer?.cancel(); // 기존 타이머 중지
 
     _imageTimer = Timer.periodic(frameDuration, (timer) {

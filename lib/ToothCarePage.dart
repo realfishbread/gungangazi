@@ -11,15 +11,13 @@ class ToothCarePage extends StatefulWidget {
   @override
   _ToothCarePageState createState() => _ToothCarePageState();
 }
-
 class _ToothCarePageState extends State<ToothCarePage> {
   final ToothRepository toothRepository = ToothRepository(
     dioService: DioService(),
-    tokenService: TokenService(), // TokenService 전달
+    tokenService: TokenService(),
   );
 
   late Future<List<BrushHistoryDTO>> _brushHistory;
-  late final TokenService tokenService;
   final _formKey = GlobalKey<FormState>();
   String? _selectedDate;
   int _duration = 0;
@@ -30,49 +28,47 @@ class _ToothCarePageState extends State<ToothCarePage> {
     super.initState();
     _brushHistory = toothRepository.fetchBrushHistory();
   }
-
-  // 날짜 선택 메서드
   Future<void> _selectDate(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
+  DateTime? pickedDate = await showDatePicker(
+    context: context,
+    initialDate: DateTime.now(),
+    firstDate: DateTime(2000),
+    lastDate: DateTime(2100),
+  );
 
-    if (pickedDate != null) {
-      setState(() {
-        _selectedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-      });
-    }
+  if (pickedDate != null) {
+    setState(() {
+      _selectedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+    });
   }
+}
 
   // 양치 기록 저장 메서드
   void _saveData() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      String? username = await tokenService.getUsername();
+      String? username = await toothRepository.tokenService.getUsername(); // toothRepository에서 호출
       BrushHistoryDTO newBrushData = BrushHistoryDTO(
-        date: _selectedDate ?? '', // 선택된 날짜를 저장
-        duration: _duration,
+        date: _selectedDate ?? DateFormat('yyyy-MM-dd').format(DateTime.now()), // 기본값 제공,
+        duration: _duration > 0 ? _duration : 1, // 기본값 제공
         flossed: _flossed,
         username: username,
       );
 
       await toothRepository.saveBrushData(newBrushData);
 
-      // 데이터를 저장한 후 리스트를 새로 고침
       setState(() {
         _brushHistory = toothRepository.fetchBrushHistory();
       });
 
-      // 입력 폼 초기화
       _formKey.currentState!.reset();
       _selectedDate = null;
       _duration = 0;
       _flossed = false;
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {

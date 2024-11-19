@@ -47,7 +47,7 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         
         // ProfileDto로 필요한 정보만 반환
-        return new ProfileDto(user.getUsername(), user.getRealname(), user.getEmail(), user.getHeight(), user.getWeight(), user.getGender(), user.getProfileImage());
+        return new ProfileDto(user.getUsername(), user.getRealname(), user.getEmail(), user.getHeight(), user.getWeight(), user.getGender(), user.getProfile_image());
     }
     
 
@@ -75,7 +75,7 @@ public class UserService {
             user.setGender(profileDto.getGender());
         }
          if (profileDto.getProfile_image() != null) {
-            user.setProfileImage(profileDto.getProfile_image()); // Base64 이미지 저장
+            user.setProfile_image(profileDto.getProfile_image()); // Base64 이미지 저장
         }
     
         return userRepository.save(user);  // 업데이트된 사용자 저장

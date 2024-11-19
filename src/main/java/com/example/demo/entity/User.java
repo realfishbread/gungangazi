@@ -40,7 +40,7 @@ public class User {
     private Integer age;
 
     @Column(name = "profile_image", columnDefinition = "TEXT") // Base64 인코딩된 이미지 저장
-    private String profileImage;
+    private String profile_image;
 
     public long getId() {
         return id;
@@ -113,11 +113,11 @@ public class User {
     public void setAge(Integer age) { // 나이에 대한 setter
         this.age = age;
     }
-    public String getProfileImage() {
-        return profileImage;
+    public String getProfile_image() {
+        return profile_image;
     }
 
-    public void setProfileImage(String profileImage) {
-        this.profileImage = profileImage;
+    public void setProfile_image(String profile_image) {
+        this.profile_image = profile_image;
     }
 }

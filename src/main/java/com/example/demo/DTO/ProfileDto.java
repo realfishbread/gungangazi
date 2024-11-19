@@ -26,7 +26,7 @@ public class ProfileDto {
         return profile_image;
     }
 
-    public void setProfile_image(String profileImage) {
+    public void setProfile_image(String profile_image) {
         this.profile_image = profile_image;
     }
 

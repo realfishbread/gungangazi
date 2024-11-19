@@ -38,7 +38,7 @@ class ProfileDto {
     if (height != null) data['height'] = height;
     if (weight != null) data['weight'] = weight;
     if (gender != null) data['gender'] = gender;
-    if (profile_image != null) data['profileImage'] = profile_image;
+    if (profile_image != null) data['profile_image'] = profile_image;
     return data;
   }
 }

@@ -238,6 +238,14 @@ class PopupHandler {
             'assets/person/yee3.jpg',
             'assets/person/yee2.jpg',
             'assets/person/yee1.jpg',
+          ],
+          'brush': [
+            'assets/person/brush.jpg',
+            'assets/person/brush1.jpg',
+            'assets/person/brush.jpg',
+            'assets/person/brush1.jpg',
+            'assets/person/brush.jpg',
+            'assets/person/brush1.jpg',
           ]
 
         } {

@@ -83,7 +83,7 @@ Widget build(BuildContext context) {
     onWillPop: () async {
       // 물 상태가 증가했는지 확인하고 애니메이션 실행
       if (_currentTooth=true) {
-        widget.popupHandler.triggerAnimation('drinkwater', delayMilliseconds: 1000);
+        widget.popupHandler.triggerAnimation('brush', delayMilliseconds: 1000);
       } else {
         print("No significant tooth level change, no animation triggered.");
       }

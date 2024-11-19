@@ -4,9 +4,13 @@ import 'repositories/userHealth/tooth_repository.dart';
 import 'dto/userHealth/brush_history.dart';
 import '../services/dio_service.dart';
 import '../services/TokenService.dart';
+import 'PopupHandler.dart';
 
 class ToothCarePage extends StatefulWidget {
-  const ToothCarePage({super.key});
+
+  final PopupHandler popupHandler;
+
+  const ToothCarePage({Key? key, required this.popupHandler}) : super(key: key);
 
   @override
   _ToothCarePageState createState() => _ToothCarePageState();
@@ -22,11 +26,13 @@ class _ToothCarePageState extends State<ToothCarePage> {
   String? _selectedDate;
   int _duration = 0;
   bool _flossed = false;
+  bool _currentTooth=false;
 
   @override
   void initState() {
     super.initState();
     _brushHistory = toothRepository.fetchBrushHistory();
+    _currentTooth=false;
   }
   Future<void> _selectDate(BuildContext context) async {
   DateTime? pickedDate = await showDatePicker(
@@ -59,6 +65,7 @@ class _ToothCarePageState extends State<ToothCarePage> {
 
       setState(() {
         _brushHistory = toothRepository.fetchBrushHistory();
+        _currentTooth=true;
       });
 
       _formKey.currentState!.reset();
@@ -71,8 +78,20 @@ class _ToothCarePageState extends State<ToothCarePage> {
 
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+Widget build(BuildContext context) {
+  return WillPopScope(
+    onWillPop: () async {
+      // 물 상태가 증가했는지 확인하고 애니메이션 실행
+      if (_currentTooth=true) {
+        widget.popupHandler.triggerAnimation('drinkwater', delayMilliseconds: 1000);
+      } else {
+        print("No significant tooth level change, no animation triggered.");
+      }
+
+      // 뒤로가기 동작 허용
+      return true;
+    },
+    child: Scaffold(
       appBar: AppBar(
         title: const Text('치아 관리'),
         backgroundColor: const Color(0xFFFFF9C4),
@@ -154,8 +173,10 @@ class _ToothCarePageState extends State<ToothCarePage> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
 }
+}
+
 
 

@@ -48,7 +48,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
       '식단': MealPage(popupHandler: _popupHandler),
       '영양제': const SupplementsPage(),
       '혈압': const BloodPressurePage(),
-      '치아건강': const ToothCarePage()
+      '치아건강': ToothCarePage(popupHandler: _popupHandler)
     };
 
     final page = routes[title];

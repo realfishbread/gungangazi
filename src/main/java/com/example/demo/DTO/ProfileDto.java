@@ -1,5 +1,10 @@
 package com.example.demo.DTO; // 적절한 패키지 경로로 변경하세요.
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
 public class ProfileDto {
     private String username;
     private String realname;
@@ -7,24 +12,24 @@ public class ProfileDto {
     private String height;
     private String weight;
     private String gender;
-    private String profileImage;
+    private String profile_image;
 
-    public ProfileDto(String username, String realname, String email, String height, String weight, String gender, String profileImage) {
+    public ProfileDto(String username, String realname, String email, String height, String weight, String gender, String profile_image) {
         this.username = username;
         this.realname = realname;
         this.email = email;
         this.height = height;
         this.weight = weight;
         this.gender = gender;
-        this.profileImage = profileImage;
+        this.profile_image = profile_image;
         
     }
-    public String getProfileImage() {
-        return profileImage;
+    public String getProfile_image() {
+        return profile_image;
     }
 
-    public void setProfileImage(String profileImage) {
-        this.profileImage = profileImage;
+    public void setProfile_image(String profileImage) {
+        this.profile_image = profile_image;
     }
 
     // Getter와 Setter

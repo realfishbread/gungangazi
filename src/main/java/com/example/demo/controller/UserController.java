@@ -117,8 +117,8 @@ public class UserController {
         if (profileDto.getGender() != null) {
             existingUser.setGender(profileDto.getGender());
         }
-        if (profileDto.getProfileImage() != null) {
-            existingUser.setProfileImage(profileDto.getProfileImage()); // Base64 이미지 저장
+        if (profileDto.getProfile_image() != null) {
+            existingUser.setProfileImage(profileDto.getProfile_image()); // Base64 이미지 저장
         }
     
         userRepository.save(existingUser);

@@ -75,7 +75,7 @@ class _Profile2State extends State<Profile2> {
       height: fieldName == '키' ? newValue : _profile?.height ?? defaultProfile.height,
       weight: fieldName == '몸무게' ? newValue : _profile?.weight ?? defaultProfile.weight,
       gender: _profile?.gender ?? defaultProfile.gender,
-      profileImage: _imageData != null ? base64Encode(_imageData!) : _profile?.profileImage,
+      profile_image: _imageData != null ? base64Encode(_imageData!) : _profile?.profile_image,
     );
     print("Sending data to server: ${jsonEncode(updatedProfile.toJson())}");
 
@@ -96,8 +96,8 @@ class _Profile2State extends State<Profile2> {
     ProfileDto? profile = await _profileRepository.fetchProfile(widget.username);
     setState(() {
       _profile = profile ?? defaultProfile;
-      if (_profile?.profileImage != null) {
-        _imageData = base64Decode(_profile!.profileImage!);
+      if (_profile?.profile_image != null) {
+        _imageData = base64Decode(_profile!.profile_image!);
       }
       isLoading = false;
     });

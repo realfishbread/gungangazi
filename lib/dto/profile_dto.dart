@@ -6,7 +6,7 @@ class ProfileDto {
   final String? height;
   final String? weight;
   final String? gender;
-  final String? profileImage;
+  final String? profile_image;
 
   ProfileDto({
     this.username,
@@ -15,7 +15,7 @@ class ProfileDto {
     this.height,
     this.weight,
     this.gender,
-    this.profileImage,
+    this.profile_image,
   });
 
   factory ProfileDto.fromJson(Map<String, dynamic> json) {
@@ -26,7 +26,7 @@ class ProfileDto {
       height: json['height'],
       weight: json['weight'],
       gender: json['gender'],
-      profileImage: json['profileImage'],
+      profile_image: json['profile_image'],
     );
   }
 
@@ -38,7 +38,7 @@ class ProfileDto {
     if (height != null) data['height'] = height;
     if (weight != null) data['weight'] = weight;
     if (gender != null) data['gender'] = gender;
-    if (profileImage != null) data['profileImage'] = profileImage;
+    if (profile_image != null) data['profileImage'] = profile_image;
     return data;
   }
 }

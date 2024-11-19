@@ -1,22 +1,22 @@
 
 class SleepDto {
   final String date;
-  final String sleepTime;
-  final String wakeUpTime;
+  final String sleep_time;
+  final String wake_up_time;
   final String username;
 
   SleepDto({
     required this.date,
-    required this.sleepTime,
-    required this.wakeUpTime,
+    required this.sleep_time,
+    required this.wake_up_time,
     required this.username
   });
 
   factory SleepDto.fromJson(Map<String, dynamic> json) {
     return SleepDto(
       date: json['date'],
-      sleepTime: json['sleepTime'],
-      wakeUpTime: json['wakeUpTime'],
+      sleep_time: json['sleep_time'],
+      wake_up_time: json['wake_up_time'],
       username: json['username']
     );
   }
@@ -24,8 +24,8 @@ class SleepDto {
   Map<String, dynamic> toJson() {
     return {
       'date': date,
-      'sleepTime': sleepTime,
-      'wakeUpTime': wakeUpTime,
+      'sleep_time': sleep_time,
+      'wake_up_time': wake_up_time,
       'username': username
     };
   }

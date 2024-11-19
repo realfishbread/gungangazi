@@ -41,8 +41,8 @@ class _SleepPageState extends State<SleepPage> {
     setState(() {
       _sleepRecords = serverData.map((dto) => {
         'date': dto.date,
-        'sleepTime': dto.sleepTime,
-        'wakeUpTime': dto.wakeUpTime,
+        'sleepTime': dto.sleep_time,
+        'wakeUpTime': dto.wake_up_time,
         'username': dto.username,
       }).toList();
     });
@@ -78,8 +78,8 @@ Future<void> _saveSleepDataToServer() async {
     String? username = await TokenService().getUsername();
     SleepDto newSleepRecord = SleepDto(
       date: formattedDate,
-      sleepTime: '${_sleepTime!.hour}:${_sleepTime!.minute}:00',
-      wakeUpTime: '${_wakeUpTime!.hour}:${_wakeUpTime!.minute}:00',
+      sleep_time: '${_sleepTime!.hour}:${_sleepTime!.minute}:00',
+      wake_up_time: '${_wakeUpTime!.hour}:${_wakeUpTime!.minute}:00',
       username: username ?? 'defaultUser', // Replace with actual username
     );
 
@@ -110,12 +110,12 @@ Future<void> _saveSleepDataToServer() async {
 
     // 수면 및 기상 시간을 TimeOfDay로 변환
     TimeOfDay sleepTime = TimeOfDay(
-      hour: int.parse(record['sleepTime']!.split(":")[0]),
-      minute: int.parse(record['sleepTime']!.split(":")[1]),
+      hour: int.parse(record['sleep_time']!.split(":")[0]),
+      minute: int.parse(record['sleep_time']!.split(":")[1]),
     );
     TimeOfDay wakeUpTime = TimeOfDay(
-      hour: int.parse(record['wakeUpTime']!.split(":")[0]),
-      minute: int.parse(record['wakeUpTime']!.split(":")[1]),
+      hour: int.parse(record['wake_up_time']!.split(":")[0]),
+      minute: int.parse(record['wake_up_time']!.split(":")[1]),
     );
 
     // 수면 시간 계산

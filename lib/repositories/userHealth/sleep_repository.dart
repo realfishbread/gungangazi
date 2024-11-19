@@ -47,8 +47,8 @@ class SleepRepository {
         List<SleepDto> sleepData = data.map((item) {
           return SleepDto(
             date: item['date'] ?? '',
-            sleepTime: item['sleepTime'] ?? '',
-            wakeUpTime: item['wakeUpTime'] ?? '',
+            sleep_time: item['sleep_time'] ?? '',
+            wake_up_time: item['wake_up_time'] ?? '',
             username: item['username'] ?? '',
           );
         }).toList();

@@ -170,10 +170,23 @@ class PopupHandler {
             'assets/person/tired1.jpg',
           ],
           'hungry': [
-            'assets/person/yee.jpg',
+            'assets/person/hungry1.jpg',
+            'assets/person/hungry2.jpg',
+            'assets/person/hungry3.jpg',
+            'assets/person/hungry3.jpg',
+            'assets/person/hungry2.jpg',
+            'assets/person/hungry1.jpg',
           ],
           'thirsty_and_dizzy': [
-            'assets/person/yeet,jpg'
+            'assets/person/jindan_sad1.jpg',
+            'assets/person/jindan_sad2.jpg',
+            'assets/person/jindan_sad3.jpg',
+            'assets/person/jindan_sad4.jpg',
+            'assets/person/jindan_sad5.jpg',
+            'assets/person/jindan_sad6.jpg',
+            'assets/person/jindan_sad7.jpg',
+            'assets/person/jindan_sad8.jpg',
+            'assets/person/jindan_sad9.jpg',
           ],
           'drinkwater': [
             'assets/person/drinkwater1.jpg',
@@ -212,6 +225,14 @@ class PopupHandler {
             'assets/person/0am2.jpg',
             'assets/person/0am1.jpg',
             'assets/person/0am.jpg',
+          ],
+          'yee': [
+            'assets/person/yee1.jpg',
+            'assets/person/yee2.jpg',
+            'assets/person/yee3.jpg',
+            'assets/person/yee3.jpg',
+            'assets/person/yee2.jpg',
+            'assets/person/yee1.jpg',
           ]
 
         } {

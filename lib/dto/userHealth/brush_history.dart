@@ -2,6 +2,7 @@ class BrushHistoryDTO {
   final String date;
   final int duration;
   final bool flossed;
+ 
 
   BrushHistoryDTO({
     required this.date,

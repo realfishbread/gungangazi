@@ -165,6 +165,9 @@ class PopupHandler {
             'assets/person/tired1.jpg',
             'assets/person/tired2.jpg',
             'assets/person/tired3.jpg',
+            'assets/person/tired3.jpg',
+            'assets/person/tired2.jpg',
+            'assets/person/tired1.jpg',
           ],
           'hungry': [
             'assets/person/yee.jpg',
@@ -206,6 +209,9 @@ class PopupHandler {
             'assets/person/0am.jpg',
             'assets/person/0am1.jpg',
             'assets/person/0am2.jpg',
+            'assets/person/0am2.jpg',
+            'assets/person/0am1.jpg',
+            'assets/person/0am.jpg',
           ]
 
         } {

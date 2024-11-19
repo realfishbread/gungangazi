@@ -19,7 +19,7 @@ class _ToothCarePageState extends State<ToothCarePage> {
   );
 
   late Future<List<BrushHistoryDTO>> _brushHistory;
-
+  late final TokenService tokenService;
   final _formKey = GlobalKey<FormState>();
   String? _selectedDate;
   int _duration = 0;
@@ -51,11 +51,12 @@ class _ToothCarePageState extends State<ToothCarePage> {
   void _saveData() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-
+      String? username = await tokenService.getUsername();
       BrushHistoryDTO newBrushData = BrushHistoryDTO(
         date: _selectedDate ?? '', // 선택된 날짜를 저장
         duration: _duration,
         flossed: _flossed,
+        username: username,
       );
 
       await toothRepository.saveBrushData(newBrushData);

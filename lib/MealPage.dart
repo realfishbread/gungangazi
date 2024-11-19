@@ -121,7 +121,7 @@ class _MealPageState extends State<MealPage> {
       onWillPop: () async {
         // 조건에 따라 애니메이션 실행
         if (widget.popupHandler.mealLevel >_currentMeal) {
-          widget.popupHandler.triggerAnimation('eatingmeal', delayMilliseconds: 2000);
+          widget.popupHandler.triggerAnimation('eatingmeal', delayMilliseconds: 1000);
         } else {
           print("No significant meal level change, no animation triggered.");
         }

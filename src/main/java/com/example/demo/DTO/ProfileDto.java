@@ -1,8 +1,6 @@
 package com.example.demo.DTO; // 적절한 패키지 경로로 변경하세요.
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 @NoArgsConstructor
 public class ProfileDto {

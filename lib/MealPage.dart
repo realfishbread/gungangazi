@@ -23,6 +23,7 @@ class _MealPageState extends State<MealPage> {
   int _mealLevel = 0; // 초기 MealLevel 설정
   String _selectedMealType = "식사"; // 기본 식사 타입 선택
   bool _isLoading = true; // 로딩 상태 플래그
+  int _currentMeal =0;
 
   @override
   void initState() {
@@ -32,6 +33,7 @@ class _MealPageState extends State<MealPage> {
       tokenService: TokenService(),
     );
     _fetchMeals(); // 데이터 로드
+    _currentMeal=widget.popupHandler.mealLevel;
   }
 
   String _getFormattedDate() {
@@ -118,7 +120,7 @@ class _MealPageState extends State<MealPage> {
     return WillPopScope(
       onWillPop: () async {
         // 조건에 따라 애니메이션 실행
-        if (widget.popupHandler.mealLevel > widget.popupHandler.mealLevelThreshold) {
+        if (widget.popupHandler.mealLevel >_currentMeal) {
           widget.popupHandler.triggerAnimation('eatingmeal', delayMilliseconds: 2000);
         } else {
           print("No significant meal level change, no animation triggered.");

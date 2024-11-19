@@ -8,10 +8,10 @@ public class SleepDto {
     private String date;
 
     @NotBlank // 비어있으면 안 되는 필드
-    private String sleepTime;
+    private String sleep_time;
 
     @NotBlank // 비어있으면 안 되는 필드
-    private String wakeUpTime;
+    private String wake_up_time;
 
     @NotNull // Null일 수 없는 필드
     private String username;
@@ -20,10 +20,10 @@ public class SleepDto {
     public SleepDto() {}
 
     // 생성자
-    public SleepDto(String date, String sleepTime, String wakeUpTime, String username) {
+    public SleepDto(String date, String sleep_time, String wake_up_time, String username) {
         this.date = date;
-        this.sleepTime = sleepTime;
-        this.wakeUpTime = wakeUpTime;
+        this.sleep_time = sleep_time;
+        this.wake_up_time = wake_up_time;
         this.username = username;
     }
 
@@ -36,20 +36,20 @@ public class SleepDto {
         this.date = date;
     }
 
-    public String getSleepTime() {
-        return sleepTime;
+    public String getSleep_time() {
+        return sleep_time;
     }
 
-    public void setSleepTime(String sleepTime) {
-        this.sleepTime = sleepTime;
+    public void setSleep_time(String sleep_time) {
+        this.sleep_time = sleep_time;
     }
 
-    public String getWakeUpTime() {
-        return wakeUpTime;
+    public String getWake_up_time() {
+        return wake_up_time;
     }
 
-    public void setWakeUpTime(String wakeUpTime) {
-        this.wakeUpTime = wakeUpTime;
+    public void setWake_up_time(String wake_up_time) {
+        this.wake_up_time = wake_up_time;
     }
 
     public String getUsername() {
@@ -65,8 +65,8 @@ public class SleepDto {
     public String toString() {
         return "SleepDto{" +
                 "date='" + date + '\'' +
-                ", sleepTime='" + sleepTime + '\'' +
-                ", wakeUpTime='" + wakeUpTime + '\'' +
+                ", sleepTime='" + sleep_time + '\'' +
+                ", wakeUpTime='" + wake_up_time + '\'' +
                 ", username='" + username + '\'' +
                 '}';
     }

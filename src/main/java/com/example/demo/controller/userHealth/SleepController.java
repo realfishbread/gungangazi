@@ -49,8 +49,8 @@ public ResponseEntity<?> saveSleepData(@RequestBody List<SleepDto> sleepData) {
         sleep.setUsername(data.getUsername());
         sleep.setDate(LocalDate.parse(data.getDate()));
         try {
-            sleep.setSleepTime(LocalTime.parse(data.getSleepTime(), timeFormatter));
-            sleep.setWakeUpTime(LocalTime.parse(data.getWakeUpTime(), timeFormatter));
+            sleep.setSleep_time(LocalTime.parse(data.getSleep_time(), timeFormatter));
+            sleep.setWake_up_time(LocalTime.parse(data.getWake_up_time(), timeFormatter));
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("잘못된 시간 형식: " + e.getMessage());
         }

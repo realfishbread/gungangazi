@@ -22,8 +22,8 @@ public class Sleep {
     private String username;
 
     private LocalDate date;
-    private LocalTime sleepTime;
-    private LocalTime wakeUpTime;
+    private LocalTime sleep_time;
+    private LocalTime wake_up_time;
 
     // Getters and Setters
     public Long getId() {
@@ -50,19 +50,19 @@ public class Sleep {
         this.date = date;
     }
 
-    public LocalTime getSleepTime() {
-        return sleepTime;
+    public LocalTime getSleep_time() {
+        return sleep_time;
     }
 
-    public void setSleepTime(LocalTime sleepTime) {
-        this.sleepTime = sleepTime;
+    public void setSleep_time(LocalTime sleep_time) {
+        this.sleep_time = sleep_time;
     }
 
-    public LocalTime getWakeUpTime() {
-        return wakeUpTime;
+    public LocalTime getWake_up_time() {
+        return wake_up_time;
     }
 
-    public void setWakeUpTime(LocalTime wakeUpTime) {
-        this.wakeUpTime = wakeUpTime;
+    public void setWake_up_time(LocalTime wake_up_time) {
+        this.wake_up_time = wake_up_time;
     }
 }

@@ -7,6 +7,19 @@ public class BrushHistoryDTO {
     private int duration;
     private boolean flossed;
 
+     // 기본 생성자
+     public BrushHistoryDTO() {
+    }
+
+     // 모든 필드를 초기화하는 생성자
+     public BrushHistoryDTO(Long id, String username, String date, int duration, boolean flossed) {
+        this.id = id;
+        this.username = username;
+        this.date = date;
+        this.duration = duration;
+        this.flossed = flossed;
+    }
+
     // Getters and Setters
     public Long getId() {
         return id;

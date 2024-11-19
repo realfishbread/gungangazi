@@ -41,8 +41,8 @@ class _SleepPageState extends State<SleepPage> {
     setState(() {
       _sleepRecords = serverData.map((dto) => {
         'date': dto.date,
-        'sleepTime': dto.sleep_time,
-        'wakeUpTime': dto.wake_up_time,
+        'sleep_time': dto.sleep_time,
+        'wake_up_time': dto.wake_up_time,
         'username': dto.username,
       }).toList();
     });

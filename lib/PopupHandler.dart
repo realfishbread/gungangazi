@@ -30,6 +30,11 @@ class PopupHandler {
   final GlobalKey _imageKey = GlobalKey(); // 이미지를 위한 GlobalKey 선언
   Rect? _imageRect;
 
+   void initialize() {
+    startImageAnimation();
+    startPeriodicStatusUpdate();
+  }
+
   // 기본 이미지 리스트 (애니메이션을 위해 여러 장)
   final List<String> defaultImagePaths = [
     'assets/person/1.jpg',
@@ -343,6 +348,7 @@ Future<void> loadStatusFromServer() async {
 
   // 이미지 애니메이션 시작
   void startImageAnimation() {
+    updateCharacterStatusBasedOnTime();
     _imageTimer?.cancel(); // 기존 타이머 중지
 
     _imageTimer = Timer.periodic(frameDuration, (timer) {
@@ -404,7 +410,30 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 2000}) {
 }
 
 
- 
+  void updateCharacterStatusBasedOnTime() {
+    DateTime now = DateTime.now(); // 현재 시간 가져오기
+    int hour = now.hour;
+
+    // 10시 이후 상태 변경
+    if (hour >= 22 || hour < 6) {
+      _currentBodyPart = '0am'; // 잠옷바람 상태
+    } else {
+      _currentBodyPart = 'default'; // 기본 상태
+    }
+
+    print("Character status updated based on time: $_currentBodyPart");
+  }
+
+  void startPeriodicStatusUpdate() {
+    _imageTimer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      updateCharacterStatusBasedOnTime();
+    });
+  }
+
+  void stopPeriodicStatusUpdate() {
+    _imageTimer?.cancel();
+  }
+
 
   // 터치 이벤트 및 팝업
   void showPopupForCoordinates(
@@ -535,5 +564,6 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 2000}) {
   // 리소스 해제
   void dispose() {
     stopImageAnimation();
+    stopPeriodicStatusUpdate();
   }
 }

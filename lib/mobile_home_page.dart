@@ -27,9 +27,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
   late PopupHandler _popupHandler;
   final DioService _dioService = DioService(token: 'your-auth-token');
 
-  double sleepProgress = 0.75;
-  double mealProgress = 0.50;
-  double waterProgress = 0.90;
+  
 
   @override
   void initState() {

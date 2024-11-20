@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gungangazi/services/TokenService.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 import '../services/dio_service.dart';
 import '../repositories/userHealth/supplement_repository.dart';
 import '../dto/userHealth/supplementDto.dart';
 import '../services/TokenService.dart';
-import 'package:intl/intl.dart';
 
 class SupplementsPage extends StatefulWidget {
   const SupplementsPage({super.key});
@@ -19,113 +14,28 @@ class SupplementsPage extends StatefulWidget {
 
 class _SupplementsPageState extends State<SupplementsPage> {
   final Map<DateTime, bool> _supplementTaken = {};
-  final Map<DateTime, bool> _menstruationRecorded = {};
+  final Set<DateTime> _selectedMenstruationDays = {};
   String? _gender;
   DateTime _selectedDay = DateTime.now();
   final DioService dioService = DioService();
-  final TokenService tokenService = TokenService(); 
+  final TokenService tokenService = TokenService();
   late final SupplementRepository supplementRepository;
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
     super.initState();
     supplementRepository = SupplementRepository(dioService: dioService, tokenService: tokenService);
-    _initializeNotifications();
     _loadData();
     _fetchGender();
   }
 
-    Future<void> _fetchGender() async {
-    String? gender = await tokenService.getGender(); // TokenService에서 성별 가져오기
+  Future<void> _fetchGender() async {
+    String? gender = await tokenService.getGender();
     setState(() {
       _gender = gender;
     });
   }
 
-  void _showMenstruationSelectionModal() {
-  DateTime dateOnly = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
-
-  // 앞뒤 5일의 날짜 리스트 생성
-  List<DateTime> dateRange = List.generate(11, (index) => dateOnly.add(Duration(days: index - 5)));
-
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext context) {
-      return StatefulBuilder(
-        builder: (BuildContext context, StateSetter modalSetState) {
-          return Container(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  '생리 기록 선택',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: dateRange.length,
-                    itemBuilder: (context, index) {
-                      DateTime currentDate = dateRange[index];
-                      return CheckboxListTile(
-                        title: Text(DateFormat('yyyy-MM-dd').format(currentDate)),
-                        value: _menstruationRecorded[currentDate] ?? false,
-                        onChanged: (bool? value) {
-                          modalSetState(() {
-                            _menstruationRecorded[currentDate] = value ?? false;
-                          });
-                        },
-                      );
-                    },
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // 데이터 저장 및 닫기
-                    _saveData();
-                    Navigator.pop(context);
-                  },
-                  child: const Text('저장'),
-                ),
-              ],
-            ),
-          );
-        },
-      );
-    },
-  );
-}
-
-
-  // 알림 초기화
-  Future<void> _initializeNotifications() async {
-    tz.initializeTimeZones();
-    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const InitializationSettings initializationSettings = InitializationSettings(android: initializationSettingsAndroid);
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-  }
-
-  // 알림 스케줄 설정
-  Future<void> _scheduleNotification(DateTime scheduledDate) async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'your_channel_id', 'your_channel_name', importance: Importance.max, priority: Priority.high, ticker: 'ticker');
-    const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
-
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      0,
-      '예정된 생리일 알림',
-      '생리 주기를 확인하세요.',
-      tz.TZDateTime.from(scheduledDate, tz.local),
-      platformChannelSpecifics,
-      androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
-  }
-
-  // 데이터 저장
   Future<void> _saveData() async {
     String? username = await tokenService.getUsername();
     if (username == null) {
@@ -133,60 +43,99 @@ class _SupplementsPageState extends State<SupplementsPage> {
       return;
     }
 
-    DateTime dateOnly = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
-    bool supplementTaken = _supplementTaken[dateOnly] ?? false;
-    bool menstruationRecorded = _menstruationRecorded[dateOnly] ?? false;
+    for (DateTime date in {..._selectedMenstruationDays, ..._supplementTaken.keys}) {
+      SupplementDto dto = SupplementDto(
+        date: date,
+        supplement_taken: _supplementTaken[date] ?? false,
+        menstruation_recorded: _selectedMenstruationDays.contains(date),
+        username: username,
+      );
+      await supplementRepository.saveSupplement(dto);
+    }
 
-    print("Saving data: date=$dateOnly, supplementTaken=$supplementTaken, menstruationRecorded=$menstruationRecorded");
-
-    SupplementDto dto = SupplementDto(
-      date: dateOnly,
-      supplementTaken: supplementTaken,
-      menstruationRecorded: menstruationRecorded,
-      username: username,
-    );
-
-    print("DTO before save: $dto");
-    await supplementRepository.saveSupplement(dto);
-
+    print("Saved data");
     await _loadData();
   }
 
-  // 데이터 로딩
   Future<void> _loadData() async {
     final supplements = await supplementRepository.fetchSupplements();
     setState(() {
       for (var supplement in supplements) {
-        _supplementTaken[supplement.date] = supplement.supplementTaken;
-        _menstruationRecorded[supplement.date] = supplement.menstruationRecorded;
+        _supplementTaken[supplement.date] = supplement.supplement_taken;
+        if (supplement.menstruation_recorded) {
+          _selectedMenstruationDays.add(supplement.date);
+        }
       }
     });
-    print('Loaded supplement data: $_supplementTaken');
-    print('Loaded menstruation data: $_menstruationRecorded');
+    print('Loaded data');
   }
 
-  // 영양제 복용 버튼 토글
-  void _toggleSupplementTaken() async {
-    DateTime dateOnly = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
-    setState(() {
-      _supplementTaken[dateOnly] = !(_supplementTaken[dateOnly] ?? false);
-    });
-
-    await _saveData();
-  }
-
-  // 생리 기록 버튼 토글
-  void _toggleMenstruationRecorded() async {
-    DateTime dateOnly = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
-    setState(() {
-      _menstruationRecorded[dateOnly] = !(_menstruationRecorded[dateOnly] ?? false);
-    });
-
-    if (_menstruationRecorded[dateOnly] == true) {
-      await _scheduleNotification(dateOnly); // 알림 설정
-    }
-
-    await _saveData();
+  void _showBottomSheet(DateTime selectedDay) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '날짜: ${selectedDay.year}-${selectedDay.month}-${selectedDay.day}',
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('영양제 복용', style: TextStyle(fontSize: 16)),
+                      Switch(
+                        value: _supplementTaken[selectedDay] ?? false,
+                        onChanged: (value) {
+                          setModalState(() {
+                            _supplementTaken[selectedDay] = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  if (_gender != '남성') ...[
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('생리 기록', style: TextStyle(fontSize: 16)),
+                        Switch(
+                          value: _selectedMenstruationDays.contains(selectedDay),
+                          onChanged: (value) {
+                            setModalState(() {
+                              if (value) {
+                                _selectedMenstruationDays.add(selectedDay);
+                              } else {
+                                _selectedMenstruationDays.remove(selectedDay);
+                              }
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context); // 서랍 닫기
+                      _saveData();
+                    },
+                    child: const Text('저장'),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -207,17 +156,17 @@ class _SupplementsPageState extends State<SupplementsPage> {
               setState(() {
                 _selectedDay = selectedDay;
               });
+              _showBottomSheet(selectedDay); // 날짜 클릭 시 서랍 표시
             },
             calendarBuilders: CalendarBuilders(
               defaultBuilder: (context, date, focusedDay) {
                 DateTime dateOnly = DateTime(date.year, date.month, date.day);
 
-                // 상태에 따라 날짜 색상 변경
-                if (_supplementTaken[dateOnly] == true && _menstruationRecorded[dateOnly] == true) {
+                if (_selectedMenstruationDays.contains(dateOnly)) {
                   return Container(
                     margin: const EdgeInsets.all(4.0),
                     decoration: BoxDecoration(
-                      color: Color(0xFFA39BEF).withOpacity(0.5),
+                      color: const Color.fromARGB(255, 235, 63, 51).withOpacity(0.5),
                       shape: BoxShape.circle,
                     ),
                     child: Center(child: Text('${date.day}')),
@@ -231,35 +180,11 @@ class _SupplementsPageState extends State<SupplementsPage> {
                     ),
                     child: Center(child: Text('${date.day}')),
                   );
-                } else if (_menstruationRecorded[dateOnly] == true) {
-                  return Container(
-                    margin: const EdgeInsets.all(4.0),
-                    decoration: BoxDecoration(
-                      color: Colors.red.withOpacity(0.5),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(child: Text('${date.day}')),
-                  );
                 }
                 return null;
               },
             ),
           ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _toggleSupplementTaken,
-            child: Text(
-              _supplementTaken[_selectedDay] == true ? '영양제 복용 취소' : '영양제 복용 기록',
-            ),
-          ),
-          if (_gender != '남성') ...[
-            const SizedBox(height: 20),
-            ElevatedButton(
-                onPressed: () => _showMenstruationSelectionModal(),
-                child: const Text('생리 날짜 선택'),
-              ),
-
-          ]
         ],
       ),
     );

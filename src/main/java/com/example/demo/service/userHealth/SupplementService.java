@@ -20,8 +20,8 @@ public class SupplementService {
         Supplement supplement = new Supplement();
         supplement.setUsername(supplementDto.getUsername());
         supplement.setDate(supplementDto.getDate());
-        supplement.setSupplementTaken(supplementDto.isSupplementTaken());
-        supplement.setMenstruationRecorded(supplementDto.isMenstruationRecorded());
+        supplement.setSupplement_taken(supplementDto.isSupplement_taken());
+        supplement.setMenstruation_recorded(supplementDto.isMenstruation_recorded());
         supplementRepository.save(supplement);
     }
 
@@ -31,8 +31,8 @@ public class SupplementService {
             .map(supplement -> {
                 SupplementDTO dto = new SupplementDTO();
                 dto.setDate(supplement.getDate());
-                dto.setSupplementTaken(supplement.isSupplementTaken());
-                dto.setMenstruationRecorded(supplement.isMenstruationRecorded());
+                dto.setSupplement_taken(supplement.isSupplement_taken());
+                dto.setMenstruation_recorded(supplement.isMenstruation_recorded());
                 dto.setUsername(supplement.getUsername());
                 return dto;
             })

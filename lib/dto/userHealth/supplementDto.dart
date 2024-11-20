@@ -1,13 +1,13 @@
 class SupplementDto {
   final DateTime date;
-  final bool supplementTaken;
-  final bool menstruationRecorded;
+  final bool supplement_taken;
+  final bool menstruation_recorded;
   final String username;
 
   SupplementDto({
     required this.date,
-    required this.supplementTaken,
-    required this.menstruationRecorded,
+    required this.supplement_taken,
+    required this.menstruation_recorded,
     required this.username,
   });
 
@@ -15,8 +15,8 @@ class SupplementDto {
   factory SupplementDto.fromJson(Map<String, dynamic> json) {
     return SupplementDto(
       date: DateTime.parse(json['date']),
-      supplementTaken: json['supplementTaken'],
-      menstruationRecorded: json['menstruationRecorded'],
+      supplement_taken: json['supplement_taken'],
+      menstruation_recorded: json['menstruation_recorded'],
       username: json['username'],
     );
   }
@@ -25,8 +25,8 @@ class SupplementDto {
   Map<String, dynamic> toJson() {
     return {
       'date': date.toIso8601String(),
-      'supplementTaken': supplementTaken,
-      'menstruationRecorded': menstruationRecorded,
+      'supplement_taken': supplement_taken,
+      'menstruation_recorded': menstruation_recorded,
       'username': username,
     };
   }

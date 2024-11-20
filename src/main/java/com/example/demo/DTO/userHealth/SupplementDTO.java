@@ -4,10 +4,21 @@ import java.time.LocalDate;
 
 public class SupplementDTO {
     private LocalDate date;
-    private boolean supplementTaken;
-    private boolean menstruationRecorded;
+    private boolean supplement_taken;
+    private boolean menstruation_recorded;
     private String username;
 
+
+    // 기본 생성자
+    public SupplementDTO() {}
+
+    // 전체 필드를 초기화하는 생성자
+    public SupplementDTO(LocalDate date, boolean supplement_taken, boolean menstruation_recorded, String username) {
+        this.date = date;
+        this.supplement_taken = supplement_taken;
+        this.menstruation_recorded = menstruation_recorded;
+        this.username = username;
+    }
     // Getters and Setters
     public LocalDate getDate() {
         return date;
@@ -17,20 +28,20 @@ public class SupplementDTO {
         this.date = date;
     }
 
-    public boolean isSupplementTaken() {
-        return supplementTaken;
+    public boolean isSupplement_taken() {
+        return supplement_taken;
     }
 
-    public void setSupplementTaken(boolean supplementTaken) {
-        this.supplementTaken = supplementTaken;
+    public void setSupplement_taken(boolean supplement_taken) {
+        this.supplement_taken = supplement_taken;
     }
 
-    public boolean isMenstruationRecorded() {
-        return menstruationRecorded;
+    public boolean isMenstruation_recorded() {
+        return menstruation_recorded;
     }
 
-    public void setMenstruationRecorded(boolean menstruationRecorded) {
-        this.menstruationRecorded = menstruationRecorded;
+    public void setMenstruation_recorded(boolean menstruation_recorded) {
+        this.menstruation_recorded = menstruation_recorded;
     }
 
     public String getUsername() {

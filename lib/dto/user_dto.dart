@@ -4,12 +4,15 @@ class UserDTO {
   final String email;
   final String realname;
   final String password;
+  final String gender; 
+
 
   UserDTO({
     required this.username,
     required this.email,
     required this.realname,
     required this.password,
+    required this.gender,
   });
 
   // DTO를 JSON으로 변환하는 메서드
@@ -19,6 +22,7 @@ class UserDTO {
       'email': email,
       'realname': realname,
       'password': password,
+      'gender': gender, // 성별 필드 포함
     };
   }
 }

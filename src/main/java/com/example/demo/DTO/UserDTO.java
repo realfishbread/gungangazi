@@ -8,6 +8,7 @@ public class UserDTO {
     private String password;
     private String email;
     private String realname;
+    private String gender;
 
     public long getId() {
         return id;
@@ -49,6 +50,14 @@ public class UserDTO {
         this.realname = realname;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
 
     // 데이터를 엔티티로 변환하는 메서드
     public User toEntity() {
@@ -57,6 +66,7 @@ public class UserDTO {
         user.setPassword(this.password);
         user.setEmail(this.email);
         user.setRealname(this.realname);
+        user.setGender(this.gender);
         return user;
     }
 

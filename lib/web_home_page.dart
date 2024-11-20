@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
               showHamburger: true,
               hoverColor: Colors.purple[100],
               selectedHoverColor: Colors.purple[100],
-              selectedColor: Colors.purple[200],
+              selectedColor: const Color.fromARGB(255, 229, 176, 238),
               selectedTitleTextStyle: const TextStyle(color: Colors.black),
               selectedIconColor: Colors.black,
             ),

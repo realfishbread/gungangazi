@@ -455,12 +455,14 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 2000}) {
     DateTime now = DateTime.now(); // 현재 시간 가져오기
     int hour = now.hour;
 
+   if (_currentBodyPart== 'default'){
     // 10시 이후 상태 변경
-    if (hour >= 22 || hour < 6) {
-      _currentBodyPart = '0am'; // 잠옷바람 상태
-    } else {
-      _currentBodyPart = 'default'; // 기본 상태
-    }
+      if (hour >= 22 || hour < 6) {
+        _currentBodyPart = '0am'; // 잠옷바람 상태
+      } else {
+        _currentBodyPart = 'default'; // 기본 상태
+      }
+   }
 
     if (hour == 0 || hour == 12 || hour == 18) {
         mealLevel = 0;
@@ -549,7 +551,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 2000}) {
         _currentBodyPart = 'smile';
       }
     }
-
+    
       // 말풍선 형태의 팝업 표시
       showMenu(
         context: context,
@@ -595,33 +597,35 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 2000}) {
 
   // 터치 이벤트와 이미지 애니메이션 처리
   Widget buildImageAnimationWithTouch(BuildContext context, Function(String) onImageSelected) {
-    startImageAnimation(); // 애니메이션 시작
+  startImageAnimation(); // 애니메이션 시작
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return GestureDetector(
-          onTapDown: (TapDownDetails details) {
-            _calculateImageRect();
-            final tapPosition = details.globalPosition;
-            showPopupForCoordinates(context, tapPosition, onImageSelected);
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      return GestureDetector(
+        onTapDown: (TapDownDetails details) {
+          _calculateImageRect();
+          final tapPosition = details.globalPosition;
+          setBodyPartStatus(); // 여기에서 `_currentBodyPart` 업데이트
+          
+          showPopupForCoordinates(context, tapPosition, onImageSelected);
+        },
+        child: ValueListenableBuilder<int>(
+          valueListenable: _imageNotifier,
+          builder: (context, value, child) {
+            return Image.asset(
+              _currentBodyPart == 'default'
+                  ? defaultImagePaths[value]
+                  : imagePathsByBodyPart[_currentBodyPart]![value],
+              fit: BoxFit.cover,
+              key: _imageKey,
+              gaplessPlayback: true,
+            );
           },
-          child: ValueListenableBuilder<int>(
-            valueListenable: _imageNotifier,
-            builder: (context, value, child) {
-              return Image.asset(
-                _currentBodyPart == 'default'
-                    ? defaultImagePaths[value]
-                    : imagePathsByBodyPart[_currentBodyPart]![value],
-                fit: BoxFit.cover,
-                key: _imageKey,
-                gaplessPlayback: true,
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
 
   // 리소스 해제
   void dispose() {

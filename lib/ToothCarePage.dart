@@ -5,6 +5,8 @@ import 'dto/userHealth/brush_history.dart';
 import '../services/dio_service.dart';
 import '../services/TokenService.dart';
 import 'PopupHandler.dart';
+import '../repositories/userHealth/sleep_repository.dart'; // SleepRepository 임포트
+import '../dto/userHealth/sleep_dto.dart'; // SleepDTO 임포트
 
 class ToothCarePage extends StatefulWidget {
 
@@ -20,7 +22,11 @@ class _ToothCarePageState extends State<ToothCarePage> {
     dioService: DioService(),
     tokenService: TokenService(),
   );
-
+  final SleepRepository sleepRepository = SleepRepository(
+    dioService: DioService(),
+    tokenService: TokenService(),
+  );
+  late Future<List<SleepDto>> _sleepHistory;
   late Future<List<BrushHistoryDTO>> _brushHistory;
   final _formKey = GlobalKey<FormState>();
   String? _selectedDate;
@@ -32,6 +38,7 @@ class _ToothCarePageState extends State<ToothCarePage> {
   void initState() {
     super.initState();
     _brushHistory = toothRepository.fetchBrushHistory();
+    _sleepHistory = sleepRepository.fetchSleepDataFromDatabase();
     _currentTooth=false;
   }
   Future<void> _selectDate(BuildContext context) async {
@@ -72,8 +79,33 @@ class _ToothCarePageState extends State<ToothCarePage> {
       _selectedDate = null;
       _duration = 0;
       _flossed = false;
+      
     }
   }
+
+  Future<void> _checkBrushAndSleep() async {
+  // 수면 및 양치 데이터 가져오기
+  List<SleepDto> sleepData = await sleepRepository.fetchSleepDataFromDatabase();
+  List<BrushHistoryDTO> brushData = await toothRepository.fetchBrushHistory();
+
+  // 가장 최근 수면 데이터 확인
+  if (sleepData.isNotEmpty) {
+    SleepDto latestSleep = sleepData.last; // 가장 최근 수면 기록
+    String latestSleepDate = latestSleep.date;
+
+    // 해당 날짜에 양치 기록이 있는지 확인
+    bool brushed = brushData.any((brush) => brush.date == latestSleepDate);
+
+    // 양치 기록이 없다면 충치 애니메이션 실행
+    if (!brushed) {
+      widget.popupHandler.triggerAnimation('nobrush', delayMilliseconds: 2000);
+    } else if (_currentTooth=true){
+      widget.popupHandler.triggerAnimation('brush', delayMilliseconds: 2000);
+    } else {
+        print("No significant tooth level change, no animation triggered.");
+      }
+  }
+}
 
 
 
@@ -81,12 +113,8 @@ class _ToothCarePageState extends State<ToothCarePage> {
 Widget build(BuildContext context) {
   return WillPopScope(
     onWillPop: () async {
-      // 물 상태가 증가했는지 확인하고 애니메이션 실행
-      if (_currentTooth=true) {
-        widget.popupHandler.triggerAnimation('brush', delayMilliseconds: 1000);
-      } else {
-        print("No significant tooth level change, no animation triggered.");
-      }
+      
+      await _checkBrushAndSleep();
 
       // 뒤로가기 동작 허용
       return true;

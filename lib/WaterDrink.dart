@@ -90,32 +90,43 @@ class _WaterDrinkState extends State<WaterDrink> {
     );
   }
 
-  List<BarChartGroupData> _generateBarChartData() {
-    List<String> dates = _dailyWaterIntake.keys.toList()..sort();
-    List<BarChartGroupData> barGroups = [];
-    for (int i = 0; i < dates.length; i++) {
-      barGroups.add(
-        BarChartGroupData(
-          x: i,
-          barRods: [
-            BarChartRodData(
-              toY: (_dailyWaterIntake[dates[i]] ?? 0).toDouble(),
-              width: 15,
-              color: Colors.blue,
-            )
-          ],
-        ),
-      );
-    }
-    return barGroups;
-  }
+  List<BarChartGroupData> _generateBarChartData({required bool isMobile}) {
+  // 날짜 정렬
+  List<String> dates = _dailyWaterIntake.keys.toList()..sort();
 
-  @override
+  // 스마트폰 화면에서는 최신 5개만 표시
+  List<String> visibleDates = isMobile && dates.length > 5
+      ? dates.sublist(dates.length - 5)
+      : dates;
+
+  // BarChartGroupData 생성
+  List<BarChartGroupData> barGroups = [];
+  for (int i = 0; i < visibleDates.length; i++) {
+    barGroups.add(
+      BarChartGroupData(
+        x: i,
+        barRods: [
+          BarChartRodData(
+            toY: (_dailyWaterIntake[visibleDates[i]] ?? 0).toDouble(),
+            width: 15,
+            color: Colors.blue,
+          )
+        ],
+      ),
+    );
+  }
+  return barGroups;
+}
+
+@override
 Widget build(BuildContext context) {
+  // 스마트폰인지 데스크톱인지 판단
+  bool isMobile = MediaQuery.of(context).size.width < 600;
+
   return WillPopScope(
     onWillPop: () async {
       // 물 상태가 증가했는지 확인하고 애니메이션 실행
-      if (widget.popupHandler.waterLevel > _currentWaterLevel ) {
+      if (widget.popupHandler.waterLevel > _currentWaterLevel) {
         widget.popupHandler.triggerAnimation('drinkwater', delayMilliseconds: 1000);
       } else {
         print("No significant water level change, no animation triggered.");
@@ -135,57 +146,71 @@ Widget build(BuildContext context) {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: BarChart(
-                BarChartData(
-                  barGroups: _generateBarChartData(),
-                  backgroundColor: Colors.lightBlue[50],
-                  titlesData: FlTitlesData(
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: (double value, TitleMeta meta) {
-                          List<String> dates = _dailyWaterIntake.keys.toList()..sort();
-                          return Text(dates[value.toInt()], style: const TextStyle(fontSize: 10));
-                        },
-                        interval: 1,
-                      ),
-                    ),
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 28,
-                        interval: 200,
-                        getTitlesWidget: (value, meta) => Text('${value.toInt()}ml'),
-                      ),
-                    ),
-                  ),
-                  gridData: FlGridData(
-                    show: true,
-                    drawVerticalLine: false,
-                    horizontalInterval: 200,
-                    getDrawingHorizontalLine: (value) {
-                      return FlLine(
-                        color: Colors.grey[300]!,
-                        strokeWidth: 1,
-                      );
-                    },
-                  ),
-                  borderData: FlBorderData(show: false),
-                  barTouchData: BarTouchData(enabled: true),
-                  extraLinesData: ExtraLinesData(
-                    horizontalLines: [
-                      HorizontalLine(
-                        y: 2000, // 권장 수분 섭취량 (예: 2000ml)
-                        color: Colors.red,
-                        strokeWidth: 2,
-                        dashArray: [5, 5],
-                        label: HorizontalLineLabel(
-                          show: true,
-                          alignment: Alignment.topLeft,
-                          labelResolver: (line) => '권장 섭취량: 2000ml',
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: SizedBox(
+                  width: (isMobile ? 5 : _dailyWaterIntake.keys.length) * 80.0, // 막대 그래프 크기 조정
+                  child: BarChart(
+                    BarChartData(
+                      barGroups: _generateBarChartData(isMobile: isMobile), // 스마트폰 여부를 전달
+                      backgroundColor: Colors.lightBlue[50],
+                      titlesData: FlTitlesData(
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            getTitlesWidget: (double value, TitleMeta meta) {
+                              List<String> dates = _dailyWaterIntake.keys.toList()..sort();
+                              List<String> visibleDates = isMobile && dates.length > 5
+                                  ? dates.sublist(dates.length - 5)
+                                  : dates;
+                              int index = value.toInt();
+                              if (index >= 0 && index < visibleDates.length) {
+                                return Text(visibleDates[index], style: const TextStyle(fontSize: 10));
+                              } else {
+                                return const Text("");
+                              }
+                            },
+                            interval: 1,
+                          ),
+                        ),
+                        leftTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 28,
+                            interval: 200,
+                            getTitlesWidget: (value, meta) => Text('${value.toInt()}ml'),
+                          ),
                         ),
                       ),
-                    ],
+                      gridData: FlGridData(
+                        show: true,
+                        drawVerticalLine: false,
+                        horizontalInterval: 200,
+                        getDrawingHorizontalLine: (value) {
+                          return FlLine(
+                            color: Colors.grey[300]!,
+                            strokeWidth: 1,
+                          );
+                        },
+                      ),
+                      borderData: FlBorderData(show: false),
+                      barTouchData: BarTouchData(enabled: true),
+                      extraLinesData: ExtraLinesData(
+                        horizontalLines: [
+                          HorizontalLine(
+                            y: 2000, // 권장 수분 섭취량
+                            color: Colors.red,
+                            strokeWidth: 2,
+                            dashArray: [5, 5],
+                            label: HorizontalLineLabel(
+                              show: true,
+                              alignment: Alignment.topLeft,
+                              labelResolver: (line) => '권장 섭취량: 2000ml',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -219,4 +244,3 @@ Widget build(BuildContext context) {
   );
 }
 }
-

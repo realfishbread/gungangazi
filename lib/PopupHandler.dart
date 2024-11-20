@@ -246,6 +246,18 @@ class PopupHandler {
             'assets/person/brush1.jpg',
             'assets/person/brush.jpg',
             'assets/person/brush1.jpg',
+            'assets/person/brush.jpg',
+            'assets/person/brush1.jpg',
+            'assets/person/brush.jpg',
+            'assets/person/brush1.jpg',
+          ],
+          'nobrush': [
+            'assets/person/nobrush1.jpg',
+            'assets/person/nobrush2.jpg',
+            'assets/person/nobrush3.jpg',
+            'assets/person/nobrush3.jpg',
+            'assets/person/nobrush2.jpg',
+            'assets/person/nobrush1.jpg',
           ]
 
         } {

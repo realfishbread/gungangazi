@@ -272,6 +272,14 @@ class PopupHandler {
             'assets/person/angry3.jpg',
             'assets/person/angry2.jpg',
             'assets/person/angry1.jpg',
+          ],
+          'smile': [
+            'assets/person/smile1.jpg',
+            'assets/person/smile2.jpg',
+            'assets/person/smile3.jpg',
+            'assets/person/smile3.jpg',
+            'assets/person/smile2.jpg',
+            'assets/person/smile1.jpg',
           ]
 
         } {
@@ -454,6 +462,11 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 2000}) {
       _currentBodyPart = 'default'; // 기본 상태
     }
 
+    if (hour == 0 || hour == 12 || hour == 18) {
+        mealLevel = 0;
+        waterLevel = 0;
+  }
+
     print("Character status updated based on time: $_currentBodyPart");
   }
 
@@ -522,18 +535,18 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 2000}) {
       // 부위별 팝업 메시지 설정
       if (relativeY < headHeight) {
         popupMessage = '잘 주무셨나요?';
-        _currentBodyPart = 'head';
+        _currentBodyPart = 'smile';
       } else if (relativeY >= headHeight && relativeY < legStartHeight) {
         if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
           popupMessage = '팔이 아프신가요?';
-          _currentBodyPart = 'arm';
+          _currentBodyPart = 'smile';
         } else {
           popupMessage = '식사 하셨나요?';
-          _currentBodyPart = 'body';
+          _currentBodyPart = 'smile';
         }
       } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
         popupMessage = '다리가 아프신가요?';
-        _currentBodyPart = 'leg';
+        _currentBodyPart = 'smile';
       }
     }
 

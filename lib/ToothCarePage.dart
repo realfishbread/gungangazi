@@ -41,7 +41,7 @@ class _ToothCarePageState extends State<ToothCarePage> {
     _sleepHistory = sleepRepository.fetchSleepDataFromDatabase();
     _currentTooth=false;
   }
-  
+
   Future<void> _selectDate(BuildContext context) async {
   DateTime? pickedDate = await showDatePicker(
     context: context,
@@ -99,9 +99,9 @@ class _ToothCarePageState extends State<ToothCarePage> {
 
     // 양치 기록이 없다면 충치 애니메이션 실행
     if (!brushed) {
-      widget.popupHandler.triggerAnimation('nobrush', delayMilliseconds: 2000);
+      widget.popupHandler.triggerAnimation('nobrush', delayMilliseconds: 1000);
     } else if (_currentTooth=true){
-      widget.popupHandler.triggerAnimation('brush', delayMilliseconds: 2000);
+      widget.popupHandler.triggerAnimation('brush', delayMilliseconds: 1000);
     } else {
         print("No significant tooth level change, no animation triggered.");
       }

@@ -123,31 +123,38 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       children: [
                         TextField(
-                          controller: _nameController,
-                          decoration: const InputDecoration(
-                            labelText: '아이디',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        TextField(
-                          controller: _passwordController,
-                          decoration: InputDecoration(
-                            labelText: '비밀번호',
-                            border: const OutlineInputBorder(),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscurePassword ? Icons.visibility : Icons.visibility_off,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _obscurePassword = !_obscurePassword;
-                                });
-                              },
+                            controller: _nameController,
+                            decoration: const InputDecoration(
+                              labelText: '아이디',
+                              border: OutlineInputBorder(),
                             ),
+                            onSubmitted: (value) {
+                              FocusScope.of(context).nextFocus(); // 다음 필드로 포커스를 이동
+                            },
                           ),
-                          obscureText: _obscurePassword,
-                        ),
+                          const SizedBox(height: 16),
+                          TextField(
+                            controller: _passwordController,
+                            decoration: InputDecoration(
+                              labelText: '비밀번호',
+                              border: const OutlineInputBorder(),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _obscurePassword = !_obscurePassword;
+                                  });
+                                },
+                              ),
+                            ),
+                            obscureText: _obscurePassword,
+                            onSubmitted: (value) {
+                              _login(); // Enter 키로 로그인 실행
+                            },
+                          ),
+
                         const SizedBox(height: 16),
                         if (_loginFailed)
                           const Text(

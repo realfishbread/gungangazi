@@ -11,6 +11,8 @@ import 'MealPage.dart';
 import 'ChatPage.dart';
 import '../services/TokenService.dart';
 import '../services/dio_service.dart';
+import 'package:flutter/foundation.dart';
+import 'web_home_page.dart';
 
 class MobileHomePage extends StatefulWidget {
   const MobileHomePage({super.key});
@@ -40,6 +42,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
     _popupHandler.dispose();
     super.dispose();
   }
+
 
   void _navigateToPage(BuildContext context, String title) {
     final routes = {
@@ -91,6 +94,15 @@ class _MobileHomePageState extends State<MobileHomePage> {
 
  @override
 Widget build(BuildContext context) {
+  // 화면 너비 가져오기
+  double screenWidth = MediaQuery.of(context).size.width;
+
+  // 데스크톱 모드일 경우 `web_home_page.dart`를 호출
+  if (screenWidth > 768) {
+    return WebHomePage(); // 데스크톱 전용 페이지
+  }
+
+  // 모바일 모드일 경우 기존 코드 유지
   return Scaffold(
     key: _scaffoldKey,
     backgroundColor: Colors.white,

@@ -58,21 +58,18 @@ Future<void> _saveSleepDataToServer() async {
     double sleepHours = sleepDuration.inMinutes / 60.0;
 
     // 새로운 sleepLevel 계산
-    
     int newSleepLevel = widget.popupHandler.sleepLevel;
-    _currentSleepLevel =widget.popupHandler.sleepLevel;
+    _currentSleepLevel = widget.popupHandler.sleepLevel;
     if (sleepHours >= 5.0) {
       newSleepLevel = widget.popupHandler.sleepLevel + 200; // 수면 시간이 충분할 경우 증가
     }
 
-    // sleepLevel 업데이트 (애니메이션 실행은 하지 않음)
+    // sleepLevel 업데이트
     widget.popupHandler.updateStatus(
       newWaterLevel: widget.popupHandler.waterLevel,
       newMealLevel: widget.popupHandler.mealLevel,
       newSleepLevel: newSleepLevel,
     );
-    print("Sleep Level updated to: $newSleepLevel");
-
 
     // 서버에 저장할 SleepDto 데이터 생성
     String? username = await TokenService().getUsername();
@@ -80,21 +77,41 @@ Future<void> _saveSleepDataToServer() async {
       date: formattedDate,
       sleep_time: '${_sleepTime!.hour}:${_sleepTime!.minute}:00',
       wake_up_time: '${_wakeUpTime!.hour}:${_wakeUpTime!.minute}:00',
-      username: username ?? 'defaultUser', // Replace with actual username
+      username: username ?? 'defaultUser',
     );
 
-    print('Prepared SleepDto for server: ${newSleepRecord.toJson()}');
-
     try {
-      // 서버에 데이터 저장
-      await sleepRepository.saveSleepDataToDatabase([newSleepRecord]);
-      print('Successfully saved sleep data to the server');
-      await _loadSleepDataFromServer();
+      // 기존 데이터 확인
+      List<SleepDto> existingRecords = await sleepRepository.fetchSleepDataFromDatabase();
+
+      // 동일한 날짜에 같은 수면 기록이 있는지 확인
+      bool isDuplicate = existingRecords.any((record) =>
+          record.date == formattedDate &&
+          record.sleep_time == newSleepRecord.sleep_time &&
+          record.wake_up_time == newSleepRecord.wake_up_time);
+
+      if (!isDuplicate) {
+        // 중복이 아니라면 데이터 저장
+        await sleepRepository.saveSleepDataToDatabase([newSleepRecord]);
+        print('Successfully saved sleep data to the server');
+        await _loadSleepDataFromServer();
+      } else {
+        print('Duplicate sleep record exists. No data saved.');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('중복된 수면 기록입니다. 다른 시간을 입력하세요.')),
+        );
+      }
     } catch (e) {
       print('Error sending data to the server: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('수면 기록 저장 중 오류가 발생했습니다. 다시 시도해주세요.')),
+      );
     }
   } else {
     print('Sleep time or wake-up time is not selected');
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('수면 시간을 선택해 주세요.')),
+      );
   }
 }
   

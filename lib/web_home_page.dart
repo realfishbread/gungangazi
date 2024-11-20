@@ -1,3 +1,5 @@
+import 'ToothCarePage.dart';
+
 import 'BloodPressure.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
@@ -11,6 +13,7 @@ import 'ChatPage.dart';
 import 'loginPge.dart';
 import '../services/TokenService.dart';
 import '../services/dio_service.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class WebHomePage extends StatelessWidget {
   const WebHomePage({Key? key}) : super(key: key);
@@ -18,7 +21,7 @@ class WebHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'easy_sidemenu Demo',
+      title: '건강아지',
       theme: ThemeData(
         primaryColor: const Color(0xFFFFF9C4), // 기본 색상 변경
         scaffoldBackgroundColor: Colors.white, // 배경 색상 흰색으로 변경
@@ -32,7 +35,7 @@ class WebHomePage extends StatelessWidget {
         ),
         useMaterial3: false,
       ),
-      home: const MyHomePage(title: 'easy_sidemenu Demo'),
+      home: const MyHomePage(title: '건강아지'),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -151,6 +154,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   SideMenuItem(
                     title: '치아 건강',
                     onTap: (index, _) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) =>  ToothCarePage(popupHandler: _popupHandler)),
+                      );
 
                     },
                     icon: const Icon(Icons.medical_services),
@@ -186,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     MaterialPageRoute(builder: (context) => const ChatPage()),
                   );
                 },
-                icon: const Icon(Icons.pets),
+                icon: const Icon(FontAwesomeIcons.commentMedical),
               ),
               SideMenuItem(
                 builder: (context, displayMode) {

@@ -280,6 +280,14 @@ class PopupHandler {
             'assets/person/smile3.jpg',
             'assets/person/smile2.jpg',
             'assets/person/smile1.jpg',
+          ],
+          'medication': [
+            'assets/person/medi1.jpg',
+            'assets/person/medi2.jpg',
+            'assets/person/medi3.jpg',
+            'assets/person/medi3.jpg',
+            'assets/person/medi2.jpg',
+            'assets/person/medi1.jpg',
           ]
 
         } {

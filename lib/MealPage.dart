@@ -121,7 +121,7 @@ class _MealPageState extends State<MealPage> {
       onWillPop: () async {
         // 조건에 따라 애니메이션 실행
         if (widget.popupHandler.mealLevel >_currentMeal) {
-          widget.popupHandler.triggerAnimation('eatingmeal', delayMilliseconds: 1000);
+          widget.popupHandler.triggerAnimation('eatingmeal', delayMilliseconds: 2000);
         } else {
           print("No significant meal level change, no animation triggered.");
         }
@@ -135,93 +135,128 @@ class _MealPageState extends State<MealPage> {
           backgroundColor: const Color(0xFFFFF9C4),
         ),
         body: _isLoading
-            ? const Center(child: CircularProgressIndicator()) // 로딩 상태 표시
-            : Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: DropdownButton<String>(
-                            value: _selectedMealType,
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                _selectedMealType = newValue!;
-                              });
-                            },
-                            items: <String>['식사', '간식']
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          flex: 2,
-                          child: TextField(
-                            controller: _mealController,
-                            decoration: const InputDecoration(
-                              labelText: '식사/간식 내용 입력',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          flex: 2,
-                          child: TextField(
-                            controller: _caloriesController,
-                            decoration: const InputDecoration(
-                              labelText: '칼로리 입력 (kcal)',
-                              border: OutlineInputBorder(),
-                            ),
-                            keyboardType: TextInputType.number,
-                          ),
-                        ),
-                      ],
+        ? const Center(child: CircularProgressIndicator())
+        : Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const Text(
+              '식사 기록 추가',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: DropdownButtonFormField<String>(
+                    value: _selectedMealType,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedMealType = newValue!;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      labelText: '식사 종류',
+                      border: OutlineInputBorder(),
                     ),
-                    const SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: _addMeal,
-                      child: const Text('기록 추가'),
-                    ),
-                    const SizedBox(height: 20),
-                    Expanded(
-                      child: _mealsByDate.isEmpty
-                          ? const Center(
-                              child: Text('기록된 식사가 없습니다.'),
-                            )
-                          : ListView(
-                              children: _mealsByDate.keys.map((date) {
-                                return ExpansionTile(
-                                  title: Text(date),
-                                  children: _mealsByDate[date]!
-                                      .map((meal) => ListTile(
-                                            title: Text(meal),
-                                            trailing: IconButton(
-                                              icon: const Icon(Icons.close),
-                                              onPressed: () {
-                                                // 삭제 기능 호출
-                                              },
-                                              tooltip: '삭제',
-                                            ),
-                                          ))
-                                      .toList(),
-                                );
-                              }).toList(),
-                            ),
-                    ),
-                  ],
+                    items: <String>['식사', '아침', '점심', '저녁', '간식']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
                 ),
+                const SizedBox(width: 10),
+                Expanded(
+                  flex: 3,
+                  child: TextField(
+                    controller: _mealController,
+                    decoration: const InputDecoration(
+                      labelText: '음식 입력',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  flex: 3,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: TextField(
+                          controller: _caloriesController,
+                          decoration: const InputDecoration(
+                            labelText: '칼로리 (Kcal)',
+                            border: OutlineInputBorder(),
+                          ),
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: _addMeal,
+                        child: const Text('기록 추가'),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            const Divider(
+              thickness: 2,
+              color: Colors.grey,
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              '역대 식사 기록',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: _mealsByDate.isEmpty
+                  ? const Center(
+                      child: Text('기록된 식사가 없습니다.'),
+                    )
+                  : ListView(
+                      children: _mealsByDate.keys.map((date) {
+                        return ExpansionTile(
+                          title: Text(date),
+                          children: _mealsByDate[date]!
+                              .map((meal) => ListTile(
+                                    title: Text(meal),
+                                    trailing: IconButton(
+                                      icon: const Icon(Icons.close),
+                                      onPressed: () {
+                                        // 삭제 기능 호출
+                                      },
+                                      tooltip: '삭제',
+                                    ),
+                                  ))
+                              .toList(),
+                        );
+                      }).toList(),
+                    ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                '권장 칼로리: 2600Kcal',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
+            ),
+          ],
+        ),
+      ),
       ),
     );
   }
+
 
   @override
   void dispose() {

@@ -8,6 +8,7 @@ import '../services/dio_service.dart';
 import '../repositories/userHealth/supplement_repository.dart';
 import '../dto/userHealth/supplementDto.dart';
 import '../services/TokenService.dart';
+import 'package:intl/intl.dart';
 
 class SupplementsPage extends StatefulWidget {
   const SupplementsPage({super.key});
@@ -41,6 +42,62 @@ class _SupplementsPageState extends State<SupplementsPage> {
       _gender = gender;
     });
   }
+
+  void _showMenstruationSelectionModal() {
+  DateTime dateOnly = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+
+  // 앞뒤 5일의 날짜 리스트 생성
+  List<DateTime> dateRange = List.generate(11, (index) => dateOnly.add(Duration(days: index - 5)));
+
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter modalSetState) {
+          return Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  '생리 기록 선택',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: dateRange.length,
+                    itemBuilder: (context, index) {
+                      DateTime currentDate = dateRange[index];
+                      return CheckboxListTile(
+                        title: Text(DateFormat('yyyy-MM-dd').format(currentDate)),
+                        value: _menstruationRecorded[currentDate] ?? false,
+                        onChanged: (bool? value) {
+                          modalSetState(() {
+                            _menstruationRecorded[currentDate] = value ?? false;
+                          });
+                        },
+                      );
+                    },
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // 데이터 저장 및 닫기
+                    _saveData();
+                    Navigator.pop(context);
+                  },
+                  child: const Text('저장'),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
 
   // 알림 초기화
   Future<void> _initializeNotifications() async {
@@ -198,11 +255,10 @@ class _SupplementsPageState extends State<SupplementsPage> {
           if (_gender != '남성') ...[
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _toggleMenstruationRecorded,
-              child: Text(
-                _menstruationRecorded[_selectedDay] == true ? '생리 기록 취소' : '생리 기록',
+                onPressed: () => _showMenstruationSelectionModal(),
+                child: const Text('생리 날짜 선택'),
               ),
-            ),
+
           ]
         ],
       ),

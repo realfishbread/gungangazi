@@ -144,7 +144,7 @@ Future<void> _saveSleepDataToServer() async {
       barRods: [
         BarChartRodData(
           toY: sleepHours,
-          color: Colors.blueAccent,
+          color: const Color.fromARGB(255, 102, 68, 255),
           width: 20,
         ),
       ],

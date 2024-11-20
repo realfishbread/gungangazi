@@ -40,4 +40,8 @@ class TokenService {
     }
     return null;
   }
+  Future<String?> getGender() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString('gender'); // 저장된 성별 정보 반환
+}
 }

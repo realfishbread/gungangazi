@@ -19,6 +19,7 @@ class SupplementsPage extends StatefulWidget {
 class _SupplementsPageState extends State<SupplementsPage> {
   final Map<DateTime, bool> _supplementTaken = {};
   final Map<DateTime, bool> _menstruationRecorded = {};
+  String? _gender;
   DateTime _selectedDay = DateTime.now();
   final DioService dioService = DioService();
   final TokenService tokenService = TokenService(); 
@@ -31,6 +32,14 @@ class _SupplementsPageState extends State<SupplementsPage> {
     supplementRepository = SupplementRepository(dioService: dioService, tokenService: tokenService);
     _initializeNotifications();
     _loadData();
+    _fetchGender();
+  }
+
+    Future<void> _fetchGender() async {
+    String? gender = await tokenService.getGender(); // TokenService에서 성별 가져오기
+    setState(() {
+      _gender = gender;
+    });
   }
 
   // 알림 초기화
@@ -186,13 +195,15 @@ class _SupplementsPageState extends State<SupplementsPage> {
               _supplementTaken[_selectedDay] == true ? '영양제 복용 취소' : '영양제 복용 기록',
             ),
           ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _toggleMenstruationRecorded,
-            child: Text(
-              _menstruationRecorded[_selectedDay] == true ? '생리 기록 취소' : '생리 기록',
+          if (_gender != '남성') ...[
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _toggleMenstruationRecorded,
+              child: Text(
+                _menstruationRecorded[_selectedDay] == true ? '생리 기록 취소' : '생리 기록',
+              ),
             ),
-          ),
+          ]
         ],
       ),
     );

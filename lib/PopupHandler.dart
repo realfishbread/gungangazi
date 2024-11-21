@@ -476,6 +476,9 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 2000}) {
         mealLevel = 0;
         waterLevel = 0;
   }
+    if (hour == 6){
+       sleepLevel =0;
+    }
 
     print("Character status updated based on time: $_currentBodyPart");
   }

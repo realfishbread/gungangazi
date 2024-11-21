@@ -1,14 +1,14 @@
 class BloodPressureDTO {
   final String systolic;
   final String diastolic;
-  final String heartRate;
+  final String heart_rate;
   final String date;
   final String username;
 
   BloodPressureDTO({
     required this.systolic,
     required this.diastolic,
-    required this.heartRate,
+    required this.heart_rate,
     required this.date,
     required this.username
   });
@@ -18,7 +18,7 @@ class BloodPressureDTO {
     return {
       'systolic': systolic,
       'diastolic': diastolic,
-      'heartRate': heartRate,
+      'heart_rate': heart_rate,
       'date': date,
       'username': username
     };
@@ -29,7 +29,7 @@ class BloodPressureDTO {
     return BloodPressureDTO(
       systolic: json['systolic'],
       diastolic: json['diastolic'],
-      heartRate: json['heartRate'],
+      heart_rate: json['heart_rate'],
       date: json['date'],
       username: json['username']
     );

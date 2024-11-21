@@ -18,7 +18,7 @@ public class BloodPressure {
     private String username;
     private int systolic;
     private int diastolic;
-    private int heartRate;
+    private int heart_rate;
     private LocalDate date;
 
     // Getters and Setters
@@ -55,12 +55,12 @@ public class BloodPressure {
         this.diastolic = diastolic;
     }
 
-    public int getHeartRate() {
-        return heartRate;
+    public int getHeart_rate() {
+        return heart_rate;
     }
 
-    public void setHeartRate(int heartRate) {
-        this.heartRate = heartRate;
+    public void setHeart_rate(int heart_rate) {
+        this.heart_rate = heart_rate;
     }
 
     public LocalDate getDate() {

@@ -108,7 +108,15 @@ class _MealPageState extends State<MealPage> {
         _updatePopupHandler(); // 상태 업데이트
         print("Meal added successfully. Updated Meal Level: $_mealLevel");
       } catch (e) {
-        print('Error adding meal: $e');
+        await _fetchMeals(); // 최신 데이터 가져오기
+        setState(() {
+          _mealController.clear();
+          _caloriesController.clear();
+        });
+
+        _updatePopupHandler(); // 상태 업데이트
+        print("Meal added successfully. Updated Meal Level: $_mealLevel");
+        
       }
     } else {
       print("Invalid input: Meal or Calories is empty/invalid.");
@@ -161,7 +169,7 @@ class _MealPageState extends State<MealPage> {
                       labelText: '식사 종류',
                       border: OutlineInputBorder(),
                     ),
-                    items: <String>['식사', '아침', '점심', '저녁', '간식']
+                    items: <String>['아침', '점심', '저녁', '간식']
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -265,3 +273,4 @@ class _MealPageState extends State<MealPage> {
     super.dispose();
   }
 }
+

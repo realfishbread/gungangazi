@@ -54,7 +54,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
       final newRecord = BloodPressureDTO(
         systolic: systolic,
         diastolic: diastolic,
-        heartRate: heartRate,
+        heart_rate: heartRate,
         date: currentDate,
         username: username,
       );
@@ -139,7 +139,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                             return ListTile(
                               title: Text(
                                   '최고 혈압: ${record.systolic} / 최저 혈압: ${record.diastolic}'),
-                              subtitle: Text('심박수: ${record.heartRate} bpm'),
+                              subtitle: Text('심박수: ${record.heart_rate} bpm'),
                             );
                           }).toList(),
                         );

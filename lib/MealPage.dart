@@ -118,6 +118,11 @@ class _MealPageState extends State<MealPage> {
         print("Meal added successfully. Updated Meal Level: $_mealLevel");
       } catch (e) {
         print('Error adding meal: $e');
+         await _fetchMeals(); // 최신 데이터 가져오기
+        setState(() {
+          _mealController.clear();
+          _caloriesController.clear();
+        });
       }
     } else {
       print("Invalid input: Meal or Calories is empty/invalid.");

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.entity.userHealth.MealEntity;
 
 @Repository
-public interface MealRepository extends JpaRepository<MealEntity, Long> {
+public interface MealRepository extends JpaRepository<MealEntity, String> {
     List<MealEntity> findByUsername(String username);
 }
 

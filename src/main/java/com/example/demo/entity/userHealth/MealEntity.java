@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 public class MealEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String username;  // username 필드 추가
     private String date;
     private String meal;
@@ -37,11 +37,11 @@ public class MealEntity {
     }
 
     // Getter 및 Setter 메소드
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

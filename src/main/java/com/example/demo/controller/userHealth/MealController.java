@@ -45,10 +45,10 @@ public class MealController {
         return mealService.getAllMealsByUsername(username);
     }
 
-    @DeleteMapping("/{mealId}")
-    public ResponseEntity<?> deleteMeal(@PathVariable Long mealId) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteMeal(@PathVariable("id") String id) {
         try {
-            mealService.deleteMeal(mealId); // 삭제 로직 호출
+            mealService.deleteMeal(id); // 삭제 로직 호출
             return ResponseEntity.ok("Meal deleted successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting meal: " + e.getMessage());

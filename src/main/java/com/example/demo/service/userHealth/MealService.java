@@ -37,11 +37,11 @@ public class MealService {
         mealRepository.save(mealEntity);
     }
 
-    public void deleteMeal(Long mealId) {
-        if (!mealRepository.existsById(mealId)) {
+    public void deleteMeal(String id) {
+        if (!mealRepository.existsById(id)) {
             throw new IllegalArgumentException("Meal not found");
         }
-        mealRepository.deleteById(mealId);
+        mealRepository.deleteById(id);
     }
 }
     

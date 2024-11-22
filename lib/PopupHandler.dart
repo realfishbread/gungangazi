@@ -472,7 +472,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
     DateTime now = DateTime.now(); // 현재 시간 가져오기
     int hour = now.hour;
 
-   if (_currentBodyPart== 'default' || _currentBodyPart =='0amtouch'|| _currentBodyPart =='smile'){
+   if (_currentBodyPart== 'default' ){
     // 10시 이후 상태 변경
       if (hour >= 22 || hour < 6) {
         _currentBodyPart = '0am'; // 잠옷바람 상태
@@ -481,7 +481,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
       }
    }
 
-    if (hour == 0 || hour == 12 || hour == 18) {
+    if (hour == 6 || hour == 12 || hour == 18) {
         mealLevel = 0;
         waterLevel = 0;
   }

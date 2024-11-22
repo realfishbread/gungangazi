@@ -4,9 +4,11 @@ import '../services/dio_service.dart';
 import '../repositories/userHealth/supplement_repository.dart';
 import '../dto/userHealth/supplementDto.dart';
 import '../services/TokenService.dart';
+import 'PopupHandler.dart';
 
 class SupplementsPage extends StatefulWidget {
-  const SupplementsPage({super.key});
+  final PopupHandler popupHandler;
+  const SupplementsPage({Key? key, required this.popupHandler}) : super(key: key);
 
   @override
   _SupplementsPageState createState() => _SupplementsPageState();
@@ -20,6 +22,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
   final DioService dioService = DioService();
   final TokenService tokenService = TokenService();
   late final SupplementRepository supplementRepository;
+  bool _addsupplement = false;
 
   @override
   void initState() {
@@ -27,6 +30,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
     supplementRepository = SupplementRepository(dioService: dioService, tokenService: tokenService);
     _loadData();
     _fetchGender();
+    _addsupplement =false;
   }
 
   Future<void> _fetchGender() async {
@@ -51,6 +55,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
         username: username,
       );
       await supplementRepository.saveSupplement(dto);
+      _addsupplement =true;
     }
 
     print("Saved data");
@@ -139,8 +144,15 @@ class _SupplementsPageState extends State<SupplementsPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+Widget build(BuildContext context) {
+  return WillPopScope(
+    onWillPop: () async {
+      if (_addsupplement==true){
+        widget.popupHandler.triggerAnimation('medication', delayMilliseconds: 1000);
+      }
+      return true;
+    },
+    child: Scaffold(
       appBar: AppBar(
         title: const Text('캘린더'),
         backgroundColor: const Color(0xFFFFF9C4),
@@ -187,6 +199,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 }

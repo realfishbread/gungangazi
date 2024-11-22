@@ -288,6 +288,14 @@ class PopupHandler {
             'assets/person/medi3.jpg',
             'assets/person/medi2.jpg',
             'assets/person/medi1.jpg',
+          ],
+          '0amtouch': [
+            'assets/person/0amtouch1.jpg',
+            'assets/person/0amtouch2.jpg',
+            'assets/person/0amtouch3.jpg',
+            'assets/person/0amtouch3.jpg',
+            'assets/person/0amtouch2.jpg',
+            'assets/person/0amtouch1.jpg',
           ]
 
         } {
@@ -544,7 +552,24 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 2000}) {
         }
       } else if (_currentBodyPart == 'hungry_and_dizzy') {
         popupMessage = '충분한 숙면과 밥을 챙겨주세요';
-      } else {
+      } else if (_currentBodyPart == '0am'){
+        if (relativeY < headHeight) {
+        popupMessage = '주무실 시간이네요!';
+        _currentBodyPart = '0amtouch';
+      } else if (relativeY >= headHeight && relativeY < legStartHeight) {
+        if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
+          popupMessage = '오늘의 파자마는 보라색이예요.';
+          _currentBodyPart = '0amtouch';
+        } else {
+          popupMessage = '오늘은 어떤 하루였나요?';
+          _currentBodyPart = '0amtouch';
+        }
+      } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
+        popupMessage = '오늘 하루도 수고 많으셨어요.';
+        _currentBodyPart = '0amtouch';
+      }
+      }
+      else {
       // 부위별 팝업 메시지 설정
       if (relativeY < headHeight) {
         popupMessage = '잘 주무셨나요?';

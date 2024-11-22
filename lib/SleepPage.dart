@@ -217,7 +217,7 @@ Widget build(BuildContext context) {
 
       // sleepLevel이 증가했는지 확인
       if (widget.popupHandler.sleepLevel > _currentSleepLevel) {
-        widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 1000);
+       widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 1000);
         print('Triggering sleeping animation for sleep level: ${widget.popupHandler.sleepLevel}');
       } else {
         print("No significant sleep level change, no animation triggered.");

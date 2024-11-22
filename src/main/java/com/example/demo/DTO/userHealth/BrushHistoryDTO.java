@@ -12,7 +12,7 @@ public class BrushHistoryDTO {
     }
 
      // 모든 필드를 초기화하는 생성자
-     public BrushHistoryDTO(int id, String username, String date, int duration, boolean flossed) {
+     public BrushHistoryDTO(long id, String username, String date, int duration, boolean flossed) {
         this.id = id;
         this.username = username;
         this.date = date;

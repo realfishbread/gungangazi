@@ -1,5 +1,5 @@
 class BrushHistoryDTO {
-  final String id;
+  final int id;
   final String date;
   final int duration;
   final bool flossed;

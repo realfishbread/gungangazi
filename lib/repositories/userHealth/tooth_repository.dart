@@ -53,7 +53,7 @@ class ToothRepository {
     }
   }
 
-  Future<void> deleteBrushHistory(String id) async {
+  Future<void> deleteBrushHistory(int id) async {
     try {
       String? token = await tokenService.getToken();
       await dioService.delete(

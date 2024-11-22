@@ -62,7 +62,7 @@ class _ToothCarePageState extends State<ToothCarePage> {
       _formKey.currentState!.save();
       String? username = await toothRepository.tokenService.getUsername();
       BrushHistoryDTO newBrushData = BrushHistoryDTO(
-        id: '',
+        id: 0,
         date: _selectedDate ?? DateFormat('yyyy-MM-dd').format(DateTime.now()),
         duration: _duration > 0 ? _duration : 1,
         flossed: _flossed,
@@ -105,19 +105,23 @@ class _ToothCarePageState extends State<ToothCarePage> {
 
   void _deleteBrushHistory(BrushHistoryDTO history) async {
   try {
-    await toothRepository.deleteBrushHistory(history.id);
+    if (history.id == null) {
+      throw Exception('삭제할 id가 null입니다.');
+    }
+    await toothRepository.deleteBrushHistory(history.id); // id를 올바르게 전달
     setState(() {
-      _brushHistory = toothRepository.fetchBrushHistory();
+      _brushHistory = toothRepository.fetchBrushHistory(); // 삭제 후 UI 업데이트
     });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('${history.date} 기록이 삭제되었습니다.')),
     );
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('기록 삭제에 실패했습니다: $e')),
+      SnackBar(content: Text('기록 삭제 실패: $e')),
     );
   }
 }
+
 
 
   @override

@@ -43,7 +43,7 @@ public class BrushHistoryService {
     }
      
     @Transactional
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         if (!brushHistoryRepository.existsById(id)) {
             throw new ResourceNotFoundException("No record found for id: " + id);
         }

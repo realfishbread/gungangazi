@@ -35,7 +35,7 @@ public class BrushHistoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBrushHistory(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteBrushHistory(@PathVariable long id) {
         brushHistoryService.deleteById(id);
         return ResponseEntity.noContent().build(); // HTTP 204 반환
     }

@@ -1,7 +1,7 @@
 package com.example.demo.DTO.userHealth;
 
 public class BrushHistoryDTO {
-    private Long id;
+    private long id;
     private String username;
     private String date;
     private int duration;
@@ -12,7 +12,7 @@ public class BrushHistoryDTO {
     }
 
      // 모든 필드를 초기화하는 생성자
-     public BrushHistoryDTO(Long id, String username, String date, int duration, boolean flossed) {
+     public BrushHistoryDTO(int id, String username, String date, int duration, boolean flossed) {
         this.id = id;
         this.username = username;
         this.date = date;
@@ -21,11 +21,11 @@ public class BrushHistoryDTO {
     }
 
     // Getters and Setters
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

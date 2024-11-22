@@ -13,7 +13,7 @@ public class BrushHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "username", nullable = false)
     private String username;
@@ -28,11 +28,11 @@ public class BrushHistory {
     private boolean flossed;
 
     // Getters and Setters
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

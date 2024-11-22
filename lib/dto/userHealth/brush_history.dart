@@ -1,5 +1,5 @@
 class BrushHistoryDTO {
-  final int id;
+  final int? id;
   final String date;
   final int duration;
   final bool flossed;
@@ -7,7 +7,7 @@ class BrushHistoryDTO {
  
 
   BrushHistoryDTO({
-    required this.id,
+    this.id,
     required this.date,
     required this.duration,
     required this.flossed,
@@ -26,7 +26,7 @@ class BrushHistoryDTO {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      if (id != null) 'id': id,
       'date': date,
       'duration': duration,
       'flossed': flossed,

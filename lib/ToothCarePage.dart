@@ -62,7 +62,6 @@ class _ToothCarePageState extends State<ToothCarePage> {
       _formKey.currentState!.save();
       String? username = await toothRepository.tokenService.getUsername();
       BrushHistoryDTO newBrushData = BrushHistoryDTO(
-        id: 0,
         date: _selectedDate ?? DateFormat('yyyy-MM-dd').format(DateTime.now()),
         duration: _duration > 0 ? _duration : 1,
         flossed: _flossed,
@@ -108,7 +107,7 @@ class _ToothCarePageState extends State<ToothCarePage> {
     if (history.id == null) {
       throw Exception('삭제할 id가 null입니다.');
     }
-    await toothRepository.deleteBrushHistory(history.id); // id를 올바르게 전달
+    await toothRepository.deleteBrushHistory(history.id!); // id를 올바르게 전달
     setState(() {
       _brushHistory = toothRepository.fetchBrushHistory(); // 삭제 후 UI 업데이트
     });

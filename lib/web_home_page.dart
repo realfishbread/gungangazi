@@ -179,7 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onTap: (index, _) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SupplementsPage()),
+                    MaterialPageRoute(builder: (context) => SupplementsPage(popupHandler: _popupHandler)),
                   );
                 },
                 icon: const Icon(Icons.calendar_today),

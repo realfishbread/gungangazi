@@ -49,7 +49,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
       '수면': SleepPage(popupHandler: _popupHandler),
       '수분': WaterDrink(popupHandler: _popupHandler),
       '식단': MealPage(popupHandler: _popupHandler),
-      '영양제': const SupplementsPage(),
+      '영양제': SupplementsPage(popupHandler: _popupHandler),
       '혈압': const BloodPressurePage(),
       '치아건강': ToothCarePage(popupHandler: _popupHandler)
     };
@@ -85,7 +85,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
     } else if (_selectedIndex == 2) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const SupplementsPage()),
+        MaterialPageRoute(builder: (context) => SupplementsPage(popupHandler: _popupHandler)),
       );
     }
   }

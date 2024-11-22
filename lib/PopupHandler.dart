@@ -431,7 +431,7 @@ Future<void> loadStatusFromServer() async {
   }
 
    /// 특정 상태에 맞는 애니메이션 실행
-void triggerAnimation(String bodyPart, {int delayMilliseconds = 2000}) {
+void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
   print("Triggering animation for: $bodyPart");
 
   // 해당 bodyPart에 대한 이미지가 있는지 확인
@@ -553,21 +553,21 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 2000}) {
       } else if (_currentBodyPart == 'hungry_and_dizzy') {
         popupMessage = '충분한 숙면과 밥을 챙겨주세요';
       } else if (_currentBodyPart == '0am'){
-        if (relativeY < headHeight) {
-        popupMessage = '주무실 시간이네요!';
-        _currentBodyPart = '0amtouch';
-      } else if (relativeY >= headHeight && relativeY < legStartHeight) {
-        if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
-          popupMessage = '오늘의 파자마는 보라색이예요.';
+          if (relativeY < headHeight) {
+          popupMessage = '주무실 시간이네요!';
           _currentBodyPart = '0amtouch';
-        } else {
-          popupMessage = '오늘은 어떤 하루였나요?';
+        } else if (relativeY >= headHeight && relativeY < legStartHeight) {
+          if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
+            popupMessage = '오늘의 파자마는 보라색이예요.';
+            _currentBodyPart = '0amtouch';
+          } else {
+            popupMessage = '오늘은 어떤 하루였나요?';
+            _currentBodyPart = '0amtouch';
+          }
+        } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
+          popupMessage = '오늘 하루도 수고 많으셨어요.';
           _currentBodyPart = '0amtouch';
-        }
-      } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
-        popupMessage = '오늘 하루도 수고 많으셨어요.';
-        _currentBodyPart = '0amtouch';
-      }
+        } 
       }
       else {
       // 부위별 팝업 메시지 설정
@@ -626,7 +626,6 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 2000}) {
     }
   }
 
-  // 터치 이벤트와 이미지 애니메이션 처리
   Widget buildImageAnimationWithTouch(BuildContext context, Function(String) onImageSelected) {
   startImageAnimation(); // 애니메이션 시작
 
@@ -636,9 +635,15 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 2000}) {
         onTapDown: (TapDownDetails details) {
           _calculateImageRect();
           final tapPosition = details.globalPosition;
-          setBodyPartStatus(); // 여기에서 `_currentBodyPart` 업데이트
           
           showPopupForCoordinates(context, tapPosition, onImageSelected);
+          
+          // 터치 이벤트 후 일정 시간 후 원래 상태로 복원
+          Future.delayed(const Duration(seconds: 2), () {
+             setBodyPartStatus();
+            _imageNotifier.value = 0; // ValueNotifier를 통해 애니메이션 상태 업데이트
+              startImageAnimation(); // 애니메이션 재시작
+          });
         },
         child: ValueListenableBuilder<int>(
           valueListenable: _imageNotifier,
@@ -657,6 +662,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 2000}) {
     },
   );
 }
+
 
   // 리소스 해제
   void dispose() {

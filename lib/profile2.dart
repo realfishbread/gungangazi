@@ -119,7 +119,7 @@ class _Profile2State extends State<Profile2> {
     );
   }
 
-  Widget buildProfileContent() {
+   Widget buildProfileContent() {
     final profile = _profile ?? defaultProfile;
 
     return Container(
@@ -208,6 +208,22 @@ class _Profile2State extends State<Profile2> {
             );
           }),
           _buildProfileItem('성별', profile.gender ?? '남성', null),
+          const SizedBox(height: 20),
+          Center(
+             child: ElevatedButton(
+            onPressed: () {
+              // 삼성 헬스와 연동하는 로직을 여기에 추가
+              print('삼성 헬스랑 연동 중...');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue, // 버튼 색상
+            ),
+            child: const Text(
+              '삼성 헬스랑 연동하기',
+              style: TextStyle(color: Colors.white),
+            ),
+            )
+          ),
           const SizedBox(height: 20),
           Center(
             child: TextButton(

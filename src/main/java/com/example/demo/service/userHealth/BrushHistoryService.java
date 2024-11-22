@@ -36,6 +36,7 @@ public class BrushHistoryService {
 
     private BrushHistoryDTO convertToDTO(BrushHistory brushHistory) {
         BrushHistoryDTO dto = new BrushHistoryDTO();
+        dto.setUsername(brushHistory.getUsername());
         dto.setDate(brushHistory.getDate());
         dto.setDuration(brushHistory.getDuration());
         dto.setFlossed(brushHistory.isFlossed());

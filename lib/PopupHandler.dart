@@ -592,12 +592,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 2000}) {
                 )
                     : const SizedBox(),
                 const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('다른 페이지로 이동'),
-                ),
+
               ],
             ),
           ),

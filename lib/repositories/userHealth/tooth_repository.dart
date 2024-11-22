@@ -53,11 +53,11 @@ class ToothRepository {
     }
   }
 
-  Future<void> deleteBrushHistory(String date) async {
+  Future<void> deleteBrushHistory(String id) async {
     try {
       String? token = await tokenService.getToken();
       await dioService.delete(
-        '/brushHistory/$date', // 서버의 삭제 API 엔드포인트
+        '/brushHistory/$id', // 서버의 삭제 API 엔드포인트
         headers: {'Authorization': 'Bearer $token'},
       );
     } catch (e) {

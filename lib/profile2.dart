@@ -11,6 +11,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'image_picker_web.dart';
 import 'image_picker_mobile.dart';
+import 'package:file_picker/file_picker.dart';
 
 class Profile2 extends StatefulWidget {
   final String username;

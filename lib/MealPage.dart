@@ -291,5 +291,4 @@ Future<void> _deleteMeal(String mealId, String date) async {
     _caloriesController.dispose();
     super.dispose();
   }
-}
-
+} 

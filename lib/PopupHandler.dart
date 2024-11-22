@@ -383,6 +383,7 @@ Future<void> loadStatusFromServer() async {
  
 
   void setBodyPartStatus() {
+    
     // 세 가지 상태의 조합에 따른 상태 설정
     if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel <= 200) {
       _currentBodyPart = 'thirsty_and_hungry_dizzy';
@@ -471,7 +472,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
     DateTime now = DateTime.now(); // 현재 시간 가져오기
     int hour = now.hour;
 
-   if (_currentBodyPart== 'default'){
+   if (_currentBodyPart== 'default' || _currentBodyPart =='0amtouch'|| _currentBodyPart =='smile'){
     // 10시 이후 상태 변경
       if (hour >= 22 || hour < 6) {
         _currentBodyPart = '0am'; // 잠옷바람 상태
@@ -639,7 +640,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
           showPopupForCoordinates(context, tapPosition, onImageSelected);
           
           // 터치 이벤트 후 일정 시간 후 원래 상태로 복원
-          Future.delayed(const Duration(seconds: 2), () {
+          Future.delayed(const Duration(seconds: 1), () {
              setBodyPartStatus();
             _imageNotifier.value = 0; // ValueNotifier를 통해 애니메이션 상태 업데이트
               startImageAnimation(); // 애니메이션 재시작

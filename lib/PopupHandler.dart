@@ -472,7 +472,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
     DateTime now = DateTime.now(); // 현재 시간 가져오기
     int hour = now.hour;
 
-   if (_currentBodyPart== 'default' ){
+   if (_currentBodyPart== 'default' || _currentBodyPart=='smile' ||_currentBodyPart=='0amtouch'){
     // 10시 이후 상태 변경
       if (hour >= 22 || hour < 6) {
         _currentBodyPart = '0am'; // 잠옷바람 상태
@@ -481,11 +481,11 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
       }
    }
 
-    if (hour == 6 || hour == 12 || hour == 18) {
+    if (hour >= 6 || hour >= 12 || hour >= 18) {
         mealLevel = 0;
         waterLevel = 0;
   }
-    if (hour == 6){
+    if (hour >= 6){
        sleepLevel =0;
     }
 
@@ -639,12 +639,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
           
           showPopupForCoordinates(context, tapPosition, onImageSelected);
           
-          // 터치 이벤트 후 일정 시간 후 원래 상태로 복원
-          Future.delayed(const Duration(seconds: 1), () {
-             setBodyPartStatus();
-            _imageNotifier.value = 0; // ValueNotifier를 통해 애니메이션 상태 업데이트
-              startImageAnimation(); // 애니메이션 재시작
-          });
+          setBodyPartStatus();
         },
         child: ValueListenableBuilder<int>(
           valueListenable: _imageNotifier,

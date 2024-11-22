@@ -1,4 +1,5 @@
 class BrushHistoryDTO {
+  final String id;
   final String date;
   final int duration;
   final bool flossed;
@@ -6,6 +7,7 @@ class BrushHistoryDTO {
  
 
   BrushHistoryDTO({
+    required this.id,
     required this.date,
     required this.duration,
     required this.flossed,
@@ -14,6 +16,7 @@ class BrushHistoryDTO {
 
   factory BrushHistoryDTO.fromJson(Map<String, dynamic> json) {
     return BrushHistoryDTO(
+      id: json['id'],
       date: json['date'],
       duration: json['duration'],
       flossed: json['flossed'],
@@ -23,6 +26,7 @@ class BrushHistoryDTO {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'date': date,
       'duration': duration,
       'flossed': flossed,

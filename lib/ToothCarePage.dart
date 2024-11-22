@@ -62,6 +62,7 @@ class _ToothCarePageState extends State<ToothCarePage> {
       _formKey.currentState!.save();
       String? username = await toothRepository.tokenService.getUsername();
       BrushHistoryDTO newBrushData = BrushHistoryDTO(
+        id: '',
         date: _selectedDate ?? DateFormat('yyyy-MM-dd').format(DateTime.now()),
         duration: _duration > 0 ? _duration : 1,
         flossed: _flossed,
@@ -102,6 +103,22 @@ class _ToothCarePageState extends State<ToothCarePage> {
     }
   }
 
+  void _deleteBrushHistory(BrushHistoryDTO history) async {
+  try {
+    await toothRepository.deleteBrushHistory(history.id);
+    setState(() {
+      _brushHistory = toothRepository.fetchBrushHistory();
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('${history.date} 기록이 삭제되었습니다.')),
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('기록 삭제에 실패했습니다: $e')),
+    );
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -137,11 +154,11 @@ class _ToothCarePageState extends State<ToothCarePage> {
                           return ListTile(
                             title: Text('날짜: ${history.date}'),
                             subtitle: Text('시간: ${history.duration}분, 치실 사용: ${history.flossed ? "O" : "X"}'),
-                            /*trailing: IconButton(
-                              /icon: const Icon(Icons.close),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.close),
                               onPressed: () => _deleteBrushHistory(history),
                               tooltip: '삭제',
-                            ),*/
+                            ),
                           );
                         },
                       );

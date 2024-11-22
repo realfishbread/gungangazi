@@ -5,10 +5,14 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.DTO.userHealth.BrushHistoryDTO;
 import com.example.demo.entity.userHealth.BrushHistory;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.userHealth.BrushHistoryRepository;
+
+
 
 @Service
 public class BrushHistoryService {
@@ -36,5 +40,13 @@ public class BrushHistoryService {
         dto.setDuration(brushHistory.getDuration());
         dto.setFlossed(brushHistory.isFlossed());
         return dto;
+    }
+     
+    @Transactional
+    public void deleteById(Long id) {
+        if (!brushHistoryRepository.existsById(id)) {
+            throw new ResourceNotFoundException("No record found for id: " + id);
+        }
+        brushHistoryRepository.deleteById(id);
     }
 }

@@ -34,4 +34,17 @@ class DioService {
 
     return dio;
   }
+
+  // DELETE 메서드 수정
+  Future<Response> delete(String path, {Map<String, dynamic>? headers}) async {
+    try {
+      final dio = getDio(); // getDio() 메서드를 호출해 Dio 인스턴스 가져오기
+      return await dio.delete(
+        path,
+        options: Options(headers: headers),
+      );
+    } catch (e) {
+      throw Exception('DELETE 요청 실패: $e');
+    }
+  }
 }

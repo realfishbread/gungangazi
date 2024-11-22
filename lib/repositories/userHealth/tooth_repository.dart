@@ -52,4 +52,16 @@ class ToothRepository {
       print("양치 데이터 저장 에러: $e");
     }
   }
+
+  Future<void> deleteBrushHistory(String date) async {
+    try {
+      String? token = await tokenService.getToken();
+      await dioService.delete(
+        '/brushHistory/$date', // 서버의 삭제 API 엔드포인트
+        headers: {'Authorization': 'Bearer $token'},
+      );
+    } catch (e) {
+      throw Exception('양치 기록 삭제에 실패했습니다: $e');
+    }
+  }
 }

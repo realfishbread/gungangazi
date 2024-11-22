@@ -56,6 +56,7 @@ class ToothRepository {
   Future<void> deleteBrushHistory(int id) async {
     try {
       String? token = await tokenService.getToken();
+      print('Bearer Token: $token'); // 디버깅용 로그
       await dioService.delete(
         '/brushHistory/$id', // 서버의 삭제 API 엔드포인트
         headers: {'Authorization': 'Bearer $token'},

@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.DTO.userHealth.BrushHistoryDTO;
 import com.example.demo.entity.userHealth.BrushHistory;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.userHealth.BrushHistoryRepository;
 
 
@@ -36,7 +35,8 @@ public class BrushHistoryService {
 
     private BrushHistoryDTO convertToDTO(BrushHistory brushHistory) {
         BrushHistoryDTO dto = new BrushHistoryDTO();
-        
+        dto.setId(brushHistory.getId());
+        dto.setUsername(brushHistory.getUsername());
         dto.setDate(brushHistory.getDate());
         dto.setDuration(brushHistory.getDuration());
         dto.setFlossed(brushHistory.isFlossed());
@@ -46,7 +46,7 @@ public class BrushHistoryService {
     @Transactional
     public void deleteById(long id) {
         if (!brushHistoryRepository.existsById(id)) {
-            throw new ResourceNotFoundException("No record found for id: " + id);
+            
         }
         brushHistoryRepository.deleteById(id);
     }

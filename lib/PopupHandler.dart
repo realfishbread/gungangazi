@@ -472,7 +472,9 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
     DateTime now = DateTime.now(); // 현재 시간 가져오기
     int hour = now.hour;
 
-   if (_currentBodyPart== 'default' || _currentBodyPart=='smile' ||_currentBodyPart=='0amtouch'){
+    
+
+   if (_currentBodyPart== 'default'){
     // 10시 이후 상태 변경
       if (hour >= 22 || hour < 6) {
         _currentBodyPart = '0am'; // 잠옷바람 상태
@@ -554,39 +556,40 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
       } else if (_currentBodyPart == 'hungry_and_dizzy') {
         popupMessage = '충분한 숙면과 밥을 챙겨주세요';
       } else if (_currentBodyPart == '0am'){
+        popupMessage = '좋은 꿈꾸세요!';
           if (relativeY < headHeight) {
           popupMessage = '주무실 시간이네요!';
-          _currentBodyPart = '0amtouch';
+          triggerAnimation('0amtouch');
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
             popupMessage = '오늘의 파자마는 보라색이예요.';
-            _currentBodyPart = '0amtouch';
+            triggerAnimation('0amtouch');
           } else {
             popupMessage = '오늘은 어떤 하루였나요?';
-            _currentBodyPart = '0amtouch';
+            triggerAnimation('0amtouch');
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
           popupMessage = '오늘 하루도 수고 많으셨어요.';
-          _currentBodyPart = '0amtouch';
+          triggerAnimation('0amtouch');
         } 
       }
       else {
       // 부위별 팝업 메시지 설정
-      if (relativeY < headHeight) {
-        popupMessage = '잘 주무셨나요?';
-        _currentBodyPart = 'smile';
-      } else if (relativeY >= headHeight && relativeY < legStartHeight) {
-        if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
-          popupMessage = '팔이 아프신가요?';
+        if (relativeY < headHeight) {
+          popupMessage = '잘 주무셨나요?';
           _currentBodyPart = 'smile';
-        } else {
-          popupMessage = '식사 하셨나요?';
+        } else if (relativeY >= headHeight && relativeY < legStartHeight) {
+          if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
+            popupMessage = '팔이 아프신가요?';
+            _currentBodyPart = 'smile';
+          } else {
+            popupMessage = '식사 하셨나요?';
+            _currentBodyPart = 'smile';
+          }
+        } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
+          popupMessage = '다리가 아프신가요?';
           _currentBodyPart = 'smile';
         }
-      } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
-        popupMessage = '다리가 아프신가요?';
-        _currentBodyPart = 'smile';
-      }
     }
     
       // 말풍선 형태의 팝업 표시
@@ -639,7 +642,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
           
           showPopupForCoordinates(context, tapPosition, onImageSelected);
           
-          setBodyPartStatus();
+           setBodyPartStatus();
         },
         child: ValueListenableBuilder<int>(
           valueListenable: _imageNotifier,

@@ -1,5 +1,5 @@
+import 'package:gungangazi/splash/SplashPage.dart';
 import 'ToothCarePage.dart';
-
 import 'BloodPressure.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';

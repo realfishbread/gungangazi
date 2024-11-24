@@ -154,47 +154,62 @@ Future<void> _saveSleepDataToServer() async {
   // 권장 수면 시간 (예: 8시간)
   double recommendedSleepHours = 8.0;
 
-  return BarChart(
-    BarChartData(
-      barGroups: barGroups,
-      titlesData: FlTitlesData(
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            interval: 4,
-            getTitlesWidget: (value, meta) => Text('${value.toInt()}h'),
-          ),
-        ),
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            getTitlesWidget: (double value, meta) {
-              return Text(_sleepRecords[value.toInt()]['date'] ?? '');
-            },
-          ),
-        ),
-      ),
-      borderData: FlBorderData(show: false),
-      minY: 0,
-      maxY: 24,
-      extraLinesData: ExtraLinesData(
-        horizontalLines: [
-          HorizontalLine(
-            y: recommendedSleepHours,
-            color: Colors.red,
-            strokeWidth: 2,
-            dashArray: [5, 5],
-            label: HorizontalLineLabel(
-              show: true,
-              alignment: Alignment.topLeft,
-              labelResolver: (line) => '권장 수면 시간: ${recommendedSleepHours.toInt()}h',
+  // 그래프 너비 계산 (데이터 개수에 따라 조정)
+  double chartWidth = barGroups.length * 40.0; // 막대 너비 + 간격 계산
+
+  return SizedBox(
+    height: 300, // 그래프 높이를 고정
+    child: SingleChildScrollView(
+      scrollDirection: Axis.horizontal, // 가로 스크롤 활성화
+      child: SizedBox(
+        width: chartWidth, // 데이터에 따라 그래프의 너비 설정
+        child: BarChart(
+          BarChartData(
+            barGroups: barGroups,
+            titlesData: FlTitlesData(
+              leftTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  interval: 4,
+                  getTitlesWidget: (value, meta) => Text('${value.toInt()}h'),
+                ),
+              ),
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  getTitlesWidget: (double value, meta) {
+                    return Text(
+                      _sleepRecords[value.toInt()]['date'] ?? '',
+                      style: const TextStyle(fontSize: 10),
+                    );
+                  },
+                ),
+              ),
+            ),
+            borderData: FlBorderData(show: false),
+            minY: 0,
+            maxY: 24,
+            extraLinesData: ExtraLinesData(
+              horizontalLines: [
+                HorizontalLine(
+                  y: recommendedSleepHours,
+                  color: Colors.red,
+                  strokeWidth: 2,
+                  dashArray: [5, 5],
+                  label: HorizontalLineLabel(
+                    show: true,
+                    alignment: Alignment.topLeft,
+                    labelResolver: (line) => '권장 수면 시간: ${recommendedSleepHours.toInt()}h',
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     ),
   );
-}
+  }
   // Helper method to calculate sleep duration
   Duration _calculateSleepDuration(TimeOfDay sleepTime, TimeOfDay wakeUpTime) {
     final now = DateTime.now();

@@ -211,32 +211,30 @@ Future<void> _deleteMeal(String mealId, String date) async {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 10),
+                      ],
+                    ),
+                    const SizedBox(height: 10), // 줄 간격 추가
+                    Row(
+                      children: [
                         Expanded(
                           flex: 3,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: TextField(
-                                  controller: _caloriesController,
-                                  decoration: const InputDecoration(
-                                    labelText: '칼로리 (Kcal)',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  keyboardType: TextInputType.number,
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              ElevatedButton(
-                                onPressed: _addMeal,
-                                child: const Text('기록 추가'),
-                              ),
-                            ],
+                          child: TextField(
+                            controller: _caloriesController,
+                            decoration: const InputDecoration(
+                              labelText: '칼로리 (Kcal)',
+                              border: OutlineInputBorder(),
+                            ),
+                            keyboardType: TextInputType.number,
                           ),
+                        ),
+                        const SizedBox(width: 10),
+                        ElevatedButton(
+                          onPressed: _addMeal,
+                          child: const Text('기록 추가'),
                         ),
                       ],
                     ),
+
                     const SizedBox(height: 20),
                     const Divider(
                       thickness: 2,

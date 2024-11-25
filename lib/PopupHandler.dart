@@ -29,7 +29,6 @@ class PopupHandler {
    void initialize() async{
     await loadStatusFromServer();
     setBodyPartStatus();
-    startImageAnimation();
 }
 
 
@@ -479,14 +478,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
       }
    }
 
-    if (hour >= 6 || hour >= 12 || hour >= 18) {
-        mealLevel = 0;
-        waterLevel = 0;
-  }
-    if (hour >= 6){
-       sleepLevel =0;
-    }
-
+    
     print("Character status updated based on time: $_currentBodyPart");
   }
 

@@ -28,8 +28,8 @@ class PopupHandler {
 
    void initialize() async{
     await loadStatusFromServer();
-  startImageAnimation(); // 애니메이션 시작
-  startPeriodicStatusUpdate(); // 주기적인 업데이트 시작
+    setBodyPartStatus();
+    startImageAnimation();
 }
 
 

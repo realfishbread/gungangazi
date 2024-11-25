@@ -2,7 +2,10 @@ package com.example.demo.DTO.userHealth;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class SupplementDTO {
+     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
     private boolean supplement_taken;
     private boolean menstruation_recorded;

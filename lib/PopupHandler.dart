@@ -23,15 +23,11 @@ class PopupHandler {
 
   
   
-
-  final int waterLevelThreshold = 100; 
-  final int mealLevelThreshold = 100; // 식사 기준 값
-  final int sleepLevelThreshold = 100;
   final GlobalKey _imageKey = GlobalKey(); // 이미지를 위한 GlobalKey 선언
   Rect? _imageRect;
 
-   void initialize() {
-  setBodyPartStatus(); // 상태 초기화
+   void initialize() async{
+    await loadStatusFromServer();
   startImageAnimation(); // 애니메이션 시작
   startPeriodicStatusUpdate(); // 주기적인 업데이트 시작
 }
@@ -299,8 +295,6 @@ class PopupHandler {
 
         } {
     _imageNotifier = ValueNotifier<int>(_currentImageIndex);
-    setBodyPartStatus(); // 새로운 상태에 따라 이미지 경로 설정
-    startImageAnimation(); // 애니메이션 다시 시작
     loadStatusFromServer();
   }
   void updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) async {
@@ -314,7 +308,6 @@ class PopupHandler {
 
       // 상태 업데이트 후 서버에 저장
       await saveStatusToServer();
-      // 물 상태가 증가했다면 물 마시는 행동 실행
       
 
       
@@ -479,7 +472,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
 
    if (_currentBodyPart== 'default'){
     // 10시 이후 상태 변경
-      if (hour >= 22 || hour < 6) {
+      if (hour >= 22 && hour < 6) {
         _currentBodyPart = '0am'; // 잠옷바람 상태
       } else {
         _currentBodyPart = 'default'; // 기본 상태

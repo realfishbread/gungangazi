@@ -1,5 +1,4 @@
 package com.example.demo.service;
-
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,4 +29,5 @@ public class StatusService {
     public Optional<Status> getStatusByUsername(String username) {
         return statusRepository.findByUsername(username);
     }
+    
 }

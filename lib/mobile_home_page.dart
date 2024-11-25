@@ -35,6 +35,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
   void initState() {
     super.initState();
     _popupHandler = PopupHandler(listData: _listData, tokenService: _tokenService, dioService: _dioService);
+   
   }
 
   @override

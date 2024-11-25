@@ -155,7 +155,7 @@ class _SleepPageState extends State<SleepPage> {
     // 권장 수면 시간 (예: 8시간)
     double recommendedSleepHours = 8.0;
 
-    return makeScrollable(BarChart(
+    return BarChart(
       BarChartData(
         barGroups: barGroups,
         titlesData: FlTitlesData(
@@ -194,7 +194,7 @@ class _SleepPageState extends State<SleepPage> {
           ],
         ),
       ),
-    ));
+    );
   }
 
   // 스크롤 가능하게 만드는 유틸리티 메서드
@@ -246,33 +246,41 @@ class _SleepPageState extends State<SleepPage> {
           child: Container(
             padding: const EdgeInsets.all(16.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                ElevatedButton(
-                  onPressed: () => _selectSleepTime(context),
-                  child: Text(_sleepTime == null
-                      ? '취침 시간 선택'
-                      : '취침 시간: ${_sleepTime!.hour}시 ${_sleepTime!.minute}분'),
+                // 버튼들을 수평으로 정렬
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () => _selectSleepTime(context),
+                      icon: const Icon(Icons.bedtime),
+                      label: Text(
+                        _sleepTime == null
+                            ? '취침 시각 선택'
+                            : 'Sleep Time: ${_sleepTime!.format(context)}',
+                      ),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () => _selectWakeUpTime(context),
+                      icon: const Icon(Icons.wb_sunny),
+                      label: Text(
+                        _wakeUpTime == null
+                            ? '기상 시각 선택'
+                            : 'Wake-up Time: ${_wakeUpTime!.format(context)}',
+                      ),
+                    ),
+                  ],
                 ),
-                ElevatedButton(
-                  onPressed: () => _selectWakeUpTime(context),
-                  child: Text(_wakeUpTime == null
-                      ? '기상 시간 선택'
-                      : '기상 시간: ${_wakeUpTime!.hour}시 ${_wakeUpTime!.minute}분'),
-                ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 20),
+                // 저장 버튼
                 ElevatedButton(
                   onPressed: _saveSleepDataToServer,
-                  child: const Text('저장하기'),
+                  child: const Text('저장'),
                 ),
-                const SizedBox(height: 24.0),
-                const Text(
-                  '수면 기록',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 20),
+                // 그래프를 스크롤 가능하도록 변경
                 Expanded(
-                  child: _buildSleepGraph(),
+                  child: makeScrollable(_buildSleepGraph()),
                 ),
               ],
             ),

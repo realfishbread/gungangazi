@@ -11,7 +11,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'image_picker_web.dart';
 import 'image_picker_mobile.dart';
-import 'package:file_picker/file_picker.dart';
 
 class Profile2 extends StatefulWidget {
   final String username;
@@ -119,7 +118,7 @@ class _Profile2State extends State<Profile2> {
     );
   }
 
-   Widget buildProfileContent() {
+  Widget buildProfileContent() {
     final profile = _profile ?? defaultProfile;
 
     return Container(
@@ -212,18 +211,18 @@ class _Profile2State extends State<Profile2> {
           Center(
              child: ElevatedButton(
             onPressed: () {
-              // 삼성 헬스와 연동하는 로직을 여기에 추가
-              print('삼성 헬스랑 연동 중...');
+
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue, // 버튼 색상
             ),
             child: const Text(
-              '삼성 헬스랑 연동하기',
+              '삼성 헬스',
               style: TextStyle(color: Colors.white),
             ),
-            )
+          )
           ),
+          
           const SizedBox(height: 20),
           Center(
             child: TextButton(

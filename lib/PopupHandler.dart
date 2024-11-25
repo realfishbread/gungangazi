@@ -31,9 +31,11 @@ class PopupHandler {
   Rect? _imageRect;
 
    void initialize() {
-    startImageAnimation();
-    startPeriodicStatusUpdate();
-  }
+  setBodyPartStatus(); // 상태 초기화
+  startImageAnimation(); // 애니메이션 시작
+  startPeriodicStatusUpdate(); // 주기적인 업데이트 시작
+}
+
 
   // 기본 이미지 리스트 (애니메이션을 위해 여러 장)
   final List<String> defaultImagePaths = [
@@ -66,15 +68,12 @@ class PopupHandler {
   PopupHandler({required this.listData, required this.dioService, required this.tokenService})
       : imagePathsByBodyPart = {
           'head': [
-            'assets/person/jindan_sad1.jpg',
-            'assets/person/jindan_sad2.jpg',
-            'assets/person/jindan_sad3.jpg',
-            'assets/person/jindan_sad4.jpg',
-            'assets/person/jindan_sad5.jpg',
-            'assets/person/jindan_sad6.jpg',
-            'assets/person/jindan_sad7.jpg',
-            'assets/person/jindan_sad8.jpg',
-            'assets/person/jindan_sad9.jpg',
+            'assets/person/head1.jpg',
+            'assets/person/head2.jpg',
+            'assets/person/head3.jpg',
+            'assets/person/head3.jpg',
+            'assets/person/head2.jpg',
+            'assets/person/head1.jpg',
           ],
           'body': [
             'assets/person/jindan_stomach1.jpg',
@@ -300,6 +299,8 @@ class PopupHandler {
 
         } {
     _imageNotifier = ValueNotifier<int>(_currentImageIndex);
+    setBodyPartStatus(); // 새로운 상태에 따라 이미지 경로 설정
+    startImageAnimation(); // 애니메이션 다시 시작
     loadStatusFromServer();
   }
   void updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) async {
@@ -319,6 +320,7 @@ class PopupHandler {
       
       setBodyPartStatus(); // 새로운 상태에 따라 이미지 경로 설정
       startImageAnimation(); // 애니메이션 다시 시작
+      
       print("Status updated and animation started - Current Body Part: $_currentBodyPart");
 }
    /// 서버에 현재 상태 저장
@@ -374,6 +376,7 @@ Future<void> loadStatusFromServer() async {
       mealLevel = data['meal_level'] ?? 100;
       sleepLevel = data['sleep_level'] ?? 100;
       setBodyPartStatus();
+      startImageAnimation(); // 상태 업데이트 후 애니메이션 재시작
       print('Status loaded from server successfully');
     }
   } catch (e) {
@@ -387,17 +390,17 @@ Future<void> loadStatusFromServer() async {
     // 세 가지 상태의 조합에 따른 상태 설정
     if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel <= 200) {
       _currentBodyPart = 'thirsty_and_hungry_dizzy';
-    } else if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel > 200) {
+    } else if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel >= 200) {
       _currentBodyPart = 'thirsty_and_hungry';
-    } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel <= 200) {
+    } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel < 200) {
       _currentBodyPart = 'thirsty_and_dizzy';
-    } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel <= 200) {
+    } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel < 200) {
       _currentBodyPart = 'hungry_and_dizzy';
-    } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel > 200) {
+    } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel >= 200) {
       _currentBodyPart = 'thirsty';
-    } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel > 200) {
+    } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel >= 200) {
       _currentBodyPart = 'hungry';
-    } else if (waterLevel > 200 && mealLevel > 200 && sleepLevel <= 200) {
+    } else if (waterLevel > 200 && mealLevel > 200 && sleepLevel < 200) {
       _currentBodyPart = 'dizzy';
     } else {
       updateCharacterStatusBasedOnTime();

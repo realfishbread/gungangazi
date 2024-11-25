@@ -13,6 +13,7 @@ class SleepPage extends StatefulWidget {
   final PopupHandler popupHandler;
 
   const SleepPage({Key? key, required this.popupHandler}) : super(key: key);
+
   @override
   _SleepPageState createState() => _SleepPageState();
 }
@@ -115,7 +116,7 @@ class _SleepPageState extends State<SleepPage> {
     }
   }
 
-
+  // 수면 그래프를 생성하고 스크롤 가능하도록 감싸는 메서드
   Widget _buildSleepGraph() {
     if (_sleepRecords.isEmpty) {
       return const Center(child: Text('저장된 수면 기록이 없습니다.'));
@@ -154,7 +155,7 @@ class _SleepPageState extends State<SleepPage> {
     // 권장 수면 시간 (예: 8시간)
     double recommendedSleepHours = 8.0;
 
-    return BarChart(
+    return makeScrollable(BarChart(
       BarChartData(
         barGroups: barGroups,
         titlesData: FlTitlesData(
@@ -193,8 +194,20 @@ class _SleepPageState extends State<SleepPage> {
           ],
         ),
       ),
+    ));
+  }
+
+  // 스크롤 가능하게 만드는 유틸리티 메서드
+  Widget makeScrollable(Widget widget) {
+    return Scrollbar(
+      thumbVisibility: true,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: widget,
+      ),
     );
   }
+
   // Helper method to calculate sleep duration
   Duration _calculateSleepDuration(TimeOfDay sleepTime, TimeOfDay wakeUpTime) {
     final now = DateTime.now();
@@ -213,8 +226,6 @@ class _SleepPageState extends State<SleepPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-
-
         // sleepLevel이 증가했는지 확인
         if (widget.popupHandler.sleepLevel > _currentSleepLevel) {
           widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 1000);
@@ -235,36 +246,31 @@ class _SleepPageState extends State<SleepPage> {
           child: Container(
             padding: const EdgeInsets.all(16.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton.icon(
-                      onPressed: () => _selectSleepTime(context),
-                      icon: const Icon(Icons.bedtime),
-                      label: Text(
-                        _sleepTime == null
-                            ? '취침 시각 선택'
-                            : 'Sleep Time: ${_sleepTime!.format(context)}',
-                      ),
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: () => _selectWakeUpTime(context),
-                      icon: const Icon(Icons.wb_sunny),
-                      label: Text(
-                        _wakeUpTime == null
-                            ? '기상 시각 선택'
-                            : 'Wake-up Time: ${_wakeUpTime!.format(context)}',
-                      ),
-                    ),
-                  ],
+                ElevatedButton(
+                  onPressed: () => _selectSleepTime(context),
+                  child: Text(_sleepTime == null
+                      ? '취침 시간 선택'
+                      : '취침 시간: ${_sleepTime!.hour}시 ${_sleepTime!.minute}분'),
                 ),
-                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () => _selectWakeUpTime(context),
+                  child: Text(_wakeUpTime == null
+                      ? '기상 시간 선택'
+                      : '기상 시간: ${_wakeUpTime!.hour}시 ${_wakeUpTime!.minute}분'),
+                ),
+                const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: _saveSleepDataToServer,
-                  child: const Text('저장'),
+                  child: const Text('저장하기'),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 24.0),
+                const Text(
+                  '수면 기록',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16.0),
                 Expanded(
                   child: _buildSleepGraph(),
                 ),
@@ -277,9 +283,9 @@ class _SleepPageState extends State<SleepPage> {
   }
 
   Future<void> _selectSleepTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
+    TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.now(),
+      initialTime: _sleepTime ?? TimeOfDay.now(),
     );
     if (picked != null && picked != _sleepTime) {
       setState(() {
@@ -289,9 +295,9 @@ class _SleepPageState extends State<SleepPage> {
   }
 
   Future<void> _selectWakeUpTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
+    TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.now(),
+      initialTime: _wakeUpTime ?? TimeOfDay.now(),
     );
     if (picked != null && picked != _wakeUpTime) {
       setState(() {
@@ -299,5 +305,4 @@ class _SleepPageState extends State<SleepPage> {
       });
     }
   }
-
 }

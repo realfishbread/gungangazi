@@ -66,15 +66,12 @@ class PopupHandler {
   PopupHandler({required this.listData, required this.dioService, required this.tokenService})
       : imagePathsByBodyPart = {
           'head': [
-            'assets/person/jindan_sad1.jpg',
-            'assets/person/jindan_sad2.jpg',
-            'assets/person/jindan_sad3.jpg',
-            'assets/person/jindan_sad4.jpg',
-            'assets/person/jindan_sad5.jpg',
-            'assets/person/jindan_sad6.jpg',
-            'assets/person/jindan_sad7.jpg',
-            'assets/person/jindan_sad8.jpg',
-            'assets/person/jindan_sad9.jpg',
+            'assets/person/head1.jpg',
+            'assets/person/head2.jpg',
+            'assets/person/head3.jpg',
+            'assets/person/head3.jpg',
+            'assets/person/head2.jpg',
+            'assets/person/head1.jpg',
           ],
           'body': [
             'assets/person/jindan_stomach1.jpg',
@@ -387,17 +384,17 @@ Future<void> loadStatusFromServer() async {
     // 세 가지 상태의 조합에 따른 상태 설정
     if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel <= 200) {
       _currentBodyPart = 'thirsty_and_hungry_dizzy';
-    } else if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel > 200) {
+    } else if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel >= 200) {
       _currentBodyPart = 'thirsty_and_hungry';
-    } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel <= 200) {
+    } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel < 200) {
       _currentBodyPart = 'thirsty_and_dizzy';
-    } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel <= 200) {
+    } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel < 200) {
       _currentBodyPart = 'hungry_and_dizzy';
-    } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel > 200) {
+    } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel >= 200) {
       _currentBodyPart = 'thirsty';
-    } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel > 200) {
+    } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel >= 200) {
       _currentBodyPart = 'hungry';
-    } else if (waterLevel > 200 && mealLevel > 200 && sleepLevel <= 200) {
+    } else if (waterLevel > 200 && mealLevel > 200 && sleepLevel < 200) {
       _currentBodyPart = 'dizzy';
     } else {
       updateCharacterStatusBasedOnTime();

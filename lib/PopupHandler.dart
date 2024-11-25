@@ -438,9 +438,10 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
     return;
   }
 
-  // 기존 타이머를 중지하고 초기화
+  // 기존 타이머 중지
   _imageTimer?.cancel();
   _imageNotifier.value = 0; // 애니메이션 초기화
+  String previousBodyPart = _currentBodyPart; // 이전 상태 저장
   _currentBodyPart = bodyPart; // 현재 애니메이션 상태 설정
 
   // 애니메이션 실행을 위한 타이머 시작
@@ -454,11 +455,12 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
       print("Animation for $bodyPart completed");
       timer.cancel();
 
-      // 일정 시간 후 기본 상태로 복구
+      // 일정 시간 후 원래 상태 복구
       Future.delayed(Duration(milliseconds: delayMilliseconds), () {
-        setBodyPartStatus();
-        _imageNotifier.value = 0;
-        startImageAnimation();
+        // 상태 복구
+        _currentBodyPart = previousBodyPart; // 이전 상태로 복구
+        setBodyPartStatus(); // 상태 업데이트
+        startImageAnimation(); // 복구된 상태로 애니메이션 재시작
         print("Character state restored to $_currentBodyPart");
       });
     }

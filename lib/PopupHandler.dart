@@ -31,9 +31,11 @@ class PopupHandler {
   Rect? _imageRect;
 
    void initialize() {
-    startImageAnimation();
-    startPeriodicStatusUpdate();
-  }
+  setBodyPartStatus(); // 상태 초기화
+  startImageAnimation(); // 애니메이션 시작
+  startPeriodicStatusUpdate(); // 주기적인 업데이트 시작
+}
+
 
   // 기본 이미지 리스트 (애니메이션을 위해 여러 장)
   final List<String> defaultImagePaths = [
@@ -297,6 +299,8 @@ class PopupHandler {
 
         } {
     _imageNotifier = ValueNotifier<int>(_currentImageIndex);
+    setBodyPartStatus(); // 새로운 상태에 따라 이미지 경로 설정
+    startImageAnimation(); // 애니메이션 다시 시작
     loadStatusFromServer();
   }
   void updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) async {
@@ -316,6 +320,7 @@ class PopupHandler {
       
       setBodyPartStatus(); // 새로운 상태에 따라 이미지 경로 설정
       startImageAnimation(); // 애니메이션 다시 시작
+      
       print("Status updated and animation started - Current Body Part: $_currentBodyPart");
 }
    /// 서버에 현재 상태 저장
@@ -371,6 +376,7 @@ Future<void> loadStatusFromServer() async {
       mealLevel = data['meal_level'] ?? 100;
       sleepLevel = data['sleep_level'] ?? 100;
       setBodyPartStatus();
+      startImageAnimation(); // 상태 업데이트 후 애니메이션 재시작
       print('Status loaded from server successfully');
     }
   } catch (e) {

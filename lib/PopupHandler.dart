@@ -29,6 +29,7 @@ class PopupHandler {
    void initialize() async{
     await loadStatusFromServer();
     setBodyPartStatus();
+    
 }
 
 
@@ -377,8 +378,9 @@ Future<void> loadStatusFromServer() async {
 }
  
 
+
   void setBodyPartStatus() {
-    
+     String PreviousBodyPart =_currentBodyPart;
     // 세 가지 상태의 조합에 따른 상태 설정
     if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel <= 200) {
       _currentBodyPart = 'thirsty_and_hungry_dizzy';
@@ -402,6 +404,10 @@ Future<void> loadStatusFromServer() async {
 
   // 이미지 애니메이션 시작
   void startImageAnimation() {
+    String previousBodyPart =_currentBodyPart;
+    
+    // 상태가 변경된 경우에만 애니메이션을 다시 시작
+  if (previousBodyPart != _currentBodyPart) {
     _imageTimer?.cancel(); // 기존 타이머 중지
 
     _imageTimer = Timer.periodic(frameDuration, (timer) {
@@ -409,7 +415,12 @@ Future<void> loadStatusFromServer() async {
           (imagePathsByBodyPart[_currentBodyPart]?.length ?? defaultImagePaths.length);
       _imageNotifier.value = _currentImageIndex;
     });
+
+    print("Animation restarted for $_currentBodyPart");
+  } else {
+    print("No state change. Animation continues for $_currentBodyPart");
   }
+}
 
   // 이미지 애니메이션 중지
   void stopImageAnimation() {

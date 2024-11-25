@@ -243,15 +243,4 @@ class _WaterDrinkState extends State<WaterDrink> {
       ),
     );
   }
-
-
-
-/// 그래프 너비를 계산하는 메서드
-  double _calculateChartWidth({required bool isMobile}) {
-    int dataCount = _dailyWaterIntake.keys.length;
-    int visibleCount = isMobile ? 5 : dataCount;
-    double barWidth = 100.0; // 막대 너비 및 간격
-
-    return visibleCount * barWidth;
-  }
 }

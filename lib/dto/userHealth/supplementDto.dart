@@ -24,7 +24,7 @@ class SupplementDto {
   // 객체를 JSON으로 변환합니다.
   Map<String, dynamic> toJson() {
     return {
-      'date': date.toIso8601String(),
+      'date': date.toIso8601String().split('T')[0],
       'supplement_taken': supplement_taken,
       'menstruation_recorded': menstruation_recorded,
       'username': username,

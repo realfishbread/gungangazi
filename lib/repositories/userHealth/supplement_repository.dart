@@ -25,7 +25,6 @@ class SupplementRepository {
         '/supplements/save',
         data: {
           ...supplementDto.toJson(),
-          'username': username, // username을 추가하는 경우
         },
       );
       print('영양제 복용 데이터 저장 완료');

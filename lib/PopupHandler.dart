@@ -28,8 +28,7 @@ class PopupHandler {
 
    void initialize() async{
     await loadStatusFromServer();
-  startImageAnimation(); // 애니메이션 시작
-  startPeriodicStatusUpdate(); // 주기적인 업데이트 시작
+    setBodyPartStatus();
 }
 
 
@@ -479,14 +478,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
       }
    }
 
-    if (hour >= 6 || hour >= 12 || hour >= 18) {
-        mealLevel = 0;
-        waterLevel = 0;
-  }
-    if (hour >= 6){
-       sleepLevel =0;
-    }
-
+    
     print("Character status updated based on time: $_currentBodyPart");
   }
 
@@ -568,6 +560,8 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
           popupMessage = '오늘 하루도 수고 많으셨어요.';
           triggerAnimation('0amtouch');
         } 
+      }else if (_currentBodyPart == 'dizzy') {
+        popupMessage = '수면 시간을 늘려주세요!';
       }
       else {
       // 부위별 팝업 메시지 설정

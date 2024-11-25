@@ -467,6 +467,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
       Future.delayed(Duration(milliseconds: delayMilliseconds), () {
         setBodyPartStatus();
         _imageNotifier.value = 0;
+        startImageAnimation();
         print("Character state restored to $_currentBodyPart");
       });
     }

@@ -16,7 +16,6 @@ class WaterDrink extends StatefulWidget {
 }
 
 class _WaterDrinkState extends State<WaterDrink> {
-   
   final WaterRepository waterRepository = WaterRepository(
     dioService: DioService(),
     tokenService: TokenService(),
@@ -55,15 +54,13 @@ class _WaterDrinkState extends State<WaterDrink> {
     int todayWaterIntake = _dailyWaterIntake[today] ?? 0;
     int todayMealLevel = widget.popupHandler.mealLevel; // 현재 mealLevel 가져오기
 
-    
-
-    // WaterDrink의 _addWater 메서드에 상태 업데이트
-  widget.popupHandler.updateStatus(
-    newWaterLevel: todayWaterIntake,
-    newMealLevel: todayMealLevel,
-    newSleepLevel: widget.popupHandler.sleepLevel
-  );
-  print("Water added and PopupHandler status updated - Water Level: $todayWaterIntake");
+    widget.popupHandler.updateStatus(
+      newWaterLevel: todayWaterIntake,
+      newMealLevel: todayMealLevel,
+      newSleepLevel: widget.popupHandler.sleepLevel,
+    );
+    print(
+        "Water added and PopupHandler status updated - Water Level: $todayWaterIntake");
 
     if (todayWaterIntake <= 200) {
       _showWarning('물');
@@ -91,156 +88,159 @@ class _WaterDrinkState extends State<WaterDrink> {
   }
 
   List<BarChartGroupData> _generateBarChartData({required bool isMobile}) {
-  // 날짜 정렬
-  List<String> dates = _dailyWaterIntake.keys.toList()..sort();
+    // 날짜 정렬
+    List<String> dates = _dailyWaterIntake.keys.toList()..sort();
 
-  // 스마트폰 화면에서는 최신 5개만 표시
-  List<String> visibleDates = isMobile && dates.length > 5
-      ? dates.sublist(dates.length - 5)
-      : dates;
+    // 최신 7개의 데이터만 표시
+    List<String> visibleDates =
+    dates.length > 7 ? dates.sublist(dates.length - 7) : dates;
 
-  // BarChartGroupData 생성
-  List<BarChartGroupData> barGroups = [];
-  for (int i = 0; i < visibleDates.length; i++) {
-    barGroups.add(
-      BarChartGroupData(
-        x: i,
-        barRods: [
-          BarChartRodData(
-            toY: (_dailyWaterIntake[visibleDates[i]] ?? 0).toDouble(),
-            width: 15,
-            color: Colors.blue,
-          )
-        ],
-      ),
-    );
+    // BarChartGroupData 생성
+    List<BarChartGroupData> barGroups = [];
+    for (int i = 0; i < visibleDates.length; i++) {
+      barGroups.add(
+        BarChartGroupData(
+          x: i,
+          barRods: [
+            BarChartRodData(
+              toY: (_dailyWaterIntake[visibleDates[i]] ?? 0).toDouble(),
+              width: 15,
+              color: Colors.blue,
+            )
+          ],
+        ),
+      );
+    }
+    return barGroups;
   }
-  return barGroups;
-}
 
-@override
-Widget build(BuildContext context) {
-  // 스마트폰인지 데스크톱인지 판단
-  bool isMobile = MediaQuery.of(context).size.width < 600;
+  @override
+  Widget build(BuildContext context) {
+    // 스마트폰인지 데스크톱인지 판단
+    bool isMobile = MediaQuery.of(context).size.width < 600;
 
-  return WillPopScope(
-    onWillPop: () async {
-      // 물 상태가 증가했는지 확인하고 애니메이션 실행
-      if (widget.popupHandler.waterLevel > _currentWaterLevel) {
-        widget.popupHandler.triggerAnimation('drinkwater', delayMilliseconds: 1000);
-      } else {
-        print("No significant water level change, no animation triggered.");
-      }
+    return WillPopScope(
+      onWillPop: () async {
+        // 물 상태가 증가했는지 확인하고 애니메이션 실행
+        if (widget.popupHandler.waterLevel > _currentWaterLevel) {
+          widget.popupHandler.triggerAnimation(
+              'drinkwater', delayMilliseconds: 1000);
+        } else {
+          print("No significant water level change, no animation triggered.");
+        }
 
-      // 뒤로가기 동작 허용
-      return true;
-    },
-    child: Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        title: const Text("수분 섭취"),
-        backgroundColor: const Color(0xFFFFF9C4),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: SizedBox(
-                  width: (isMobile ? 5 : _dailyWaterIntake.keys.length) * 80.0, // 막대 그래프 크기 조정
-                  child: BarChart(
-                    BarChartData(
-                      barGroups: _generateBarChartData(isMobile: isMobile), // 스마트폰 여부를 전달
-                      backgroundColor: Colors.lightBlue[50],
-                      titlesData: FlTitlesData(
-                        bottomTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            getTitlesWidget: (double value, TitleMeta meta) {
-                              List<String> dates = _dailyWaterIntake.keys.toList()..sort();
-                              List<String> visibleDates = isMobile && dates.length > 5
-                                  ? dates.sublist(dates.length - 5)
-                                  : dates;
-                              int index = value.toInt();
-                              if (index >= 0 && index < visibleDates.length) {
-                                return Text(visibleDates[index], style: const TextStyle(fontSize: 10));
-                              } else {
-                                return const Text("");
-                              }
-                            },
-                            interval: 1,
-                          ),
-                        ),
-                        leftTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            reservedSize: 28,
-                            interval: 200,
-                            getTitlesWidget: (value, meta) => Text('${value.toInt()}ml'),
-                          ),
-                        ),
-                      ),
-                      gridData: FlGridData(
-                        show: true,
-                        drawVerticalLine: false,
-                        horizontalInterval: 200,
-                        getDrawingHorizontalLine: (value) {
-                          return FlLine(
-                            color: Colors.grey[300]!,
-                            strokeWidth: 1,
-                          );
-                        },
-                      ),
-                      borderData: FlBorderData(show: false),
-                      barTouchData: BarTouchData(enabled: true),
-                      extraLinesData: ExtraLinesData(
-                        horizontalLines: [
-                          HorizontalLine(
-                            y: 2000, // 권장 수분 섭취량
-                            color: Colors.red,
-                            strokeWidth: 2,
-                            dashArray: [5, 5],
-                            label: HorizontalLineLabel(
-                              show: true,
-                              alignment: Alignment.topLeft,
-                              labelResolver: (line) => '권장 섭취량: 2000ml',
+        // 뒤로가기 동작 허용
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: true,
+          title: const Text("수분 섭취"),
+          backgroundColor: const Color(0xFFFFF9C4),
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: SizedBox(
+                    width: 7 * 80.0, // 최신 7개 데이터를 기준으로 크기 설정
+                    child: BarChart(
+                      BarChartData(
+                        barGroups: _generateBarChartData(isMobile: isMobile),
+                        backgroundColor: Colors.lightBlue[50],
+                        titlesData: FlTitlesData(
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              getTitlesWidget: (double value, TitleMeta meta) {
+                                List<String> dates =
+                                _dailyWaterIntake.keys.toList()..sort();
+                                List<String> visibleDates = dates.length > 7
+                                    ? dates.sublist(dates.length - 7)
+                                    : dates;
+                                int index = value.toInt();
+                                if (index >= 0 && index < visibleDates.length) {
+                                  return Text(visibleDates[index],
+                                      style: const TextStyle(fontSize: 10));
+                                } else {
+                                  return const Text("");
+                                }
+                              },
+                              interval: 1,
                             ),
                           ),
-                        ],
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 28,
+                              interval: 200,
+                              getTitlesWidget: (value, meta) =>
+                                  Text('${value.toInt()}ml'),
+                            ),
+                          ),
+                        ),
+                        gridData: FlGridData(
+                          show: true,
+                          drawVerticalLine: false,
+                          horizontalInterval: 200,
+                          getDrawingHorizontalLine: (value) {
+                            return FlLine(
+                              color: Colors.grey[300]!,
+                              strokeWidth: 1,
+                            );
+                          },
+                        ),
+                        borderData: FlBorderData(show: false),
+                        barTouchData: BarTouchData(enabled: true),
+                        extraLinesData: ExtraLinesData(
+                          horizontalLines: [
+                            HorizontalLine(
+                              y: 2000, // 권장 수분 섭취량
+                              color: Colors.red,
+                              strokeWidth: 2,
+                              dashArray: [5, 5],
+                              label: HorizontalLineLabel(
+                                show: true,
+                                alignment: Alignment.topLeft,
+                                labelResolver: (line) => '권장 섭취량: 2000ml',
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () => _addWater(-200),
-                      child: const Text('-물 한 잔 취소'),
-                    ),
-                    const SizedBox(width: 20),
-                    ElevatedButton(
-                      onPressed: () => _addWater(200),
-                      child: const Text('+물 한 잔 200ml'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => _addWater(-200),
+                        child: const Text('-물 한 잔 취소'),
+                      ),
+                      const SizedBox(width: 20),
+                      ElevatedButton(
+                        onPressed: () => _addWater(200),
+                        child: const Text('+물 한 잔 200ml'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

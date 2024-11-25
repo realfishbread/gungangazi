@@ -36,7 +36,7 @@ class _SleepPageState extends State<SleepPage> {
     _currentSleepLevel = widget.popupHandler.sleepLevel;
   }
 
-  // Fetch sleep data from the server and update _sleepRecords
+  // 서버에서 수면 데이터 가져오기
   Future<void> _loadSleepDataFromServer() async {
     List<SleepDto> serverData = await sleepRepository.fetchSleepDataFromDatabase();
     setState(() {
@@ -47,10 +47,10 @@ class _SleepPageState extends State<SleepPage> {
         'username': dto.username,
       }).toList();
     });
-    print('_sleepRecords: $_sleepRecords'); // Debugging print
+    print('_sleepRecords: $_sleepRecords'); // 디버깅용 출력
   }
 
-  // Save sleep data directly to the server
+  // 수면 데이터 서버에 저장하기
   Future<void> _saveSleepDataToServer() async {
     if (_sleepTime != null && _wakeUpTime != null) {
       String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -116,13 +116,18 @@ class _SleepPageState extends State<SleepPage> {
     }
   }
 
-  // 수면 그래프를 생성하고 스크롤 가능하도록 감싸는 메서드
+  // 그래프 생성 메서드
   Widget _buildSleepGraph() {
     if (_sleepRecords.isEmpty) {
       return const Center(child: Text('저장된 수면 기록이 없습니다.'));
     }
 
-    List<BarChartGroupData> barGroups = _sleepRecords.asMap().entries.map((entry) {
+    // 최근 7개의 수면 기록만 사용
+    List<Map<String, String>> recentSleepRecords = _sleepRecords.length > 7
+        ? _sleepRecords.sublist(_sleepRecords.length - 7)
+        : _sleepRecords;
+
+    List<BarChartGroupData> barGroups = recentSleepRecords.asMap().entries.map((entry) {
       int index = entry.key;
       Map<String, String> record = entry.value;
 
@@ -170,7 +175,12 @@ class _SleepPageState extends State<SleepPage> {
             sideTitles: SideTitles(
               showTitles: true,
               getTitlesWidget: (double value, meta) {
-                return Text(_sleepRecords[value.toInt()]['date'] ?? '');
+                int index = value.toInt();
+                if (index >= 0 && index < recentSleepRecords.length) {
+                  return Text(recentSleepRecords[index]['date'] ?? '');
+                } else {
+                  return const Text('');
+                }
               },
             ),
           ),
@@ -197,18 +207,7 @@ class _SleepPageState extends State<SleepPage> {
     );
   }
 
-  // 스크롤 가능하게 만드는 유틸리티 메서드
-  Widget makeScrollable(Widget widget) {
-    return Scrollbar(
-      thumbVisibility: true,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: widget,
-      ),
-    );
-  }
-
-  // Helper method to calculate sleep duration
+  // 수면 시간 계산 메서드
   Duration _calculateSleepDuration(TimeOfDay sleepTime, TimeOfDay wakeUpTime) {
     final now = DateTime.now();
 
@@ -278,9 +277,9 @@ class _SleepPageState extends State<SleepPage> {
                   child: const Text('저장'),
                 ),
                 const SizedBox(height: 20),
-                // 그래프를 스크롤 가능하도록 변경
+                // 그래프를 표시
                 Expanded(
-                  child: makeScrollable(_buildSleepGraph()),
+                  child: _buildSleepGraph(),
                 ),
               ],
             ),
@@ -291,9 +290,9 @@ class _SleepPageState extends State<SleepPage> {
   }
 
   Future<void> _selectSleepTime(BuildContext context) async {
-    TimeOfDay? picked = await showTimePicker(
+    final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: _sleepTime ?? TimeOfDay.now(),
+      initialTime: TimeOfDay.now(),
     );
     if (picked != null && picked != _sleepTime) {
       setState(() {
@@ -303,9 +302,9 @@ class _SleepPageState extends State<SleepPage> {
   }
 
   Future<void> _selectWakeUpTime(BuildContext context) async {
-    TimeOfDay? picked = await showTimePicker(
+    final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: _wakeUpTime ?? TimeOfDay.now(),
+      initialTime: TimeOfDay.now(),
     );
     if (picked != null && picked != _wakeUpTime) {
       setState(() {

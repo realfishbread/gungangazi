@@ -16,7 +16,6 @@ class WaterDrink extends StatefulWidget {
 }
 
 class _WaterDrinkState extends State<WaterDrink> {
-
   final WaterRepository waterRepository = WaterRepository(
     dioService: DioService(),
     tokenService: TokenService(),
@@ -55,12 +54,10 @@ class _WaterDrinkState extends State<WaterDrink> {
     int todayWaterIntake = _dailyWaterIntake[today] ?? 0;
     int todayMealLevel = widget.popupHandler.mealLevel; // 현재 mealLevel 가져오기
 
-
-    // WaterDrink의 _addWater 메서드에 상태 업데이트
     widget.popupHandler.updateStatus(
-        newWaterLevel: todayWaterIntake,
-        newMealLevel: todayMealLevel,
-        newSleepLevel: widget.popupHandler.sleepLevel
+      newWaterLevel: todayWaterIntake,
+      newMealLevel: todayMealLevel,
+      newSleepLevel: widget.popupHandler.sleepLevel,
     );
     print(
         "Water added and PopupHandler status updated - Water Level: $todayWaterIntake");
@@ -92,13 +89,11 @@ class _WaterDrinkState extends State<WaterDrink> {
 
   List<BarChartGroupData> _generateBarChartData({required bool isMobile}) {
     // 날짜 정렬
-    List<String> dates = _dailyWaterIntake.keys.toList()
-      ..sort();
+    List<String> dates = _dailyWaterIntake.keys.toList()..sort();
 
-    // 스마트폰 화면에서는 최신 5개만 표시
-    List<String> visibleDates = isMobile && dates.length > 5
-        ? dates.sublist(dates.length - 5)
-        : dates;
+    // 최신 7개의 데이터만 표시
+    List<String> visibleDates =
+    dates.length > 7 ? dates.sublist(dates.length - 7) : dates;
 
     // BarChartGroupData 생성
     List<BarChartGroupData> barGroups = [];
@@ -122,10 +117,7 @@ class _WaterDrinkState extends State<WaterDrink> {
   @override
   Widget build(BuildContext context) {
     // 스마트폰인지 데스크톱인지 판단
-    bool isMobile = MediaQuery
-        .of(context)
-        .size
-        .width < 600;
+    bool isMobile = MediaQuery.of(context).size.width < 600;
 
     return WillPopScope(
       onWillPop: () async {
@@ -154,23 +146,20 @@ class _WaterDrinkState extends State<WaterDrink> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: SizedBox(
-                    width: _calculateChartWidth(isMobile: isMobile),
+                    width: 7 * 80.0, // 최신 7개 데이터를 기준으로 크기 설정
                     child: BarChart(
                       BarChartData(
                         barGroups: _generateBarChartData(isMobile: isMobile),
-                        // 스마트폰 여부를 전달
                         backgroundColor: Colors.lightBlue[50],
                         titlesData: FlTitlesData(
                           bottomTitles: AxisTitles(
                             sideTitles: SideTitles(
                               showTitles: true,
                               getTitlesWidget: (double value, TitleMeta meta) {
-                                List<String> dates = _dailyWaterIntake.keys
-                                    .toList()
-                                  ..sort();
-                                List<String> visibleDates = isMobile &&
-                                    dates.length > 5
-                                    ? dates.sublist(dates.length - 5)
+                                List<String> dates =
+                                _dailyWaterIntake.keys.toList()..sort();
+                                List<String> visibleDates = dates.length > 7
+                                    ? dates.sublist(dates.length - 7)
                                     : dates;
                                 int index = value.toInt();
                                 if (index >= 0 && index < visibleDates.length) {
@@ -209,8 +198,7 @@ class _WaterDrinkState extends State<WaterDrink> {
                         extraLinesData: ExtraLinesData(
                           horizontalLines: [
                             HorizontalLine(
-                              y: 2000,
-                              // 권장 수분 섭취량
+                              y: 2000, // 권장 수분 섭취량
                               color: Colors.red,
                               strokeWidth: 2,
                               dashArray: [5, 5],
@@ -256,7 +244,9 @@ class _WaterDrinkState extends State<WaterDrink> {
     );
   }
 
-  /// 그래프 너비를 계산하는 메서드
+
+
+/// 그래프 너비를 계산하는 메서드
   double _calculateChartWidth({required bool isMobile}) {
     int dataCount = _dailyWaterIntake.keys.length;
     int visibleCount = isMobile ? 5 : dataCount;

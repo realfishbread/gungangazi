@@ -82,7 +82,7 @@ class _EditPageState extends State<EditPage> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                if (widget.fieldName != '아이디' && widget.fieldName != '이메일')
+                if (widget.fieldName != '이름' && widget.fieldName != '이메일')
                   Text(
                     widget.fieldName == '키' ? 'cm' : 'kg',
                     style: const TextStyle(fontSize: 18),

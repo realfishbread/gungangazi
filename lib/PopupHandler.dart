@@ -568,6 +568,8 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
           popupMessage = '오늘 하루도 수고 많으셨어요.';
           triggerAnimation('0amtouch');
         } 
+      }else if (_currentBodyPart == 'dizzy') {
+        popupMessage = '수면 시간을 늘려주세요!';
       }
       else {
       // 부위별 팝업 메시지 설정

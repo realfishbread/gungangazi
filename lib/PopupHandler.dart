@@ -87,21 +87,14 @@ class PopupHandler {
             'assets/person/jindan_stomach1.jpg',
           ],
           'arm': [
-            'assets/person/jindan_armsick1.jpg',
-            'assets/person/jindan_armsick3.jpg',
-            'assets/person/jindan_armsick5.jpg',
-            'assets/person/jindan_armsick7.jpg',
-            'assets/person/jindan_armsick9.jpg',
-            'assets/person/jindan_armsick11.jpg',
-            'assets/person/jindan_armsick13.jpg',
-            'assets/person/jindan_armsick16.jpg',
-            'assets/person/jindan_armsick13.jpg',
-            'assets/person/jindan_armsick11.jpg',
-            'assets/person/jindan_armsick9.jpg',
-            'assets/person/jindan_armsick7.jpg',
-            'assets/person/jindan_armsick5.jpg',
-            'assets/person/jindan_armsick3.jpg',
-            'assets/person/jindan_armsick1.jpg',
+            'assets/person/arm1.jpg',
+            'assets/person/arm2.jpg',
+            'assets/person/arm3.jpg',
+            'assets/person/arm4.jpg',
+            'assets/person/arm4.jpg',
+            'assets/person/arm3.jpg',
+            'assets/person/arm2.jpg',
+            'assets/person/arm1.jpg',
           ],
           'leg': [
             'assets/person/leg1.jpg',
@@ -575,8 +568,8 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
           _currentBodyPart = 'head';
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
-            popupMessage = '팔이 아프신가요?';
-            _currentBodyPart = 'smile';
+            popupMessage = '오늘 하루도 화이팅!';
+            _currentBodyPart = 'arm';
           } else {
             popupMessage = '식사 하셨나요?';
             _currentBodyPart = 'smile';

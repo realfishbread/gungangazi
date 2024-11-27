@@ -82,7 +82,7 @@ class BloodPressureRepository {
 
       // DELETE 요청 전송
       final response = await dio.delete(
-        '/blood-pressure/${record.id}', // API의 엔드포인트, record.id 사용
+        '/bloodPressure/deleteBloodPressureData', 
         options: Options(
           headers: {
             'Authorization': 'Bearer $token', // 인증 토큰 추가

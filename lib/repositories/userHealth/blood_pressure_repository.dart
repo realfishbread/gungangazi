@@ -27,6 +27,7 @@ class BloodPressureRepository {
       final response = await dio.post(
         '/bloodPressure/saveBloodPressureData',
         data: bloodPressureData,
+        queryParameters: {'username': username},
       );
 
       if (response.statusCode == 200) {

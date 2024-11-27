@@ -49,7 +49,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
     final String heartRate = _heartRateController.text;
     final String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
     final String? username = await TokenService().getUsername(); // username 가져오기
-    final String  id='default-id';
+    final String? id='default-id';
 
     if (systolic.isNotEmpty && diastolic.isNotEmpty && heartRate.isNotEmpty && username != null) {
       final newRecord = BloodPressureDTO(

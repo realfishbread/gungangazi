@@ -1,74 +1,60 @@
-import 'package:gungangazi/splash/SplashPage.dart';
-import 'ToothCarePage.dart';
-import 'BloodPressure.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
-import 'PopupHandler.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'dart:convert';
+import 'dart:typed_data';
 import 'profile2.dart';
+import '../services/dio_service.dart';
+import '../services/TokenService.dart';
+import 'ToothCarePage.dart';
+import 'BloodPressure.dart';
+import 'PopupHandler.dart';
 import 'SupplementsPage.dart';
 import 'SleepPage.dart';
 import 'WaterDrink.dart';
 import 'MealPage.dart';
 import 'ChatPage.dart';
 import 'loginPge.dart';
-import '../services/TokenService.dart';
-import '../services/dio_service.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../dto/profile_dto.dart';
+import '../repositories/profile_repository.dart';
 
-class WebHomePage extends StatelessWidget {
+class WebHomePage extends StatefulWidget {
   const WebHomePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: '건강아지',
-      theme: ThemeData(
-        primaryColor: const Color(0xFFFFF9C4), // 기본 색상 변경
-        scaffoldBackgroundColor: Colors.white, // 배경 색상 흰색으로 변경
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFFFFF9C4), // 앱바 색상 변경
-          titleTextStyle: TextStyle( // 앱바 텍스트 스타일
-            color: Colors.black, // 앱바 텍스트 색상 검은색으로 변경
-            fontSize: 20,
-          ),
-          iconTheme: IconThemeData(color: Colors.black), // 아이콘 색상 검은색으로 설정
-        ),
-        useMaterial3: false,
-      ),
-      home: const MyHomePage(title: '건강아지'),
-      debugShowCheckedModeBanner: false,
-    );
-  }
+  State<WebHomePage> createState() => _WebHomePageState();
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
+class _WebHomePageState extends State<WebHomePage> {
   PageController pageController = PageController();
   SideMenuController sideMenu = SideMenuController();
 
-  List<dynamic> _listData = [];
   late PopupHandler _popupHandler; // PopupHandler 선언
   final DioService _dioService = DioService(token: 'your-auth-token');
   final TokenService _tokenService = TokenService();
 
+  ProfileDto? _profile;
+  Uint8List? _imageData;
+
   @override
   void initState() {
     super.initState();
-    _popupHandler = PopupHandler(listData: _listData, tokenService: _tokenService, dioService: _dioService);
+    _popupHandler = PopupHandler(listData: [], tokenService: _tokenService, dioService: _dioService);
+    fetchProfile(); // 프로필 데이터 가져오기
   }
 
-  @override
-  void dispose() {
-    _popupHandler.dispose(); // PopupHandler 리소스 해제
-    super.dispose();
+  Future<void> fetchProfile() async {
+    String? token = await _tokenService.getToken();
+    DioService dioService = DioService(token: token);
+    ProfileRepository profileRepository = ProfileRepository(dioService: dioService, tokenService: _tokenService);
+
+    ProfileDto? profile = await profileRepository.fetchProfile('your-username'); // 서버에서 프로필 가져오기
+    setState(() {
+      _profile = profile;
+      if (_profile?.profile_image != null) {
+        _imageData = base64Decode(_profile!.profile_image!);
+      }
+    });
   }
 
   @override
@@ -93,6 +79,46 @@ class _MyHomePageState extends State<MyHomePage> {
               selectedColor: const Color.fromARGB(255, 229, 176, 238),
               selectedTitleTextStyle: const TextStyle(color: Colors.black),
               selectedIconColor: Colors.black,
+            ),
+            title: Column(
+              children: [
+                // 프로필 이미지
+                ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxHeight: 150,
+                    maxWidth: 150,
+                  ),
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundColor: const Color.fromARGB(255, 240, 240, 240),
+                    backgroundImage: _imageData != null
+                        ? MemoryImage(_imageData!) // 서버에서 가져온 이미지
+                        : AssetImage('assets/place_holder.png') as ImageProvider, // 기본 이미지
+                  ),
+                ),
+                const SizedBox(height: 8), // 이미지와 텍스트 간 간격
+                // 사용자 이름
+                Text(
+                  _profile?.realname ?? '홍길동', // 프로필 이름
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                // 사용자 이메일
+                Text(
+                  _profile?.email ?? 'user@example.com', // 프로필 이메일
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[700],
+                  ),
+                ),
+                const Divider(
+                  indent: 8.0,
+                  endIndent: 8.0,
+                ),
+              ],
             ),
             footer: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -156,9 +182,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     onTap: (index, _) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) =>  ToothCarePage(popupHandler: _popupHandler)),
+                        MaterialPageRoute(builder: (context) => ToothCarePage(popupHandler: _popupHandler)),
                       );
-
                     },
                     icon: const Icon(Icons.medical_services),
                   ),
@@ -167,7 +192,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onTap: (index, _) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) =>  BloodPressurePage()),
+                        MaterialPageRoute(builder: (context) => BloodPressurePage()),
                       );
                     },
                     icon: const Icon(Icons.favorite),
@@ -184,7 +209,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
                 icon: const Icon(Icons.calendar_today),
               ),
-
               SideMenuItem(
                 title: '채팅',
                 onTap: (index, _) {
@@ -205,13 +229,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               SideMenuItem(
                 title: '프로필',
-                onTap: (index, _) async { // async 추가
-                  String? username = await _tokenService.getUsername(); // 비동기 처리로 username 가져오기
+                onTap: (index, _) async {
+                  String? username = await _tokenService.getUsername();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => Profile2(
-                        username: username ?? "기본아이디", // username이 null이면 기본값 사용
+                        username: username ?? "기본아이디",
                       ),
                     ),
                   );
@@ -238,14 +262,10 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ],
           ),
-          const VerticalDivider(
-            width: 0,
-          ),
+          const VerticalDivider(width: 0),
           Expanded(
             child: Center(
-              // PopupHandler의 buildImageAnimationWithTouch를 메인 화면에 표시
               child: _popupHandler.buildImageAnimationWithTouch(context, (selectedImagePath) {
-                // 이미지가 선택되었을 때 처리할 내용
                 print('Selected image path: $selectedImagePath');
               }),
             ),

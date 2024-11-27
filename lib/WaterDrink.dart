@@ -5,6 +5,7 @@ import '../repositories/userHealth/water_repository.dart';
 import '../services/dio_service.dart';
 import '../services/TokenService.dart';
 import 'PopupHandler.dart'; // PopupHandler 임포트
+import 'dart:async';
 
 class WaterDrink extends StatefulWidget {
   final PopupHandler popupHandler; // PopupHandler 인스턴스를 받도록 설정
@@ -22,6 +23,7 @@ class _WaterDrinkState extends State<WaterDrink> {
   );
   int _currentWaterLevel = 0; //
   Map<String, int> _dailyWaterIntake = {};
+  
 
   @override
   void initState() {
@@ -51,9 +53,17 @@ class _WaterDrinkState extends State<WaterDrink> {
   // 수분 및 식사 상태 확인
   void _checkStatus() {
     String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    int currentHour = DateTime.now().hour;
     int todayWaterIntake = _dailyWaterIntake[today] ?? 0;
     int todayMealLevel = widget.popupHandler.mealLevel; // 현재 mealLevel 가져오기
 
+
+    
+    // 오전 6시 이전에는 PopupHandler 상태를 업데이트하지 않음
+    if (currentHour < 6) {
+      print("PopupHandler status not updated before 6:00 AM.");
+      return;
+    }
     widget.popupHandler.updateStatus(
       newWaterLevel: todayWaterIntake,
       newMealLevel: todayMealLevel,

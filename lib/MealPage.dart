@@ -79,6 +79,12 @@ class _MealPageState extends State<MealPage> {
   // PopupHandler 상태 업데이트
   void _updatePopupHandler() {
     print("Updating PopupHandler...");
+    int currentHour = DateTime.now().hour;
+    // 오전 6시 이전에는 PopupHandler 상태를 업데이트하지 않음
+    if (currentHour < 6) {
+      print("PopupHandler status not updated before 6:00 AM.");
+      return;
+    }
     widget.popupHandler.updateStatus(
       newWaterLevel: widget.popupHandler.waterLevel,
       newMealLevel: _mealLevel,

@@ -18,7 +18,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
   final TextEditingController _heartRateController = TextEditingController();
   final Map<String, List<BloodPressureDTO>> _groupedRecords = {};
   final BloodPressureRepository bloodPressureRepository = BloodPressureRepository(
-    dioService: DioService(), 
+    dioService: DioService(),
     tokenService: TokenService(),
   );
 
@@ -49,6 +49,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
     final String heartRate = _heartRateController.text;
     final String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
     final String? username = await TokenService().getUsername(); // username 가져오기
+    final String  id='default-id';
 
     if (systolic.isNotEmpty && diastolic.isNotEmpty && heartRate.isNotEmpty && username != null) {
       final newRecord = BloodPressureDTO(
@@ -57,6 +58,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
         heart_rate: heartRate,
         date: currentDate,
         username: username,
+        id: id ?? ' ',
       );
 
       // 서버에 데이터 저장
@@ -84,6 +86,20 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
         const SnackBar(content: Text('모든 값을 입력해주세요.')),
       );
     }
+  }
+
+  // 데이터를 삭제하는 메서드
+  Future<void> _deleteData(String date, BloodPressureDTO record) async {
+    await bloodPressureRepository.deleteBloodPressureDataFromDatabase(record);
+    setState(() {
+      _groupedRecords[date]?.remove(record);
+      if (_groupedRecords[date]?.isEmpty ?? true) {
+        _groupedRecords.remove(date);
+      }
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('데이터가 삭제되었습니다.')),
+    );
   }
 
   @override
@@ -125,7 +141,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: _submitData,
-              child: const Text('제출'),
+              child: const Text('저장'),
             ),
             const SizedBox(height: 16),
             Expanded(
@@ -140,6 +156,10 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                               title: Text(
                                   '최고 혈압: ${record.systolic} / 최저 혈압: ${record.diastolic}'),
                               subtitle: Text('심박수: ${record.heart_rate} bpm'),
+                              trailing: IconButton(
+                                icon: const Icon(Icons.delete, color: Colors.red),
+                                onPressed: () => _deleteData(date, record),
+                              ),
                             );
                           }).toList(),
                         );

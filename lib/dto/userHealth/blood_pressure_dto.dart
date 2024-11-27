@@ -4,13 +4,15 @@ class BloodPressureDTO {
   final String heart_rate;
   final String date;
   final String username;
+  final String? id;
 
   BloodPressureDTO({
     required this.systolic,
     required this.diastolic,
     required this.heart_rate,
     required this.date,
-    required this.username
+    required this.username,
+    this.id,
   });
 
   // 서버로 보낼 때 사용되는 Map 변환 메서드
@@ -20,7 +22,8 @@ class BloodPressureDTO {
       'diastolic': diastolic,
       'heart_rate': heart_rate,
       'date': date,
-      'username': username
+      'username': username,
+      'id': id,
     };
   }
 
@@ -31,7 +34,8 @@ class BloodPressureDTO {
       diastolic: json['diastolic'],
       heart_rate: json['heart_rate'],
       date: json['date'],
-      username: json['username']
+      username: json['username'],
+      id: json['id'] ?? ' ', // JSON에서 id가 없으면 기본값으로 빈 문자열 사용
     );
   }
 }

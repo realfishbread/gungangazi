@@ -284,6 +284,15 @@ class PopupHandler {
             'assets/person/0amtouch3.jpg',
             'assets/person/0amtouch2.jpg',
             'assets/person/0amtouch1.jpg',
+          ],
+          '0amarm': [
+            'assets/person/0amarm1.jpg',
+            'assets/person/0amarm2.jpg',
+            'assets/person/0amarm3.jpg',
+            'assets/person/0amarm3.jpg',
+            'assets/person/0amarm2.jpg',
+            'assets/person/0amarm1.jpg',
+
           ]
 
         } {
@@ -549,7 +558,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
             popupMessage = '오늘의 파자마는 보라색이예요.';
-            triggerAnimation('0amtouch');
+            triggerAnimation('0amarm');
           } else {
             popupMessage = '오늘은 어떤 하루였나요?';
             triggerAnimation('0amtouch');

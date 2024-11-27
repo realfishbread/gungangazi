@@ -69,6 +69,38 @@ class BloodPressureRepository {
       return [];
     }
   }
+
+   // 서버에서 혈압 데이터를 삭제하는 메서드
+  Future<void> deleteBloodPressureDataFromDatabase(BloodPressureDTO record) async {
+    try {
+      final Dio dio = await dioService.getDio(); // Dio 인스턴스 가져오기
+      final String? token = await tokenService.getToken(); // 토큰 가져오기
+
+      if (token == null) {
+        throw Exception("토큰을 찾을 수 없습니다.");
+      }
+
+      // DELETE 요청 전송
+      final response = await dio.delete(
+        '/blood-pressure/${record.id}', // API의 엔드포인트, record.id 사용
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token', // 인증 토큰 추가
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        print("데이터 삭제 성공: ${record.id}");
+      } else {
+        throw Exception("데이터 삭제 실패: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("데이터 삭제 중 오류 발생: $e");
+      throw Exception("서버에서 데이터를 삭제할 수 없습니다.");
+    }
+  }
 }
+
 
 

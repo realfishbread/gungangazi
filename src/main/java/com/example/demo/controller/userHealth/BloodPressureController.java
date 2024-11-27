@@ -3,6 +3,7 @@ package com.example.demo.controller.userHealth;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entity.userHealth.BloodPressure;
 import com.example.demo.service.userHealth.BloodPressureService;
+
 
 @RestController
 @RequestMapping("/bloodPressure")
@@ -33,8 +35,8 @@ public class BloodPressureController {
         return bloodPressureService.getBloodPressureDataByUsername(username);
     }
 
-    @DeleteMapping("/deleteBloodPressureData/{id}")
-    public String deleteBloodPressureData(@RequestParam Long id) {
+    @DeleteMapping("/deleteBloodPressureData")
+    public String deleteBloodPressureData(@RequestParam Long id, Authentication authentication) {
         bloodPressureService.deleteBloodPressureDataById(id);
         return "혈압 데이터가 삭제되었습니다.";
     }

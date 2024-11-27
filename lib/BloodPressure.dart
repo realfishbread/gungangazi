@@ -49,7 +49,6 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
     final String heartRate = _heartRateController.text;
     final String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
     final String? username = await TokenService().getUsername(); // username 가져오기
-    final String? id='default-id';
 
     if (systolic.isNotEmpty && diastolic.isNotEmpty && heartRate.isNotEmpty && username != null) {
       final newRecord = BloodPressureDTO(
@@ -58,7 +57,6 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
         heart_rate: heartRate,
         date: currentDate,
         username: username,
-        id: id ?? ' ',
       );
 
       // 서버에 데이터 저장
@@ -157,7 +155,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                                   '최고 혈압: ${record.systolic} / 최저 혈압: ${record.diastolic}'),
                               subtitle: Text('심박수: ${record.heart_rate} bpm'),
                               trailing: IconButton(
-                                icon: const Icon(Icons.delete, color: Colors.red),
+                                icon: const Icon(Icons.close, color: Colors.red),
                                 onPressed: () => _deleteData(date, record),
                               ),
                             );

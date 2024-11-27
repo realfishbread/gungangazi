@@ -29,6 +29,7 @@ class PopupHandler {
    void initialize() async{
     await loadStatusFromServer();
     setBodyPartStatus();
+    
 }
 
 
@@ -86,21 +87,14 @@ class PopupHandler {
             'assets/person/jindan_stomach1.jpg',
           ],
           'arm': [
-            'assets/person/jindan_armsick1.jpg',
-            'assets/person/jindan_armsick3.jpg',
-            'assets/person/jindan_armsick5.jpg',
-            'assets/person/jindan_armsick7.jpg',
-            'assets/person/jindan_armsick9.jpg',
-            'assets/person/jindan_armsick11.jpg',
-            'assets/person/jindan_armsick13.jpg',
-            'assets/person/jindan_armsick16.jpg',
-            'assets/person/jindan_armsick13.jpg',
-            'assets/person/jindan_armsick11.jpg',
-            'assets/person/jindan_armsick9.jpg',
-            'assets/person/jindan_armsick7.jpg',
-            'assets/person/jindan_armsick5.jpg',
-            'assets/person/jindan_armsick3.jpg',
-            'assets/person/jindan_armsick1.jpg',
+            'assets/person/arm1.jpg',
+            'assets/person/arm2.jpg',
+            'assets/person/arm3.jpg',
+            'assets/person/arm4.jpg',
+            'assets/person/arm4.jpg',
+            'assets/person/arm3.jpg',
+            'assets/person/arm2.jpg',
+            'assets/person/arm1.jpg',
           ],
           'leg': [
             'assets/person/leg1.jpg',
@@ -290,6 +284,15 @@ class PopupHandler {
             'assets/person/0amtouch3.jpg',
             'assets/person/0amtouch2.jpg',
             'assets/person/0amtouch1.jpg',
+          ],
+          '0amarm': [
+            'assets/person/0amarm1.jpg',
+            'assets/person/0amarm2.jpg',
+            'assets/person/0amarm3.jpg',
+            'assets/person/0amarm3.jpg',
+            'assets/person/0amarm2.jpg',
+            'assets/person/0amarm1.jpg',
+
           ]
 
         } {
@@ -377,8 +380,9 @@ Future<void> loadStatusFromServer() async {
 }
  
 
+
   void setBodyPartStatus() {
-    
+     String PreviousBodyPart =_currentBodyPart;
     // 세 가지 상태의 조합에 따른 상태 설정
     if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel <= 200) {
       _currentBodyPart = 'thirsty_and_hungry_dizzy';
@@ -409,7 +413,7 @@ Future<void> loadStatusFromServer() async {
           (imagePathsByBodyPart[_currentBodyPart]?.length ?? defaultImagePaths.length);
       _imageNotifier.value = _currentImageIndex;
     });
-  }
+  } 
 
   // 이미지 애니메이션 중지
   void stopImageAnimation() {
@@ -436,9 +440,10 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
     return;
   }
 
-  // 기존 타이머를 중지하고 초기화
+  // 기존 타이머 중지
   _imageTimer?.cancel();
   _imageNotifier.value = 0; // 애니메이션 초기화
+  String previousBodyPart = _currentBodyPart; // 이전 상태 저장
   _currentBodyPart = bodyPart; // 현재 애니메이션 상태 설정
 
   // 애니메이션 실행을 위한 타이머 시작
@@ -452,10 +457,12 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
       print("Animation for $bodyPart completed");
       timer.cancel();
 
-      // 일정 시간 후 기본 상태로 복구
+      // 일정 시간 후 원래 상태 복구
       Future.delayed(Duration(milliseconds: delayMilliseconds), () {
-        setBodyPartStatus();
-        _imageNotifier.value = 0;
+        // 상태 복구
+        _currentBodyPart = previousBodyPart; // 이전 상태로 복구
+        setBodyPartStatus(); // 상태 업데이트
+        startImageAnimation(); // 복구된 상태로 애니메이션 재시작
         print("Character state restored to $_currentBodyPart");
       });
     }
@@ -551,7 +558,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
             popupMessage = '오늘의 파자마는 보라색이예요.';
-            triggerAnimation('0amtouch');
+            triggerAnimation('0amarm');
           } else {
             popupMessage = '오늘은 어떤 하루였나요?';
             triggerAnimation('0amtouch');
@@ -570,8 +577,8 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
           _currentBodyPart = 'head';
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
-            popupMessage = '팔이 아프신가요?';
-            _currentBodyPart = 'smile';
+            popupMessage = '오늘 하루도 화이팅!';
+            _currentBodyPart = 'arm';
           } else {
             popupMessage = '식사 하셨나요?';
             _currentBodyPart = 'smile';

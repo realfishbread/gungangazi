@@ -1,8 +1,10 @@
 import 'dart:typed_data';
-import 'dart:html' as html;
+import 'package:universal_html/html.dart' as html;
 import 'dart:async';
 
+
 Future<Uint8List?> pickImageWeb() async {
+  
   try {
     final html.FileUploadInputElement uploadInput = html.FileUploadInputElement()..accept = 'image/*';
     uploadInput.style.display = 'none'; // 화면에 보이지 않게 처리

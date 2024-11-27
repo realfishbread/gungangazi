@@ -89,7 +89,8 @@ class _WaterDrinkState extends State<WaterDrink> {
 
   List<BarChartGroupData> _generateBarChartData({required bool isMobile}) {
     // 날짜 정렬
-    List<String> dates = _dailyWaterIntake.keys.toList()..sort();
+    List<String> dates = _dailyWaterIntake.keys.toList()
+      ..sort();
 
     // 최신 7개의 데이터만 표시
     List<String> visibleDates =
@@ -117,7 +118,10 @@ class _WaterDrinkState extends State<WaterDrink> {
   @override
   Widget build(BuildContext context) {
     // 스마트폰인지 데스크톱인지 판단
-    bool isMobile = MediaQuery.of(context).size.width < 600;
+    bool isMobile = MediaQuery
+        .of(context)
+        .size
+        .width < 600;
 
     return WillPopScope(
       onWillPop: () async {
@@ -157,7 +161,8 @@ class _WaterDrinkState extends State<WaterDrink> {
                               showTitles: true,
                               getTitlesWidget: (double value, TitleMeta meta) {
                                 List<String> dates =
-                                _dailyWaterIntake.keys.toList()..sort();
+                                _dailyWaterIntake.keys.toList()
+                                  ..sort();
                                 List<String> visibleDates = dates.length > 7
                                     ? dates.sublist(dates.length - 7)
                                     : dates;
@@ -198,7 +203,8 @@ class _WaterDrinkState extends State<WaterDrink> {
                         extraLinesData: ExtraLinesData(
                           horizontalLines: [
                             HorizontalLine(
-                              y: 2000, // 권장 수분 섭취량
+                              y: 2000,
+                              // 권장 수분 섭취량
                               color: Colors.red,
                               strokeWidth: 2,
                               dashArray: [5, 5],

@@ -21,4 +21,12 @@ public class BloodPressureService {
     public List<BloodPressure> getBloodPressureDataByUsername(String username) {
         return bloodPressureRepository.findByUsername(username);
     }
+
+    public void deleteBloodPressureDataById(Long id) {
+        if (bloodPressureRepository.existsById(id)) {
+            bloodPressureRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("해당 ID의 혈압 데이터를 찾을 수 없습니다.");
+        }
+    }
 }

@@ -205,15 +205,27 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               SideMenuItem(
                 title: '프로필',
-                onTap: (index, _) async { // async 추가
+                onTap: (index, _) async {
                   String? username = await _tokenService.getUsername(); // 비동기 처리로 username 가져오기
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Profile2(
-                        username: username ?? "기본아이디", // username이 null이면 기본값 사용
-                      ),
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true, // 내용이 길어질 경우 스크롤 허용
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)), // 둥근 모서리
                     ),
+                    builder: (BuildContext context) {
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          left: 16,
+                          right: 16,
+                          top: 16,
+                          bottom: MediaQuery.of(context).viewInsets.bottom + 16, // 키보드 높이 보정
+                        ),
+                        child: Profile2(
+                          username: username ?? "기본아이디", // username이 null이면 기본값 사용
+                        ),
+                      );
+                    },
                   );
                 },
                 icon: const Icon(Icons.person),

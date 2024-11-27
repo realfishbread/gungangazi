@@ -33,7 +33,7 @@ public class BloodPressureController {
         return bloodPressureService.getBloodPressureDataByUsername(username);
     }
 
-    @DeleteMapping("/deleteBloodPressureData")
+    @DeleteMapping("/deleteBloodPressureData/{id}")
     public String deleteBloodPressureData(@RequestParam Long id) {
         bloodPressureService.deleteBloodPressureDataById(id);
         return "혈압 데이터가 삭제되었습니다.";

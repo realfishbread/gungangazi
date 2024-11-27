@@ -83,6 +83,9 @@ class BloodPressureRepository {
       // DELETE 요청 전송
       final response = await dio.delete(
         '/bloodPressure/deleteBloodPressureData', 
+         queryParameters: {
+        'id': record.id, // 쿼리 파라미터로 id 전달
+      },
         options: Options(
           headers: {
             'Authorization': 'Bearer $token', // 인증 토큰 추가

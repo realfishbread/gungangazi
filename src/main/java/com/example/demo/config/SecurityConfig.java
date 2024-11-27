@@ -66,6 +66,7 @@ public class SecurityConfig {
                 .requestMatchers(new AntPathRequestMatcher("/character/status", "POST")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/character/status", "GET")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/brushHistory/{id}", "DELETE")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/bloodPressure/deleteBloodPressureData", "DELETE")).permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가

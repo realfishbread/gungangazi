@@ -4,7 +4,7 @@ class BloodPressureDTO {
   final String heart_rate;
   final String date;
   final String username;
-  final String? id;
+  final int? id;
 
   BloodPressureDTO({
     required this.systolic,

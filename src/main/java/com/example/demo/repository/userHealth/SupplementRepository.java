@@ -15,3 +15,4 @@ public interface SupplementRepository extends JpaRepository<Supplement, Suppleme
     List<Supplement> findByUsername(String username);
     Optional<Supplement> findByUsernameAndDate(String username, LocalDate date);
 }
+

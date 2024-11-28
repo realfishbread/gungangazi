@@ -42,7 +42,7 @@ public class SupplementController {
         return supplementService.getSupplementsByUsername(username);
     }
 
-    @GetMapping("/supplements/single")
+    @GetMapping("/single")
         public ResponseEntity<Supplement> getSingleSupplement(
                 @RequestParam String username,
                 @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {

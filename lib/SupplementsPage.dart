@@ -41,28 +41,31 @@ class _SupplementsPageState extends State<SupplementsPage> {
   }
 
   Future<void> _saveData() async {
-    String? username = await tokenService.getUsername();
-    if (username == null) {
-      print("Username을 가져올 수 없습니다.");
-      return;
-    }
-    
-    for (DateTime date in {..._selectedMenstruationDays, ..._supplementTaken.keys}) {
-      SupplementDto dto = SupplementDto(
-        date: date,
-        supplement_taken: _supplementTaken[date] ?? false,
-        menstruation_recorded: _selectedMenstruationDays.contains(date),
-        username: username,
-      );
-      await supplementRepository.saveSupplement(dto);
-    }
-
-    print("Saved data");
-    _addSupplement = true;
-
-    // 데이터 동기화
-    await _loadData();
+  String? username = await tokenService.getUsername();
+  if (username == null) {
+    print("Username을 가져올 수 없습니다.");
+    return;
   }
+
+  final Set<DateTime> uniqueDates = {..._selectedMenstruationDays, ..._supplementTaken.keys};
+  
+  await Future.wait(uniqueDates.map((date) async {
+    SupplementDto dto = SupplementDto(
+      date: date,
+      supplement_taken: _supplementTaken[date] ?? false,
+      menstruation_recorded: _selectedMenstruationDays.contains(date),
+      username: username,
+    );
+    print("Saving DTO: ${dto.toJson()}");
+    await supplementRepository.saveSupplement(dto);
+  }));
+
+  print("All data saved successfully");
+  _addSupplement = true;
+
+  // 데이터 동기화
+  await _loadData();
+}
 
   Future<void> _loadData() async {
     final supplements = await supplementRepository.fetchSupplements();

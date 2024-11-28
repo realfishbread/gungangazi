@@ -51,4 +51,28 @@ class SupplementRepository {
       return [];
     }
   }
+
+  Future<SupplementDto?> fetchSingleSupplement(String username, DateTime date) async {
+  try {
+    String? token = await tokenService.getToken();
+    final Dio dio = dioService.getDio();
+    final response = await dio.get(
+      '/supplements/single',
+      queryParameters: {
+        'username': username,
+        'date': date.toIso8601String(),
+      },
+      options: Options(
+          headers: {
+            'Authorization': 'Bearer $token', // 인증 토큰 추가
+          },
+        ),
+    );
+    return response.data != null ? SupplementDto.fromJson(response.data) : null;
+  } catch (e) {
+    print('Error fetching single supplement data: $e');
+    return null;
+  }
+}
+
 }

@@ -1,5 +1,6 @@
 package com.example.demo.service.userHealth;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,4 +39,15 @@ public class SupplementService {
             })
             .collect(Collectors.toList());
     }
+
+
+    public SupplementDTO getSupplementByUsernameAndDate(String username, LocalDate date) {
+        return supplementRepository
+                .findByUsernameAndDate(username, date)
+                .map(SupplementDTO::fromEntity) // Entity를 DTO로 변환
+                .orElse(null);
+    }
 }
+
+
+

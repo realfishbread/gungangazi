@@ -81,24 +81,50 @@ class _SupplementsPageState extends State<SupplementsPage> {
     print('_selectedMenstruationDays: $_selectedMenstruationDays');
   }
 
- void _showBottomSheet(DateTime selectedDay) {
+ Future<void> _fetchSingleDayData(DateTime selectedDay) async {
+  String? username = await tokenService.getUsername();
+  if (username == null) {
+    print("Username을 가져올 수 없습니다.");
+    return;
+  }
+
+  // API를 통해 선택된 날짜의 데이터를 가져옴
+  try {
+    final singleDayData = await supplementRepository.fetchSingleSupplement(
+      username,
+      selectedDay,
+    );
+
+    setState(() {
+      // 선택된 날짜 데이터만 반영
+      _supplementTaken[selectedDay] = singleDayData?.supplement_taken ?? false;
+      if (singleDayData?.menstruation_recorded ?? false) {
+        _selectedMenstruationDays.add(selectedDay);
+      } else {
+        _selectedMenstruationDays.remove(selectedDay);
+      }
+    });
+
+    print('Single day data fetched: $singleDayData');
+  } catch (e) {
+    print('Failed to fetch single day data: $e');
+  }
+}
+
+void _showBottomSheet(DateTime selectedDay) {
   showModalBottomSheet(
     context: context,
     builder: (context) {
       return FutureBuilder<void>(
-        future: _loadData(), // 서버에서 데이터를 새로 가져옴
+        future: _fetchSingleDayData(selectedDay), // 선택된 날짜의 데이터를 가져옴
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-          // 데이터를 가져오는 동안 로딩 표시
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator()); // 로딩 표시
           }
 
-          // 데이터 로드 후
           return StatefulBuilder(
             builder: (BuildContext context, StateSetter setModalState) {
-              // 최신 데이터를 반영하여 상태 초기화
+              // 최신 데이터를 반영하여 Switch 초기화
               bool initialSupplementTaken = _supplementTaken[selectedDay] ?? false;
               bool initialMenstruationRecorded = _selectedMenstruationDays.contains(selectedDay);
 
@@ -234,4 +260,3 @@ class _SupplementsPageState extends State<SupplementsPage> {
     );
   }
 }
-

@@ -46,7 +46,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
       print("Username을 가져올 수 없습니다.");
       return;
     }
-
+    
     for (DateTime date in {..._selectedMenstruationDays, ..._supplementTaken.keys}) {
       SupplementDto dto = SupplementDto(
         date: date,

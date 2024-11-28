@@ -16,6 +16,7 @@ dependencies:
   mysql1: ^0.19.2
   image_picker: ^1.1.2
   http: ^1.2.2
+  calendar_date_picker2: ^1.1.7
   flutter_cube: ^0.1.1
   adaptive_bottom_navigation: ^1.0.7
   universal_html: ^2.0.5

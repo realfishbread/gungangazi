@@ -42,6 +42,7 @@ class _WebHomePageState extends State<WebHomePage> {
     super.initState();
     _popupHandler = PopupHandler(listData: [], tokenService: _tokenService, dioService: _dioService);
     fetchProfile(); // 프로필 데이터 가져오기
+    _popupHandler.initialize();
   }
 
   Future<void> fetchProfile() async {

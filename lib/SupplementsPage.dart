@@ -28,7 +28,9 @@ class _SupplementsPageState extends State<SupplementsPage> {
   void initState() {
     super.initState();
     supplementRepository = SupplementRepository(dioService: dioService, tokenService: tokenService);
-    _loadData();
+    _loadData().then((_) {
+    setState(() {}); // 데이터 로드 후 강제 UI 갱신
+  });
     _fetchGender();
     _addsupplement =false;
   }
@@ -113,6 +115,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
                           _supplementTaken[selectedDay] = value;
                         });
                         setState(() {}); // 전체 UI 업데이트
+                        print('Switch value changed: ${_supplementTaken[selectedDay]}'); // 디버깅 로그
                       },
                     ),
                   ],
@@ -144,6 +147,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
                   onPressed: () {
                     Navigator.pop(context); // 서랍 닫기
                     _saveData();
+                    _loadData(); // UI 갱신
                   },
                   child: const Text('저장'),
                 ),

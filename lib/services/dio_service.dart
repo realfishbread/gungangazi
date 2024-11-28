@@ -61,7 +61,7 @@ class DioService {
 
     // 서버 API 호출
     final response = await DioService().getDio().get(
-      '/user/profile', // 예: 서버에서 사용자 프로필 반환
+      '/profile', // 예: 서버에서 사용자 프로필 반환
       options: Options(
         headers: {'Authorization': 'Bearer $token'},
       ),

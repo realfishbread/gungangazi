@@ -85,77 +85,91 @@ class _SupplementsPageState extends State<SupplementsPage> {
   showModalBottomSheet(
     context: context,
     builder: (context) {
-      return StatefulBuilder(
-        builder: (BuildContext context, StateSetter setModalState) {
-          // Switch 상태를 즉시 반영하도록 초기화
-          bool initialSupplementTaken = _supplementTaken[selectedDay] ?? false;
-          bool initialMenstruationRecorded = _selectedMenstruationDays.contains(selectedDay);
+      return FutureBuilder<void>(
+        future: _loadData(), // 서버에서 데이터를 새로 가져옴
+        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+          // 데이터를 가져오는 동안 로딩 표시
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
-          return Container(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '날짜: ${selectedDay.year}-${selectedDay.month}-${selectedDay.day}',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // 데이터 로드 후
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setModalState) {
+              // 최신 데이터를 반영하여 상태 초기화
+              bool initialSupplementTaken = _supplementTaken[selectedDay] ?? false;
+              bool initialMenstruationRecorded = _selectedMenstruationDays.contains(selectedDay);
+
+              return Container(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text('영양제 복용', style: TextStyle(fontSize: 16)),
-                    Switch(
-                      value: initialSupplementTaken,
-                      onChanged: (value) {
-                        setModalState(() {
-                          initialSupplementTaken = value;
-                          _supplementTaken[selectedDay] = value;
-                        });
-                        print('영양제 복용 상태 변경: $value');
+                    Text(
+                      '날짜: ${selectedDay.year}-${selectedDay.month}-${selectedDay.day}',
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('영양제 복용', style: TextStyle(fontSize: 16)),
+                        Switch(
+                          value: initialSupplementTaken,
+                          onChanged: (value) {
+                            setModalState(() {
+                              initialSupplementTaken = value;
+                              _supplementTaken[selectedDay] = value;
+                            });
+                            print('영양제 복용 상태 변경: $value');
+                          },
+                        ),
+                      ],
+                    ),
+                    if (_gender != '남성') ...[
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('생리 기록', style: TextStyle(fontSize: 16)),
+                          Switch(
+                            value: initialMenstruationRecorded,
+                            onChanged: (value) {
+                              setModalState(() {
+                                initialMenstruationRecorded = value;
+                                if (value) {
+                                  _selectedMenstruationDays.add(selectedDay);
+                                } else {
+                                  _selectedMenstruationDays.remove(selectedDay);
+                                }
+                              });
+                              print('생리 기록 상태 변경: $value');
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await _saveData();
+                        Navigator.pop(context); // 서랍 닫기
                       },
+                      child: const Text('저장'),
                     ),
                   ],
                 ),
-                if (_gender != '남성') ...[
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('생리 기록', style: TextStyle(fontSize: 16)),
-                      Switch(
-                        value: initialMenstruationRecorded,
-                        onChanged: (value) {
-                          setModalState(() {
-                            initialMenstruationRecorded = value;
-                            if (value) {
-                              _selectedMenstruationDays.add(selectedDay);
-                            } else {
-                              _selectedMenstruationDays.remove(selectedDay);
-                            }
-                          });
-                          print('생리 기록 상태 변경: $value');
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () async {
-                    await _saveData();
-                    Navigator.pop(context); // 서랍 닫기
-                  },
-                  child: const Text('저장'),
-                ),
-              ],
-            ),
+              );
+            },
           );
         },
       );
     },
   );
 }
+
 
 
 

@@ -62,8 +62,9 @@ class _SupplementsPageState extends State<SupplementsPage> {
     print("Saved data");
     _addsupplement = true;
 
-    // 데이터 동기화
+    // 데이터 동기화 및 UI 업데이트
     await _loadData();
+    setState(() {});
   }
 
 

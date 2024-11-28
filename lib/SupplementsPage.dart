@@ -81,16 +81,16 @@ class _SupplementsPageState extends State<SupplementsPage> {
     print('_selectedMenstruationDays: $_selectedMenstruationDays');
   }
 
-  void _showBottomSheet(DateTime selectedDay) {
-  // 서랍을 열 때 해당 날짜의 상태를 동기화
-  bool initialSupplementTaken = _supplementTaken[selectedDay] ?? false;
-  bool initialMenstruationRecorded = _selectedMenstruationDays.contains(selectedDay);
-
+ void _showBottomSheet(DateTime selectedDay) {
   showModalBottomSheet(
     context: context,
     builder: (context) {
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter setModalState) {
+          // Switch 상태를 즉시 반영하도록 초기화
+          bool initialSupplementTaken = _supplementTaken[selectedDay] ?? false;
+          bool initialMenstruationRecorded = _selectedMenstruationDays.contains(selectedDay);
+
           return Container(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -110,11 +110,9 @@ class _SupplementsPageState extends State<SupplementsPage> {
                       onChanged: (value) {
                         setModalState(() {
                           initialSupplementTaken = value;
-                        });
-                        setState(() {
                           _supplementTaken[selectedDay] = value;
                         });
-                        print('Supplement Taken Updated: $value');
+                        print('영양제 복용 상태 변경: $value');
                       },
                     ),
                   ],
@@ -130,15 +128,13 @@ class _SupplementsPageState extends State<SupplementsPage> {
                         onChanged: (value) {
                           setModalState(() {
                             initialMenstruationRecorded = value;
-                          });
-                          setState(() {
                             if (value) {
                               _selectedMenstruationDays.add(selectedDay);
                             } else {
                               _selectedMenstruationDays.remove(selectedDay);
                             }
                           });
-                          print('Menstruation Recorded Updated: $value');
+                          print('생리 기록 상태 변경: $value');
                         },
                       ),
                     ],
@@ -148,7 +144,6 @@ class _SupplementsPageState extends State<SupplementsPage> {
                 ElevatedButton(
                   onPressed: () async {
                     await _saveData();
-                    await _loadData();
                     Navigator.pop(context); // 서랍 닫기
                   },
                   child: const Text('저장'),
@@ -161,6 +156,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
     },
   );
 }
+
 
 
 

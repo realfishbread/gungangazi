@@ -82,9 +82,9 @@ class _SupplementsPageState extends State<SupplementsPage> {
   }
 
   void _showBottomSheet(DateTime selectedDay) {
-  // 서랍 열기 전에 선택된 날짜의 현재 상태를 가져옴
-  bool currentSupplementTaken = _supplementTaken[selectedDay] ?? false;
-  bool currentMenstruationRecorded = _selectedMenstruationDays.contains(selectedDay);
+  // 서랍을 열 때 해당 날짜의 상태를 동기화
+  bool initialSupplementTaken = _supplementTaken[selectedDay] ?? false;
+  bool initialMenstruationRecorded = _selectedMenstruationDays.contains(selectedDay);
 
   showModalBottomSheet(
     context: context,
@@ -106,13 +106,15 @@ class _SupplementsPageState extends State<SupplementsPage> {
                   children: [
                     const Text('영양제 복용', style: TextStyle(fontSize: 16)),
                     Switch(
-                      value: currentSupplementTaken,
+                      value: initialSupplementTaken,
                       onChanged: (value) {
                         setModalState(() {
-                          currentSupplementTaken = value;
+                          initialSupplementTaken = value;
+                        });
+                        setState(() {
                           _supplementTaken[selectedDay] = value;
                         });
-                        print('Supplement switch updated: $currentSupplementTaken');
+                        print('Supplement Taken Updated: $value');
                       },
                     ),
                   ],
@@ -124,17 +126,19 @@ class _SupplementsPageState extends State<SupplementsPage> {
                     children: [
                       const Text('생리 기록', style: TextStyle(fontSize: 16)),
                       Switch(
-                        value: currentMenstruationRecorded,
+                        value: initialMenstruationRecorded,
                         onChanged: (value) {
                           setModalState(() {
-                            currentMenstruationRecorded = value;
+                            initialMenstruationRecorded = value;
+                          });
+                          setState(() {
                             if (value) {
                               _selectedMenstruationDays.add(selectedDay);
                             } else {
                               _selectedMenstruationDays.remove(selectedDay);
                             }
                           });
-                          print('Menstruation switch updated: $currentMenstruationRecorded');
+                          print('Menstruation Recorded Updated: $value');
                         },
                       ),
                     ],
@@ -157,6 +161,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
     },
   );
 }
+
 
 
   @override

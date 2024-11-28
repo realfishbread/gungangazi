@@ -82,74 +82,82 @@ class _SupplementsPageState extends State<SupplementsPage> {
   }
 
   void _showBottomSheet(DateTime selectedDay) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setModalState) {
-            return Container(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '날짜: ${selectedDay.year}-${selectedDay.month}-${selectedDay.day}',
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
+  // 서랍 열기 전에 선택된 날짜의 현재 상태를 가져옴
+  bool currentSupplementTaken = _supplementTaken[selectedDay] ?? false;
+  bool currentMenstruationRecorded = _selectedMenstruationDays.contains(selectedDay);
+
+  showModalBottomSheet(
+    context: context,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setModalState) {
+          return Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '날짜: ${selectedDay.year}-${selectedDay.month}-${selectedDay.day}',
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('영양제 복용', style: TextStyle(fontSize: 16)),
+                    Switch(
+                      value: currentSupplementTaken,
+                      onChanged: (value) {
+                        setModalState(() {
+                          currentSupplementTaken = value;
+                          _supplementTaken[selectedDay] = value;
+                        });
+                        print('Supplement switch updated: $currentSupplementTaken');
+                      },
+                    ),
+                  ],
+                ),
+                if (_gender != '남성') ...[
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('영양제 복용', style: TextStyle(fontSize: 16)),
+                      const Text('생리 기록', style: TextStyle(fontSize: 16)),
                       Switch(
-                        value: _supplementTaken[selectedDay] ?? false,
+                        value: currentMenstruationRecorded,
                         onChanged: (value) {
                           setModalState(() {
-                            _supplementTaken[selectedDay] = value;
+                            currentMenstruationRecorded = value;
+                            if (value) {
+                              _selectedMenstruationDays.add(selectedDay);
+                            } else {
+                              _selectedMenstruationDays.remove(selectedDay);
+                            }
                           });
-                          print('Switch value changed: ${_supplementTaken[selectedDay]}');
+                          print('Menstruation switch updated: $currentMenstruationRecorded');
                         },
                       ),
                     ],
                   ),
-                  if (_gender != '남성') ...[
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('생리 기록', style: TextStyle(fontSize: 16)),
-                        Switch(
-                          value: _selectedMenstruationDays.contains(selectedDay),
-                          onChanged: (value) {
-                            setModalState(() {
-                              if (value) {
-                                _selectedMenstruationDays.add(selectedDay);
-                              } else {
-                                _selectedMenstruationDays.remove(selectedDay);
-                              }
-                            });
-                            print('Menstruation switch changed: $value');
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () async {
-                      Navigator.pop(context); // 서랍 닫기
-                      await _saveData();
-                    },
-                    child: const Text('저장'),
-                  ),
                 ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    await _saveData();
+                    await _loadData();
+                    Navigator.pop(context); // 서랍 닫기
+                  },
+                  child: const Text('저장'),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {

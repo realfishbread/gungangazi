@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import '../../dto/userHealth/supplementDto.dart';
 import '../../services/dio_service.dart';
 import '../../services/TokenService.dart';
+import 'package:intl/intl.dart';
+
 
 class SupplementRepository {
   final DioService dioService;
@@ -56,11 +58,12 @@ class SupplementRepository {
   try {
     String? token = await tokenService.getToken();
     final Dio dio = dioService.getDio();
+    final String formattedDate = DateFormat('yyyy-MM-dd').format(date);
     final response = await dio.get(
       '/supplements/single',
       queryParameters: {
         'username': username,
-        'date': date.toIso8601String(),
+        'date': formattedDate,
       },
       options: Options(
           headers: {

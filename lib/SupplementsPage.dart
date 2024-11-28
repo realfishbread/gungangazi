@@ -22,29 +22,25 @@ class _SupplementsPageState extends State<SupplementsPage> {
   final DioService dioService = DioService();
   final TokenService tokenService = TokenService();
   late final SupplementRepository supplementRepository;
-  bool _addsupplement = false;
+  bool _addSupplement = false;
 
   @override
   void initState() {
     super.initState();
     supplementRepository = SupplementRepository(dioService: dioService, tokenService: tokenService);
-    _loadData().then((_) {
-    setState(() {}); // 데이터 로드 후 강제 UI 갱신
-  });
+    _loadData();
     _fetchGender();
-    _addsupplement =false;
   }
 
   Future<void> _fetchGender() async {
     String? gender = await dioService.getGender();
-    print('Fetched gender: $gender'); // 성별 값을 확인
+    print('Fetched gender: $gender');
     setState(() {
       _gender = gender;
     });
-}
+  }
 
-
- Future<void> _saveData() async {
+  Future<void> _saveData() async {
     String? username = await tokenService.getUsername();
     if (username == null) {
       print("Username을 가져올 수 없습니다.");
@@ -62,162 +58,157 @@ class _SupplementsPageState extends State<SupplementsPage> {
     }
 
     print("Saved data");
-    _addsupplement = true;
+    _addSupplement = true;
 
-    // 데이터 동기화 및 UI 업데이트
+    // 데이터 동기화
     await _loadData();
-    setState(() {});
   }
-
 
   Future<void> _loadData() async {
     final supplements = await supplementRepository.fetchSupplements();
     setState(() {
-      _supplementTaken.clear(); // 이전 데이터 초기화
-      _selectedMenstruationDays.clear(); // 이전 데이터 초기화
+      _supplementTaken.clear();
+      _selectedMenstruationDays.clear();
       for (var supplement in supplements) {
         _supplementTaken[supplement.date] = supplement.supplement_taken;
         if (supplement.menstruation_recorded) {
           _selectedMenstruationDays.add(supplement.date);
         }
       }
-  });
+    });
 
-  print('_supplementTaken: $_supplementTaken');
-  print('_selectedMenstruationDays: $_selectedMenstruationDays');
-}
-
+    print('_supplementTaken: $_supplementTaken');
+    print('_selectedMenstruationDays: $_selectedMenstruationDays');
+  }
 
   void _showBottomSheet(DateTime selectedDay) {
-  showModalBottomSheet(
-    context: context,
-    builder: (context) {
-      return StatefulBuilder(
-        builder: (BuildContext context, StateSetter setModalState) {
-          return Container(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '날짜: ${selectedDay.year}-${selectedDay.month}-${selectedDay.day}',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('영양제 복용', style: TextStyle(fontSize: 16)),
-                    Switch(
-                      value: _supplementTaken[selectedDay] ?? false,
-                      onChanged: (value) {
-                        setModalState(() {
-                          _supplementTaken[selectedDay] = value;
-                        });
-                        setState(() {}); // 전체 UI 업데이트
-                        print('Switch value changed: ${_supplementTaken[selectedDay]}'); // 디버깅 로그
-                      },
-                    ),
-                  ],
-                ),
-                if (_gender != '남성') ...[
-                  const SizedBox(height: 10),
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '날짜: ${selectedDay.year}-${selectedDay.month}-${selectedDay.day}',
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('생리 기록', style: TextStyle(fontSize: 16)),
+                      const Text('영양제 복용', style: TextStyle(fontSize: 16)),
                       Switch(
-                        value: _selectedMenstruationDays.contains(selectedDay),
+                        value: _supplementTaken[selectedDay] ?? false,
                         onChanged: (value) {
                           setModalState(() {
-                            if (value) {
-                              _selectedMenstruationDays.add(selectedDay);
-                            } else {
-                              _selectedMenstruationDays.remove(selectedDay);
-                            }
+                            _supplementTaken[selectedDay] = value;
                           });
-                          setState(() {}); // 전체 UI 업데이트
+                          print('Switch value changed: ${_supplementTaken[selectedDay]}');
                         },
                       ),
                     ],
                   ),
+                  if (_gender != '남성') ...[
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('생리 기록', style: TextStyle(fontSize: 16)),
+                        Switch(
+                          value: _selectedMenstruationDays.contains(selectedDay),
+                          onChanged: (value) {
+                            setModalState(() {
+                              if (value) {
+                                _selectedMenstruationDays.add(selectedDay);
+                              } else {
+                                _selectedMenstruationDays.remove(selectedDay);
+                              }
+                            });
+                            print('Menstruation switch changed: $value');
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () async {
+                      Navigator.pop(context); // 서랍 닫기
+                      await _saveData();
+                    },
+                    child: const Text('저장'),
+                  ),
                 ],
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context); // 서랍 닫기
-                    _saveData();
-                    _loadData(); // UI 갱신
-                  },
-                  child: const Text('저장'),
-                ),
-              ],
-            ),
-          );
-        },
-      );
-    },
-  );
-}
-
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   @override
-Widget build(BuildContext context) {
-  return WillPopScope(
-    onWillPop: () async {
-      if (_addsupplement==true){
-        widget.popupHandler.triggerAnimation('medication', delayMilliseconds: 1000);
-      }
-      return true;
-    },
-    child: Scaffold(
-      appBar: AppBar(
-        title: const Text('캘린더'),
-        backgroundColor: const Color(0xFFFFF9C4),
-      ),
-      body: Column(
-        children: [
-          TableCalendar(
-            focusedDay: _selectedDay,
-            firstDay: DateTime.utc(2020, 1, 1),
-            lastDay: DateTime.utc(2030, 12, 31),
-            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDay = selectedDay;
-              });
-              _showBottomSheet(selectedDay); // 날짜 클릭 시 서랍 표시
-            },
-            calendarBuilders: CalendarBuilders(
-              defaultBuilder: (context, date, focusedDay) {
-                DateTime dateOnly = DateTime(date.year, date.month, date.day);
-
-                if (_selectedMenstruationDays.contains(dateOnly)) {
-                  return Container(
-                    margin: const EdgeInsets.all(4.0),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 235, 63, 51).withOpacity(0.5),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(child: Text('${date.day}')),
-                  );
-                } else if (_supplementTaken[dateOnly] == true) {
-                  return Container(
-                    margin: const EdgeInsets.all(4.0),
-                    decoration: BoxDecoration(
-                      color: Color(0xFF9ADCFF).withOpacity(0.5),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(child: Text('${date.day}')),
-                  );
-                }
-                return null;
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        if (_addSupplement) {
+          widget.popupHandler.triggerAnimation('medication', delayMilliseconds: 1000);
+        }
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('캘린더'),
+          backgroundColor: const Color(0xFFFFF9C4),
+        ),
+        body: Column(
+          children: [
+            TableCalendar(
+              focusedDay: _selectedDay,
+              firstDay: DateTime.utc(2020, 1, 1),
+              lastDay: DateTime.utc(2030, 12, 31),
+              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                });
+                _showBottomSheet(selectedDay);
               },
+              calendarBuilders: CalendarBuilders(
+                defaultBuilder: (context, date, focusedDay) {
+                  DateTime dateOnly = DateTime(date.year, date.month, date.day);
+
+                  if (_selectedMenstruationDays.contains(dateOnly)) {
+                    return Container(
+                      margin: const EdgeInsets.all(4.0),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 235, 63, 51).withOpacity(0.5),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(child: Text('${date.day}')),
+                    );
+                  } else if (_supplementTaken[dateOnly] == true) {
+                    return Container(
+                      margin: const EdgeInsets.all(4.0),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF9ADCFF).withOpacity(0.5),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(child: Text('${date.day}')),
+                    );
+                  }
+                  return null;
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
-}
+

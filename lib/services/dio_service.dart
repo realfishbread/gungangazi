@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
+import 'TokenService.dart';
 
 class DioService {
   final String baseUrl = 'https://gungangazi.site';
   String? token;
+  final TokenService tokenService = TokenService(); // TokenService 인스턴스 생성
 
   // 생성자에서 토큰을 받도록 변경합니다.
   DioService({this.token});
@@ -47,4 +49,36 @@ class DioService {
       throw Exception('DELETE 요청 실패: $e');
     }
   }
+
+  Future<String?> getGender() async {
+  try {
+    // 토큰 가져오기
+   final token = await tokenService.getToken();
+    if (token == null) {
+      print("Token is null");
+      return null;
+    }
+
+    // 서버 API 호출
+    final response = await DioService().getDio().get(
+      '/user/profile', // 예: 서버에서 사용자 프로필 반환
+      options: Options(
+        headers: {'Authorization': 'Bearer $token'},
+      ),
+    );
+
+    // API 응답 처리
+    if (response.statusCode == 200) {
+      final data = response.data;
+      print("Fetched gender: ${data['gender']}");
+      return data['gender']; // 서버에서 반환된 성별 값
+    } else {
+      print("Failed to fetch gender: ${response.statusCode}");
+      return null;
+    }
+  } catch (e) {
+    print("Error fetching gender: $e");
+    return null;
+  }
+}
 }

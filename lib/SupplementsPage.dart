@@ -34,7 +34,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
   }
 
   Future<void> _fetchGender() async {
-    String? gender = await tokenService.getGender();
+    String? gender = await dioService.getGender();
     print('Fetched gender: $gender'); // 성별 값을 확인
     setState(() {
       _gender = gender;

@@ -27,7 +27,7 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
   }
 
   Future<void> _addDogMessage(String fullText) async {
-    if (fullText.length <= 20) {
+    if (fullText.length <= 50) {
       // 짧은 메시지는 애니메이션 유지
       setState(() {
         _isTyping = true;

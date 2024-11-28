@@ -13,6 +13,7 @@ import '../services/TokenService.dart';
 import '../services/dio_service.dart';
 import 'package:flutter/foundation.dart';
 
+
 import 'web_home_page.dart';
 
 class MobileHomePage extends StatefulWidget {
@@ -29,6 +30,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
   final List<dynamic> _listData = [];
   late PopupHandler _popupHandler;
   final DioService _dioService = DioService(token: 'your-auth-token');
+ 
 
   
 
@@ -37,11 +39,12 @@ class _MobileHomePageState extends State<MobileHomePage> {
     super.initState();
     _popupHandler = PopupHandler(listData: _listData, tokenService: _tokenService, dioService: _dioService);
     _popupHandler.initialize();
-   
+ 
   }
 
   @override
   void dispose() {
+    
     _popupHandler.dispose();
     super.dispose();
   }

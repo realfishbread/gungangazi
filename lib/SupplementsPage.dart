@@ -35,12 +35,14 @@ class _SupplementsPageState extends State<SupplementsPage> {
 
   Future<void> _fetchGender() async {
     String? gender = await tokenService.getGender();
+    print('Fetched gender: $gender'); // 성별 값을 확인
     setState(() {
       _gender = gender;
     });
-  }
+}
 
-  Future<void> _saveData() async {
+
+ Future<void> _saveData() async {
     String? username = await tokenService.getUsername();
     if (username == null) {
       print("Username을 가져올 수 없습니다.");
@@ -55,93 +57,104 @@ class _SupplementsPageState extends State<SupplementsPage> {
         username: username,
       );
       await supplementRepository.saveSupplement(dto);
-      _addsupplement =true;
     }
 
     print("Saved data");
+    _addsupplement = true;
+
+    // 데이터 동기화
     await _loadData();
   }
+
 
   Future<void> _loadData() async {
     final supplements = await supplementRepository.fetchSupplements();
     setState(() {
+      _supplementTaken.clear(); // 이전 데이터 초기화
+      _selectedMenstruationDays.clear(); // 이전 데이터 초기화
       for (var supplement in supplements) {
         _supplementTaken[supplement.date] = supplement.supplement_taken;
         if (supplement.menstruation_recorded) {
           _selectedMenstruationDays.add(supplement.date);
         }
       }
-    });
-    print('Loaded data');
-  }
+  });
+
+  print('_supplementTaken: $_supplementTaken');
+  print('_selectedMenstruationDays: $_selectedMenstruationDays');
+}
+
 
   void _showBottomSheet(DateTime selectedDay) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setModalState) {
-            return Container(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '날짜: ${selectedDay.year}-${selectedDay.month}-${selectedDay.day}',
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
+  showModalBottomSheet(
+    context: context,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setModalState) {
+          return Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '날짜: ${selectedDay.year}-${selectedDay.month}-${selectedDay.day}',
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('영양제 복용', style: TextStyle(fontSize: 16)),
+                    Switch(
+                      value: _supplementTaken[selectedDay] ?? false,
+                      onChanged: (value) {
+                        setModalState(() {
+                          _supplementTaken[selectedDay] = value;
+                        });
+                        setState(() {}); // 전체 UI 업데이트
+                      },
+                    ),
+                  ],
+                ),
+                if (_gender != '남성') ...[
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('영양제 복용', style: TextStyle(fontSize: 16)),
+                      const Text('생리 기록', style: TextStyle(fontSize: 16)),
                       Switch(
-                        value: _supplementTaken[selectedDay] ?? false,
+                        value: _selectedMenstruationDays.contains(selectedDay),
                         onChanged: (value) {
                           setModalState(() {
-                            _supplementTaken[selectedDay] = value;
+                            if (value) {
+                              _selectedMenstruationDays.add(selectedDay);
+                            } else {
+                              _selectedMenstruationDays.remove(selectedDay);
+                            }
                           });
+                          setState(() {}); // 전체 UI 업데이트
                         },
                       ),
                     ],
                   ),
-                  if (_gender != '남성') ...[
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('생리 기록', style: TextStyle(fontSize: 16)),
-                        Switch(
-                          value: _selectedMenstruationDays.contains(selectedDay),
-                          onChanged: (value) {
-                            setModalState(() {
-                              if (value) {
-                                _selectedMenstruationDays.add(selectedDay);
-                              } else {
-                                _selectedMenstruationDays.remove(selectedDay);
-                              }
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context); // 서랍 닫기
-                      _saveData();
-                    },
-                    child: const Text('저장'),
-                  ),
                 ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context); // 서랍 닫기
+                    _saveData();
+                  },
+                  child: const Text('저장'),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
 
   @override
 Widget build(BuildContext context) {

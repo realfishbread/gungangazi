@@ -49,7 +49,9 @@ class _SupplementsPageState extends State<SupplementsPage> {
 
   final Set<DateTime> uniqueDates = {..._selectedMenstruationDays, ..._supplementTaken.keys};
   
-  await Future.wait(uniqueDates.map((date) async {
+  await Future.wait(uniqueDates.where((date) {
+    return _selectedMenstruationDays.contains(date) || _supplementTaken.containsKey(date);
+  }).map((date) async {
     SupplementDto dto = SupplementDto(
       date: date,
       supplement_taken: _supplementTaken[date] ?? false,
@@ -174,7 +176,7 @@ void _showBottomSheet(DateTime selectedDay) {
                                   _selectedMenstruationDays.remove(selectedDay);
                                 }
                               });
-                              print('생리 기록 상태 변경: $value');
+                              print('_selectedMenstruationDays after update: $_selectedMenstruationDays');
                             },
                           ),
                         ],

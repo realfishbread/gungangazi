@@ -58,6 +58,32 @@ class _WebHomePageState extends State<WebHomePage> {
       }
     });
   }
+  // 프로필 페이지로 슈욱 슬라이드 애니메이션 전환
+  void _navigateToProfile(BuildContext context) async {
+    String? username = await _tokenService.getUsername();
+
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return Profile2(username: username ?? "기본아이디");
+        },
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          // 애니메이션 정의 (슬라이드 효과)
+          const begin = Offset(1.0, 0.0); // 화면 오른쪽에서 시작
+          const end = Offset.zero; // 화면 중앙으로 이동
+          const curve = Curves.easeInOut; // 부드러운 애니메이션 효과
+
+          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var offsetAnimation = animation.drive(tween);
+
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -230,20 +256,12 @@ class _WebHomePageState extends State<WebHomePage> {
                 },
               ),
               SideMenuItem(
-                title: '프로필',
-                onTap: (index, _) async {
-                  String? username = await _tokenService.getUsername();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Profile2(
-                        username: username ?? "기본아이디",
-                      ),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.person),
-              ),
+                    title: '프로필',
+                    onTap: (index, _) {
+                      _navigateToProfile(context);
+                    },
+                    icon: const Icon(Icons.person),
+                  ),
               SideMenuItem(
                 builder: (context, displayMode) {
                   return const Divider(

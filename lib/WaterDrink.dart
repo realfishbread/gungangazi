@@ -5,7 +5,6 @@ import '../repositories/userHealth/water_repository.dart';
 import '../services/dio_service.dart';
 import '../services/TokenService.dart';
 import 'PopupHandler.dart'; // PopupHandler 임포트
-import 'dart:async';
 
 class WaterDrink extends StatefulWidget {
   final PopupHandler popupHandler; // PopupHandler 인스턴스를 받도록 설정
@@ -21,9 +20,8 @@ class _WaterDrinkState extends State<WaterDrink> {
     dioService: DioService(),
     tokenService: TokenService(),
   );
-  int _currentWaterLevel = 0; //
+  int _currentWaterLevel = 0;
   Map<String, int> _dailyWaterIntake = {};
-  
 
   @override
   void initState() {
@@ -50,15 +48,11 @@ class _WaterDrinkState extends State<WaterDrink> {
     _checkStatus(); // 물 섭취량 확인 후 상태 업데이트
   }
 
-  // 수분 및 식사 상태 확인
   void _checkStatus() {
     String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
     int currentHour = DateTime.now().hour;
     int todayWaterIntake = _dailyWaterIntake[today] ?? 0;
-    int todayMealLevel = widget.popupHandler.mealLevel; // 현재 mealLevel 가져오기
 
-
-    
     // 오전 6시 이전에는 PopupHandler 상태를 업데이트하지 않음
     if (currentHour < 6) {
       print("PopupHandler status not updated before 6:00 AM.");
@@ -66,47 +60,17 @@ class _WaterDrinkState extends State<WaterDrink> {
     }
     widget.popupHandler.updateStatus(
       newWaterLevel: todayWaterIntake,
-      newMealLevel: todayMealLevel,
+      newMealLevel: widget.popupHandler.mealLevel,
       newSleepLevel: widget.popupHandler.sleepLevel,
     );
-    print(
-        "Water added and PopupHandler status updated - Water Level: $todayWaterIntake");
-
-    if (todayWaterIntake <= 200) {
-      _showWarning('물');
-    }
   }
 
-  void _showWarning(String type) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('경고!'),
-          content: Text('오늘 $type을 너무 적게 섭취했어요! 더 많이 섭취해주세요.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('확인'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  List<BarChartGroupData> _generateBarChartData() {
+    List<String> dates = _dailyWaterIntake.keys.toList()..sort();
 
-  List<BarChartGroupData> _generateBarChartData({required bool isMobile}) {
-    // 날짜 정렬
-    List<String> dates = _dailyWaterIntake.keys.toList()
-      ..sort();
-
-    // 최신 7개의 데이터만 표시
     List<String> visibleDates =
-    dates.length > 7 ? dates.sublist(dates.length - 7) : dates;
+        dates.length > 7 ? dates.sublist(dates.length - 7) : dates;
 
-    // BarChartGroupData 생성
     List<BarChartGroupData> barGroups = [];
     for (int i = 0; i < visibleDates.length; i++) {
       barGroups.add(
@@ -127,23 +91,19 @@ class _WaterDrinkState extends State<WaterDrink> {
 
   @override
   Widget build(BuildContext context) {
-    // 스마트폰인지 데스크톱인지 판단
-    bool isMobile = MediaQuery
-        .of(context)
-        .size
-        .width < 600;
+    bool isWeb = MediaQuery.of(context).size.width >= 600;
+
+    // 그래프 너비 동적으로 설정
+    double graphWidth = isWeb
+        ? MediaQuery.of(context).size.width - 100 // 데스크톱: 화면 너비 기반
+        : 7 * 80.0; // 모바일: 7개의 데이터 고정
 
     return WillPopScope(
       onWillPop: () async {
-        // 물 상태가 증가했는지 확인하고 애니메이션 실행
         if (widget.popupHandler.waterLevel > _currentWaterLevel) {
           widget.popupHandler.triggerAnimation(
               'drinkwater', delayMilliseconds: 1000);
-        } else {
-          print("No significant water level change, no animation triggered.");
         }
-
-        // 뒤로가기 동작 허용
         return true;
       },
       child: Scaffold(
@@ -160,10 +120,10 @@ class _WaterDrinkState extends State<WaterDrink> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: SizedBox(
-                    width: 7 * 80.0, // 최신 7개 데이터를 기준으로 크기 설정
+                    width: graphWidth, // 동적으로 설정된 그래프 너비
                     child: BarChart(
                       BarChartData(
-                        barGroups: _generateBarChartData(isMobile: isMobile),
+                        barGroups: _generateBarChartData(),
                         backgroundColor: Colors.lightBlue[50],
                         titlesData: FlTitlesData(
                           bottomTitles: AxisTitles(
@@ -171,8 +131,7 @@ class _WaterDrinkState extends State<WaterDrink> {
                               showTitles: true,
                               getTitlesWidget: (double value, TitleMeta meta) {
                                 List<String> dates =
-                                _dailyWaterIntake.keys.toList()
-                                  ..sort();
+                                    _dailyWaterIntake.keys.toList()..sort();
                                 List<String> visibleDates = dates.length > 7
                                     ? dates.sublist(dates.length - 7)
                                     : dates;
@@ -214,7 +173,6 @@ class _WaterDrinkState extends State<WaterDrink> {
                           horizontalLines: [
                             HorizontalLine(
                               y: 2000,
-                              // 권장 수분 섭취량
                               color: Colors.red,
                               strokeWidth: 2,
                               dashArray: [5, 5],

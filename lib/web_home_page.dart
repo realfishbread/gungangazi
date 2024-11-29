@@ -100,12 +100,6 @@ class _WebHomePageState extends State<WebHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0, // 그림자 제거
-        centerTitle: true, // 제목(아이콘)을 가운데로 설정
-        title: const Icon(Icons.local_hospital_outlined, color: Colors.black), // 가운데에 아이콘 추가
-        backgroundColor: const Color(0xFFFFF9C4), // 앱바 배경색
-      ),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -189,8 +183,9 @@ class _WebHomePageState extends State<WebHomePage> {
                         MaterialPageRoute(builder: (context) => SleepPage(popupHandler: _popupHandler)),
                       );
                     },
-                    icon: const Icon(Icons.bedtime),
+                    icon: const Icon(Icons.nightlight),
                   ),
+
                   SideMenuItem(
                     title: '식단',
                     onTap: (index, _) {

@@ -255,6 +255,8 @@ Future<void> _deleteMeal(String mealId, String date) async {
   }
 }
 
+
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(

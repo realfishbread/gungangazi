@@ -317,9 +317,25 @@ Future<void> _selectWakeUpTime(BuildContext context) async {
                     scrollDirection: Axis.horizontal,
                     controller: _scrollController,
                     child: SizedBox(
-                      width: _sleepRecords.length * 80.0,
-                      child: _buildSleepGraph(),
-                    ),
+                          height: 300, // 그래프 높이
+                          child: ImprovedScrolling(
+                            scrollController: _scrollController,
+                            enableMMBScrolling: true, // 마우스 중간 버튼 스크롤 허용
+                            enableKeyboardScrolling: true, // 키보드 스크롤 허용
+                            enableCustomMouseWheelScrolling: true, // 마우스 휠 커스터마이징 허용
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              controller: _scrollController,
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  minWidth: MediaQuery.of(context).size.width, // 화면 너비
+                                  maxWidth: _sleepRecords.length * 80.0, // 그래프 너비
+                                ),
+                                child: _buildSleepGraph(),
+                              ),
+                            ),
+                          ),
+                        ),
                   ),
                 ),
               )
@@ -329,9 +345,25 @@ Future<void> _selectWakeUpTime(BuildContext context) async {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: SizedBox(
-                    width: _sleepRecords.length * 80.0,
-                    child: _buildSleepGraph(),
-                  ),
+                      height: 300, // 그래프 높이
+                      child: ImprovedScrolling(
+                        scrollController: _scrollController,
+                        enableMMBScrolling: true, // 마우스 중간 버튼 스크롤 허용
+                        enableKeyboardScrolling: true, // 키보드 스크롤 허용
+                        enableCustomMouseWheelScrolling: true, // 마우스 휠 커스터마이징 허용
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          controller: _scrollController,
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minWidth: MediaQuery.of(context).size.width, // 화면 너비
+                              maxWidth: _sleepRecords.length * 80.0, // 그래프 너비
+                            ),
+                            child: _buildSleepGraph(),
+                          ),
+                        ),
+                      ),
+                    ),
                 ),
               ),
             const Divider(),

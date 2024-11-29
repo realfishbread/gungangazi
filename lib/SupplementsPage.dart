@@ -48,17 +48,15 @@ class _SupplementsPageState extends State<SupplementsPage> {
     return;
   }
 
-  // 모든 날짜를 통합
+  // 생리 기록 또는 영양제 복용 여부만 저장 가능하도록 수정
   final Set<DateTime> uniqueDates = {..._selectedMenstruationDays, ..._supplementTaken.keys};
 
   try {
-    // 모든 날짜를 비동기로 저장
     await Future.wait(uniqueDates.map((date) async {
-      // 생리 기록 또는 영양제 복용 여부만 저장 가능하도록 로직 수정
       bool isSupplementTaken = _supplementTaken[date] ?? false;
       bool isMenstruationRecorded = _selectedMenstruationDays.contains(date);
 
-      // 아무 데이터도 없는 경우는 저장하지 않음
+      // 아무 데이터도 없는 경우 저장하지 않음
       if (!isSupplementTaken && !isMenstruationRecorded) {
         return;
       }
@@ -71,17 +69,22 @@ class _SupplementsPageState extends State<SupplementsPage> {
         username: username,
       );
 
+      // 서버 저장 호출
       print("Saving DTO: ${dto.toJson()}");
-      await supplementRepository.saveSupplement(dto); // 서버에 데이터 저장
+      await supplementRepository.saveSupplement(dto);
     }));
 
+    // 저장 성공 메시지
     print("All data saved successfully");
-    setState(() {
-      _addSupplement = true; // 저장 성공 시 애니메이션 활성화
-    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('데이터 저장이 완료되었습니다.')),
+    );
 
     // 데이터 동기화
     await _loadData();
+    setState(() {
+      _addSupplement = true;
+    });
   } catch (e) {
     print("Error while saving data: $e");
     ScaffoldMessenger.of(context).showSnackBar(

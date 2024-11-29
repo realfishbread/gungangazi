@@ -6,6 +6,7 @@ import '../repositories/userHealth/sleep_repository.dart';
 import '../services/dio_service.dart';
 import '../services/TokenService.dart';
 import 'PopupHandler.dart';
+import 'package:flutter_improved_scrolling/flutter_improved_scrolling.dart';
 
 class SleepPage extends StatefulWidget {
   final PopupHandler popupHandler;
@@ -24,6 +25,9 @@ class _SleepPageState extends State<SleepPage> {
   int _currentSleepLevel = 0; // 현재 sleepLevel 저장
   bool _isLoading = true;
 
+  // ScrollController 추가
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -35,7 +39,6 @@ class _SleepPageState extends State<SleepPage> {
     _currentSleepLevel = widget.popupHandler.sleepLevel;
   }
 
-  // 서버에서 수면 데이터 가져오기
   Future<void> _loadAllSleepDataFromServer() async {
     setState(() {
       _isLoading = true;
@@ -50,11 +53,11 @@ class _SleepPageState extends State<SleepPage> {
               'username': dto.username,
             }).toList();
 
-        // 날짜순 정렬 (최신 데이터가 오른쪽에 표시되도록 오름차순)
+        // 날짜순 정렬 (최신 데이터가 오른쪽으로 표시되도록 오름차순)
         _sleepRecords.sort((a, b) {
           DateTime dateA = DateTime.parse(a['date']!);
           DateTime dateB = DateTime.parse(b['date']!);
-          return dateA.compareTo(dateB); // 오름차순 정렬
+          return dateA.compareTo(dateB);
         });
       });
     } catch (e) {
@@ -125,94 +128,90 @@ class _SleepPageState extends State<SleepPage> {
 
   // 그래프 생성 메서드
   Widget _buildSleepGraph() {
-  if (_sleepRecords.isEmpty) {
-    return const Center(child: Text('저장된 수면 기록이 없습니다.'));
-  }
+    if (_sleepRecords.isEmpty) {
+      return const Center(child: Text('저장된 수면 기록이 없습니다.'));
+    }
 
-  // 최신 데이터가 오른쪽으로 가도록 데이터 정렬
-  List<Map<String, String>> recentSleepRecords = _sleepRecords.reversed.toList();
+    // Bar Chart 데이터 생성
+    List<BarChartGroupData> barGroups = _sleepRecords.asMap().entries.map((entry) {
+      int index = entry.key;
+      Map<String, String> record = entry.value;
 
-  List<BarChartGroupData> barGroups = recentSleepRecords.asMap().entries.map((entry) {
-    int index = entry.key;
-    Map<String, String> record = entry.value;
+      // 수면 및 기상 시간을 TimeOfDay로 변환
+      TimeOfDay sleepTime = TimeOfDay(
+        hour: int.parse(record['sleep_time']!.split(":")[0]),
+        minute: int.parse(record['sleep_time']!.split(":")[1]),
+      );
+      TimeOfDay wakeUpTime = TimeOfDay(
+        hour: int.parse(record['wake_up_time']!.split(":")[0]),
+        minute: int.parse(record['wake_up_time']!.split(":")[1]),
+      );
 
-    // 수면 및 기상 시간을 TimeOfDay로 변환
-    TimeOfDay sleepTime = TimeOfDay(
-      hour: int.parse(record['sleep_time']!.split(":")[0]),
-      minute: int.parse(record['sleep_time']!.split(":")[1]),
-    );
-    TimeOfDay wakeUpTime = TimeOfDay(
-      hour: int.parse(record['wake_up_time']!.split(":")[0]),
-      minute: int.parse(record['wake_up_time']!.split(":")[1]),
-    );
+      // 수면 시간 계산
+      Duration sleepDuration = _calculateSleepDuration(sleepTime, wakeUpTime);
+      double sleepHours = sleepDuration.inMinutes / 60.0;
 
-    // 수면 시간 계산
-    Duration sleepDuration = _calculateSleepDuration(sleepTime, wakeUpTime);
-    double sleepHours = sleepDuration.inMinutes / 60.0;
-
-    return BarChartGroupData(
-      x: index,
-      barRods: [
-        BarChartRodData(
-          toY: sleepHours,
-          color: const Color.fromARGB(255, 168, 148, 255),
-          width: 20,
-        ),
-      ],
-    );
-  }).toList();
-
-  // 권장 수면 시간 (예: 8시간)
-  double recommendedSleepHours = 8.0;
-
-  return BarChart(
-    BarChartData(
-      barGroups: barGroups,
-      gridData: FlGridData(show: false),
-      titlesData: FlTitlesData(
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            interval: 2,
-            getTitlesWidget: (value, meta) => Text('${value.toInt()}h'),
-          ),
-        ),
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            getTitlesWidget: (double value, meta) {
-              int index = value.toInt();
-              if (index >= 0 && index < recentSleepRecords.length) {
-                return Text(recentSleepRecords[index]['date'] ?? '');
-              } else {
-                return const Text('');
-              }
-            },
-          ),
-        ),
-      ),
-      borderData: FlBorderData(show: false),
-      minY: 0,
-      maxY: 12,
-      extraLinesData: ExtraLinesData(
-        horizontalLines: [
-          HorizontalLine(
-            y: recommendedSleepHours,
-            color: Colors.red,
-            strokeWidth: 2,
-            dashArray: [5, 5],
-            label: HorizontalLineLabel(
-              show: true,
-              alignment: Alignment.topLeft,
-              labelResolver: (line) => '권장: 8h',
-            ),
+      return BarChartGroupData(
+        x: index,
+        barRods: [
+          BarChartRodData(
+            toY: sleepHours,
+            color: const Color.fromARGB(255, 168, 148, 255),
+            width: 20,
           ),
         ],
-      ),
-    ),
-  );
-}
+      );
+    }).toList();
 
+    double recommendedSleepHours = 8.0; // 권장 수면 시간
+
+    return BarChart(
+      BarChartData(
+        barGroups: barGroups,
+        gridData: FlGridData(show: false),
+        titlesData: FlTitlesData(
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              interval: 2,
+              getTitlesWidget: (value, meta) => Text('${value.toInt()}h'),
+            ),
+          ),
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              getTitlesWidget: (double value, meta) {
+                int index = value.toInt();
+                if (index >= 0 && index < _sleepRecords.length) {
+                  return Text(_sleepRecords[index]['date'] ?? '');
+                } else {
+                  return const Text('');
+                }
+              },
+            ),
+          ),
+        ),
+        borderData: FlBorderData(show: false),
+        minY: 0,
+        maxY: 12,
+        extraLinesData: ExtraLinesData(
+          horizontalLines: [
+            HorizontalLine(
+              y: recommendedSleepHours,
+              color: Colors.red,
+              strokeWidth: 2,
+              dashArray: [5, 5],
+              label: HorizontalLineLabel(
+                show: true,
+                alignment: Alignment.topLeft,
+                labelResolver: (line) => '권장: 8h',
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
   Duration _calculateSleepDuration(TimeOfDay sleepTime, TimeOfDay wakeUpTime) {
     final now = DateTime.now();
     final sleepDateTime = DateTime(now.year, now.month, now.day, sleepTime.hour, sleepTime.minute);
@@ -254,99 +253,109 @@ class _SleepPageState extends State<SleepPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        if (widget.popupHandler.sleepLevel > _currentSleepLevel) {
-          widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 1000);
-        }
-        return true;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('수면'),
-          backgroundColor: const Color(0xFFFFF9C4),
-        ),
-        body: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () => _selectSleepTime(context),
-                  icon: const Icon(Icons.bedtime),
-                  label: Text(
-                    _sleepTime == null
-                        ? '취침 시각 선택'
-                        : '취침: ${_sleepTime!.format(context)}',
+Widget build(BuildContext context) {
+  return WillPopScope(
+    onWillPop: () async {
+      if (widget.popupHandler.sleepLevel > _currentSleepLevel) {
+        widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 1000);
+      }
+      return true;
+    },
+    child: Scaffold(
+      appBar: AppBar(
+        title: const Text('수면'),
+        backgroundColor: const Color(0xFFFFF9C4),
+      ),
+      body: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              // 취침 시각 선택 드롭다운
+              DropdownButton<TimeOfDay>(
+                hint: const Text('취침 시각 선택'),
+                value: _sleepTime,
+                items: List.generate(
+                  24,
+                  (hour) => DropdownMenuItem<TimeOfDay>(
+                    value: TimeOfDay(hour: hour, minute: 0),
+                    child: Text('${hour.toString().padLeft(2, '0')}:00'),
                   ),
                 ),
-                ElevatedButton.icon(
-                  onPressed: () => _selectWakeUpTime(context),
-                  icon: const Icon(Icons.wb_sunny),
-                  label: Text(
-                    _wakeUpTime == null
-                        ? '기상 시각 선택'
-                        : '기상: ${_wakeUpTime!.format(context)}',
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: _saveSleepDataToServer,
-                  child: const Text('저장'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                '최근 수면 그래프',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
-            SizedBox(
-              height: 300,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: SizedBox(
-                  width: _sleepRecords.length * 80.0, // 데이터 수에 따라 충분히 넓은 너비 설정
-                  child: _buildSleepGraph(),
-                ),
-              ),
-            ),
-            const Divider(),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                '수면 기록',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _sleepRecords.length,
-                itemBuilder: (context, index) {
-                  final record = _sleepRecords[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      title: Text(
-                        record['date'] ?? '',
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(
-                        "취침: ${record['sleep_time']} | 기상: ${record['wake_up_time']}",
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                    ),
-                  );
+                onChanged: (TimeOfDay? value) {
+                  setState(() {
+                    _sleepTime = value;
+                  });
                 },
               ),
+              // 기상 시각 선택 버튼
+              ElevatedButton.icon(
+                onPressed: () => _selectWakeUpTime(context),
+                icon: const Icon(Icons.wb_sunny),
+                label: Text(
+                  _wakeUpTime == null
+                      ? '기상 시각 선택'
+                      : '기상: ${_wakeUpTime!.format(context)}',
+                ),
+              ),
+              // 저장 버튼
+              ElevatedButton(
+                onPressed: _saveSleepDataToServer,
+                child: const Text('저장'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              '최근 수면 그래프',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-          ],
-        ),
+          ),
+          SizedBox(
+            height: 300,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: SizedBox(
+                width: _sleepRecords.length * 80.0, // 데이터 수에 따라 충분히 넓은 너비 설정
+                child: _buildSleepGraph(),
+              ),
+            ),
+          ),
+          const Divider(),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              '수면 기록',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _sleepRecords.length,
+              itemBuilder: (context, index) {
+                final record = _sleepRecords[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    title: Text(
+                      record['date'] ?? '',
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      "취침: ${record['sleep_time']} | 기상: ${record['wake_up_time']}",
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 }

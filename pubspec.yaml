@@ -38,6 +38,8 @@ dependencies:
   jwt_decode: ^0.3.1
   file_picker: ^5.0.0
   intl: ^0.18.0
+  infinite_carousel: ^1.1.1
+  flutter_improved_scrolling: ^0.0.3
 
 dev_dependencies:
    

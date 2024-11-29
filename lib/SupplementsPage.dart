@@ -57,8 +57,6 @@ class _SupplementsPageState extends State<SupplementsPage> {
       bool isSupplementTaken = _supplementTaken[date] ?? false;
       bool isMenstruationRecorded = _selectedMenstruationDays.contains(date);
 
-      if (!isSupplementTaken && !isMenstruationRecorded) return;
-
       // DTO 생성
       SupplementDto dto = SupplementDto(
         date: date,

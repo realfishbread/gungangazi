@@ -24,6 +24,8 @@ class _SleepPageState extends State<SleepPage> {
   List<Map<String, String>> _sleepRecords = [];
   late final SleepRepository sleepRepository;
   int _currentSleepLevel = 0; // 현재 sleepLevel 저장
+  bool _isLoading = true;
+  
 
   @override
   void initState() {
@@ -32,22 +34,41 @@ class _SleepPageState extends State<SleepPage> {
       dioService: DioService(),
       tokenService: TokenService(),
     );
-    _loadSleepDataFromServer();
+    _loadAllSleepDataFromServer();
     _currentSleepLevel = widget.popupHandler.sleepLevel;
   }
 
+  
+
   // 서버에서 수면 데이터 가져오기
-  Future<void> _loadSleepDataFromServer() async {
-    List<SleepDto> serverData = await sleepRepository.fetchSleepDataFromDatabase();
+  Future<void> _loadAllSleepDataFromServer() async {
     setState(() {
-      _sleepRecords = serverData.map((dto) => {
-        'date': dto.date,
-        'sleep_time': dto.sleep_time,
-        'wake_up_time': dto.wake_up_time,
-        'username': dto.username,
-      }).toList();
+      _isLoading = true;
     });
-    print('_sleepRecords: $_sleepRecords'); // 디버깅용 출력
+    try {
+      List<SleepDto> serverData = await sleepRepository.fetchSleepDataFromDatabase();
+      setState(() {
+        _sleepRecords = serverData.map((dto) => {
+              'date': dto.date,
+              'sleep_time': dto.sleep_time,
+              'wake_up_time': dto.wake_up_time,
+              'username': dto.username,
+            }).toList();
+
+        // 날짜순 정렬 (최신 데이터가 위로 오도록)
+        _sleepRecords.sort((a, b) {
+          DateTime dateA = DateTime.parse(a['date']!);
+          DateTime dateB = DateTime.parse(b['date']!);
+          return dateB.compareTo(dateA); // 내림차순 정렬
+        });
+      });
+    } catch (e) {
+      print('Error loading sleep data: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   // 수면 데이터 서버에 저장하기
@@ -95,7 +116,7 @@ class _SleepPageState extends State<SleepPage> {
           // 중복이 아니라면 데이터 저장
           await sleepRepository.saveSleepDataToDatabase([newSleepRecord]);
           print('Successfully saved sleep data to the server');
-          await _loadSleepDataFromServer();
+          await _loadAllSleepDataFromServer();
         } else {
           print('Duplicate sleep record exists. No data saved.');
           ScaffoldMessenger.of(context).showSnackBar(
@@ -150,7 +171,7 @@ class _SleepPageState extends State<SleepPage> {
         barRods: [
           BarChartRodData(
             toY: sleepHours,
-            color: const Color.fromARGB(255, 102, 68, 255),
+            color: const Color.fromARGB(255, 168, 148, 255),
             width: 20,
           ),
         ],
@@ -163,6 +184,9 @@ class _SleepPageState extends State<SleepPage> {
     return BarChart(
       BarChartData(
         barGroups: barGroups,
+        gridData: FlGridData(
+        show: false, // 배경 모눈 제거
+      ),
         titlesData: FlTitlesData(
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
@@ -221,19 +245,13 @@ class _SleepPageState extends State<SleepPage> {
     }
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        // sleepLevel이 증가했는지 확인
         if (widget.popupHandler.sleepLevel > _currentSleepLevel) {
           widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 1000);
-          print('Triggering sleeping animation for sleep level: ${widget.popupHandler.sleepLevel}');
-        } else {
-          print("No significant sleep level change, no animation triggered.");
         }
-
-        // 뒤로 가기 허용
         return true;
       },
       child: Scaffold(
@@ -246,7 +264,6 @@ class _SleepPageState extends State<SleepPage> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                // 버튼들을 수평으로 정렬
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -271,15 +288,26 @@ class _SleepPageState extends State<SleepPage> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                // 저장 버튼
                 ElevatedButton(
                   onPressed: _saveSleepDataToServer,
                   child: const Text('저장'),
                 ),
                 const SizedBox(height: 20),
-                // 그래프를 표시
                 Expanded(
-                  child: _buildSleepGraph(),
+                  child: _isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : ListView.builder(
+                          itemCount: _sleepRecords.length,
+                          itemBuilder: (context, index) {
+                            final record = _sleepRecords[index];
+                            return ListTile(
+                              title: Text(record['date'] ?? ''),
+                              subtitle: Text(
+                                "취침: ${record['sleep_time']} | 기상: ${record['wake_up_time']}",
+                              ),
+                            );
+                          },
+                        ),
                 ),
               ],
             ),

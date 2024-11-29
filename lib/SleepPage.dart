@@ -66,6 +66,72 @@ class _SleepPageState extends State<SleepPage> {
     }
   }
 
+  // 수면 데이터 서버에 저장하기
+  Future<void> _saveSleepDataToServer() async {
+    if (_sleepTime != null && _wakeUpTime != null) {
+      String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+      Duration sleepDuration = _calculateSleepDuration(_sleepTime!, _wakeUpTime!);
+      double sleepHours = sleepDuration.inMinutes / 60.0;
+
+      // 새로운 sleepLevel 계산
+      int newSleepLevel = widget.popupHandler.sleepLevel;
+      _currentSleepLevel = widget.popupHandler.sleepLevel;
+      if (sleepHours >= 5.0) {
+        newSleepLevel = widget.popupHandler.sleepLevel + 200; // 수면 시간이 충분할 경우 증가
+      }
+
+      // sleepLevel 업데이트
+      widget.popupHandler.updateStatus(
+        newWaterLevel: widget.popupHandler.waterLevel,
+        newMealLevel: widget.popupHandler.mealLevel,
+        newSleepLevel: newSleepLevel,
+      );
+
+      // 서버에 저장할 SleepDto 데이터 생성
+      String? username = await TokenService().getUsername();
+      SleepDto newSleepRecord = SleepDto(
+        date: formattedDate,
+        sleep_time: '${_sleepTime!.hour}:${_sleepTime!.minute}:00',
+        wake_up_time: '${_wakeUpTime!.hour}:${_wakeUpTime!.minute}:00',
+        username: username ?? 'defaultUser',
+      );
+
+      try {
+        // 기존 데이터 확인
+        List<SleepDto> existingRecords = await sleepRepository.fetchSleepDataFromDatabase();
+
+        // 동일한 날짜에 같은 수면 기록이 있는지 확인
+        bool isDuplicate = existingRecords.any((record) =>
+        record.date == formattedDate &&
+            record.sleep_time == newSleepRecord.sleep_time &&
+            record.wake_up_time == newSleepRecord.wake_up_time);
+
+        if (!isDuplicate) {
+          // 중복이 아니라면 데이터 저장
+          await sleepRepository.saveSleepDataToDatabase([newSleepRecord]);
+          print('Successfully saved sleep data to the server');
+          await _loadAllSleepDataFromServer();
+        } else {
+          print('Duplicate sleep record exists. No data saved.');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('중복된 수면 기록입니다. 다른 시간을 입력하세요.')),
+          );
+        }
+      } catch (e) {
+        print('Error sending data to the server: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('수면 기록 저장 중 오류가 발생했습니다. 다시 시도해주세요.')),
+        );
+      }
+    } else {
+      print('Sleep time or wake-up time is not selected');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('수면 시간을 선택해 주세요.')),
+      );
+    }
+  }
+
   // 그래프 생성 메서드
   Widget _buildSleepGraph() {
     if (_sleepRecords.isEmpty) {
@@ -175,67 +241,143 @@ class _SleepPageState extends State<SleepPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        if (widget.popupHandler.sleepLevel > _currentSleepLevel) {
-          widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 1000);
-        }
-        return true;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('수면'),
-          backgroundColor: const Color(0xFFFFF9C4),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : ListView(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Text(
-                            '최근 수면 그래프',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 300,
-                          child: _buildSleepGraph(), // 차트 추가
-                        ),
-                        const Divider(),
-                        const Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Text(
-                            '수면 기록',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: _sleepRecords.length,
-                          itemBuilder: (context, index) {
-                            final record = _sleepRecords[index];
-                            return ListTile(
-                              title: Text(record['date'] ?? ''),
-                              subtitle: Text(
-                                "취침: ${record['sleep_time']} | 기상: ${record['wake_up_time']}",
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-            ),
-          ],
-        ),
+Widget build(BuildContext context) {
+  return WillPopScope(
+    onWillPop: () async {
+      if (widget.popupHandler.sleepLevel > _currentSleepLevel) {
+        widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 1000);
+      }
+      return true;
+    },
+    child: Scaffold(
+      appBar: AppBar(
+        title: const Text('수면'),
+        backgroundColor: const Color(0xFFFFF9C4),
       ),
+      body: Column(
+        children: [
+          // 입력 영역 추가
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () => _selectSleepTime(context),
+                      icon: const Icon(Icons.bedtime),
+                      label: Text(
+                        _sleepTime == null
+                            ? '취침 시각 선택'
+                            : '취침: ${_sleepTime!.format(context)}',
+                      ),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () => _selectWakeUpTime(context),
+                      icon: const Icon(Icons.wb_sunny),
+                      label: Text(
+                        _wakeUpTime == null
+                            ? '기상 시각 선택'
+                            : '기상: ${_wakeUpTime!.format(context)}',
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: _saveSleepDataToServer,
+                  child: const Text('오늘 수면 데이터 저장'),
+                ),
+              ],
+            ),
+          ),
+          const Divider(), // 입력 영역과 그래프를 구분
+          // 그래프 영역
+          Expanded(
+            flex: 2,
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Text(
+                          '최근 수면 그래프',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: _buildSleepGraph(),
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
+          const Divider(),
+          // 기록 데이터 영역
+          Expanded(
+            flex: 3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    '수면 기록',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: _sleepRecords.length,
+                    itemBuilder: (context, index) {
+                      final record = _sleepRecords[index];
+                      return ListTile(
+                        title: Text(record['date'] ?? ''),
+                        subtitle: Text(
+                          "취침: ${record['sleep_time']} | 기상: ${record['wake_up_time']}",
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Future<void> _selectSleepTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
     );
+    if (picked != null && picked != _sleepTime) {
+      setState(() {
+        _sleepTime = picked;
+      });
+    }
   }
+
+  Future<void> _selectWakeUpTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null && picked != _wakeUpTime) {
+      setState(() {
+        _wakeUpTime = picked;
+      });
+    }
+  } 
+
 }
 
 

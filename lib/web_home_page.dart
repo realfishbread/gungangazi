@@ -58,32 +58,36 @@ class _WebHomePageState extends State<WebHomePage> {
       }
     });
   }
-  // 프로필 페이지로 슈욱 슬라이드 애니메이션 전환
   void _navigateToProfile(BuildContext context) async {
-    String? username = await _tokenService.getUsername();
+  String? username = await _tokenService.getUsername();
 
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return Profile2(username: username ?? "기본아이디");
-        },
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          // 애니메이션 정의 (슬라이드 효과)
-          const begin = Offset(1.0, 0.0); // 화면 오른쪽에서 시작
-          const end = Offset.zero; // 화면 중앙으로 이동
-          const curve = Curves.easeInOut; // 부드러운 애니메이션 효과
-
-          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-          var offsetAnimation = animation.drive(tween);
-
-          return SlideTransition(
-            position: offsetAnimation,
-            child: child,
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true, // 높이를 조절하기 위해 필요한 설정
+    backgroundColor: Colors.transparent, // 배경 투명
+    builder: (context) {
+      return DraggableScrollableSheet(
+        initialChildSize: 0.8, // 초기 높이 비율 (전체 화면의 80%)
+        minChildSize: 0.5, // 최소 높이 비율
+        maxChildSize: 0.95, // 최대 높이 비율
+        builder: (BuildContext context, ScrollController scrollController) {
+          return Container(
+            decoration: const BoxDecoration(
+              color: Colors.white, // 페이지 배경
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.0), // 상단 모서리 둥글게
+                topRight: Radius.circular(20.0),
+              ),
+            ),
+            child: Profile2(
+              username: username ?? "기본아이디",
+            ),
           );
         },
-      ),
-    );
-  }
+      );
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) {

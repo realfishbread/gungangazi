@@ -5,6 +5,8 @@ import '../repositories/userHealth/supplement_repository.dart';
 import '../dto/userHealth/supplementDto.dart';
 import '../services/TokenService.dart';
 import 'PopupHandler.dart';
+import 'package:intl/intl.dart';
+
 
 
 class SupplementsPage extends StatefulWidget {
@@ -41,6 +43,29 @@ class _SupplementsPageState extends State<SupplementsPage> {
     });
   }
 
+  // 상태 변경 및 데이터 저장 로직 개선
+void _updateMenstruationOrSupplement(DateTime date, {bool? isMenstruation, bool? isSupplement}) {
+  setState(() {
+    // 생리 기록 여부 업데이트
+    if (isMenstruation != null) {
+      if (isMenstruation) {
+        _selectedMenstruationDays.add(date);
+      } else {
+        _selectedMenstruationDays.remove(date);
+      }
+    }
+
+    // 영양제 복용 여부 업데이트
+    if (isSupplement != null) {
+      _supplementTaken[date] = isSupplement;
+    }
+
+    // 디버그 출력
+    print('_selectedMenstruationDays: $_selectedMenstruationDays');
+    print('_supplementTaken: $_supplementTaken');
+  });
+}
+
   Future<void> _saveData() async {
   String? username = await tokenService.getUsername();
   if (username == null) {
@@ -53,17 +78,15 @@ class _SupplementsPageState extends State<SupplementsPage> {
 
   try {
     await Future.wait(uniqueDates.map((date) async {
-      // 생리 기록 또는 영양제 복용 여부가 없으면 저장하지 않음
-      bool isSupplementTaken = _supplementTaken[date] ?? false;
-      bool isMenstruationRecorded = _selectedMenstruationDays.contains(date);
+      
 
       // DTO 생성
       SupplementDto dto = SupplementDto(
-        date: date,
-        supplement_taken: isSupplementTaken,
-        menstruation_recorded: isMenstruationRecorded,
-        username: username,
-      );
+      date: date,
+      supplement_taken: _supplementTaken[date] ?? false, // 기본값 false
+      menstruation_recorded: _selectedMenstruationDays.contains(date), // 생리 기록 여부
+      username: username,
+    );
 
       print("Saving DTO: ${dto.toJson()}");
       await supplementRepository.saveSupplement(dto);
@@ -138,84 +161,73 @@ class _SupplementsPageState extends State<SupplementsPage> {
   }
 }
 
+// BottomSheet 로직 개선
 void _showBottomSheet(DateTime selectedDay) {
   showModalBottomSheet(
     context: context,
     builder: (context) {
-      return FutureBuilder<void>(
-        future: _fetchSingleDayData(selectedDay), // 선택된 날짜의 데이터를 가져옴
-        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator()); // 로딩 표시
-          }
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setModalState) {
+          bool isSupplementTaken = _supplementTaken[selectedDay] ?? false;
+          bool isMenstruationRecorded = _selectedMenstruationDays.contains(selectedDay);
 
-          return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setModalState) {
-              // 최신 데이터를 반영하여 Switch 초기화
-              bool initialSupplementTaken = _supplementTaken[selectedDay] ?? false;
-              bool initialMenstruationRecorded = _selectedMenstruationDays.contains(selectedDay);
-
-              return Container(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '날짜: ${DateFormat('yyyy-MM-dd').format(selectedDay)}',
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      '날짜: ${selectedDay.year}-${selectedDay.month}-${selectedDay.day}',
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('영양제 복용', style: TextStyle(fontSize: 16)),
-                        Switch(
-                          value: initialSupplementTaken,
-                          onChanged: (value) {
-                            setModalState(() {
-                              initialSupplementTaken = value;
-                              _supplementTaken[selectedDay] = value;
-                            });
-                            print('영양제 복용 상태 변경: $value');
-                          },
-                        ),
-                      ],
-                    ),
-                    if (_gender != '남성') ...[
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text('생리 기록', style: TextStyle(fontSize: 16)),
-                          Switch(
-                            value: initialMenstruationRecorded,
-                            onChanged: (value) {
-                              setModalState(() {
-                                initialMenstruationRecorded = value;
-                                if (value) {
-                                  _selectedMenstruationDays.add(selectedDay);
-                                } else {
-                                  _selectedMenstruationDays.remove(selectedDay);
-                                }
-                              });
-                              print('_selectedMenstruationDays after update: $_selectedMenstruationDays');
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () async {
-                        await _saveData();
-                        Navigator.pop(context); // 서랍 닫기
+                    const Text('영양제 복용'),
+                    Switch(
+                      value: isSupplementTaken,
+                      onChanged: (value) {
+                        setModalState(() {
+                          isSupplementTaken = value;
+                        });
+                        _updateMenstruationOrSupplement(
+                          selectedDay,
+                          isSupplement: isSupplementTaken,
+                        );
                       },
-                      child: const Text('저장'),
                     ),
                   ],
                 ),
-              );
-            },
+                if (_gender != '남성')
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('생리 기록'),
+                      Switch(
+                        value: isMenstruationRecorded,
+                        onChanged: (value) {
+                          setModalState(() {
+                            isMenstruationRecorded = value;
+                          });
+                          _updateMenstruationOrSupplement(
+                            selectedDay,
+                            isMenstruation: isMenstruationRecorded,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () async {
+                    await _saveData();
+                    Navigator.pop(context);
+                  },
+                  child: const Text('저장'),
+                ),
+              ],
+            ),
           );
         },
       );

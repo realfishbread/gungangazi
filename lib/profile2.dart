@@ -207,21 +207,7 @@ class _Profile2State extends State<Profile2> {
             );
           }),
           _buildProfileItem('성별', profile.gender ?? '남성', null),
-          const SizedBox(height: 20),
-          Center(
-             child: ElevatedButton(
-            onPressed: () {
-
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue, // 버튼 색상
-            ),
-            child: const Text(
-              '삼성 헬스',
-              style: TextStyle(color: Colors.white),
-            ),
-          )
-          ),
+          
           
           const SizedBox(height: 20),
           Center(

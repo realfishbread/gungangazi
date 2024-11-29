@@ -234,7 +234,18 @@ void _showBottomSheet(DateTime selectedDay) {
                 defaultBuilder: (context, date, focusedDay) {
                   DateTime dateOnly = DateTime(date.year, date.month, date.day);
 
-                  if (_selectedMenstruationDays.contains(dateOnly)) {
+                  if (_selectedMenstruationDays.contains(dateOnly) && (_supplementTaken[dateOnly] == true)) {
+                    // 생리와 영양제 둘 다 체크된 경우 보라색
+                    return Container(
+                      margin: const EdgeInsets.all(4.0),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF9B51E0).withOpacity(0.5), // 보라색
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(child: Text('${date.day}')),
+                    );
+                  } else if (_selectedMenstruationDays.contains(dateOnly)) {
+                    // 생리만 체크된 경우 빨간색
                     return Container(
                       margin: const EdgeInsets.all(4.0),
                       decoration: BoxDecoration(
@@ -244,18 +255,20 @@ void _showBottomSheet(DateTime selectedDay) {
                       child: Center(child: Text('${date.day}')),
                     );
                   } else if (_supplementTaken[dateOnly] == true) {
+                    // 영양제만 체크된 경우 파란색
                     return Container(
                       margin: const EdgeInsets.all(4.0),
                       decoration: BoxDecoration(
-                        color: Color(0xFF9ADCFF).withOpacity(0.5),
+                        color: const Color(0xFF9ADCFF).withOpacity(0.5),
                         shape: BoxShape.circle,
                       ),
                       child: Center(child: Text('${date.day}')),
                     );
                   }
-                  return null;
+                  return null; // 아무 것도 체크되지 않은 경우 기본 스타일
                 },
               ),
+
             ),
           ],
         ),

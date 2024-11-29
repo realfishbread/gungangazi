@@ -524,10 +524,58 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
       popupMessage = '목이 말라요... 물을 주세요!';
     } else if (_currentBodyPart == 'hungry') {
         popupMessage = '배고파요... 식사를 해주세요!!';
+        // 부위별 팝업 메시지 설정
+        if (relativeY < headHeight) {
+          popupMessage = '식사를 잘 챙겨주세요!';
+          _currentBodyPart = 'angry';
+        } else if (relativeY >= headHeight && relativeY < legStartHeight) {
+          if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
+            popupMessage = '목을 축이고 싶고, 배가 고파요';
+            _currentBodyPart = 'angry';
+          } else {
+            popupMessage = '수분섭취를 잊지 말아주세요';
+            _currentBodyPart = 'angry';
+          }
+        } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
+          popupMessage = '배고파서 삭신이 쑤셔요.';
+          _currentBodyPart = 'angry';
+        }
       } else if (_currentBodyPart == 'thirsty_and_dizzy') {
         popupMessage = '충분한 숙면을 취하지 못했어요, 목도 말라요.';
+        // 부위별 팝업 메시지 설정
+        if (relativeY < headHeight) {
+          popupMessage = '식사를 잘 챙겨주세요!';
+          _currentBodyPart = 'angry';
+        } else if (relativeY >= headHeight && relativeY < legStartHeight) {
+          if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
+            popupMessage = '목을 축이고 싶고, 배가 고파요';
+            _currentBodyPart = 'angry';
+          } else {
+            popupMessage = '수분섭취를 잊지 말아주세요';
+            _currentBodyPart = 'angry';
+          }
+        } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
+          popupMessage = '배고파서 삭신이 쑤셔요.';
+          _currentBodyPart = 'angry';
+        }
       } else if (_currentBodyPart == 'thirsty_and_hungry_dizzy') {
         popupMessage = '건강을 챙겨주세요';
+        // 부위별 팝업 메시지 설정
+        if (relativeY < headHeight) {
+          popupMessage = '식사를 잘 챙겨주세요!';
+          _currentBodyPart = 'angry';
+        } else if (relativeY >= headHeight && relativeY < legStartHeight) {
+          if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
+            popupMessage = '목을 축이고 싶고, 배가 고파요';
+            _currentBodyPart = 'angry';
+          } else {
+            popupMessage = '수분섭취를 잊지 말아주세요';
+            _currentBodyPart = 'angry';
+          }
+        } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
+          popupMessage = '배고파서 삭신이 쑤셔요.';
+          _currentBodyPart = 'angry';
+        }
       } else if (_currentBodyPart == 'thirsty_and_hungry') {
         popupMessage = '목도 마르고 배도 고파요... 물과 식사가 필요해요!';
         // 부위별 팝업 메시지 설정

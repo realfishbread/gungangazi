@@ -204,6 +204,38 @@ class _MealPageState extends State<MealPage> {
   );
 }
 
+Widget _getCalorieStatusWidget(String date) {
+  final int totalCalories = _calculateTotalCalories(date);
+  final int recommendedCalories = (_gender == '여성') ? 2000 : 2600; // 성별에 따른 권장 칼로리
+  final int calorieDifference = totalCalories - recommendedCalories;
+
+  // 초과 여부에 따라 아이콘과 텍스트 설정
+  if (calorieDifference > 0) {
+    return Row(
+      children: [
+        const Icon(Icons.local_fire_department, color: Colors.red), // 🔥 아이콘
+        const SizedBox(width: 5),
+        Text(
+          "초과 ${calorieDifference.abs()} Kcal",
+          style: const TextStyle(color: Colors.red, fontSize: 14),
+        ),
+      ],
+    );
+  } else {
+    return Row(
+      children: [
+        const Icon(Icons.check_circle, color: Colors.green), // ✅ 아이콘
+        const SizedBox(width: 5),
+        Text(
+          "남음 ${calorieDifference.abs()} Kcal",
+          style: const TextStyle(color: Colors.green, fontSize: 14),
+        ),
+      ],
+    );
+  }
+}
+
+
  // 식사 기록 삭제
 Future<void> _deleteMeal(String mealId, String date) async {
   try {
@@ -321,35 +353,42 @@ Future<void> _deleteMeal(String mealId, String date) async {
             ),
             const SizedBox(height: 10),
             Expanded(
-              child: _mealsByDate.isEmpty
-                  ? const Center(
-                      child: Text('기록된 식사가 없습니다.'),
-                    )
-                  : ListView(
-                      children: _mealsByDate.keys.map((date) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ExpansionTile(
-                              title: Text(date),
-                              children: _mealsByDate[date]!
-                                  .map((meal) => ListTile(
-                                        title: Text("${meal['meal']} (${meal['calories']} Kcal)"),
-                                        trailing: IconButton(
-                                          icon: const Icon(Icons.close),
-                                          onPressed: () => _deleteMeal(meal['id'], date),
-                                          tooltip: '삭제',
-                                        ),
-                                      ))
-                                  .toList(),
-                            ),
-                            if (date == _getFormattedDate())
-                              _buildCalorieSummary(date), // 날짜별 칼로리 요약 추가
-                          ],
-                        );
-                      }).toList(),
-                    ),
-            ),
+                  child: _mealsByDate.isEmpty
+                      ? const Center(
+                          child: Text('기록된 식사가 없습니다.'),
+                        )
+                      : ListView(
+                          children: _mealsByDate.keys.map((date) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ExpansionTile(
+                                  title: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        date,
+                                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                      ),
+                                      _getCalorieStatusWidget(date), // 칼로리 상태와 아이콘 표시
+                                    ],
+                                  ),
+                                  children: _mealsByDate[date]!
+                                      .map((meal) => ListTile(
+                                            title: Text("${meal['meal']} (${meal['calories']} Kcal)"),
+                                            trailing: IconButton(
+                                              icon: const Icon(Icons.close),
+                                              onPressed: () => _deleteMeal(meal['id'], date),
+                                              tooltip: '삭제',
+                                            ),
+                                          ))
+                                      .toList(),
+                                ),
+                              ],
+                            );
+                          }).toList(),
+                        ),
+                ),
             // **하단에 고정된 요약 위젯 추가**
                   _buildCalorieSummary(_getFormattedDate()), // 오늘 날짜를 전달
           ],

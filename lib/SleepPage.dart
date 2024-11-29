@@ -134,11 +134,17 @@ class _SleepPageState extends State<SleepPage> {
     }
 
     // Bar Chart 데이터 생성
-    List<BarChartGroupData> barGroups = _sleepRecords.asMap().entries.map((entry) {
+    // 최근 10개의 수면 데이터를 가져오기
+List<Map<String, String>> limitedSleepRecords = _sleepRecords.length > 10
+    ? _sleepRecords.sublist(_sleepRecords.length - 10)
+    : _sleepRecords;
+
+    // BarChart에 전달할 데이터 수정
+    List<BarChartGroupData> barGroups = limitedSleepRecords.asMap().entries.map((entry) {
       int index = entry.key;
       Map<String, String> record = entry.value;
 
-      // 수면 및 기상 시간을 TimeOfDay로 변환
+      // 수면 시간 계산 로직 동일
       TimeOfDay sleepTime = TimeOfDay(
         hour: int.parse(record['sleep_time']!.split(":")[0]),
         minute: int.parse(record['sleep_time']!.split(":")[1]),
@@ -148,7 +154,6 @@ class _SleepPageState extends State<SleepPage> {
         minute: int.parse(record['wake_up_time']!.split(":")[1]),
       );
 
-      // 수면 시간 계산
       Duration sleepDuration = _calculateSleepDuration(sleepTime, wakeUpTime);
       double sleepHours = sleepDuration.inMinutes / 60.0;
 

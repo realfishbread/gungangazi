@@ -48,18 +48,16 @@ class _SupplementsPageState extends State<SupplementsPage> {
     return;
   }
 
-  // 생리 기록 또는 영양제 복용 여부만 저장 가능하도록 수정
+  // 중복 제거를 위한 Set 사용
   final Set<DateTime> uniqueDates = {..._selectedMenstruationDays, ..._supplementTaken.keys};
 
   try {
     await Future.wait(uniqueDates.map((date) async {
+      // 생리 기록 또는 영양제 복용 여부가 없으면 저장하지 않음
       bool isSupplementTaken = _supplementTaken[date] ?? false;
       bool isMenstruationRecorded = _selectedMenstruationDays.contains(date);
 
-      // 아무 데이터도 없는 경우 저장하지 않음
-      if (!isSupplementTaken && !isMenstruationRecorded) {
-        return;
-      }
+      if (!isSupplementTaken && !isMenstruationRecorded) return;
 
       // DTO 생성
       SupplementDto dto = SupplementDto(
@@ -69,22 +67,19 @@ class _SupplementsPageState extends State<SupplementsPage> {
         username: username,
       );
 
-      // 서버 저장 호출
       print("Saving DTO: ${dto.toJson()}");
       await supplementRepository.saveSupplement(dto);
     }));
 
-    // 저장 성공 메시지
     print("All data saved successfully");
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('데이터 저장이 완료되었습니다.')),
-    );
 
-    // 데이터 동기화
-    await _loadData();
+    // 애니메이션 상태 업데이트
     setState(() {
       _addSupplement = true;
     });
+
+    // 데이터 다시 로드
+    await _loadData();
   } catch (e) {
     print("Error while saving data: $e");
     ScaffoldMessenger.of(context).showSnackBar(
@@ -126,15 +121,10 @@ class _SupplementsPageState extends State<SupplementsPage> {
     return;
   }
 
-  // API를 통해 선택된 날짜의 데이터를 가져옴
   try {
-    final singleDayData = await supplementRepository.fetchSingleSupplement(
-      username,
-      selectedDay,
-    );
+    final singleDayData = await supplementRepository.fetchSingleSupplement(username, selectedDay);
 
     setState(() {
-      // 선택된 날짜 데이터만 반영
       _supplementTaken[selectedDay] = singleDayData?.supplement_taken ?? false;
       if (singleDayData?.menstruation_recorded ?? false) {
         _selectedMenstruationDays.add(selectedDay);
@@ -144,6 +134,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
     });
 
     print('Single day data fetched: $singleDayData');
+    print('_selectedMenstruationDays after update: $_selectedMenstruationDays');
   } catch (e) {
     print('Failed to fetch single day data: $e');
   }

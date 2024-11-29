@@ -256,85 +256,90 @@ Widget build(BuildContext context) {
       ),
       body: Column(
         children: [
-          // 수면 데이터 입력 영역
-          Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 버튼 간격 균등하게 배치
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () => _selectSleepTime(context),
-                    icon: const Icon(Icons.bedtime),
-                    label: Text(
-                      _sleepTime == null
-                          ? '취침 시각 선택'
-                          : '취침: ${_sleepTime!.format(context)}',
-                    ),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () => _selectWakeUpTime(context),
-                    icon: const Icon(Icons.wb_sunny),
-                    label: Text(
-                      _wakeUpTime == null
-                          ? '기상 시각 선택'
-                          : '기상: ${_wakeUpTime!.format(context)}',
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: _saveSleepDataToServer,
-                    child: const Text('오늘 수면 데이터 저장'),
-                  ),
-                ],
+          // 수면 시간 선택 및 저장 버튼
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton.icon(
+                onPressed: () => _selectSleepTime(context),
+                icon: const Icon(Icons.bedtime),
+                label: Text(
+                  _sleepTime == null
+                      ? '취침 시각 선택'
+                      : 'Sleep Time: ${_sleepTime!.format(context)}',
+                ),
               ),
-            ),
-          const Divider(), // 구분선
-          // 가로로 스크롤 가능한 그래프
-          SizedBox(
-            height: 300,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text(
-                    '최근 수면 그래프',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
+              ElevatedButton.icon(
+                onPressed: () => _selectWakeUpTime(context),
+                icon: const Icon(Icons.wb_sunny),
+                label: Text(
+                  _wakeUpTime == null
+                      ? '기상 시각 선택'
+                      : 'Wake-up Time: ${_wakeUpTime!.format(context)}',
                 ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal, // 가로 스크롤 활성화
-                    child: SizedBox(
-                      width: _sleepRecords.length * 80, // 그래프 너비를 동적으로 설정
-                      child: _buildSleepGraph(), // 그래프
-                    ),
-                  ),
-                ),
-              ],
+              ),
+              ElevatedButton(
+                onPressed: _saveSleepDataToServer,
+                child: const Text('오늘 수면 데이터 저장'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // 그래프 섹션
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              '최근 수면 그래프',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
-          const Divider(), // 구분선
-          // 스크롤 가능한 수면 기록
+          SizedBox(
+            height: 300,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: SizedBox(
+                width: _sleepRecords.length * 70,
+                child: _buildSleepGraph(),
+              ),
+            ),
+          ),
+          const Divider(),
+          // 수면 기록 섹션
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              '수면 기록',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
           Expanded(
             child: ListView.builder(
               itemCount: _sleepRecords.length,
               itemBuilder: (context, index) {
                 final record = _sleepRecords[index];
-                return ListTile(
-                  title: Text(record['date'] ?? ''),
-                  subtitle: Text(
-                    "취침: ${record['sleep_time']} | 기상: ${record['wake_up_time']}",
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0), // 상하 간격 추가
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16.0), // 좌우 여백 추가
+                    title: Text(
+                      record['date'] ?? '',
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold), // 더 가독성 있는 폰트 스타일
+                    ),
+                    subtitle: Text(
+                      "취침: ${record['sleep_time']} | 기상: ${record['wake_up_time']}",
+                      style: const TextStyle(fontSize: 14), // 폰트 크기 조정
+                    ),
                   ),
                 );
               },
             ),
           ),
+
         ],
       ),
     ),
   );
 }
-
 
 Future<void> _selectSleepTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(

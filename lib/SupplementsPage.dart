@@ -54,7 +54,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
     await Future.wait(uniqueDates.map((date) async {
       SupplementDto dto = SupplementDto(
         date: date,
-        supplement_taken: _supplementTaken[date] ?? false,
+        supplement_taken: _supplementTaken[date] ?? false, // 기본값을 false로 설정
         menstruation_recorded: _selectedMenstruationDays.contains(date),
         username: username,
       );
@@ -76,6 +76,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
     );
   }
 }
+
 
 
   Future<void> _loadData() async {

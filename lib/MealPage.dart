@@ -24,10 +24,14 @@ class _MealPageState extends State<MealPage> {
   String _selectedMealType = "식사"; // 기본 식사 타입 선택
   bool _isLoading = true; // 로딩 상태 플래그
   int _currentMeal = 0;
+  String? _gender;
+
+
 
   @override
   void initState() {
     super.initState();
+    _fetchGender(); // 성별 가져오기
     _mealRepository = MealRepository(
       dioService: DioService(),
       tokenService: TokenService(),
@@ -41,34 +45,48 @@ class _MealPageState extends State<MealPage> {
     _currentMeal = widget.popupHandler.mealLevel;
   }
 
+
+  Future<void> _fetchGender() async {
+  try {
+    // 예시: 서버에서 성별 데이터 가져오기
+    String? gender = await DioService().getGender();
+    print('Fetched gender: $gender');
+    setState(() {
+      _gender = gender; // 성별 저장
+    });
+  } catch (e) {
+    print('Error fetching gender: $e');
+  }
+}
+
   String _getFormattedDate() {
     return DateFormat('yyyy-MM-dd').format(DateTime.now());
   }
 
   // **하루 총 칼로리와 권장 칼로리 비교를 위한 위젯 추가**
-Widget _buildCalorieSummary(String date) {
-  final int totalCalories = _calculateTotalCalories(date);
-  final int recommendedCalories = 2600; // 권장 칼로리
+  Widget _buildCalorieSummary(String date) {
+    final int totalCalories = _calculateTotalCalories(date);
+    final int recommendedCalories = (_gender == '여성') ? 2000 : 2600; // 성별에 따른 권장 칼로리
 
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 10),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "오늘 총 칼로리 섭취: $totalCalories Kcal",
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        if (totalCalories > recommendedCalories)
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           Text(
-            "초과된 칼로리: ${totalCalories - recommendedCalories} Kcal",
-            style: const TextStyle(color: Colors.red, fontSize: 14),
-          )
-        else
-          Text(
-            "남은 칼로리: ${recommendedCalories - totalCalories} Kcal",
-            style: const TextStyle(color: Colors.green, fontSize: 14),
+            "오늘 총 칼로리 섭취: $totalCalories Kcal",
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
+          if (totalCalories > recommendedCalories)
+            Text(
+              "초과된 칼로리: ${totalCalories - recommendedCalories} Kcal",
+              style: const TextStyle(color: Colors.red, fontSize: 14),
+            )
+          else
+            Text(
+              "남은 칼로리: ${recommendedCalories - totalCalories} Kcal",
+              style: const TextStyle(color: Colors.green, fontSize: 14),
+            ),
       ],
     ),
   );
@@ -332,13 +350,8 @@ Future<void> _deleteMeal(String mealId, String date) async {
                       }).toList(),
                     ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                '권장 칼로리: 2600Kcal',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-            ),
+            // **하단에 고정된 요약 위젯 추가**
+                  _buildCalorieSummary(_getFormattedDate()), // 오늘 날짜를 전달
           ],
         ),
       ),

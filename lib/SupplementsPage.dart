@@ -48,28 +48,38 @@ class _SupplementsPageState extends State<SupplementsPage> {
   }
 
   final Set<DateTime> uniqueDates = {..._selectedMenstruationDays, ..._supplementTaken.keys};
-  
-  await Future.wait(uniqueDates.where((date) {
-    return _selectedMenstruationDays.contains(date) || _supplementTaken.containsKey(date);
-  }).map((date) async {
-    SupplementDto dto = SupplementDto(
-      date: date,
-      supplement_taken: _supplementTaken[date] ?? false,
-      menstruation_recorded: _selectedMenstruationDays.contains(date),
-      username: username,
+
+  try {
+    // 모든 날짜를 비동기로 저장
+    await Future.wait(uniqueDates.map((date) async {
+      SupplementDto dto = SupplementDto(
+        date: date,
+        supplement_taken: _supplementTaken[date] ?? false,
+        menstruation_recorded: _selectedMenstruationDays.contains(date),
+        username: username,
+      );
+      print("Saving DTO: ${dto.toJson()}");
+      await supplementRepository.saveSupplement(dto); // 서버에 데이터 저장
+    }));
+
+    print("All data saved successfully");
+    setState(() {
+      _addSupplement = true; // 저장 성공 시 애니메이션 활성화
+    });
+
+    // 데이터 동기화
+    await _loadData();
+  } catch (e) {
+    print("Error while saving data: $e");
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('데이터 저장 중 오류가 발생했습니다.')),
     );
-    print("Saving DTO: ${dto.toJson()}");
-    await supplementRepository.saveSupplement(dto);
-  }));
-
-  print("All data saved successfully");
-  _addSupplement = true;
-
-  // 데이터 동기화
-  await _loadData();
+  }
 }
 
+
   Future<void> _loadData() async {
+  try {
     final supplements = await supplementRepository.fetchSupplements();
     setState(() {
       _supplementTaken.clear();
@@ -84,7 +94,14 @@ class _SupplementsPageState extends State<SupplementsPage> {
 
     print('_supplementTaken: $_supplementTaken');
     print('_selectedMenstruationDays: $_selectedMenstruationDays');
+  } catch (e) {
+    print("Error while loading data: $e");
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('데이터 로드 중 오류가 발생했습니다.')),
+    );
   }
+}
+
 
  Future<void> _fetchSingleDayData(DateTime selectedDay) async {
   String? username = await tokenService.getUsername();

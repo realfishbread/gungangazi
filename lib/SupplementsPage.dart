@@ -48,17 +48,29 @@ class _SupplementsPageState extends State<SupplementsPage> {
     return;
   }
 
+  // 모든 날짜를 통합
   final Set<DateTime> uniqueDates = {..._selectedMenstruationDays, ..._supplementTaken.keys};
 
   try {
     // 모든 날짜를 비동기로 저장
     await Future.wait(uniqueDates.map((date) async {
+      // 생리 기록 또는 영양제 복용 여부만 저장 가능하도록 로직 수정
+      bool isSupplementTaken = _supplementTaken[date] ?? false;
+      bool isMenstruationRecorded = _selectedMenstruationDays.contains(date);
+
+      // 아무 데이터도 없는 경우는 저장하지 않음
+      if (!isSupplementTaken && !isMenstruationRecorded) {
+        return;
+      }
+
+      // DTO 생성
       SupplementDto dto = SupplementDto(
         date: date,
-        supplement_taken: _supplementTaken[date] ?? false, // 기본값을 false로 설정
-        menstruation_recorded: _selectedMenstruationDays.contains(date),
+        supplement_taken: isSupplementTaken,
+        menstruation_recorded: isMenstruationRecorded,
         username: username,
       );
+
       print("Saving DTO: ${dto.toJson()}");
       await supplementRepository.saveSupplement(dto); // 서버에 데이터 저장
     }));
@@ -77,7 +89,6 @@ class _SupplementsPageState extends State<SupplementsPage> {
     );
   }
 }
-
 
 
   Future<void> _loadData() async {

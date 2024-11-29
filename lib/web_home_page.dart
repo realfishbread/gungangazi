@@ -72,15 +72,23 @@ class _WebHomePageState extends State<WebHomePage> {
         maxChildSize: 0.95, // 최대 높이 비율
         builder: (BuildContext context, ScrollController scrollController) {
           return Container(
-            decoration: const BoxDecoration(
-              color: Colors.white, // 페이지 배경
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20.0), // 상단 모서리 둥글게
-                topRight: Radius.circular(20.0),
-              ),
+            margin: const EdgeInsets.all(16.0), // 스마트폰처럼 모서리에 여백 추가
+            decoration: BoxDecoration(
+              color: Colors.white, // 모달 배경색
+              borderRadius: BorderRadius.circular(30.0), // 전체적으로 둥근 모서리
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1), // 그림자 색상
+                  blurRadius: 10, // 그림자 흐림 정도
+                  offset: const Offset(0, 5), // 그림자 위치
+                ),
+              ],
             ),
-            child: Profile2(
-              username: username ?? "기본아이디",
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(30.0), // 내부 내용도 둥글게
+              child: Profile2(
+                username: username ?? "기본아이디",
+              ),
             ),
           );
         },

@@ -128,23 +128,18 @@ class _SleepPageState extends State<SleepPage> {
   }
 
   // 그래프 생성 메서드
-  Widget _buildSleepGraph() {
+  Widget _buildSleepGraph(BuildContext context) {
     if (_sleepRecords.isEmpty) {
       return const Center(child: Text('저장된 수면 기록이 없습니다.'));
     }
 
-    // Bar Chart 데이터 생성
-    // 최근 10개의 수면 데이터를 가져오기
-List<Map<String, String>> limitedSleepRecords = _sleepRecords.length > 10
-    ? _sleepRecords.sublist(_sleepRecords.length - 10)
-    : _sleepRecords;
+    final double graphHeight = MediaQuery.of(context).size.height * 0.3;
+    final double graphWidth = MediaQuery.of(context).size.width;
 
-    // BarChart에 전달할 데이터 수정
-    List<BarChartGroupData> barGroups = limitedSleepRecords.asMap().entries.map((entry) {
+    List<BarChartGroupData> barGroups = _sleepRecords.asMap().entries.map((entry) {
       int index = entry.key;
       Map<String, String> record = entry.value;
 
-      // 수면 시간 계산 로직 동일
       TimeOfDay sleepTime = TimeOfDay(
         hour: int.parse(record['sleep_time']!.split(":")[0]),
         minute: int.parse(record['sleep_time']!.split(":")[1]),
@@ -169,56 +164,42 @@ List<Map<String, String>> limitedSleepRecords = _sleepRecords.length > 10
       );
     }).toList();
 
-    double recommendedSleepHours = 8.0; // 권장 수면 시간
-
-    return BarChart(
-      BarChartData(
-        barGroups: barGroups,
-        gridData: FlGridData(show: false),
-        titlesData: FlTitlesData(
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              interval: 2,
-              getTitlesWidget: (value, meta) => Text('${value.toInt()}h'),
-            ),
-          ),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              getTitlesWidget: (double value, meta) {
-                int index = value.toInt();
-                if (index >= 0 && index < _sleepRecords.length) {
-                  return Text(_sleepRecords[index]['date'] ?? '');
-                } else {
-                  return const Text('');
-                }
-              },
-            ),
-          ),
-        ),
-        borderData: FlBorderData(show: false),
-        minY: 0,
-        maxY: 12,
-        extraLinesData: ExtraLinesData(
-          horizontalLines: [
-            HorizontalLine(
-              y: recommendedSleepHours,
-              color: Colors.red,
-              strokeWidth: 2,
-              dashArray: [5, 5],
-              label: HorizontalLineLabel(
-                show: true,
-                alignment: Alignment.topLeft,
-                labelResolver: (line) => '권장: 8h',
+    return SizedBox(
+      height: graphHeight,
+      width: graphWidth,
+      child: BarChart(
+        BarChartData(
+          barGroups: barGroups,
+          gridData: FlGridData(show: false),
+          titlesData: FlTitlesData(
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                interval: 2,
+                getTitlesWidget: (value, meta) => Text('${value.toInt()}h'),
               ),
             ),
-          ],
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (double value, meta) {
+                  int index = value.toInt();
+                  if (index >= 0 && index < _sleepRecords.length) {
+                    return Text(_sleepRecords[index]['date'] ?? '');
+                  } else {
+                    return const Text('');
+                  }
+                },
+              ),
+            ),
+          ),
+          borderData: FlBorderData(show: false),
+          minY: 0,
+          maxY: 12,
         ),
       ),
     );
   }
-
   Duration _calculateSleepDuration(TimeOfDay sleepTime, TimeOfDay wakeUpTime) {
     final now = DateTime.now();
     final sleepDateTime = DateTime(now.year, now.month, now.day, sleepTime.hour, sleepTime.minute);
@@ -332,7 +313,7 @@ Future<void> _selectWakeUpTime(BuildContext context) async {
                           minWidth: MediaQuery.of(context).size.width,
                           maxWidth: _sleepRecords.length * 80.0,
                         ),
-                        child: _buildSleepGraph(),
+                        child: _buildSleepGraph(context),
                       ),
                     ),
                   ),
@@ -349,7 +330,7 @@ Future<void> _selectWakeUpTime(BuildContext context) async {
                       minWidth: MediaQuery.of(context).size.width,
                       maxWidth: _sleepRecords.length * 80.0,
                     ),
-                    child: _buildSleepGraph(),
+                    child: _buildSleepGraph(context),
                   ),
                 ),
               ),
@@ -389,5 +370,4 @@ Future<void> _selectWakeUpTime(BuildContext context) async {
     );
   }
 }
-
 

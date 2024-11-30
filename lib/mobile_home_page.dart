@@ -210,7 +210,6 @@ Widget _getDrawerContent() {
           [
             {'icon': FontAwesomeIcons.tooth, 'title': '치아건강'},
             {'icon': FontAwesomeIcons.heartPulse, 'title': '혈압'},
-            {'icon': FontAwesomeIcons.bandage, 'title': '상처'},
           ],
         ),
       );

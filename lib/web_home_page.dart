@@ -88,6 +88,10 @@ class _WebHomePageState extends State<WebHomePage> {
               borderRadius: BorderRadius.circular(30.0), // 내부 내용도 둥글게
               child: Profile2(
                 username: username ?? "기본아이디",
+                onProfileUpdated: () {
+                  // 프로필 변경 후 동기화
+                  fetchProfile();
+                },
               ),
             ),
           );

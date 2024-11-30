@@ -163,6 +163,13 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: _submitData,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFFFF9C4),
+                foregroundColor: Colors.black,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30)
+                ),
+              ),
               child: const Text('저장'),
             ),
             const SizedBox(height: 16),

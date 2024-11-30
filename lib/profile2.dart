@@ -14,14 +14,21 @@ import 'image_picker_mobile.dart';
 
 class Profile2 extends StatefulWidget {
   final String username;
+  final VoidCallback onProfileUpdated; // 추가
 
-  const Profile2({super.key, required this.username});
+
+   const Profile2({
+    Key? key,
+    required this.username,
+    required this.onProfileUpdated, // 추가
+  }) : super(key: key);
 
   @override
   _Profile2State createState() => _Profile2State();
 }
 
 class _Profile2State extends State<Profile2> {
+  
   Uint8List? _imageData;
   late ProfileRepository _profileRepository;
   final TokenService _tokenService = TokenService();
@@ -82,6 +89,7 @@ class _Profile2State extends State<Profile2> {
     bool success = await _profileRepository.updateProfile(widget.username, updatedProfile.toJson());
 
     if (success) {
+      widget.onProfileUpdated(); // 동기화 콜백 호출
       await fetchProfile(); // 업데이트 후 프로필 다시 가져옴
     } else {
       print('프로필 업데이트 실패');

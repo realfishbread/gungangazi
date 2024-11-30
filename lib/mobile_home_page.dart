@@ -80,9 +80,14 @@ class _MobileHomePageState extends State<MobileHomePage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Profile2(username: username),
+            builder: (context) => Profile2(
+            username: username,
+            onProfileUpdated: () {
+              // 프로필 업데이트 후 동기화
+              setState(() {});
+            },
           ),
-        );
+        ));
       } else {
         print('아이디를 찾을 수 없습니다.');
       }

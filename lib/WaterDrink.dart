@@ -203,11 +203,25 @@ class _WaterDrinkState extends State<WaterDrink> {
                     children: [
                       ElevatedButton(
                         onPressed: () => _addWater(-200),
+                         style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFFFF9C4),
+                          foregroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30)
+                          ),
+                        ),
                         child: const Text('-물 한 잔 취소'),
                       ),
                       const SizedBox(width: 20),
                       ElevatedButton(
                         onPressed: () => _addWater(200),
+                         style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFFFF9C4),
+                          foregroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30)
+                          ),
+                        ),
                         child: const Text('+물 한 잔 200ml'),
                       ),
                     ],

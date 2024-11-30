@@ -230,6 +230,13 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
                   onPressed: () {
                     diagnoseDisease();
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFFF9C4),
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)
+                    ),
+                  ),
                   child: const Text("진단하기"),
                 ),
               ],

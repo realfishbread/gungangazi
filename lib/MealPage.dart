@@ -337,6 +337,13 @@ Future<void> _deleteMeal(String mealId, String date) async {
                 const SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: _addMeal,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFFF9C4),
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)
+                    ),
+                  ),
                   child: const Text('기록 추가'),
                 ),
               ],

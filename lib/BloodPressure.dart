@@ -22,6 +22,8 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
     tokenService: TokenService(),
   );
 
+
+ String? _heartRateError; // 심박수 입력 오류 메시지
   @override
   void initState() {
     super.initState();
@@ -50,6 +52,14 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
     final String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
     final String? username = await TokenService().getUsername(); // username 가져오기
 
+    // 심박수 오류 확인
+    if (_heartRateError != null || systolic.isEmpty || diastolic.isEmpty || heartRate.isEmpty || username == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('모든 값을 올바르게 입력해주세요.')),
+      );
+      return;
+    }
+
     if (systolic.isNotEmpty && diastolic.isNotEmpty && heartRate.isNotEmpty && username != null) {
       final newRecord = BloodPressureDTO(
         systolic: systolic,
@@ -69,6 +79,10 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
         } else {
           _groupedRecords[currentDate] = [newRecord];
         }
+         _systolicController.clear();
+        _diastolicController.clear();
+        _heartRateController.clear();
+        _heartRateError = null; // 오류 초기화
       });
 
       // 입력 필드 초기화
@@ -105,7 +119,6 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('혈압과 심박수 입력'),
-        backgroundColor: const Color(0xFFFFF9C4),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -132,9 +145,19 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
             TextField(
               controller: _heartRateController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
+              onChanged: (value) {
+                setState(() {
+                  if (int.tryParse(value) == null) {
+                    _heartRateError = '심박수는 숫자만 입력 가능합니다.';
+                  } else {
+                    _heartRateError = null;
+                  }
+                });
+              },
+              decoration: InputDecoration(
                 labelText: '심박수 (bpm)',
-                border: OutlineInputBorder(),
+                errorText: _heartRateError, // 오류 메시지 표시
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 32),
@@ -152,8 +175,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                           title: Text('날짜: $date'),
                           children: _groupedRecords[date]!.map((record) {
                             return ListTile(
-                              title: Text(
-                                  '최고 혈압: ${record.systolic} / 최저 혈압: ${record.diastolic}'),
+                              title: Text('최고 혈압: ${record.systolic} / 최저 혈압: ${record.diastolic}'),
                               subtitle: Text('심박수: ${record.heart_rate} bpm'),
                               trailing: IconButton(
                                 icon: const Icon(Icons.close, color: Colors.red),

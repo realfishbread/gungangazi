@@ -213,6 +213,13 @@ class _ToothCarePageState extends State<ToothCarePage> {
                     ),
                     ElevatedButton(
                       onPressed: _saveData,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFFF9C4),
+                        foregroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)
+                        ),
+                      ),
                       child: const Text('저장'),
                     ),
                   ],

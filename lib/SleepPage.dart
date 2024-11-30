@@ -253,6 +253,13 @@ class _SleepPageState extends State<SleepPage> {
                     ElevatedButton.icon(
                       onPressed: () => _selectSleepTime(context),
                       icon: const Icon(Icons.bedtime),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFFF9C4),
+                        foregroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)
+                        ),
+                      ),
                       label: Text(
                         _sleepTime == null
                             ? '취침 시각 선택'
@@ -262,6 +269,13 @@ class _SleepPageState extends State<SleepPage> {
                     ElevatedButton.icon(
                       onPressed: () => _selectWakeUpTime(context),
                       icon: const Icon(Icons.wb_sunny),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFFF9C4),
+                        foregroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)
+                        ),
+                      ),
                       label: Text(
                         _wakeUpTime == null
                             ? '기상 시각 선택'
@@ -274,6 +288,13 @@ class _SleepPageState extends State<SleepPage> {
                 // 저장 버튼
                 ElevatedButton(
                   onPressed: _saveSleepDataToServer,
+                  style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFFF9C4),
+                        foregroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)
+                        ),
+                      ),
                   child: const Text('저장'),
                 ),
                 const SizedBox(height: 20),

@@ -119,6 +119,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('혈압과 심박수 입력'),
+        backgroundColor: const Color(0xFFFFF9C4),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

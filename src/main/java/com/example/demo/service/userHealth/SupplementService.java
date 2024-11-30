@@ -23,6 +23,8 @@ public class SupplementService {
         if (existingSupplement.isPresent()) {
             // 기존 데이터를 업데이트
             Supplement supplement = existingSupplement.get();
+            supplement.setUsername(dto.getUsername());
+            supplement.setDate(dto.getDate());
             supplement.setSupplement_taken(dto.isSupplement_taken());
             supplement.setMenstruation_recorded(dto.isMenstruation_recorded());
             supplementRepository.save(supplement);

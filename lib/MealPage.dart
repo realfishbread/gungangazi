@@ -5,7 +5,6 @@ import '../../repositories/userHealth/meal_repository.dart';
 import '../../services/dio_service.dart';
 import '../../services/TokenService.dart';
 import 'PopupHandler.dart';
-import 'package:expansion_tile_card/expansion_tile_card.dart';
 
 class MealPage extends StatefulWidget {
   final PopupHandler popupHandler;
@@ -21,7 +20,6 @@ class _MealPageState extends State<MealPage> {
   final TextEditingController _mealController = TextEditingController();
   final TextEditingController _caloriesController = TextEditingController();
   late MealRepository _mealRepository;
-  bool _isAddingRecord = false;
   int _mealLevel = 0;
   String _selectedMealType = "식사";
   bool _isLoading = true;
@@ -59,34 +57,6 @@ class _MealPageState extends State<MealPage> {
     return DateFormat('yyyy-MM-dd').format(DateTime.now());
   }
 
-  Widget _buildCalorieSummary(String date) {
-    final int totalCalories = _calculateTotalCalories(date);
-    final int recommendedCalories = (_gender == '여성') ? 2000 : 2600;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "오늘 총 칼로리 섭취: $totalCalories Kcal",
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          if (totalCalories > recommendedCalories)
-            Text(
-              "초과된 칼로리: ${totalCalories - recommendedCalories} Kcal",
-              style: const TextStyle(color: Colors.red, fontSize: 14),
-            )
-          else
-            Text(
-              "남은 칼로리: ${recommendedCalories - totalCalories} Kcal",
-              style: const TextStyle(color: Colors.green, fontSize: 14),
-            ),
-        ],
-      ),
-    );
-  }
-
   Future<void> _fetchMeals() async {
     try {
       List<MealDTO> meals = await _mealRepository.fetchAllMeals();
@@ -120,9 +90,7 @@ class _MealPageState extends State<MealPage> {
 
   void _updatePopupHandler() {
     int currentHour = DateTime.now().hour;
-    if (currentHour < 6) {
-      return;
-    }
+    if (currentHour < 6) return;
     widget.popupHandler.updateStatus(
       newWaterLevel: widget.popupHandler.waterLevel,
       newMealLevel: _mealLevel,
@@ -130,42 +98,32 @@ class _MealPageState extends State<MealPage> {
     );
   }
 
-  void _toggleAddRecord() {
-    setState(() {
-      _isAddingRecord = !_isAddingRecord;
-    });
-  }
+  Widget _buildCalorieSummary(String date) {
+    final int totalCalories = _calculateTotalCalories(date);
+    final int recommendedCalories = (_gender == '여성') ? 2000 : 2600;
 
-  void _addMeal() async {
-    final String meal = _mealController.text.trim();
-    final int? calories = int.tryParse(_caloriesController.text.trim());
-    if (meal.isNotEmpty && calories != null) {
-      final String currentDate = _getFormattedDate();
-      String? username = await TokenService().getUsername();
-      final MealDTO newMeal = MealDTO(
-        id: '',
-        date: currentDate,
-        meal: meal,
-        username: username ?? '',
-        calories: calories,
-        meal_type: _selectedMealType,
-      );
-
-      try {
-        await _mealRepository.addMeal(newMeal);
-        await _fetchMeals();
-        setState(() {
-          _mealController.clear();
-          _caloriesController.clear();
-          _isAddingRecord = false;
-        });
-        _updatePopupHandler();
-      } catch (e) {
-        print('Error adding meal: $e');
-      }
-    } else {
-      print("Invalid input: Meal or Calories is empty/invalid.");
-    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "오늘 총 칼로리 섭취: $totalCalories Kcal",
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          if (totalCalories > recommendedCalories)
+            Text(
+              "초과된 칼로리: ${totalCalories - recommendedCalories} Kcal",
+              style: const TextStyle(color: Colors.red, fontSize: 14),
+            )
+          else
+            Text(
+              "남은 칼로리: ${recommendedCalories - totalCalories} Kcal",
+              style: const TextStyle(color: Colors.green, fontSize: 14),
+            ),
+        ],
+      ),
+    );
   }
 
   int _calculateTotalCalories(String date) {
@@ -174,9 +132,7 @@ class _MealPageState extends State<MealPage> {
       0,
       (sum, meal) {
         final calories = meal['calories'];
-        if (calories is int) {
-          return sum + calories;
-        }
+        if (calories is int) return sum + calories;
         return sum;
       },
     );
@@ -212,6 +168,44 @@ class _MealPageState extends State<MealPage> {
     }
   }
 
+  Widget _buildMealHistory() {
+    return RefreshIndicator(
+      onRefresh: _fetchMeals,
+      child: _mealsByDate.isEmpty
+          ? const Center(child: Text('기록된 식사가 없습니다.'))
+          : ListView(
+              children: _mealsByDate.keys.map((date) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ExpansionTile(
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            date,
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          _getCalorieStatusWidget(date),
+                        ],
+                      ),
+                      children: _mealsByDate[date]!
+                          .map((meal) => ListTile(
+                                title: Text("${meal['meal']} (${meal['calories']} Kcal)"),
+                                trailing: IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () => _deleteMeal(meal['id'], date),
+                                ),
+                              ))
+                          .toList(),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
+    );
+  }
+
   Future<void> _deleteMeal(String mealId, String date) async {
     try {
       await _mealRepository.deleteMeal(mealId);
@@ -243,118 +237,11 @@ class _MealPageState extends State<MealPage> {
         ),
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())
-            : Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    ElevatedButton(
-                      onPressed: _toggleAddRecord,
-                      child: Text(_isAddingRecord ? '취소' : '식사 기록 추가'),
-                    ),
-                    if (_isAddingRecord)
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: DropdownButtonFormField<String>(
-                                  value: _selectedMealType,
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      _selectedMealType = newValue!;
-                                    });
-                                  },
-                                  decoration: const InputDecoration(
-                                    labelText: '식사 종류',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  items: <String>['아침', '점심', '저녁', '간식']
-                                      .map<DropdownMenuItem<String>>((String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                flex: 3,
-                                child: TextField(
-                                  controller: _mealController,
-                                  decoration: const InputDecoration(
-                                    labelText: '음식 입력',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: TextField(
-                                  controller: _caloriesController,
-                                  decoration: const InputDecoration(
-                                    labelText: '칼로리 (Kcal)',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  keyboardType: TextInputType.number,
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              ElevatedButton(
-                                onPressed: _addMeal,
-                                child: const Text('기록 추가'),
-                              ),
-                            ],
-                          ),
-                          const Divider(thickness: 2),
-                        ],
-                      ),
-                    Expanded(
-                      child: _mealsByDate.isEmpty
-                          ? const Center(child: Text('기록된 식사가 없습니다.'))
-                          : ListView(
-                              children: _mealsByDate.keys.map((date) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ExpansionTileCard(
-                                      baseColor: Colors.yellow[50],
-                                      expandedColor: Colors.yellow[100],
-                                      title: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            date,
-                                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                          ),
-                                          _getCalorieStatusWidget(date),
-                                        ],
-                                      ),
-                                      children: _mealsByDate[date]!
-                                          .map((meal) => ListTile(
-                                                title: Text("${meal['meal']} (${meal['calories']} Kcal)"),
-                                                trailing: IconButton(
-                                                  icon: const Icon(Icons.close),
-                                                  onPressed: () => _deleteMeal(meal['id'], date),
-                                                ),
-                                              ))
-                                          .toList(),
-                                    ),
-                                  ],
-                                );
-                              }).toList(),
-                            ),
-                    ),
-                    _buildCalorieSummary(_getFormattedDate()),
-                  ],
-                ),
+            : Column(
+                children: [
+                  Expanded(child: _buildMealHistory()),
+                  _buildCalorieSummary(_getFormattedDate()),
+                ],
               ),
       ),
     );

@@ -57,74 +57,86 @@ class _SleepPageState extends State<SleepPage> {
 
   // 그래프 생성 메서드
   Widget _buildSleepGraph() {
-    if (_sleepRecords.isEmpty) {
-      return const Center(child: Text('저장된 수면 기록이 없습니다.'));
-    }
-
-    List<Map<String, String>> limitedSleepRecords = _sleepRecords.length > 10
-        ? _sleepRecords.sublist(_sleepRecords.length - 10)
-        : _sleepRecords;
-
-    List<BarChartGroupData> barGroups = limitedSleepRecords.asMap().entries.map((entry) {
-      int index = entry.key;
-      Map<String, String> record = entry.value;
-
-      TimeOfDay sleepTime = TimeOfDay(
-        hour: int.parse(record['sleep_time']!.split(":")[0]),
-        minute: int.parse(record['sleep_time']!.split(":")[1]),
-      );
-      TimeOfDay wakeUpTime = TimeOfDay(
-        hour: int.parse(record['wake_up_time']!.split(":")[0]),
-        minute: int.parse(record['wake_up_time']!.split(":")[1]),
-      );
-
-      Duration sleepDuration = _calculateSleepDuration(sleepTime, wakeUpTime);
-      double sleepHours = sleepDuration.inMinutes / 60.0;
-
-      return BarChartGroupData(
-        x: index,
-        barRods: [
-          BarChartRodData(
-            toY: sleepHours,
-            color: const Color.fromARGB(255, 168, 148, 255),
-            width: 20,
-          ),
-        ],
-      );
-    }).toList();
-
-    return BarChart(
-      BarChartData(
-        barGroups: barGroups,
-        titlesData: FlTitlesData(
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              interval: 2,
-              getTitlesWidget: (value, meta) => Text('${value.toInt()}h'),
-            ),
-          ),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              getTitlesWidget: (double value, meta) {
-                int index = value.toInt();
-                if (index >= 0 && index < _sleepRecords.length) {
-                  return Text(_sleepRecords[index]['date'] ?? '');
-                } else {
-                  return const Text('');
-                }
-              },
-            ),
-          ),
-        ),
-        minY: 0,
-        maxY: 12,
-        gridData: FlGridData(show: false),
-        borderData: FlBorderData(show: false),
-      ),
-    );
+  if (_sleepRecords.isEmpty) {
+    return const Center(child: Text('저장된 수면 기록이 없습니다.'));
   }
+
+  List<Map<String, String>> limitedSleepRecords = _sleepRecords.length > 10
+      ? _sleepRecords.sublist(_sleepRecords.length - 10)
+      : _sleepRecords;
+
+  List<BarChartGroupData> barGroups = limitedSleepRecords.asMap().entries.map((entry) {
+    int index = entry.key;
+    Map<String, String> record = entry.value;
+
+    TimeOfDay sleepTime = TimeOfDay(
+      hour: int.parse(record['sleep_time']!.split(":")[0]),
+      minute: int.parse(record['sleep_time']!.split(":")[1]),
+    );
+    TimeOfDay wakeUpTime = TimeOfDay(
+      hour: int.parse(record['wake_up_time']!.split(":")[0]),
+      minute: int.parse(record['wake_up_time']!.split(":")[1]),
+    );
+
+    Duration sleepDuration = _calculateSleepDuration(sleepTime, wakeUpTime);
+    double sleepHours = sleepDuration.inMinutes / 60.0;
+
+    return BarChartGroupData(
+      x: index,
+      barRods: [
+        BarChartRodData(
+          toY: sleepHours,
+          color: const Color.fromARGB(255, 168, 148, 255),
+          width: 20,
+        ),
+      ],
+    );
+  }).toList();
+
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      double availableWidth = constraints.maxWidth; // 화면의 가용 너비
+      double barWidth = 20; // 막대 너비
+      double spacing = 12; // 막대 간격
+      int totalBars = limitedSleepRecords.length;
+
+      double totalGraphWidth = (barWidth + spacing) * totalBars;
+
+      return BarChart(
+        BarChartData(
+          barGroups: barGroups,
+          titlesData: FlTitlesData(
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                interval: 2,
+                getTitlesWidget: (value, meta) => Text('${value.toInt()}h'),
+              ),
+            ),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (double value, meta) {
+                  int index = value.toInt();
+                  if (index >= 0 && index < limitedSleepRecords.length) {
+                    return Text(limitedSleepRecords[index]['date'] ?? '');
+                  } else {
+                    return const Text('');
+                  }
+                },
+              ),
+            ),
+          ),
+          minY: 0,
+          maxY: 12,
+          gridData: FlGridData(show: false),
+          borderData: FlBorderData(show: false),
+          barTouchData: BarTouchData(enabled: true),
+        ),
+      );
+    },
+  );
+}
 
   Duration _calculateSleepDuration(TimeOfDay sleepTime, TimeOfDay wakeUpTime) {
     final now = DateTime.now();

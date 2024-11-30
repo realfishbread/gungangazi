@@ -221,6 +221,13 @@ class _Profile2State extends State<Profile2> {
               child: const Text('로그아웃', style: TextStyle(color: Colors.black)),
             ),
           ),
+          const Spacer(),
+          Center(
+            child: Text(
+              '추가적인 정보나 안내 텍스트를 여기에 표시하세요.',
+              style: const TextStyle(fontSize: 10, color: Colors.grey),
+            ),
+          ),
         ],
       ),
     );

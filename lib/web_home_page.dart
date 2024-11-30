@@ -100,6 +100,19 @@ class _WebHomePageState extends State<WebHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0, // 그림자 제거
+        centerTitle: true, // 제목(아이콘)을 가운데로 설정
+        leading: SizedBox(
+          child: Image.asset(
+            'assets/logo.png', // 이미지 경로
+            fit: BoxFit.contain,
+          ),
+        ),
+        leadingWidth: 150, // leading의 너비를 120으로 설정
+        backgroundColor: const Color(0xFFFFF9C4), // 앱바 배경색
+      ),
+
       body: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [

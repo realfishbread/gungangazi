@@ -114,7 +114,13 @@ Widget build(BuildContext context) {
     backgroundColor: Colors.white,
     appBar: AppBar(
       automaticallyImplyLeading: false,
-      title: const Icon(Icons.local_hospital_outlined, color: Colors.black),
+      leading: SizedBox(
+        child: Image.asset(
+          'assets/logo.png', // 이미지 경로
+          fit: BoxFit.contain,
+        ),
+      ),
+      leadingWidth: 150,
       backgroundColor: const Color(0xFFFFF9C4),
       centerTitle: true,
       actions: [

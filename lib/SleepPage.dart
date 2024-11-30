@@ -282,7 +282,10 @@ Future<void> _selectWakeUpTime(BuildContext context) async {
               minWidth: graphWidth,
               maxWidth: graphWidth,
             ),
-            child: _buildSleepGraph(),
+            child: Align( // Align 위젯 추가
+              alignment: Alignment.center, // 중앙 정렬
+              child: _buildSleepGraph(),
+            ),
           ),
         ),
       ),

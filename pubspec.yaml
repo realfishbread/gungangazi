@@ -40,6 +40,7 @@ dependencies:
   intl: ^0.18.0
   infinite_carousel: ^1.1.1
   flutter_improved_scrolling: ^0.0.3
+  expansion_tile_card: ^3.0.0
 
 dev_dependencies:
    

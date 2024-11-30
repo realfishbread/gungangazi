@@ -101,84 +101,83 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFFFFAEC), // 배경색을 파스텔 옐로우로 설정
-      appBar: null,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/splash/splash_image.png', // 로고 아이콘을 이미지로 변경
-                  width: 200,
-                  height: 200,
+ @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: const Color(0xFFFFFAEC),
+    appBar: null,
+    body: Center(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/splash/splash_image.png',
+                width: 200,
+                height: 200,
+              ),
+              const SizedBox(height: 24),
+              Container(
+                constraints: const BoxConstraints(maxWidth: 400),
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 10,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 24),
-                Container(
-                  constraints: const BoxConstraints(maxWidth: 400),
-                  padding: const EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 10,
-                        offset: Offset(0, 4),
+                child: Column(
+                  children: [
+                    if (_currentStep == 0)
+                      _buildTextField(_nameController, '아이디'),
+                    if (_currentStep == 1)
+                      _buildTextField(
+                          _emailController, '이메일', TextInputType.emailAddress),
+                    if (_currentStep == 2)
+                      _buildTextField(_realnameController, '이름'),
+                    if (_currentStep == 3)
+                      _buildTextField(
+                          _passwordController, '비밀번호', TextInputType.text, true),
+                    if (_currentStep == 4) _buildGenderSelection(),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.yellow[100],
+                        foregroundColor: Colors.black,
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      if (_currentStep == 0)
-                        _buildTextField(_nameController, '아이디'),
-                      if (_currentStep == 1)
-                        _buildTextField(_emailController, '이메일', TextInputType.emailAddress),
-                      if (_currentStep == 2)
-                        _buildTextField(_realnameController, '이름'),
-                      if (_currentStep == 3)
-                        _buildTextField(_passwordController, '비밀번호', TextInputType.text, true),
-                      if (_currentStep == 4)
-                        _buildGenderSelection(),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.yellow[100], // 버튼 배경색을 검정으로 설정
-                          foregroundColor: Colors.black, // 텍스트 색상을 흰색으로 설정
-                        ),
-                        onPressed: _nextStep,
-                        child: Text(
-                          _currentStep == steps.length - 1 ? '회원가입' : '다음',
-                        ),
+                      onPressed: _nextStep,
+                      child: Text(
+                        _currentStep == steps.length - 1 ? '회원가입' : '다음',
                       ),
-
-                      const SizedBox(height: 16),
-                      Text('단계: ${steps[_currentStep]} (${_currentStep + 1}/${steps.length})'),
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.black, // 텍스트 색상을 검정으로 설정
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);  // 로그인 페이지로 돌아가기
-                        },
-                        child: const Text('로그인 페이지로 돌아가기'),
+                    ),
+                    const SizedBox(height: 16),
+                    Text('단계: ${steps[_currentStep]} (${_currentStep + 1}/${steps.length})'),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.black,
                       ),
-
-                    ],
-                  ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('로그인 페이지로 돌아가기'),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildGenderSelection() {
     return Column(

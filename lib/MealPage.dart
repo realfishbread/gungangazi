@@ -5,6 +5,7 @@ import '../../repositories/userHealth/meal_repository.dart';
 import '../../services/dio_service.dart';
 import '../../services/TokenService.dart';
 import 'PopupHandler.dart';
+import 'package:expansion_tile_card/expansion_tile_card.dart';
 
 class MealPage extends StatefulWidget {
   final PopupHandler popupHandler;
@@ -16,11 +17,11 @@ class MealPage extends StatefulWidget {
 }
 
 class _MealPageState extends State<MealPage> {
-  final Map<String, List<Map<String, dynamic>>> _mealsByDate = {}; // 식사 기록 저장
+  final Map<String, List<Map<String, dynamic>>> _mealsByDate = {};
   final TextEditingController _mealController = TextEditingController();
   final TextEditingController _caloriesController = TextEditingController();
   late MealRepository _mealRepository;
-  bool _isAddingRecord = false; // 입력 필드 표시 여부
+  bool _isAddingRecord = false;
   int _mealLevel = 0;
   String _selectedMealType = "식사";
   bool _isLoading = true;
@@ -30,14 +31,13 @@ class _MealPageState extends State<MealPage> {
   @override
   void initState() {
     super.initState();
-    _fetchGender(); // 성별 가져오기
+    _fetchGender();
     _mealRepository = MealRepository(
       dioService: DioService(),
       tokenService: TokenService(),
     );
     _fetchMeals().then((_) {
       setState(() {
-        // Total calories를 가져오기 위해 현재 날짜로 상태 업데이트
         _calculateTotalCalories(_getFormattedDate());
       });
     });
@@ -157,7 +157,7 @@ class _MealPageState extends State<MealPage> {
         setState(() {
           _mealController.clear();
           _caloriesController.clear();
-          _isAddingRecord = false; // 입력 폼 닫기
+          _isAddingRecord = false;
         });
         _updatePopupHandler();
       } catch (e) {
@@ -324,7 +324,9 @@ class _MealPageState extends State<MealPage> {
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    ExpansionTile(
+                                    ExpansionTileCard(
+                                      baseColor: Colors.yellow[50],
+                                      expandedColor: Colors.yellow[100],
                                       title: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
@@ -365,4 +367,3 @@ class _MealPageState extends State<MealPage> {
     super.dispose();
   }
 }
-

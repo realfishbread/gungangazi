@@ -187,16 +187,24 @@ class _ToothCarePageState extends State<ToothCarePage> {
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
-                      decoration: const InputDecoration(labelText: '양치 시간(분)'),
-                      keyboardType: TextInputType.number,
-                      onSaved: (value) => _duration = int.parse(value!),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return '양치 시간을 입력하세요.';
-                        }
-                        return null;
-                      },
-                    ),
+                        decoration: const InputDecoration(labelText: '양치 시간(분)'),
+                        keyboardType: TextInputType.number,
+                        onSaved: (value) => _duration = int.parse(value!),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return '양치 시간을 입력하세요.';
+                          }
+                          // 숫자인지 확인
+                          if (int.tryParse(value) == null) {
+                            return '숫자만 입력 가능합니다.';
+                          }
+                          // 0 이상의 값인지 확인
+                          if (int.parse(value) <= 0) {
+                            return '양치 시간은 1분 이상이어야 합니다.';
+                          }
+                          return null;
+                        },
+                      ),
                     SwitchListTile(
                       title: const Text('치실 사용'),
                       value: _flossed,

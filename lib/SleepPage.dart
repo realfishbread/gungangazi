@@ -261,127 +261,133 @@ Future<void> _selectWakeUpTime(BuildContext context) async {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
-  Widget _buildSleepGraphContainer(bool isWeb) {
-    double graphWidth = isWeb
-        ? _sleepRecords.length * 80.0 // 웹: 데이터 수에 따라 동적 너비
-        : MediaQuery.of(context).size.width; // 모바일: 화면 너비 고정
+  @override
+  Widget build(BuildContext context) {
+    final bool isWeb = kIsWeb;
 
-    return Scrollbar(
-      controller: _scrollController,
-      thumbVisibility: true,
-      child: ImprovedScrolling(
-        scrollController: _scrollController,
-        enableMMBScrolling: true,
-        enableKeyboardScrolling: true,
-        enableCustomMouseWheelScrolling: true,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          controller: _scrollController,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minWidth: graphWidth,
-              maxWidth: graphWidth,
+    return WillPopScope(
+      onWillPop: () async {
+        if (widget.popupHandler.sleepLevel > _currentSleepLevel) {
+          widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 1000);
+        }
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('수면'),
+          backgroundColor: const Color(0xFFFFF9C4),
+        ),
+        body: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () => _selectSleepTime(context),
+                  icon: const Icon(Icons.bed),
+                  label: Text(
+                    _wakeUpTime == null
+                        ? '기상 시각 선택'
+                        : '기상: ${_sleepTime!.format(context)}',
+                  ),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () => _selectWakeUpTime(context),
+                  icon: const Icon(Icons.wb_sunny),
+                  label: Text(
+                    _wakeUpTime == null
+                        ? '기상 시각 선택'
+                        : '기상: ${_wakeUpTime!.format(context)}',
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: _saveSleepDataToServer,
+                  child: const Text('저장'),
+                ),
+              ],
             ),
-            child: _buildSleepGraph(),
-          ),
+            const SizedBox(height: 16),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                '최근 수면 그래프',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+            if (isWeb)
+              Expanded(
+                child: Scrollbar(
+                  controller: _scrollController,
+                  thumbVisibility: true, 
+                  child: ImprovedScrolling(
+                    scrollController: _scrollController,
+                    enableMMBScrolling: true, 
+                    enableKeyboardScrolling: true,
+                    enableCustomMouseWheelScrolling: true, 
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      controller: _scrollController,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minWidth: MediaQuery.of(context).size.width,
+                          maxWidth: _sleepRecords.length * 80.0,
+                        ),
+                        child: _buildSleepGraph(),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            else
+              SizedBox(
+                height: 300,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  controller: _scrollController,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minWidth: MediaQuery.of(context).size.width,
+                      maxWidth: _sleepRecords.length * 80.0,
+                    ),
+                    child: _buildSleepGraph(),
+                  ),
+                ),
+              ),
+            const Divider(),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                '수면 기록',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _sleepRecords.length,
+                itemBuilder: (context, index) {
+                  final record = _sleepRecords[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      title: Text(
+                        record['date'] ?? '',
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        "취침: ${record['sleep_time']} | 기상: ${record['wake_up_time']}",
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
-
-@override
-Widget build(BuildContext context) {
-  final bool isWeb = kIsWeb;
-
-  return WillPopScope(
-    onWillPop: () async {
-      if (widget.popupHandler.sleepLevel > _currentSleepLevel) {
-        widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 1000);
-      }
-      return true;
-    },
-    child: Scaffold(
-      appBar: AppBar(
-        title: const Text('수면'),
-        backgroundColor: const Color(0xFFFFF9C4),
-      ),
-      body: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () => _selectSleepTime(context),
-                icon: const Icon(Icons.bed),
-                label: Text(
-                  _sleepTime == null
-                      ? '취침 시각 선택'
-                      : '취침: ${_sleepTime!.format(context)}',
-                ),
-              ),
-              ElevatedButton.icon(
-                onPressed: () => _selectWakeUpTime(context),
-                icon: const Icon(Icons.wb_sunny),
-                label: Text(
-                  _wakeUpTime == null
-                      ? '기상 시각 선택'
-                      : '기상: ${_wakeUpTime!.format(context)}',
-                ),
-              ),
-              ElevatedButton(
-                onPressed: _saveSleepDataToServer,
-                child: const Text('저장'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              '최근 수면 그래프',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-          ),
-          Expanded(
-            flex: 2, // 그래프가 차지하는 비율
-            child: _buildSleepGraphContainer(isWeb),
-          ),
-          const Divider(),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              '수면 기록',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-          ),
-          Expanded(
-            flex: 1, // 수면 기록 리스트 비율
-            child: ListView.builder(
-              itemCount: _sleepRecords.length,
-              itemBuilder: (context, index) {
-                final record = _sleepRecords[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    title: Text(
-                      record['date'] ?? '',
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(
-                      "취침: ${record['sleep_time']} | 기상: ${record['wake_up_time']}",
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
 }
 
 

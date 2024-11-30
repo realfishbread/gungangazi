@@ -150,7 +150,7 @@ class _ToothCarePageState extends State<ToothCarePage> {
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return const Center(child: Text('기록이 없습니다.'));
                     } else {
-                      return ListView.builder(
+                      return ListView.separated(
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
                           final history = snapshot.data![index];
@@ -164,6 +164,7 @@ class _ToothCarePageState extends State<ToothCarePage> {
                             ),
                           );
                         },
+                        separatorBuilder: (context, index) => const Divider(), // 구분선 추가
                       );
                     }
                   },

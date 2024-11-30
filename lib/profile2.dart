@@ -224,7 +224,7 @@ class _Profile2State extends State<Profile2> {
           const Spacer(),
           Center(
             child: Text(
-              '추가적인 정보나 안내 텍스트를 여기에 표시하세요.',
+              '건강아지 | 고객 지원 문의 : +82 1234 5678 및 yoonh12288@gmail.com',
               style: const TextStyle(fontSize: 10, color: Colors.grey),
             ),
           ),

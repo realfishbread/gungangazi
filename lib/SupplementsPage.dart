@@ -48,13 +48,11 @@ class _SupplementsPageState extends State<SupplementsPage> {
     return;
   }
 
-  // 중복 제거를 위한 Set 사용
-  final Set<DateTime> uniqueDates = {..._selectedMenstruationDays, ..._supplementTaken.keys};
-
   try {
-    await Future.wait(uniqueDates.map((date) async {
-      // 생리 기록 또는 영양제 복용 여부가 없으면 저장하지 않음
-      bool isSupplementTaken = _supplementTaken[date] ?? false;
+    // 모든 날짜 데이터를 순회하면서 덮어쓰기 방식으로 저장
+    await Future.wait(_supplementTaken.entries.map((entry) async {
+      DateTime date = entry.key;
+      bool isSupplementTaken = entry.value;
       bool isMenstruationRecorded = _selectedMenstruationDays.contains(date);
 
       // DTO 생성

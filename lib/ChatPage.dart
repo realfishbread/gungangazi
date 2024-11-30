@@ -23,7 +23,7 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
   @override
   void initState() {
     super.initState();
-    _addDogMessage('안녕하시게나. 나는 건강아지 박사라네. 무슨일이 있어 찾아왔는가?');
+    _addDogMessage('안녕하시게나. 나는 건강아지 박사라네. 무슨 일이 있어 찾아왔는가?');
   }
 
   Future<void> _addDogMessage(String fullText) async {

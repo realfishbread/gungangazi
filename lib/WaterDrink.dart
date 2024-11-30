@@ -22,6 +22,7 @@ class _WaterDrinkState extends State<WaterDrink> {
   );
   int _currentWaterLevel = 0;
   Map<String, int> _dailyWaterIntake = {};
+  static const int recommendedIntake = 2000; // 권장 섭취량 기준
 
   @override
   void initState() {
@@ -80,7 +81,9 @@ class _WaterDrinkState extends State<WaterDrink> {
             BarChartRodData(
               toY: (_dailyWaterIntake[visibleDates[i]] ?? 0).toDouble(),
               width: 15,
-              color: Colors.blue,
+              color: (_dailyWaterIntake[visibleDates[i]] ?? 0) >= recommendedIntake
+                  ? Colors.green
+                  : Colors.blue, // 권장 섭취량 초과 여부에 따라 색상 변경
             )
           ],
         ),
@@ -124,6 +127,7 @@ class _WaterDrinkState extends State<WaterDrink> {
                     child: BarChart(
                       BarChartData(
                         barGroups: _generateBarChartData(),
+                        maxY: recommendedIntake.toDouble() + 1000, // 권장 섭취량을 기준으로 최대값 설정
                         backgroundColor: Colors.lightBlue[50],
                         titlesData: FlTitlesData(
                           bottomTitles: AxisTitles(
@@ -150,7 +154,7 @@ class _WaterDrinkState extends State<WaterDrink> {
                             sideTitles: SideTitles(
                               showTitles: true,
                               reservedSize: 28,
-                              interval: 200,
+                              interval: 500, // 500ml 간격으로 표시
                               getTitlesWidget: (value, meta) =>
                                   Text('${value.toInt()}ml'),
                             ),
@@ -159,7 +163,7 @@ class _WaterDrinkState extends State<WaterDrink> {
                         gridData: FlGridData(
                           show: true,
                           drawVerticalLine: false,
-                          horizontalInterval: 200,
+                          horizontalInterval: 500, // 500ml 간격으로 그리드 표시
                           getDrawingHorizontalLine: (value) {
                             return FlLine(
                               color: Colors.grey[300]!,
@@ -172,14 +176,14 @@ class _WaterDrinkState extends State<WaterDrink> {
                         extraLinesData: ExtraLinesData(
                           horizontalLines: [
                             HorizontalLine(
-                              y: 2000,
+                              y: recommendedIntake.toDouble(),
                               color: Colors.red,
                               strokeWidth: 2,
                               dashArray: [5, 5],
                               label: HorizontalLineLabel(
                                 show: true,
                                 alignment: Alignment.topLeft,
-                                labelResolver: (line) => '권장 섭취량: 2000ml',
+                                labelResolver: (line) => '권장 섭취량: ${recommendedIntake}ml',
                               ),
                             ),
                           ],

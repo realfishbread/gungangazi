@@ -44,9 +44,15 @@ class _WaterDrinkState extends State<WaterDrink> {
     final userInfo = await dioService.getUserInfo(); // 사용자 정보 가져오기
     if (userInfo != null) {
       setState(() {
-        userAge = int.tryParse(userInfo['age']?.toString() ?? '0'); // 나이 가져오기
-        userGender = userInfo['gender']; // 성별 가져오기
+        // 나이: 숫자만 추출
+        userAge = int.tryParse(userInfo['age']?.replaceAll(RegExp(r'[^0-9]'), '') ?? '0') ?? 0;
 
+        // 성별: 값이 없거나 예상 범위를 벗어날 경우 기본값 설정
+        userGender = (userInfo['gender'] == '남성' || userInfo['gender'] == '여성') 
+          ? userInfo['gender'] 
+          : '남성'; // 기본값: '남성'
+
+        // 권장 칼로리 계산
         if (userAge != null && userGender != null) {
           recommendedIntake = _calculateRecommendedIntake(userAge!, userGender!);
         }

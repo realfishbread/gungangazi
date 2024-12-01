@@ -46,22 +46,34 @@ class _MealPageState extends State<MealPage> {
 
 
    Future<void> _fetchUserInfo() async {
-    try {
-      final userInfo = await DioService().getUserInfo(); // 사용자 정보 가져오기
-      if (userInfo != null) {
-        setState(() {
-          _gender = userInfo['gender'];
-          _age = int.tryParse(userInfo['age']?.toString() ?? '0') ?? 0;
-          _weight = int.tryParse(userInfo['weight']?.toString() ?? '0') ?? 0;
-          _height = int.tryParse(userInfo['height']?.toString() ?? '0') ??0;
-          // 권장 칼로리 계산
-          _recommendedCalories = _calculateRecommendedCalories(_age, _gender ?? '남성', _weight, _height);
-        });
-      }
-    } catch (e) {
-      print('Error fetching user info: $e');
+  try {
+    final userInfo = await DioService().getUserInfo(); // 사용자 정보 가져오기
+    if (userInfo != null) {
+      setState(() {
+        _gender = userInfo['gender'];
+
+        // 나이 추출 (숫자만)
+        _age = int.tryParse(userInfo['age']?.replaceAll(RegExp(r'[^0-9]'), '') ?? '0') ?? 0;
+
+        // 체중 추출 (숫자만)
+        _weight = int.tryParse(userInfo['weight']?.replaceAll(RegExp(r'[^0-9]'), '') ?? '0') ?? 0;
+
+        // 키 추출 (숫자만)
+        _height = int.tryParse(userInfo['height']?.replaceAll(RegExp(r'[^0-9]'), '') ?? '0') ?? 0;
+
+        // 권장 칼로리 계산
+        _recommendedCalories = _calculateRecommendedCalories(
+          _age,
+          _gender ?? '남성',
+          _weight,
+          _height,
+        );
+      });
     }
+  } catch (e) {
+    print('Error fetching user info: $e');
   }
+}
 
 int _calculateRecommendedCalories(int age, String gender, int weight, int height) {
   // 키는 cm 단위로 받아오고, 계산에서는 m 단위로 변환 필요

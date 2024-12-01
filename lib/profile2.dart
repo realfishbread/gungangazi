@@ -260,7 +260,7 @@ class _Profile2State extends State<Profile2> {
                 child: const Text('로그아웃', style: TextStyle(color: Colors.black)),
               ),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 50),
             Center(
               child: Column(
                 children: [

@@ -88,7 +88,7 @@ class _Profile2State extends State<Profile2> {
     height: fieldName == '키' ? newValue : _profile?.height ?? defaultProfile.height,
     weight: fieldName == '몸무게' ? newValue : _profile?.weight ?? defaultProfile.weight,
     gender: _profile?.gender ?? defaultProfile.gender,
-    age: fieldName == '몸무게' ? newValue : _profile?.age ?? defaultProfile.age,
+    age: fieldName == '나이' ? newValue : _profile?.age ?? defaultProfile.age,
     profile_image: _imageData != null ? base64Encode(_imageData!) : _profile?.profile_image,
   );
 

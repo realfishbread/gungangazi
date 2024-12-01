@@ -120,7 +120,15 @@ public class UserController {
         if (profileDto.getProfile_image() != null) {
             existingUser.setProfile_image(profileDto.getProfile_image()); // Base64 이미지 저장
         }
-    
+        if (profileDto.getAge() != null) {
+            try {
+                int age = Integer.parseInt(profileDto.getAge()); // String -> int 변환
+                existingUser.setAge(age); // 유효한 나이 값 설정
+            } catch (NumberFormatException e) {
+                return createErrorResponse("유효하지 않은 나이 값입니다.", 400); // 숫자가 아닌 값 처리
+            }
+        }
+        
         userRepository.save(existingUser);
     
         return ResponseEntity.ok(createSuccessResponse("사용자 정보가 업데이트되었습니다."));

@@ -63,15 +63,24 @@ class _MealPageState extends State<MealPage> {
     }
   }
 
-
 int _calculateRecommendedCalories(int age, String gender, int weight, int height) {
+  // 키는 cm 단위로 받아오고, 계산에서는 m 단위로 변환 필요
+  double heightInMeters = height / 100.0;
   double bmr;
+
   if (gender == '남성') {
-    bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+    // Harris-Benedict 방정식: 남성용
+    bmr = 88.362 + (13.397 * weight) + (4.799 * heightInMeters * 100) - (5.677 * age);
+  } else if (gender == '여성') {
+    // Harris-Benedict 방정식: 여성용
+    bmr = 447.593 + (9.247 * weight) + (3.098 * heightInMeters * 100) - (4.330 * age);
   } else {
-    bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+    // 기본값 처리 (성별이 명확하지 않은 경우)
+    bmr = 0.0;
   }
-  return (bmr * 1.55).toInt(); // 활동 계수 1.55 적용
+
+  // 활동 계수: 1.55 = 적당한 활동
+  return (bmr * 1.55).round();
 }
 
 

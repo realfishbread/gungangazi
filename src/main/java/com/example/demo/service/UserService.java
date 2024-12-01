@@ -77,12 +77,20 @@ public class UserService {
          if (profileDto.getProfile_image() != null) {
             user.setProfile_image(profileDto.getProfile_image()); // Base64 이미지 저장
         }
-        if (profileDto.getAge() != null) { // 나이 업데이트
+        if (profileDto.getAge() != null && !profileDto.getAge().isBlank()) { // 나이 값이 null 또는 빈 값이 아닌지 확인
             try {
-                user.setAge(Integer.parseInt(profileDto.getAge())); // String -> int 변환
+                int age = Integer.parseInt(profileDto.getAge().trim()); // String -> int 변환 (공백 제거 포함)
+                
+                if (age < 0) {
+                    throw new IllegalArgumentException("나이는 음수일 수 없습니다."); // 음수 값에 대한 추가 검증
+                }
+                
+                user.setAge(age); // 검증된 나이 값 설정
             } catch (NumberFormatException e) {
-                throw new RuntimeException("유효하지 않은 나이 값입니다."); // 변환 실패 시 예외 처리
+                throw new IllegalArgumentException("유효하지 않은 나이 형식입니다. 숫자 값을 입력해주세요."); // 구체적인 예외 메시지
             }
+        } else {
+            throw new IllegalArgumentException("나이 값이 비어있습니다."); // 값이 비어 있을 경우 예외 처리
         }
         
     

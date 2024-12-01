@@ -23,6 +23,15 @@ public class ProfileDto {
         this.profile_image = profile_image;
         this.age =age;
     }
+
+    // 변환 메서드 추가
+    public Integer getAgeAsInteger() {
+        try {
+            return (age != null && !age.isEmpty()) ? Integer.parseInt(age) : null;
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid age format: " + age);
+        }
+    }
     public String getProfile_image() {
         return profile_image;
     }

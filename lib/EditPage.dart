@@ -40,14 +40,16 @@ class _EditPageState extends State<EditPage> {
       _isSaving = true; // 저장 중 상태 설정
     });
 
-    // 단위를 붙여서 저장 (키, 몸무게만 단위 추가)
+     // 단위를 붙여서 저장 (키, 몸무게, 나이에 단위 추가)
     String newValue;
     if (widget.fieldName == '키') {
       newValue = '${_controller.text}cm'; // 키에 cm 단위 추가
     } else if (widget.fieldName == '몸무게') {
       newValue = '${_controller.text}kg'; // 몸무게에 kg 단위 추가
+    } else if (widget.fieldName == '나이') {
+      newValue = '${_controller.text}세'; // 나이에 "세" 단위 추가
     } else {
-      newValue = _controller.text; // 나이, 이름, 이메일 등 다른 필드는 그대로 저장
+      newValue = _controller.text; // 나머지 필드는 그대로 저장
     }
 
     await widget.onSave(widget.fieldName, newValue); // 수정된 값 저장
@@ -88,10 +90,14 @@ class _EditPageState extends State<EditPage> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                // 키와 몸무게에만 단위 표시
-                if (widget.fieldName == '키' || widget.fieldName == '몸무게')
+                // 키, 몸무게, 나이에 단위 표시
+                if (widget.fieldName == '키' || widget.fieldName == '몸무게' || widget.fieldName == '나이')
                   Text(
-                    widget.fieldName == '키' ? 'cm' : 'kg',
+                    widget.fieldName == '키'
+                        ? 'cm'
+                        : widget.fieldName == '몸무게'
+                            ? 'kg'
+                            : '세', // '나이' 필드에는 '세' 추가
                     style: const TextStyle(fontSize: 18),
                   ),
               ],

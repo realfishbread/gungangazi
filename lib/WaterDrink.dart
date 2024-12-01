@@ -4,7 +4,9 @@ import 'package:intl/intl.dart';
 import '../repositories/userHealth/water_repository.dart';
 import '../services/dio_service.dart';
 import '../services/TokenService.dart';
+import '../repositories/profile_repository.dart';
 import 'PopupHandler.dart'; // PopupHandler 임포트
+import 'package:dio/dio.dart';
 
 class WaterDrink extends StatefulWidget {
   final PopupHandler popupHandler; // PopupHandler 인스턴스를 받도록 설정
@@ -22,13 +24,62 @@ class _WaterDrinkState extends State<WaterDrink> {
   );
   int _currentWaterLevel = 0;
   Map<String, int> _dailyWaterIntake = {};
-  static const int recommendedIntake = 750; // 권장 섭취량 기준
+  int recommendedIntake = 750; // 권장 섭취량 기준
+  final DioService dioService = DioService();
+  late ProfileRepository profileRepository;
+  int? userAge = 0;
+  String userGender = "남성";
 
   @override
   void initState() {
     super.initState();
+    profileRepository = ProfileRepository(dioService: DioService(), tokenService: TokenService(),);
+    _loadUserInfo();
     _loadWaterIntake();
     _currentWaterLevel = widget.popupHandler.waterLevel;
+  }
+
+   Future<void> _loadUserInfo() async {
+  try {
+    final userInfo = await dioService.getUserInfo(); // 사용자 정보 가져오기
+    if (userInfo != null) {
+      setState(() {
+        userAge = int.tryParse(userInfo['age']?.toString() ?? '0'); // 나이 가져오기
+        userGender = userInfo['gender']; // 성별 가져오기
+
+        if (userAge != null && userGender != null) {
+          recommendedIntake = _calculateRecommendedIntake(userAge!, userGender!);
+        }
+      });
+    }
+  } catch (e) {
+    print("Failed to load user info: $e");
+  }
+}
+
+  int _calculateRecommendedIntake(int age, String gender) {
+    if (gender == "남성") {
+      if (age >= 6 && age <= 8) return 589;
+      if (age >= 9 && age <= 11) return 686;
+      if (age >= 12 && age <= 14) return 911;
+      if (age >= 15 && age <= 18) return 920;
+      if (age >= 19 && age <= 29) return 981;
+      if (age >= 30 && age <= 49) return 957;
+      if (age >= 50 && age <= 64) return 940;
+      if (age >= 65 && age <= 74) return 904;
+      return 662; // 75세 이상
+    } else if (gender == "여성") {
+      if (age >= 6 && age <= 8) return 514;
+      if (age >= 9 && age <= 11) return 643;
+      if (age >= 12 && age <= 14) return 610;
+      if (age >= 15 && age <= 18) return 659;
+      if (age >= 19 && age <= 29) return 709;
+      if (age >= 30 && age <= 49) return 772;
+      if (age >= 50 && age <= 64) return 784;
+      if (age >= 65 && age <= 74) return 624;
+      return 552; // 75세 이상
+    }
+    return 750; // 기본값
   }
 
   Future<void> _loadWaterIntake() async {

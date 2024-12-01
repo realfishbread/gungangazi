@@ -88,9 +88,7 @@ class _Profile2State extends State<Profile2> {
     height: fieldName == '키' ? newValue : _profile?.height ?? defaultProfile.height,
     weight: fieldName == '몸무게' ? newValue : _profile?.weight ?? defaultProfile.weight,
     gender: _profile?.gender ?? defaultProfile.gender,
-    age: fieldName == '나이'
-        ? (newValue is int ? newValue.toString() : newValue)
-        : _profile?.age ?? '25', // int를 String으로 변환 후 저장
+    age: fieldName == '몸무게' ? newValue : _profile?.age ?? defaultProfile.age,
     profile_image: _imageData != null ? base64Encode(_imageData!) : _profile?.profile_image,
   );
 
@@ -236,19 +234,16 @@ class _Profile2State extends State<Profile2> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EditPage(
-                      fieldName: '나이',
-                      currentValue: (profile.age ?? '0'), // 여전히 String으로 전달
-                      onSave: (fieldName, newValue) async {
-                        await updateProfileData(
-                          fieldName: fieldName,
-                          newValue: int.tryParse(newValue)?.toString() ?? '0', // String으로 변환 후 저장
-                        );
-                      },
-                    ),
+                  builder: (context) => EditPage(
+                    fieldName: '나이',
+                    currentValue: (profile.weight ?? '33').replaceAll('세', ''),
+                    onSave: (fieldName, newValue) async {
+                      await updateProfileData(fieldName: fieldName, newValue: newValue);
+                    },
                   ),
-                );
-              }),
+                ),
+              );
+            }),
             _buildProfileItem('성별', profile.gender ?? '남성', null),
            
 

@@ -24,14 +24,7 @@ public class ProfileDto {
         this.age =age;
     }
 
-    // 변환 메서드 추가
-    public Integer getAgeAsInteger() {
-        try {
-            return (age != null && !age.isEmpty()) ? Integer.parseInt(age) : null;
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid age format: " + age);
-        }
-    }
+    
     public String getProfile_image() {
         return profile_image;
     }
@@ -98,11 +91,5 @@ public class ProfileDto {
         this.age = age;
     }
 
-    public int getAgeAsInt() {
-        try {
-            return Integer.parseInt(age);
-        } catch (NumberFormatException e) {
-            return 0; // 기본값
-        }
-    }
+    
 }

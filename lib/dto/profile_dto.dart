@@ -28,7 +28,7 @@ class ProfileDto {
       weight: json['weight'] as String?,
       gender: json['gender'] as String?,
       profile_image: json['profile_image'] as String?,
-      age: json['age']?.toString(), // JSON에서 age를 String으로 변환
+      age: json['age'] as String?, // JSON에서 age를 String으로 변환
     );
   }
 

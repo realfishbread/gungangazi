@@ -25,49 +25,63 @@ class _MealPageState extends State<MealPage> {
   bool _isLoading = true; // 로딩 상태 플래그
   int _currentMeal = 0;
   String? _gender;
+  int _recommendedCalories = 2000; // 기본 권장 칼로리 값
+  int _age = 0; // 사용자 나이
+  int _weight = 0; // 사용자 체중
+  int _height =0;
 
 
 
   @override
   void initState() {
     super.initState();
-    _fetchGender(); // 성별 가져오기
     _mealRepository = MealRepository(
       dioService: DioService(),
       tokenService: TokenService(),
     );
-    _fetchMeals().then((_) {
-    setState(() {
-      // Total calories를 가져오기 위해 현재 날짜로 상태 업데이트
-      _calculateTotalCalories(_getFormattedDate());
-    });
-    });
+    _fetchUserInfo(); // 사용자 정보 가져오기
+    _fetchMeals(); // 식사 기록 가져오기
     _currentMeal = widget.popupHandler.mealLevel;
   }
 
 
-  Future<void> _fetchGender() async {
-  try {
-    // 예시: 서버에서 성별 데이터 가져오기
-    String? gender = await DioService().getGender();
-    print('Fetched gender: $gender');
-    setState(() {
-      _gender = gender; // 성별 저장
-    });
-  } catch (e) {
-    print('Error fetching gender: $e');
+   Future<void> _fetchUserInfo() async {
+    try {
+      final userInfo = await DioService().getUserInfo(); // 사용자 정보 가져오기
+      if (userInfo != null) {
+        setState(() {
+          _gender = userInfo['gender'];
+          _age = int.tryParse(userInfo['age']?.toString() ?? '0') ?? 0;
+          _weight = int.tryParse(userInfo['weight']?.toString() ?? '0') ?? 0;
+          _height = int.tryParse(userInfo['height']?.toString() ?? '0') ??0;
+          // 권장 칼로리 계산
+          _recommendedCalories = _calculateRecommendedCalories(_age, _gender ?? '남성', _weight, _height);
+        });
+      }
+    } catch (e) {
+      print('Error fetching user info: $e');
+    }
   }
+
+
+int _calculateRecommendedCalories(int age, String gender, int weight, int height) {
+  double bmr;
+  if (gender == '남성') {
+    bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+  } else {
+    bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+  }
+  return (bmr * 1.55).toInt(); // 활동 계수 1.55 적용
 }
+
 
   String _getFormattedDate() {
     return DateFormat('yyyy-MM-dd').format(DateTime.now());
   }
 
-  // **하루 총 칼로리와 권장 칼로리 비교를 위한 위젯 추가**
-  Widget _buildCalorieSummary(String date) {
+  // 기존 _buildCalorieSummary() 메서드 수정
+Widget _buildCalorieSummary(String date) {
     final int totalCalories = _calculateTotalCalories(date);
-    final int recommendedCalories = (_gender == '여성') ? 2000 : 2600; // 성별에 따른 권장 칼로리
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -77,56 +91,82 @@ class _MealPageState extends State<MealPage> {
             "오늘 총 칼로리 섭취: $totalCalories Kcal",
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
-          if (totalCalories > recommendedCalories)
+          if (totalCalories > _recommendedCalories)
             Text(
-              "초과된 칼로리: ${totalCalories - recommendedCalories} Kcal",
+              "초과된 칼로리: ${totalCalories - _recommendedCalories} Kcal",
               style: const TextStyle(color: Colors.red, fontSize: 14),
             )
           else
             Text(
-              "남은 칼로리: ${recommendedCalories - totalCalories} Kcal",
+              "남은 칼로리: ${_recommendedCalories - totalCalories} Kcal",
               style: const TextStyle(color: Colors.green, fontSize: 14),
             ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
+Widget _getCalorieStatusWidget(String date) {
+    final int totalCalories = _calculateTotalCalories(date);
+    final int calorieDifference = totalCalories - _recommendedCalories;
 
+    if (calorieDifference > 0) {
+      return Row(
+        children: [
+          const Icon(Icons.local_fire_department, color: Colors.red),
+          const SizedBox(width: 5),
+          Text(
+            "초과 ${calorieDifference.abs()} Kcal",
+            style: const TextStyle(color: Colors.red, fontSize: 14),
+          ),
+        ],
+      );
+    } else {
+      return Row(
+        children: [
+          const Icon(Icons.check_circle, color: Colors.green),
+          const SizedBox(width: 5),
+          Text(
+            "남음 ${calorieDifference.abs()} Kcal",
+            style: const TextStyle(color: Colors.green, fontSize: 14),
+          ),
+        ],
+      );
+    }
+  }
   // 서버에서 모든 식사 기록 가져오기
   Future<void> _fetchMeals() async {
     try {
-      print("Fetching meals from server...");
-      List<MealDTO> meals = await _mealRepository.fetchAllMeals(); // 서버에서 데이터 가져오기
-      print("Fetched meals: $meals");
-
+      List<MealDTO> meals = await _mealRepository.fetchAllMeals();
       setState(() {
-        _mealsByDate.clear(); // 기존 데이터 초기화
+        _mealsByDate.clear();
         for (var meal in meals) {
           final mealData = {
-            'id': meal.id, // id 포함
+            'id': meal.id,
             'meal': meal.meal,
             'calories': meal.calories,
             'meal_type': meal.meal_type,
           };
-
           if (_mealsByDate.containsKey(meal.date)) {
             _mealsByDate[meal.date]?.add(mealData);
           } else {
             _mealsByDate[meal.date] = [mealData];
           }
         }
-        _mealLevel = ((_mealsByDate[_getFormattedDate()]?.length) ?? 0) * 200; // MealLevel 계산
-        print("Updated MealLevel: $_mealLevel");
-        _isLoading = false; // 로딩 완료
+        _mealLevel = ((_mealsByDate[_getFormattedDate()]?.length) ?? 0) * 200;
+        _isLoading = false;
         _updatePopupHandler();
       });
     } catch (e) {
       print('Error loading meals: $e');
       setState(() {
-        _isLoading = false; // 에러 발생 시 로딩 상태 해제
+        _isLoading = false;
       });
     }
   }
+
+ 
+
+
 
   // PopupHandler 상태 업데이트
   void _updatePopupHandler() {
@@ -204,36 +244,7 @@ class _MealPageState extends State<MealPage> {
   );
 }
 
-Widget _getCalorieStatusWidget(String date) {
-  final int totalCalories = _calculateTotalCalories(date);
-  final int recommendedCalories = (_gender == '여성') ? 2000 : 2600; // 성별에 따른 권장 칼로리
-  final int calorieDifference = totalCalories - recommendedCalories;
 
-  // 초과 여부에 따라 아이콘과 텍스트 설정
-  if (calorieDifference > 0) {
-    return Row(
-      children: [
-        const Icon(Icons.local_fire_department, color: Colors.red), // 🔥 아이콘
-        const SizedBox(width: 5),
-        Text(
-          "초과 ${calorieDifference.abs()} Kcal",
-          style: const TextStyle(color: Colors.red, fontSize: 14),
-        ),
-      ],
-    );
-  } else {
-    return Row(
-      children: [
-        const Icon(Icons.check_circle, color: Colors.green), // ✅ 아이콘
-        const SizedBox(width: 5),
-        Text(
-          "남음 ${calorieDifference.abs()} Kcal",
-          style: const TextStyle(color: Colors.green, fontSize: 14),
-        ),
-      ],
-    );
-  }
-}
 
 
  // 식사 기록 삭제
@@ -261,157 +272,170 @@ Future<void> _deleteMeal(String mealId, String date) async {
       onWillPop: () async {
         if (widget.popupHandler.mealLevel > _currentMeal) {
           widget.popupHandler.triggerAnimation('eatingmeal', delayMilliseconds: 2000);
-        } else {
-          print("No significant meal level change, no animation triggered.");
         }
         return true;
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('날짜별 식단 기록'),
-          backgroundColor: const Color(0xFFFFF9C4),
-        ),
-        body: _isLoading
-    ? const Center(child: CircularProgressIndicator())
-    : Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const Text(
-              '식사 기록 추가',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: DropdownButtonFormField<String>(
-                    value: _selectedMealType,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedMealType = newValue!;
-                      });
-                    },
-                    decoration: const InputDecoration(
-                      labelText: '식사 종류',
-                      border: OutlineInputBorder(),
-                    ),
-                    items: <String>['아침', '점심', '저녁', '간식']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
+        title: const Text('날짜별 식단 기록'),
+        backgroundColor: const Color(0xFFFFF9C4),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline, color: Colors.black),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text("권장 칼로리 계산 방법"),
+                  content: const Text(
+                    "권장 칼로리는 Harris-Benedict 방정식을 기반으로 계산됩니다:\n\n"
+                    "남성:\n"
+                    "  BMR = 88.362 + (13.397 × 체중(kg)) + (4.799 × 키(cm)) - (5.677 × 나이)\n\n"
+                    "여성:\n"
+                    "  BMR = 447.593 + (9.247 × 체중(kg)) + (3.098 × 키(cm)) - (4.330 × 나이)\n\n"
+                    "활동 계수(1.55)를 적용하여 최종 권장 칼로리를 계산합니다:\n"
+                    "  권장 칼로리 = BMR × 1.55\n\n"
+                    "사용자의 키, 체중, 나이를 기반으로 정확히 계산합니다.",
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  flex: 3,
-                  child: TextField(
-                    controller: _mealController,
-                    decoration: const InputDecoration(
-                      labelText: '음식 입력',
-                      border: OutlineInputBorder(),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("닫기"),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: TextField(
-                    controller: _caloriesController,
-                    decoration: const InputDecoration(
-                      labelText: '칼로리 (Kcal)',
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: _addMeal,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFFF9C4),
-                    foregroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)
-                    ),
-                  ),
-                  child: const Text('기록 추가'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            const Divider(
-              thickness: 2,
-              color: Colors.grey,
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              '역대 식사 기록',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Expanded(
-                  child: _mealsByDate.isEmpty
-                      ? const Center(
-                          child: Text('기록된 식사가 없습니다.'),
-                        )
-                      : ListView(
-                          children: _mealsByDate.keys.map((date) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ExpansionTile(
-                                  title: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        date,
-                                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                      ),
-                                      _getCalorieStatusWidget(date), // 칼로리 상태와 아이콘 표시
-                                    ],
-                                  ),
-                                  children: _mealsByDate[date]!
-                                      .map((meal) => ListTile(
-                                            title: Text("${meal['meal']} (${meal['calories']} Kcal)"),
-                                            trailing: IconButton(
-                                              icon: const Icon(Icons.close),
-                                              onPressed: () => _deleteMeal(meal['id'], date),
-                                              tooltip: '삭제',
-                                            ),
-                                          ))
-                                      .toList(),
-                                ),
-                              ],
-                            );
-                          }).toList(),
-                        ),
-                ),
-            // **하단에 고정된 요약 위젯 추가**
-                  _buildCalorieSummary(_getFormattedDate()), // 오늘 날짜를 전달
-          ],
-        ),
+              );
+            },
+          ),
+        ],
       ),
-
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Text(
+                      '식사 기록 추가',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: DropdownButtonFormField<String>(
+                            value: _selectedMealType,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                _selectedMealType = newValue!;
+                              });
+                            },
+                            decoration: const InputDecoration(
+                              labelText: '식사 종류',
+                              border: OutlineInputBorder(),
+                            ),
+                            items: <String>['아침', '점심', '저녁', '간식']
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          flex: 3,
+                          child: TextField(
+                            controller: _mealController,
+                            decoration: const InputDecoration(
+                              labelText: '음식 입력',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: TextField(
+                            controller: _caloriesController,
+                            decoration: const InputDecoration(
+                              labelText: '칼로리 (Kcal)',
+                              border: OutlineInputBorder(),
+                            ),
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        ElevatedButton(
+                          onPressed: _addMeal,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFFFF9C4),
+                            foregroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30)),
+                          ),
+                          child: const Text('기록 추가'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    const Divider(thickness: 2, color: Colors.grey),
+                    const SizedBox(height: 10),
+                    const Text(
+                      '역대 식사 기록',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: _mealsByDate.isEmpty
+                          ? const Center(child: Text('기록된 식사가 없습니다.'))
+                          : ListView(
+                              children: _mealsByDate.keys.map((date) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ExpansionTile(
+                                      title: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            date,
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          _getCalorieStatusWidget(date),
+                                        ],
+                                      ),
+                                      children: _mealsByDate[date]!
+                                          .map((meal) => ListTile(
+                                                title: Text(
+                                                    "${meal['meal']} (${meal['calories']} Kcal)"),
+                                                trailing: IconButton(
+                                                  icon: const Icon(Icons.close),
+                                                  onPressed: () => _deleteMeal(meal['id'], date),
+                                                  tooltip: '삭제',
+                                                ),
+                                              ))
+                                          .toList(),
+                                    ),
+                                  ],
+                                );
+                              }).toList(),
+                            ),
+                    ),
+                    _buildCalorieSummary(_getFormattedDate()),
+                  ],
+                ),
+              ),
       ),
     );
   }
-
-  
-
-  @override
-  void dispose() {
-    _mealController.dispose();
-    _caloriesController.dispose();
-    super.dispose();
-  }
-} 
+}

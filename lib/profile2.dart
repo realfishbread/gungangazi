@@ -11,6 +11,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'image_picker_web.dart';
 import 'image_picker_mobile.dart';
+import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
 class Profile2 extends StatefulWidget {
   final String username;
@@ -34,6 +35,7 @@ class _Profile2State extends State<Profile2> {
   final TokenService _tokenService = TokenService();
   ProfileDto? _profile;
   bool isLoading = true;
+  late ScrollController _scrollController;
 
   final ProfileDto defaultProfile = ProfileDto(
     username: '기본아이디',
@@ -47,9 +49,16 @@ class _Profile2State extends State<Profile2> {
   @override
   void initState() {
     super.initState();
+     _scrollController = ScrollController();
     _initialize();
   }
 
+
+  @override
+  void dispose() {
+    _scrollController.dispose(); // ScrollController 해제
+    super.dispose();
+  }
   // 초기화 함수
   Future<void> _initialize() async {
     String? token = await _tokenService.getToken();
@@ -122,14 +131,22 @@ class _Profile2State extends State<Profile2> {
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : buildProfileContent(),
+          : WebSmoothScroll( // WebSmoothScroll 추가
+              controller: _scrollController,
+              scrollOffset: 100, // 스크롤 속도 조정
+              child: SingleChildScrollView(
+                controller: _scrollController, // ScrollController 연결
+                child: buildProfileContent(),
+              ),
+            ),
     );
   }
 
   Widget buildProfileContent() {
-    final profile = _profile ?? defaultProfile;
+  final profile = _profile ?? defaultProfile;
 
-    return Container(
+  return SingleChildScrollView( // 스크롤 가능하게 변경
+    child: Container(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,8 +232,6 @@ class _Profile2State extends State<Profile2> {
             );
           }),
           _buildProfileItem('성별', profile.gender ?? '남성', null),
-          
-          
           const SizedBox(height: 20),
           Center(
             child: TextButton(
@@ -229,17 +244,30 @@ class _Profile2State extends State<Profile2> {
               child: const Text('로그아웃', style: TextStyle(color: Colors.black)),
             ),
           ),
-          const Spacer(),
+          const SizedBox(height: 20), // 텍스트와 로고 간 간격
           Center(
-            child: Text(
-              '건강아지 | 고객 지원 문의 : +82 1234 5678 및 yoonh12288@gmail.com',
-              style: const TextStyle(fontSize: 10, color: Colors.grey),
+            child: Column(
+              children: [
+                Text(
+                  '건강아지 | 고객 지원 문의 : +82 1234 5678 및 yoonh12288@gmail.com',
+                  style: const TextStyle(fontSize: 10, color: Colors.grey),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10), // 텍스트와 로고 간 간격
+                Image.asset(
+                  'assets/logo.png', // 로고 경로
+                  width: 50, // 로고 너비
+                  height: 50, // 로고 높이
+                  fit: BoxFit.contain,
+                ),
+              ],
             ),
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildProfileItem(String title, String value, VoidCallback? onEdit) {
     return Padding(

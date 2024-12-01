@@ -41,6 +41,7 @@ dependencies:
   infinite_carousel: ^1.1.1
   flutter_improved_scrolling: ^0.0.3
   expansion_tile_card: ^3.0.0
+  web_smooth_scroll: ^1.1.0
 
 dev_dependencies:
    

@@ -232,24 +232,23 @@ class _Profile2State extends State<Profile2> {
                 ),
               );
             }),
-             _buildProfileItem('나이', profile.age ?? '25', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditPage(
-                    fieldName: '나이',
-                    currentValue: profile.age ?? '25', // age를 항상 String으로 전달
-                    onSave: (fieldName, newValue) async {
-                      // 저장 시 String을 int로 변환
-                      await updateProfileData(
-                        fieldName: fieldName,
-                        newValue: int.tryParse(newValue) ?? 0, // String -> int 변환
-                      );
-                    },
+             _buildProfileItem('나이', profile.age ?? '0', () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditPage(
+                      fieldName: '나이',
+                      currentValue: profile.age ?? '0', // 여전히 String으로 전달
+                      onSave: (fieldName, newValue) async {
+                        await updateProfileData(
+                          fieldName: fieldName,
+                          newValue: int.tryParse(newValue)?.toString() ?? '0', // String으로 변환 후 저장
+                        );
+                      },
+                    ),
                   ),
-                ),
-              );
-            }),
+                );
+              }),
             _buildProfileItem('성별', profile.gender ?? '남성', null),
            
 

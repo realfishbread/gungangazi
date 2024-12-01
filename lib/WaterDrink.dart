@@ -172,11 +172,16 @@ class _WaterDrinkState extends State<WaterDrink> {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text("물 마시는 법"),
+                    title: const Text("수분 섭취 가이드"),
                     content: const Text(
-                      "식사 전후 30분에서 1시간 사이에 물을 마시는 것이 좋습니다. "
-                      "한 번에 많은 양의 물을 마시면 전해질 불균형이 생길 수 있으니, "
-                      "한 잔씩 나누어 섭취하세요. 노년층은 매시간 의식적으로 물을 섭취하는 것이 중요합니다.",
+                      "연령별 권장 수분 섭취량 (mL/일):\n"
+                      "• 19-29세: 남성 981mL, 여성 709mL\n"
+                      "• 30-49세: 남성 957mL, 여성 772mL\n"
+                      "• 50-64세: 남성 940mL, 여성 784mL\n"
+                      "• 65-74세: 남성 904mL, 여성 624mL\n\n"
+                      "물은 식사 전후 30분에서 1시간 사이에 마시는 것이 좋습니다. "
+                      "한 번에 많은 양의 물을 마시면 전해질 불균형이 생길 수 있으니, 한 잔씩 나누어 섭취하세요. "
+                      "노년층은 매시간 의식적으로 물을 섭취하는 것이 중요합니다.",
                     ),
                     actions: [
                       TextButton(
@@ -192,18 +197,6 @@ class _WaterDrinkState extends State<WaterDrink> {
         ),
         body: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                "연령별 권장 수분 섭취량 (mL/일):\n"
-                "• 19-29세: 남성 981mL, 여성 709mL\n"
-                "• 30-49세: 남성 957mL, 여성 772mL\n"
-                "• 50-64세: 남성 940mL, 여성 784mL\n"
-                "• 65-74세: 남성 904mL, 여성 624mL",
-                style: TextStyle(fontSize: 12, color: Colors.black87),
-                textAlign: TextAlign.center,
-              ),
-            ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -284,38 +277,48 @@ class _WaterDrinkState extends State<WaterDrink> {
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () => _addWater(-200),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFFF9C4),
-                          foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)),
+                  GestureDetector(
+                    onTap: () => _addWater(200), // 물 섭취 추가
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.local_drink, // 물컵 아이콘
+                          color: Colors.blueAccent,
+                          size: 48,
                         ),
-                        child: const Text('취소'),
-                      ),
-                      const SizedBox(width: 20),
-                      ElevatedButton(
-                        onPressed: () => _addWater(200),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFFF9C4),
-                          foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)),
+                        const SizedBox(height: 5),
+                        const Text(
+                          '+물 한 잔',
+                          style: TextStyle(color: Colors.blueAccent, fontSize: 14),
                         ),
-                        child: const Text('+물 한 잔'),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(width: 40), // 간격 조정
+                  GestureDetector(
+                    onTap: () => _addWater(-200), // 물 섭취 취소
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.remove_circle_outline,
+                          color: Colors.redAccent,
+                          size: 48,
+                        ),
+                        const SizedBox(height: 5),
+                        const Text(
+                          '취소',
+                          style: TextStyle(color: Colors.redAccent, fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-            ),
+             ),
+
           ],
         ),
       ),

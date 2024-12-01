@@ -22,7 +22,7 @@ class _WaterDrinkState extends State<WaterDrink> {
   );
   int _currentWaterLevel = 0;
   Map<String, int> _dailyWaterIntake = {};
-  static const int recommendedIntake = 2000; // 권장 섭취량 기준
+  static const int recommendedIntake = 750; // 권장 섭취량 기준
 
   @override
   void initState() {
@@ -114,9 +114,45 @@ class _WaterDrinkState extends State<WaterDrink> {
           automaticallyImplyLeading: true,
           title: const Text("수분 섭취"),
           backgroundColor: const Color(0xFFFFF9C4),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.info_outline, color: Colors.black),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text("물 마시는 법"),
+                    content: const Text(
+                      "식사 전후 30분에서 1시간 사이에 물을 마시는 것이 좋습니다. "
+                      "한 번에 많은 양의 물을 마시면 전해질 불균형이 생길 수 있으니, "
+                      "한 잔씩 나누어 섭취하세요. 노년층은 매시간 의식적으로 물을 섭취하는 것이 중요합니다.",
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text("닫기"),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ],
         ),
         body: Column(
           children: [
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                "연령별 권장 수분 섭취량 (mL/일):\n"
+                "• 19-29세: 남성 981mL, 여성 709mL\n"
+                "• 30-49세: 남성 957mL, 여성 772mL\n"
+                "• 50-64세: 남성 940mL, 여성 784mL\n"
+                "• 65-74세: 남성 904mL, 여성 624mL",
+                style: TextStyle(fontSize: 12, color: Colors.black87),
+                textAlign: TextAlign.center,
+              ),
+            ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -183,7 +219,8 @@ class _WaterDrinkState extends State<WaterDrink> {
                               label: HorizontalLineLabel(
                                 show: true,
                                 alignment: Alignment.topLeft,
-                                labelResolver: (line) => '권장 섭취량: ${recommendedIntake}ml',
+                                labelResolver: (line) =>
+                                    '권장 섭취량: ${recommendedIntake}ml',
                               ),
                             ),
                           ],
@@ -203,26 +240,24 @@ class _WaterDrinkState extends State<WaterDrink> {
                     children: [
                       ElevatedButton(
                         onPressed: () => _addWater(-200),
-                         style: ElevatedButton.styleFrom(
+                        style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFFFF9C4),
                           foregroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)
-                          ),
+                              borderRadius: BorderRadius.circular(30)),
                         ),
-                        child: const Text('-물 한 잔 취소'),
+                        child: const Text('취소'),
                       ),
                       const SizedBox(width: 20),
                       ElevatedButton(
                         onPressed: () => _addWater(200),
-                         style: ElevatedButton.styleFrom(
+                        style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFFFF9C4),
                           foregroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)
-                          ),
+                              borderRadius: BorderRadius.circular(30)),
                         ),
-                        child: const Text('+물 한 잔 200ml'),
+                        child: const Text('+물 한 잔'),
                       ),
                     ],
                   ),

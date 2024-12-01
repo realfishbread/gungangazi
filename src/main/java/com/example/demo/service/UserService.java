@@ -47,7 +47,7 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         
         // ProfileDto로 필요한 정보만 반환
-        return new ProfileDto(user.getUsername(), user.getRealname(), user.getEmail(), user.getHeight(), user.getWeight(), user.getGender(), user.getProfile_image());
+        return new ProfileDto(user.getUsername(), user.getRealname(), user.getEmail(), user.getHeight(), user.getWeight(), user.getGender(), user.getProfile_image(), String.valueOf(user.getAge()));
     }
     
 
@@ -77,6 +77,14 @@ public class UserService {
          if (profileDto.getProfile_image() != null) {
             user.setProfile_image(profileDto.getProfile_image()); // Base64 이미지 저장
         }
+        if (profileDto.getAge() != null) { // 나이 업데이트
+            try {
+                user.setAge(Integer.parseInt(profileDto.getAge())); // String -> int 변환
+            } catch (NumberFormatException e) {
+                throw new RuntimeException("유효하지 않은 나이 값입니다."); // 변환 실패 시 예외 처리
+            }
+        }
+        
     
         return userRepository.save(user);  // 업데이트된 사용자 저장
     }

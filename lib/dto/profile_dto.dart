@@ -1,4 +1,3 @@
-import 'dart:convert';
 class ProfileDto {
   final String? username;
   final String? realname;
@@ -7,6 +6,7 @@ class ProfileDto {
   final String? weight;
   final String? gender;
   final String? profile_image;
+  final String? age; // 여전히 String으로 유지
 
   ProfileDto({
     this.username,
@@ -16,29 +16,35 @@ class ProfileDto {
     this.weight,
     this.gender,
     this.profile_image,
+    this.age,
   });
 
   factory ProfileDto.fromJson(Map<String, dynamic> json) {
     return ProfileDto(
-      username: json['username'],
-      realname: json['realname'],
-      email: json['email'],
-      height: json['height'],
-      weight: json['weight'],
-      gender: json['gender'],
-      profile_image: json['profile_image'],
+      username: json['username'] as String?,
+      realname: json['realname'] as String?,
+      email: json['email'] as String?,
+      height: json['height'] as String?,
+      weight: json['weight'] as String?,
+      gender: json['gender'] as String?,
+      profile_image: json['profile_image'] as String?,
+      age: json['age']?.toString(), // JSON에서 age를 String으로 변환
     );
   }
 
   Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    if (username != null) data['username'] = username;
-    if (realname != null) data['realname'] = realname;
-    if (email != null) data['email'] = email;
-    if (height != null) data['height'] = height;
-    if (weight != null) data['weight'] = weight;
-    if (gender != null) data['gender'] = gender;
-    if (profile_image != null) data['profile_image'] = profile_image;
-    return data;
+    return {
+      'username': username,
+      'realname': realname,
+      'email': email,
+      'height': height,
+      'weight': weight,
+      'gender': gender,
+      'profile_image': profile_image,
+      'age': age, // String으로 저장
+    };
   }
+
+  // String 형태의 age를 int로 변환해주는 유틸리티
+  int get ageAsInt => int.tryParse(age ?? '0') ?? 0;
 }

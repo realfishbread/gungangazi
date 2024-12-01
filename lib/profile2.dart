@@ -15,13 +15,12 @@ import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
 class Profile2 extends StatefulWidget {
   final String username;
-  final VoidCallback onProfileUpdated; // 추가
+  final VoidCallback onProfileUpdated;
 
-
-   const Profile2({
+  const Profile2({
     Key? key,
     required this.username,
-    required this.onProfileUpdated, // 추가
+    required this.onProfileUpdated,
   }) : super(key: key);
 
   @override
@@ -29,7 +28,6 @@ class Profile2 extends StatefulWidget {
 }
 
 class _Profile2State extends State<Profile2> {
-  
   Uint8List? _imageData;
   late ProfileRepository _profileRepository;
   final TokenService _tokenService = TokenService();
@@ -44,22 +42,22 @@ class _Profile2State extends State<Profile2> {
     height: '170cm',
     weight: '70kg',
     gender: '남성',
+    age: '25', // 기본 age 값 추가
   );
 
   @override
   void initState() {
     super.initState();
-     _scrollController = ScrollController();
+    _scrollController = ScrollController();
     _initialize();
   }
 
-
   @override
   void dispose() {
-    _scrollController.dispose(); // ScrollController 해제
+    _scrollController.dispose();
     super.dispose();
   }
-  // 초기화 함수
+
   Future<void> _initialize() async {
     String? token = await _tokenService.getToken();
     DioService dioService = DioService(token: token);
@@ -79,31 +77,34 @@ class _Profile2State extends State<Profile2> {
         });
       }
     }
-    await updateProfileData(); // 이미지 선택 후 데이터 업데이트
+    await updateProfileData();
   }
 
-  // 프로필 데이터 저장 (텍스트 필드와 이미지 포함)
-  Future<void> updateProfileData({String? fieldName, String? newValue}) async {
-    final updatedProfile = ProfileDto(
-      username: _profile?.username ?? defaultProfile.username,
-      realname: fieldName == '이름' ? newValue : _profile?.realname ?? defaultProfile.realname,
-      email: fieldName == '이메일' ? newValue : _profile?.email ?? defaultProfile.email,
-      height: fieldName == '키' ? newValue : _profile?.height ?? defaultProfile.height,
-      weight: fieldName == '몸무게' ? newValue : _profile?.weight ?? defaultProfile.weight,
-      gender: _profile?.gender ?? defaultProfile.gender,
-      profile_image: _imageData != null ? base64Encode(_imageData!) : _profile?.profile_image,
-    );
-    print("Sending data to server: ${jsonEncode(updatedProfile.toJson())}");
+  Future<void> updateProfileData({String? fieldName, dynamic newValue}) async {
+  final updatedProfile = ProfileDto(
+    username: _profile?.username ?? defaultProfile.username,
+    realname: fieldName == '이름' ? newValue : _profile?.realname ?? defaultProfile.realname,
+    email: fieldName == '이메일' ? newValue : _profile?.email ?? defaultProfile.email,
+    height: fieldName == '키' ? newValue : _profile?.height ?? defaultProfile.height,
+    weight: fieldName == '몸무게' ? newValue : _profile?.weight ?? defaultProfile.weight,
+    gender: _profile?.gender ?? defaultProfile.gender,
+    age: fieldName == '나이'
+        ? (newValue is int ? newValue.toString() : newValue)
+        : _profile?.age ?? '25', // int를 String으로 변환 후 저장
+    profile_image: _imageData != null ? base64Encode(_imageData!) : _profile?.profile_image,
+  );
 
-    bool success = await _profileRepository.updateProfile(widget.username, updatedProfile.toJson());
+  print("Sending data to server: ${jsonEncode(updatedProfile.toJson())}");
 
-    if (success) {
-      widget.onProfileUpdated(); // 동기화 콜백 호출
-      await fetchProfile(); // 업데이트 후 프로필 다시 가져옴
-    } else {
-      print('프로필 업데이트 실패');
-    }
+  bool success = await _profileRepository.updateProfile(widget.username, updatedProfile.toJson());
+
+  if (success) {
+    widget.onProfileUpdated();
+    await fetchProfile();
+  } else {
+    print('프로필 업데이트 실패');
   }
+}
 
   Future<void> fetchProfile() async {
     setState(() {
@@ -131,11 +132,11 @@ class _Profile2State extends State<Profile2> {
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : WebSmoothScroll( // WebSmoothScroll 추가
+          : WebSmoothScroll(
               controller: _scrollController,
-              scrollOffset: 100, // 스크롤 속도 조정
+              scrollOffset: 100,
               child: SingleChildScrollView(
-                controller: _scrollController, // ScrollController 연결
+                controller: _scrollController,
                 child: buildProfileContent(),
               ),
             ),
@@ -143,131 +144,144 @@ class _Profile2State extends State<Profile2> {
   }
 
   Widget buildProfileContent() {
-  final profile = _profile ?? defaultProfile;
+    final profile = _profile ?? defaultProfile;
 
-  return SingleChildScrollView( // 스크롤 가능하게 변경
-    child: Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Stack(
-              children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundColor: const Color.fromARGB(255, 240, 240, 240),
-                  backgroundImage: _imageData != null
-                      ? MemoryImage(_imageData!)
-                      : AssetImage('assets/place_holder.png') as ImageProvider,
-                ),
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: IconButton(
-                    icon: const Icon(Icons.camera_alt, color: Colors.black),
-                    onPressed: _pickImage,
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Stack(
+                children: [
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundColor: const Color.fromARGB(255, 240, 240, 240),
+                    backgroundImage: _imageData != null
+                        ? MemoryImage(_imageData!)
+                        : AssetImage('assets/place_holder.png') as ImageProvider,
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: IconButton(
+                      icon: const Icon(Icons.camera_alt, color: Colors.black),
+                      onPressed: _pickImage,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Divider(color: Colors.black),
+            _buildProfileItem('아이디', profile.username ?? '기본아이디', null),
+            _buildProfileItem('이름', profile.realname ?? '기본이름', () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditPage(
+                    fieldName: '이름',
+                    currentValue: profile.realname ?? '기본이름',
+                    onSave: (fieldName, newValue) async {
+                      await updateProfileData(fieldName: fieldName, newValue: newValue);
+                    },
                   ),
                 ),
-              ],
+              );
+            }),
+            _buildProfileItem('이메일', profile.email ?? '기본이메일@example.com', () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditPage(
+                    fieldName: '이메일',
+                    currentValue: profile.email ?? '기본이메일@example.com',
+                    onSave: (fieldName, newValue) async {
+                      await updateProfileData(fieldName: fieldName, newValue: newValue);
+                    },
+                  ),
+                ),
+              );
+            }),
+            _buildProfileItem('키', profile.height ?? '170cm', () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditPage(
+                    fieldName: '키',
+                    currentValue: (profile.height ?? '170cm').replaceAll('cm', ''),
+                    onSave: (fieldName, newValue) async {
+                      await updateProfileData(fieldName: fieldName, newValue: newValue);
+                    },
+                  ),
+                ),
+              );
+            }),
+            _buildProfileItem('몸무게', profile.weight ?? '70kg', () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditPage(
+                    fieldName: '몸무게',
+                    currentValue: (profile.weight ?? '70kg').replaceAll('kg', ''),
+                    onSave: (fieldName, newValue) async {
+                      await updateProfileData(fieldName: fieldName, newValue: newValue);
+                    },
+                  ),
+                ),
+              );
+            }),
+            _buildProfileItem('성별', profile.gender ?? '남성', null),
+            _buildProfileItem('나이', profile.age ?? '25', () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditPage(
+                    fieldName: '나이',
+                    currentValue: profile.age ?? '25', // age를 항상 String으로 전달
+                    onSave: (fieldName, newValue) async {
+                      // 저장 시 String을 int로 변환
+                      await updateProfileData(
+                        fieldName: fieldName,
+                        newValue: int.tryParse(newValue) ?? 0, // String -> int 변환
+                      );
+                    },
+                  ),
+                ),
+              );
+            }),
+
+
+            const SizedBox(height: 20),
+            Center(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                },
+                child: const Text('로그아웃', style: TextStyle(color: Colors.black)),
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
-          const Divider(color: Colors.black),
-          _buildProfileItem('아이디', profile.username ?? '기본아이디', null),
-          _buildProfileItem('이름', profile.realname ?? '기본이름', () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EditPage(
-                  fieldName: '이름',
-                  currentValue: profile.realname ?? '기본이름',
-                  onSave: (fieldName, newValue) async {
-                    await updateProfileData(fieldName: fieldName, newValue: newValue);
-                  },
-                ),
+            const SizedBox(height: 30),
+            Center(
+              child: Column(
+                children: [
+                  Text(
+                    '건강아지 | 고객 지원 문의 : +82 1234 5678 및 yoonh12288@gmail.com',
+                    style: const TextStyle(fontSize: 10, color: Colors.grey),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
-            );
-          }),
-          _buildProfileItem('이메일', profile.email ?? '기본이메일@example.com', () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EditPage(
-                  fieldName: '이메일',
-                  currentValue: profile.email ?? '기본이메일@example.com',
-                  onSave: (fieldName, newValue) async {
-                    await updateProfileData(fieldName: fieldName, newValue: newValue);
-                  },
-                ),
-              ),
-            );
-          }),
-          _buildProfileItem('키', profile.height ?? '170cm', () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EditPage(
-                  fieldName: '키',
-                  currentValue: (profile.height ?? '170cm').replaceAll('cm', ''),
-                  onSave: (fieldName, newValue) async {
-                    await updateProfileData(fieldName: fieldName, newValue: newValue);
-                  },
-                ),
-              ),
-            );
-          }),
-          _buildProfileItem('몸무게', profile.weight ?? '70kg', () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EditPage(
-                  fieldName: '몸무게',
-                  currentValue: (profile.weight ?? '70kg').replaceAll('kg', ''),
-                  onSave: (fieldName, newValue) async {
-                    await updateProfileData(fieldName: fieldName, newValue: newValue);
-                  },
-                ),
-              ),
-            );
-          }),
-          _buildProfileItem('성별', profile.gender ?? '남성', null),
-          const SizedBox(height: 20),
-          Center(
-            child: TextButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
-                );
-              },
-              child: const Text('로그아웃', style: TextStyle(color: Colors.black)),
             ),
-          ),
-          const SizedBox(height: 20), // 텍스트와 로고 간 간격
-          Center(
-            child: Column(
-              children: [
-                Text(
-                  '건강아지 | 고객 지원 문의 : +82 1234 5678 및 yoonh12288@gmail.com',
-                  style: const TextStyle(fontSize: 10, color: Colors.grey),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 10), // 텍스트와 로고 간 간격
-                Image.asset(
-                  'assets/logo.png', // 로고 경로
-                  width: 50, // 로고 너비
-                  height: 50, // 로고 높이
-                  fit: BoxFit.contain,
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildProfileItem(String title, String value, VoidCallback? onEdit) {
     return Padding(

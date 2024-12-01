@@ -11,8 +11,9 @@ public class ProfileDto {
     private String weight;
     private String gender;
     private String profile_image;
+    private String age;
 
-    public ProfileDto(String username, String realname, String email, String height, String weight, String gender, String profile_image) {
+    public ProfileDto(String username, String realname, String email, String height, String weight, String gender, String profile_image, String age) {
         this.username = username;
         this.realname = realname;
         this.email = email;
@@ -20,7 +21,7 @@ public class ProfileDto {
         this.weight = weight;
         this.gender = gender;
         this.profile_image = profile_image;
-        
+        this.age =age;
     }
     public String getProfile_image() {
         return profile_image;
@@ -77,5 +78,22 @@ public class ProfileDto {
 
     public void setGender(String gender) {
         this.gender = gender;
+ 
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public int getAgeAsInt() {
+        try {
+            return Integer.parseInt(age);
+        } catch (NumberFormatException e) {
+            return 0; // 기본값
+        }
     }
 }

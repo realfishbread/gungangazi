@@ -42,6 +42,8 @@ public class User {
     @Column(name = "profile_image", columnDefinition = "TEXT") // Base64 인코딩된 이미지 저장
     private String profile_image;
 
+    
+
     public long getId() {
         return id;
     }

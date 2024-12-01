@@ -236,7 +236,7 @@ class _Profile2State extends State<Profile2> {
                   MaterialPageRoute(
                   builder: (context) => EditPage(
                     fieldName: '나이',
-                    currentValue: (profile.weight ?? '33').replaceAll('세', ''),
+                    currentValue: (profile.age ?? '33').replaceAll('세', ''),
                     onSave: (fieldName, newValue) async {
                       await updateProfileData(fieldName: fieldName, newValue: newValue);
                     },

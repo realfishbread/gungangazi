@@ -45,29 +45,5 @@ class ProfileDto {
     };
   }
 
-  // String 형태의 age를 int로 변환해주는 유틸리티
-  int get ageAsInt => int.tryParse(age ?? '0') ?? 0;
-
-  // age를 업데이트할 수 있는 메서드 추가
-  ProfileDto copyWith({
-    String? username,
-    String? realname,
-    String? email,
-    String? height,
-    String? weight,
-    String? gender,
-    String? profile_image,
-    String? age,
-  }) {
-    return ProfileDto(
-      username: username ?? this.username,
-      realname: realname ?? this.realname,
-      email: email ?? this.email,
-      height: height ?? this.height,
-      weight: weight ?? this.weight,
-      gender: gender ?? this.gender,
-      profile_image: profile_image ?? this.profile_image,
-      age: age ?? this.age,
-    );
-  }
+  
 }

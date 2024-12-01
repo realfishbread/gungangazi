@@ -40,10 +40,16 @@ class _EditPageState extends State<EditPage> {
       _isSaving = true; // 저장 중 상태 설정
     });
 
-    // 단위를 붙여서 저장 (이름과 이메일에는 단위 붙이지 않음)
-    String newValue = widget.fieldName == '키' || widget.fieldName == '몸무게'
-        ? '${_controller.text}${widget.fieldName == '키' ? 'cm' : 'kg'}'
-        : _controller.text;
+    // 단위를 붙여서 저장 (키, 몸무게만 단위 추가)
+    String newValue;
+    if (widget.fieldName == '키') {
+      newValue = '${_controller.text}cm'; // 키에 cm 단위 추가
+    } else if (widget.fieldName == '몸무게') {
+      newValue = '${_controller.text}kg'; // 몸무게에 kg 단위 추가
+    } else {
+      newValue = _controller.text; // 나이, 이름, 이메일 등 다른 필드는 그대로 저장
+    }
+
     await widget.onSave(widget.fieldName, newValue); // 수정된 값 저장
 
     setState(() {
@@ -82,7 +88,8 @@ class _EditPageState extends State<EditPage> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                if (widget.fieldName != '이름' && widget.fieldName != '이메일')
+                // 키와 몸무게에만 단위 표시
+                if (widget.fieldName == '키' || widget.fieldName == '몸무게')
                   Text(
                     widget.fieldName == '키' ? 'cm' : 'kg',
                     style: const TextStyle(fontSize: 18),
@@ -93,9 +100,9 @@ class _EditPageState extends State<EditPage> {
             _isSaving
                 ? const CircularProgressIndicator() // 저장 중일 때 로딩 스피너 표시
                 : TextButton(
-              onPressed: _saveProfile,
-              child: const Text('저장', style: TextStyle(color: Colors.black)),
-            ),
+                    onPressed: _saveProfile,
+                    child: const Text('저장', style: TextStyle(color: Colors.black)),
+                  ),
           ],
         ),
       ),

@@ -232,8 +232,7 @@ class _Profile2State extends State<Profile2> {
                 ),
               );
             }),
-            _buildProfileItem('성별', profile.gender ?? '남성', null),
-            _buildProfileItem('나이', profile.age ?? '25', () {
+             _buildProfileItem('나이', profile.age ?? '25', () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -251,6 +250,8 @@ class _Profile2State extends State<Profile2> {
                 ),
               );
             }),
+            _buildProfileItem('성별', profile.gender ?? '남성', null),
+           
 
 
             const SizedBox(height: 20),

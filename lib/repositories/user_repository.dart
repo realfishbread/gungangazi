@@ -50,6 +50,7 @@ class UserRepository {
         data: {'email': email}, // JSON 데이터
         options: Options(
           headers: {'Content-Type': 'application/json'}, // 헤더 설정
+          
         ),
       );
 

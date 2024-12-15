@@ -5,8 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "email_token")
 public class EmailToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,16 +17,16 @@ public class EmailToken {
     private String token;
 
     private String username; // 연결된 사용자 ID
-    private LocalDateTime expirationTime;
+    private LocalDateTime expiration_time;
 
-    public EmailToken(String token, String username, LocalDateTime expirationTime) {
+    public EmailToken(String token, String username, LocalDateTime expiration_time) {
         this.token = token;
         this.username = username;
-        this.expirationTime = expirationTime;
+        this.expiration_time = expiration_time;
     }
 
     public boolean isExpired() {
-        return expirationTime.isBefore(LocalDateTime.now());
+        return expiration_time.isBefore(LocalDateTime.now());
     }
 
 
@@ -52,11 +54,11 @@ public class EmailToken {
         this.username = username;
     }
     
-    public LocalDateTime getExpirationTime() {
-        return expirationTime;
+    public LocalDateTime getExpiration_time() {
+        return expiration_time;
     }
     
-    public void setExpirationTime(LocalDateTime expirationTime) {
-        this.expirationTime = expirationTime;
+    public void setExpiration_time(LocalDateTime expiration_time) {
+        this.expiration_time = expiration_time;
     }
 }

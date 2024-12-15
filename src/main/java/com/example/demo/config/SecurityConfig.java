@@ -51,6 +51,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers(new AntPathRequestMatcher("/login", "POST")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/signup", "POST")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/verify-email", "POST")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/profile", "GET")).authenticated()
                 .requestMatchers(new AntPathRequestMatcher("/{username}/update", "PUT")).authenticated()
                 .requestMatchers(new AntPathRequestMatcher("/waterIntake", "GET")).authenticated()

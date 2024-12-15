@@ -1,7 +1,9 @@
 package com.example.demo.controller;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;  // JWT 발급 서비스 (새로 추가)
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,7 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.userHealth.EmailTokenRepository;
 import com.example.demo.service.JwtTokenProvider;
 import com.example.demo.service.UserService;
+import com.example.demo.service.EmailService;
 
 @RestController
 @RequestMapping
@@ -40,6 +43,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;  // JWT 토큰 발급 서비스 (새로 추가)
@@ -70,27 +76,44 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/request-email-verification")
+    public ResponseEntity<?> requestEmailVerification(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        if (email == null || email.isEmpty()) {
+            return ResponseEntity.badRequest().body("이메일을 입력해 주세요.");
+        }
+
+        // 이메일 인증 토큰 생성 및 이메일 전송
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new IllegalArgumentException("이메일이 존재하지 않습니다."));
+
+        String token = UUID.randomUUID().toString();
+        emailTokenRepository.save(new EmailToken(token, user.getUsername(), LocalDateTime.now().plusHours(1)));
+
+        emailService.sendEmailWithTemplate(email, "이메일 인증 요청", token);
+        return ResponseEntity.ok(Map.of("message", "이메일 인증 링크를 발송했습니다."));
+    }
+
+
 
     // 이메일 인증
     @PostMapping("/verify-email")
-    public ResponseEntity<?> verifyEmail(@RequestParam String token) {
+    public ResponseEntity<?> verifyEmail(@RequestParam("token") String token) {
         EmailToken emailToken = emailTokenRepository.findByToken(token)
             .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 토큰입니다."));
-
+    
         if (emailToken.isExpired()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("토큰이 만료되었습니다.");
         }
-
+    
         User user = userRepository.findByUsername(emailToken.getUsername())
             .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-
-        user.setEmailVerified(true); // 이메일 인증 상태 업데이트
+    
+        user.setEmailVerified(true);
         userRepository.save(user);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "이메일 인증이 완료되었습니다.");
-        return ResponseEntity.ok(response);
+    
+        return ResponseEntity.ok(Map.of("message", "이메일 인증이 완료되었습니다."));
     }
     
 

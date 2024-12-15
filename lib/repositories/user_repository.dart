@@ -46,7 +46,7 @@ class UserRepository {
     try {
       // POST 요청으로 이메일 데이터를 서버에 전송
       final response = await _dio.post(
-        '/verify-email',
+        '/request-email-verification',
         data: {'email': email}, // JSON 데이터
         options: Options(
           headers: {'Content-Type': 'application/json'}, // 헤더 설정

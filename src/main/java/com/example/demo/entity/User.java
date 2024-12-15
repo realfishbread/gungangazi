@@ -42,6 +42,8 @@ public class User {
     @Column(name = "profile_image", columnDefinition = "TEXT") // Base64 인코딩된 이미지 저장
     private String profile_image;
 
+    @Column(name = "email_verified", nullable = false) // 이메일 인증 여부 추가
+    private boolean emailVerified = false;
     
 
     public long getId() {
@@ -114,7 +116,7 @@ public class User {
 
     public void setAge(String age) { // 나이에 대한 setter
         this.age = age;
-        
+
     }
     public String getProfile_image() {
         return profile_image;
@@ -122,5 +124,13 @@ public class User {
 
     public void setProfile_image(String profile_image) {
         this.profile_image = profile_image;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
     }
 }

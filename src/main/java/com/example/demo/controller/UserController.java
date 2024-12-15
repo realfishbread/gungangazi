@@ -15,13 +15,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.DTO.LoginRequestDto;
 import com.example.demo.DTO.ProfileDto;
 import com.example.demo.DTO.UserDTO;
+import com.example.demo.entity.EmailToken;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.userHealth.EmailTokenRepository;
 import com.example.demo.service.JwtTokenProvider;
 import com.example.demo.service.UserService;
 
@@ -40,6 +43,10 @@ public class UserController {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;  // JWT 토큰 발급 서비스 (새로 추가)
+
+
+    @Autowired
+    private EmailTokenRepository emailTokenRepository; // 이메일 토큰 저장소
 
     // 회원가입
     @PostMapping("/signup")
@@ -62,6 +69,30 @@ public class UserController {
         response.put("token", token);
         return ResponseEntity.ok(response);
     }
+
+
+    // 이메일 인증
+    @PostMapping("/verify-email")
+    public ResponseEntity<?> verifyEmail(@RequestParam String token) {
+        EmailToken emailToken = emailTokenRepository.findByToken(token)
+            .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 토큰입니다."));
+
+        if (emailToken.isExpired()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("토큰이 만료되었습니다.");
+        }
+
+        User user = userRepository.findByUsername(emailToken.getUsername())
+            .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        user.setEmailVerified(true); // 이메일 인증 상태 업데이트
+        userRepository.save(user);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "이메일 인증이 완료되었습니다.");
+        return ResponseEntity.ok(response);
+    }
+    
 
     // 로그인
     @PostMapping("/login")

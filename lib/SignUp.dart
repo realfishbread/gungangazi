@@ -180,10 +180,14 @@ void _validatePassword(String password) {
   final passwordRegex =
       RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
 
-  if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-    _showErrorDialog('이메일과 비밀번호를 입력해 주세요.');
+  if (_emailController.text.isEmpty ) {
+    _showErrorDialog('이메일을 입력해 주세요.');
     return false; // 유효성 검사 실패
   }
+  if (_passwordController.text.isEmpty) {
+    _showErrorDialog('비밀번호를 입력해 주세요.');
+    return false; // 유효성 검사 실패
+  } 
 
   if (!emailRegex.hasMatch(_emailController.text)) {
     _showErrorDialog('올바른 이메일 주소를 입력해 주세요.');
@@ -313,13 +317,13 @@ Widget _buildFullForm() {
   return Column(
     children: [
       _buildEmailFieldWithButton(), // 이메일 입력 필드 + 인증 버튼
-      const SizedBox(height: 8),
+      const SizedBox(height: 10),
       _buildTextField(_realnameController, '이름'),
-      const SizedBox(height: 8),
+      const SizedBox(height: 10),
       _buildTextField(_nameController, '아이디'),
-      const SizedBox(height: 8),
+      const SizedBox(height: 10),
       _buildPasswordField(), // 비밀번호 필드
-      const SizedBox(height: 8),
+      const SizedBox(height: 10),
       _buildGenderSelection(),
       const SizedBox(height: 16),
       ElevatedButton(
@@ -337,7 +341,7 @@ Widget _buildFullForm() {
 
 @override
 Widget build(BuildContext context) {
-  final bool isWebSize = isWeb(context); // 데스크톱 여부 확인
+  final bool isWebSize = isWeb(context); // 웹 기준 여부 확인
 
   return Scaffold(
     backgroundColor: const Color(0xFFFFFAEC), // 배경색
@@ -352,70 +356,76 @@ Widget build(BuildContext context) {
               Text(
                 'Gunganghazi?', // 건강아지 로고 텍스트
                 style: TextStyle(
-                  fontSize: 40, // 텍스트 크기 확대
+                  fontSize: 40, // 텍스트 크기
                   fontWeight: FontWeight.bold,
                   color: Colors.green[800],
                 ),
-                textAlign: TextAlign.center, // 텍스트 가운데 정렬
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
-              SlideTransition(
-                position: _slideAnimation, // 애니메이션 적용
-                child: Container(
-                  constraints: BoxConstraints(
-                    maxWidth: 600, // 최대 너비 설정
-                    minHeight: isWebSize ? 500 : 300, // 데스크톱 모드에서 세로 길이 확대
-                  ),
-                  padding: const EdgeInsets.all(24.0), // 내부 여백 확대
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 10,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  // 이 부분을 가운데 정렬로 수정
-                  child: Center( // **Container 내부에 Center 추가**
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min, // 내용 크기에 맞춤
-                      mainAxisAlignment: MainAxisAlignment.center, // 수직 중앙 정렬
-                      crossAxisAlignment: CrossAxisAlignment.center, // 수평 중앙 정렬
-                      children: [
-                        if (isWebSize)
-                          _buildFullForm() // 모든 필드를 한 페이지에 표시
-                        else
-                          _buildStepForm(), // 단계별 표시
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              // 애니메이션 비활성화 및 Container 크기 조정
+              isWebSize
+                  ? SlideTransition(
+                      position: _slideAnimation,
+                      child: _buildContainer(isWebSize),
+                    )
+                  : _buildContainer(isWebSize), // 모바일에서는 애니메이션 없이 바로 표시
             ],
           ),
         ),
       ),
     ),
-    bottomNavigationBar: isWebSize // 데스크톱 상태에서만 표시
+    bottomNavigationBar: isWebSize
         ? Container(
-            color: Colors.transparent, // 배경 투명
+            color: Colors.transparent,
             padding: const EdgeInsets.all(16.0),
             child: Text(
               '건강하지 | 고객 지원 문의 : +82 1234 5678 및 yoonh12288@gmail.com',
               style: TextStyle(
-                fontSize: 11, // 텍스트 크기
-                color: Colors.grey[700], // 회색 텍스트
+                fontSize: 11,
+                color: Colors.grey[700],
               ),
               textAlign: TextAlign.center,
             ),
           )
-        : null, // 모바일에서는 표시하지 않음
+        : null, // 모바일에서는 하단바 제거
   );
 }
 
+// Container 크기 조정 함수
+Widget _buildContainer(bool isWebSize) {
+  return Container(
+    constraints: BoxConstraints(
+      maxWidth: isWebSize ? 600 : 400, // 모바일 화면에서는 너비 작게
+      minHeight: isWebSize ? 500 : 250, // 모바일 화면에서는 높이 작게
+    ),
+    padding: const EdgeInsets.all(16.0), // 내부 여백
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
+      boxShadow: const [
+        BoxShadow(
+          color: Colors.black26,
+          blurRadius: 10,
+          offset: Offset(0, 4),
+        ),
+      ],
+    ),
+    child: Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (isWebSize)
+            _buildFullForm() // 모든 필드를 한 페이지에 표시
+          else
+            _buildStepForm(), // 단계별 표시
+        ],
+      ),
+    ),
+  );
+}
 
 
   Widget _buildGenderSelection() {

@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>이메일 인증</title>
+    <title>건강하지?! 이메일 인증</title>
 </head>
 <body>
-    <p>안녕하세요,피트니입니다.</p>
-    <p>다음 링크를 클릭하여 이메일을 인증하세요:</p>
-    <a href="${link}">이메일 인증</a>
+    <h1>이메일 인증 요청</h1>
+    <p>아래 링크를 클릭하여 이메일 인증을 완료하세요:</p>
+    <a th:href="${link}" target="_blank">이메일 인증하기</a>
 </body>
 </html>

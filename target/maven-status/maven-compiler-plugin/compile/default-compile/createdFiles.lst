@@ -17,12 +17,15 @@ com\example\demo\DTO\userHealth\MealDTO.class
 com\example\demo\service\CustomUserDetailsService.class
 com\example\demo\entity\Status.class
 com\example\demo\service\userHealth\BloodPressureService.class
+com\example\demo\entity\EmailToken.class
 com\example\demo\config\SecurityConfig.class
 com\example\demo\DTO\UserDTO.class
+com\example\demo\repository\userHealth\EmailTokenRepository.class
 com\example\demo\DTO\ProfileDto.class
 com\example\demo\repository\userHealth\SleepRepository.class
 com\example\demo\service\userHealth\BrushHistoryService.class
 com\example\demo\service\StatusService.class
+com\example\demo\service\EmailService.class
 com\example\demo\DemoApplication.class
 com\example\demo\config\JacksonConfig.class
 com\example\demo\entity\User.class
@@ -38,6 +41,7 @@ com\example\demo\exception\ResourceNotFoundException.class
 com\example\demo\repository\userHealth\MealRepository.class
 com\example\demo\controller\UserController.class
 com\example\demo\entity\userHealth\BrushHistory.class
+com\example\demo\service\AuthService.class
 com\example\demo\entity\userHealth\MealEntity.class
 com\example\demo\entity\userHealth\BloodPressure.class
 com\example\demo\repository\userHealth\BrushHistoryRepository.class

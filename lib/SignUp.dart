@@ -207,17 +207,20 @@ Widget _buildPasswordField() {
         TextField(
           controller: _passwordController,
           keyboardType: TextInputType.text,
-          obscureText: true,
+          obscureText: !_isPasswordVisible, // 상태에 따라 토글
           onChanged: _validatePassword,
           decoration: InputDecoration(
             labelText: '비밀번호',
             border: const OutlineInputBorder(),
             suffixIcon: IconButton(
-              icon: Icon(Icons.visibility),
+              icon: Icon(
+                _isPasswordVisible
+                    ? Icons.visibility_off // 비밀번호 숨김 아이콘
+                    : Icons.visibility, // 비밀번호 보임 아이콘
+              ),
               onPressed: () {
-                // 비밀번호 보기/숨기기 기능
                 setState(() {
-                  // _isPasswordVisible 변수를 사용해 상태 토글
+                  _isPasswordVisible = !_isPasswordVisible; // 상태 토글
                 });
               },
             ),
@@ -274,9 +277,9 @@ Widget _buildPasswordField() {
 Widget _buildStepForm() {
   return Column(
     children: [
-      if (_currentStep == 0) _buildTextField(_nameController, '아이디'),
-      if (_currentStep == 1) _buildEmailFieldWithButton(),
-      if (_currentStep == 2) _buildTextField(_realnameController, '이름'),
+      if (_currentStep == 0)_buildEmailFieldWithButton(),
+      if (_currentStep == 1) _buildTextField(_realnameController, '이름'),
+      if (_currentStep == 2)  _buildTextField(_nameController, '아이디'),
       if (_currentStep == 3) _buildPasswordField(), // 비밀번호 필드
       if (_currentStep == 4) _buildGenderSelection(),
       const SizedBox(height: 16),
@@ -309,11 +312,11 @@ Widget _buildStepForm() {
 Widget _buildFullForm() {
   return Column(
     children: [
-      _buildTextField(_nameController, '아이디'),
-      const SizedBox(height: 8),
       _buildEmailFieldWithButton(), // 이메일 입력 필드 + 인증 버튼
       const SizedBox(height: 8),
       _buildTextField(_realnameController, '이름'),
+      const SizedBox(height: 8),
+      _buildTextField(_nameController, '아이디'),
       const SizedBox(height: 8),
       _buildPasswordField(), // 비밀번호 필드
       const SizedBox(height: 8),

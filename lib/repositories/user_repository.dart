@@ -42,26 +42,22 @@ class UserRepository {
   }
   
    Future<String> sendEmailVerification(String email) async {
-    
-    try {
-      // POST 요청으로 이메일 데이터를 서버에 전송
-      final response = await _dio.post(
-        '/request-email-verification',
-        data: {'email': email}, // JSON 데이터
-        options: Options(
-          headers: {'Content-Type': 'application/json'}, // 헤더 설정
-          
-        ),
-      );
+  try {
+    final response = await _dio.post(
+      '/request-email-verification',
+      data: {'email': email},
+      options: Options(headers: {'Content-Type': 'application/json'}),
+    );
 
-      if (response.statusCode == 200) {
-        return response.data['message']; // 성공 메시지 반환
-      } else {
-        return response.data['error'] ?? '이메일 인증 실패'; // 실패 메시지 반환
-      }
-    } catch (e) {
-      throw Exception('Error sending email verification: $e');
+    if (response.statusCode == 200) {
+      return response.data['message'] ?? '이메일 인증 성공';
+    } else {
+      return response.data['error'] ?? '이메일 인증 실패';
     }
+  } catch (e) {
+    print('Error: ${e.toString()}'); // 로그 추가
+    return '서버와의 연결에 실패했습니다: ${e.toString()}';
   }
+}
 
 }

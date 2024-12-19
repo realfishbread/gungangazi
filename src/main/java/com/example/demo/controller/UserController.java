@@ -3,10 +3,9 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;  // JWT 발급 서비스 (새로 추가)
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;  // JWT 발급 서비스 (새로 추가)
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -87,15 +86,20 @@ public class UserController {
             return ResponseEntity.badRequest().body("이메일을 입력해 주세요.");
         }
 
-        // 이메일 인증 토큰 생성 및 이메일 전송
+        // 이메일 인증 코드 생성 및 이메일 전송
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new IllegalArgumentException("이메일이 존재하지 않습니다."));
 
-        String token = UUID.randomUUID().toString();
-        emailTokenRepository.save(new EmailToken(token, user.getUsername(), LocalDateTime.now().plusHours(1)));
+        // 6자리 인증 코드 생성
+        String verificationCode = emailService.generateVerificationCode();
+        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(10);
 
-        emailService.sendEmailWithTemplate(email, "이메일 인증 요청", token);
-        return ResponseEntity.ok(Map.of("message", "이메일 인증 링크를 발송했습니다."));
+        // 인증 코드를 데이터베이스에 저장
+        emailTokenRepository.save(new EmailToken(verificationCode, expirationTime, email));
+
+        // 이메일 전송
+        emailService.sendEmailWithCode(email, "이메일 인증 코드", verificationCode);
+        return ResponseEntity.ok(Map.of("message", "이메일 인증 코드를 발송했습니다."));
     }
 
 

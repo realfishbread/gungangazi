@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.Random;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -41,14 +43,19 @@ public class EmailService {
         }
     }
 
-    public void sendEmailWithTemplate(String to, String subject, String token) {
+    public void sendEmailWithCode(String to, String subject, String code) {
         Context context = new Context();
-        context.setVariable("link", "https://gungangazi.site/verify-email?token=" + token);
+        context.setVariable("code", code); // 랜덤 인증 코드 추가
 
-        // email-template.html 파일을 템플릿으로 사용
+        // email-code-template.html 파일을 템플릿으로 사용
         String body = templateEngine.process("email-template", context);
 
         // HTML 이메일 전송
         sendEmail(to, subject, body);
+    }
+
+    public String generateVerificationCode() {
+        Random random = new Random();
+        return String.format("%06d", random.nextInt(999999)); // 6자리 랜덤 숫자 생성
     }
 }

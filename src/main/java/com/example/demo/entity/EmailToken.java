@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,13 +17,18 @@ public class EmailToken {
 
     private String token;
 
-    private String username; // 연결된 사용자 ID
     private LocalDateTime expiration_time;
+     @Column(nullable = false, unique = true)
+    private String email; // 이메일 필드 추가
 
-    public EmailToken(String token, String username, LocalDateTime expiration_time) {
+    public EmailToken() {
+        // 기본 생성자
+    }
+
+    public EmailToken(String token, LocalDateTime expiration_time,  String email) {
         this.token = token;
-        this.username = username;
         this.expiration_time = expiration_time;
+        this.email = email;
     }
 
     public boolean isExpired() {
@@ -46,13 +52,6 @@ public class EmailToken {
         this.token = token;
     }
     
-    public String getUsername() {
-        return username;
-    }
-    
-    public void setUsername(String username) {
-        this.username = username;
-    }
     
     public LocalDateTime getExpiration_time() {
         return expiration_time;
@@ -60,5 +59,13 @@ public class EmailToken {
     
     public void setExpiration_time(LocalDateTime expiration_time) {
         this.expiration_time = expiration_time;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

@@ -1,8 +1,12 @@
 package com.example.demo.service;
+import java.util.Collections;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Random;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +21,8 @@ public class AuthService {
     private final EmailTokenRepository emailTokenRepository;
     private final UserService userService;
 
-    private final HashSet<String> verifiedEmails = new HashSet<>(); // 검증된 이메일 목록
+    private final Set<String> verifiedEmails = Collections.synchronizedSet(new HashSet<String>());
+
 
     @Autowired
     public AuthService(EmailTokenRepository emailTokenRepository, UserService userService) {
@@ -25,41 +30,47 @@ public class AuthService {
         this.userService = userService;
     }
 
-    // Step 1: 인증 코드 전송
     public void sendVerificationCode(String email) {
-        // 6자리 인증 번호 생성
+        EmailToken existingToken = emailTokenRepository.findByEmail(email);
+        if (existingToken != null && LocalDateTime.now().isBefore(existingToken.getExpiration_time())) {
+            throw new IllegalStateException("유효한 인증 코드가 이미 전송되었습니다. 잠시 후 다시 시도하세요.");
+        }
+
         String verificationCode = generateVerificationCode();
-        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(10); // 10분 유효
+        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(10);
 
-        // 기존 인증 번호 삭제
-        emailTokenRepository.deleteByEmail(email);
+        emailTokenRepository.save(new EmailToken(verificationCode, expirationTime, email));
 
-        // 새 인증 번호 저장
-        emailTokenRepository.save(new EmailToken(verificationCode, email, expirationTime));
     }
 
-    // Step 2: 인증 코드 검증
     public boolean verifyCode(String email, String code) {
+        if (code == null || code.isEmpty()) {
+            return false;
+        }
+
         EmailToken token = emailTokenRepository.findByEmail(email);
 
         if (token != null && token.getToken().equals(code) && LocalDateTime.now().isBefore(token.getExpiration_time())) {
-            // 인증 성공 → 이메일 상태 저장
             verifiedEmails.add(email);
-            emailTokenRepository.delete(token); // 토큰 삭제
+            emailTokenRepository.delete(token);
             return true;
         }
+
+        if (token != null && LocalDateTime.now().isAfter(token.getExpiration_time())) {
+            emailTokenRepository.delete(token);
+        }
+
         return false;
     }
 
-    // Step 3: 최종 사용자 저장
     public boolean registerUserIfVerified(String email, UserDTO userDTO) {
-        if (verifiedEmails.contains(email)) {
-            // 이메일 인증된 경우 사용자 저장
-            userService.registerUser(userDTO);
-            verifiedEmails.remove(email); // 인증 완료 후 상태 제거
-            return true;
+        if (!verifiedEmails.contains(email)) {
+            throw new IllegalStateException("이메일 인증이 완료되지 않았습니다.");
         }
-        return false; // 인증되지 않은 이메일
+
+        userService.registerUser(userDTO);
+        verifiedEmails.remove(email);
+        return true;
     }
 
     private String generateVerificationCode() {

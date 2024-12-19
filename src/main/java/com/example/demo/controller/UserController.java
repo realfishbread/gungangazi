@@ -27,9 +27,10 @@ import com.example.demo.entity.EmailToken;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.userHealth.EmailTokenRepository;
+import com.example.demo.service.AuthService;
+import com.example.demo.service.EmailService;
 import com.example.demo.service.JwtTokenProvider;
 import com.example.demo.service.UserService;
-import com.example.demo.service.EmailService;
 
 @RestController
 @RequestMapping
@@ -46,6 +47,9 @@ public class UserController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private AuthService authService;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;  // JWT 토큰 발급 서비스 (새로 추가)
@@ -97,25 +101,36 @@ public class UserController {
 
 
     // 이메일 인증
-    @PostMapping("/verify-email")
-    public ResponseEntity<?> verifyEmail(@RequestParam("token") String token) {
-        EmailToken emailToken = emailTokenRepository.findByToken(token)
-            .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 토큰입니다."));
-    
-        if (emailToken.isExpired()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("토큰이 만료되었습니다.");
-        }
-    
-        User user = userRepository.findByUsername(emailToken.getUsername())
-            .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-    
-        user.setEmailVerified(true);
-        userRepository.save(user);
-    
-        return ResponseEntity.ok(Map.of("message", "이메일 인증이 완료되었습니다."));
+    // Step 1: 이메일로 인증 코드 전송
+    @PostMapping("/send-verification-code")
+    public ResponseEntity<String> sendVerificationCode(@RequestParam String email) {
+        authService.sendVerificationCode(email);
+        return ResponseEntity.ok("인증 코드가 이메일로 전송되었습니다.");
     }
     
+    // Step 2: 인증 코드 검증
+    @PostMapping("/verify-code")
+    public ResponseEntity<String> verifyCode(@RequestParam String email, @RequestParam String code) {
+        boolean isVerified = authService.verifyCode(email, code);
+        if (isVerified) {
+            return ResponseEntity.ok("이메일 인증이 완료되었습니다.");
+        } else {
+            return ResponseEntity.badRequest().body("인증 번호가 유효하지 않거나 만료되었습니다.");
+        }
+    }
+
+    // Step 3: 최종 사용자 저장
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestParam String email, @RequestBody UserDTO userDTO) {
+        boolean isVerified = authService.registerUserIfVerified(email, userDTO);
+
+        if (isVerified) {
+            // 검증이 끝난 경우, signUp 메서드 호출
+            return signUp(userDTO);
+        } else {
+            return ResponseEntity.badRequest().body("이메일 인증이 완료되지 않았습니다.");
+        }
+    }
 
     // 로그인
     @PostMapping("/login")

@@ -59,5 +59,21 @@ class UserRepository {
     return '서버와의 연결에 실패했습니다: ${e.toString()}';
   }
 }
+     // 이메일 인증 코드 검증 요청
+  Future<String> verifyEmailCode(String email, String code) async {
+    try {
+      final response = await _dio.post(
+        '/verify-code', // 엔드포인트
+        queryParameters: {'email': email, 'code': code},
+      );
+
+      // 서버 응답 메시지 반환
+      return response.data['message'] ?? '인증이 완료되었습니다.';
+    } catch (e) {
+      // 예외 발생 시 오류 메시지 반환
+      return '서버 요청 실패: $e';
+    }
+  }
+ 
 
 }

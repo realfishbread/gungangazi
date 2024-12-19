@@ -17,6 +17,7 @@ class _SignUpPageState extends State<SignUpPage>
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _realnameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _verificationCodeController = TextEditingController(); // 인증 코드 입력 컨트롤러
 
   late AnimationController _animationController; // 애니메이션 컨트롤러
   late Animation<Offset> _slideAnimation; // 슬라이드 애니메이션
@@ -27,6 +28,7 @@ class _SignUpPageState extends State<SignUpPage>
   String _passwordFeedback = ''; // 비밀번호 유효성 검사 메시지
   bool _isPasswordValid = false; // 비밀번호 유효 여부
   bool _isPasswordVisible = false; // 비밀번호 표시 여부
+  bool _isVerificationFieldVisible = false; // 인증 코드 입력 필드 표시 여부
 
   final List<String> steps = ['아이디', '이메일', '이름', '비밀번호', '성별'];
   final TokenService _tokenService = TokenService(); // 토큰 저장 서비스
@@ -108,10 +110,17 @@ void _completeSignUp() async {
 
 
 
-  Future<bool> _isFormValid() async {
-  // 이메일과 비밀번호 유효성 검사
-  if (!_validateEmailAndPassword()) {
-    return false; // 유효성 검사가 실패하면 false 반환
+ Future<bool> _isFormValid() async {
+  // 이메일만 유효성 검사
+  if (_emailController.text.isEmpty) {
+    _showErrorDialog('이메일을 입력해 주세요.');
+    return false; // 유효성 검사 실패
+  }
+
+  final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+  if (!emailRegex.hasMatch(_emailController.text)) {
+    _showErrorDialog('올바른 이메일 주소를 입력해 주세요.');
+    return false; // 이메일 형식이 올바르지 않음
   }
 
   final email = _emailController.text;
@@ -124,7 +133,7 @@ void _completeSignUp() async {
       _showErrorDialog('이메일 인증 링크를 발송했습니다. 메일을 확인해 주세요.');
       return true; // 이메일 인증 요청 성공
     } else {
-      _showErrorDialog('이메일 인증 발송에 실패했습니다: $response');
+      _showErrorDialog('$response');
       return false;
     }
   } catch (e) {
@@ -132,6 +141,7 @@ void _completeSignUp() async {
     return false;
   }
 }
+
 
 
 
@@ -248,33 +258,96 @@ Widget _buildPasswordField() {
   Widget _buildEmailFieldWithButton() {
   return Container(
     width: 300, // 전체 너비 제한
-    child: Row(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
       children: [
-        Expanded(
-          flex: 3, // 이메일 입력 필드
-          child: TextField(
-            controller: _emailController,
-            keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              labelText: '이메일',
-              border: OutlineInputBorder(),
+        Row(
+          children: [
+            Expanded(
+              flex: 3, // 이메일 입력 필드
+              child: TextField(
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  labelText: '이메일',
+                  border: OutlineInputBorder(),
+                ),
+              ),
             ),
-          ),
+            const SizedBox(width: 8), // 입력 필드와 버튼 간격
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.yellow[100],
+                foregroundColor: Colors.black,
+              ),
+              onPressed: () async {
+                final emailValid = await _isFormValid(); // 이메일만 검증
+                if (emailValid) {
+                  setState(() {
+                    _isVerificationFieldVisible = true; // 인증 코드 입력칸 표시
+                  });
+                }
+              },
+              child: const Text('인증'),
+            ),
+
+          ],
         ),
-        const SizedBox(width: 8), // 입력 필드와 버튼 간격
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.yellow[100],
-            foregroundColor: Colors.black,
+        const SizedBox(height: 8),
+        if (_isVerificationFieldVisible) // 인증 코드 입력칸 표시 조건
+          Row(
+            children: [
+              Expanded(
+                flex: 3,
+                child: TextField(
+                  controller: _verificationCodeController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: '인증 코드 입력',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green[100],
+                  foregroundColor: Colors.black,
+                ),
+                onPressed: () {
+                  _verifyCode(); // 인증 코드 검증 함수 호출
+                },
+                child: const Text('확인'),
+              ),
+            ],
           ),
-          onPressed: () async {
-            await _isFormValid(); // 이메일 인증 호출
-          },
-          child: const Text('인증'),
-        ),
       ],
     ),
   );
+}
+
+
+void _verifyCode() async {
+  final email = _emailController.text;
+  final code = _verificationCodeController.text;
+
+  if (code.isEmpty) {
+    _showErrorDialog('인증 코드를 입력해 주세요.');
+    return;
+  }
+
+  final userRepository = UserRepository();
+  final result = await userRepository.verifyEmailCode(email, code);
+
+  if (result == '이메일 인증이 완료되었습니다.') {
+    _showErrorDialog('인증 성공!');
+    setState(() {
+      _isVerificationFieldVisible = false;
+      _nextStep(); // 다음 단계로 이동
+    });
+  } else {
+    _showErrorDialog(result); // 오류 메시지 표시
+  }
 }
 
 

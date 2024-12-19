@@ -110,17 +110,10 @@ void _completeSignUp() async {
 
 
 
- Future<bool> _isFormValid() async {
-  // 이메일만 유효성 검사
-  if (_emailController.text.isEmpty) {
-    _showErrorDialog('이메일을 입력해 주세요.');
-    return false; // 유효성 검사 실패
-  }
-
-  final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-  if (!emailRegex.hasMatch(_emailController.text)) {
-    _showErrorDialog('올바른 이메일 주소를 입력해 주세요.');
-    return false; // 이메일 형식이 올바르지 않음
+  Future<bool> _isFormValid() async {
+  // 이메일과 비밀번호 유효성 검사
+  if (!_validateEmailAndPassword()) {
+    return false; // 유효성 검사가 실패하면 false 반환
   }
 
   final email = _emailController.text;
@@ -141,7 +134,6 @@ void _completeSignUp() async {
     return false;
   }
 }
-
 
 
 
@@ -187,27 +179,19 @@ void _validatePassword(String password) {
 
   bool _validateEmailAndPassword() {
   final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-  final passwordRegex =
-      RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
 
   if (_emailController.text.isEmpty ) {
     _showErrorDialog('이메일을 입력해 주세요.');
     return false; // 유효성 검사 실패
   }
-  if (_passwordController.text.isEmpty) {
-    _showErrorDialog('비밀번호를 입력해 주세요.');
-    return false; // 유효성 검사 실패
-  } 
+  
 
   if (!emailRegex.hasMatch(_emailController.text)) {
     _showErrorDialog('올바른 이메일 주소를 입력해 주세요.');
     return false; // 이메일 형식이 올바르지 않음
   }
 
-  if (!passwordRegex.hasMatch(_passwordController.text)) {
-    _showErrorDialog('비밀번호는 8자 이상, 대문자, 소문자, 숫자, 특수문자를 포함해야 합니다.');
-    return false; // 비밀번호 형식이 올바르지 않음
-  }
+  
 
   return true; // 유효성 검사 성공
 }
@@ -281,16 +265,13 @@ Widget _buildPasswordField() {
                 foregroundColor: Colors.black,
               ),
               onPressed: () async {
-                final emailValid = await _isFormValid(); // 이메일만 검증
-                if (emailValid) {
-                  setState(() {
-                    _isVerificationFieldVisible = true; // 인증 코드 입력칸 표시
-                  });
-                }
+                await _isFormValid(); // 이메일 인증 호출
+                setState(() {
+                  _isVerificationFieldVisible = true; // 인증 코드 입력칸 표시
+                });
               },
               child: const Text('인증'),
             ),
-
           ],
         ),
         const SizedBox(height: 8),

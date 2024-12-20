@@ -68,33 +68,31 @@ public class AuthService {
 
 
 
-    public boolean verifyCode(String email, String token) {
-        if (token == null || token.isEmpty()) {
+    public boolean verifyCode(String email, String code) {
+        System.out.println("verifyCode 호출됨: " + email + ", " + code); // 디버깅 로그 추가
+    
+        if (code == null || code.isEmpty()) {
+            System.out.println("코드가 null 또는 비어 있음"); // 디버깅 로그 추가
             return false;
         }
     
-        // 이메일로 토큰 조회
-        EmailToken yee = emailTokenRepository.findByEmail(email);
-    
-        // 토큰이 없으면 false 반환
-        if (yee == null) {
+        EmailToken token = emailTokenRepository.findByEmail(email);
+        if (token == null) {
+            System.out.println("토큰을 찾을 수 없음"); // 디버깅 로그 추가
             return false;
         }
     
-        // 만료된 토큰 삭제 처리
-        if (LocalDateTime.now().isAfter(yee.getExpiration_time())) {
-            emailTokenRepository.delete(yee);
-            return false; // 만료된 토큰은 인증 실패
+        if (token.getToken().equals(code) && LocalDateTime.now().isBefore(token.getExpiration_time())) {
+            verifiedEmails.add(email);
+            emailTokenRepository.delete(token); // 데이터베이스에서 삭제
+            return true;
         }
     
-        // 토큰이 일치하고 아직 유효하다면 인증 성공 처리
-        if (yee.getToken().equals(token)) {
-            verifiedEmails.add(email); // 인증된 이메일 리스트에 추가
-            emailTokenRepository.delete(yee); // 인증 완료 후 토큰 삭제
-            return true; // 인증 성공
+        if (LocalDateTime.now().isAfter(token.getExpiration_time())) {
+            System.out.println("토큰 만료됨"); // 디버깅 로그 추가
+            emailTokenRepository.delete(token); // 만료된 토큰 삭제
         }
     
-        // 기본 실패
         return false;
     }
 

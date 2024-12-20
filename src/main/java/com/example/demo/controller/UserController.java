@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;  // JWT 발급 서비스 (새로 추가)
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -93,22 +92,7 @@ public class UserController {
         response.put("token", token);
         return ResponseEntity.ok(response);
     }
-    @Transactional
-    @RestController
-@RequestMapping("/auth")
-public class AuthController {
-
-    @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private EmailTokenRepository emailTokenRepository; // DB 저장소
-
-    @Autowired
-    private StringRedisTemplate redisTemplate; // Redis 사용
-
-    private static final long VERIFICATION_CODE_TTL = 10; // 인증 코드 TTL(분)
-
+    
     /**
      * 이메일 인증 코드 요청
      */
@@ -179,7 +163,7 @@ public class AuthController {
 
         return ResponseEntity.ok("이메일 인증이 완료되었습니다.");
     }
-}
+
 
 
     

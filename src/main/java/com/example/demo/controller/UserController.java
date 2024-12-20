@@ -1,13 +1,14 @@
 package com.example.demo.controller;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;  // JWT 발급 서비스 (새로 추가)
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;  // JWT 발급 서비스 (새로 추가)
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,17 +19,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.DTO.LoginRequestDto;
 import com.example.demo.DTO.ProfileDto;
 import com.example.demo.DTO.UserDTO;
+import com.example.demo.DTO.VerifyCodeRequestDTO;
 import com.example.demo.entity.EmailToken;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.userHealth.EmailTokenRepository;
-import com.example.demo.service.AuthService;
 import com.example.demo.service.EmailService;
 import com.example.demo.service.JwtTokenProvider;
 import com.example.demo.service.UserService;
@@ -49,25 +49,38 @@ public class UserController {
     @Autowired
     private EmailService emailService;
 
-    @Autowired
-    private AuthService authService;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;  // JWT 토큰 발급 서비스 (새로 추가)
 
 
     @Autowired
-    private EmailTokenRepository emailTokenRepository; // 이메일 토큰 저장소
+    private EmailTokenRepository emailTokenRepository; // DB 저장소
+
+    @Autowired
+    private StringRedisTemplate redisTemplate; // Redis 사용
+
+    private static final long VERIFICATION_CODE_TTL = 10; // 인증 코드 TTL(분)
 
     // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody UserDTO userDTO) {
+        // 아이디 중복 확인
         if (userRepository.existsByUsername(userDTO.getUsername())) {
-           Map<String, Object> errorResponse = new HashMap<>();
-           errorResponse.put("message", "아이디가 이미 존재합니다.");
-           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", "아이디가 이미 존재합니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
-       // UserDTO를 User 엔티티로 변환하여 저장
+
+        // 이메일 인증 여부 확인
+        EmailToken emailToken = emailTokenRepository.findByEmail(userDTO.getEmail());
+        if (emailToken == null || !emailToken.isEmail_verified()) { // 이메일 인증 여부 확인
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", "이메일 인증이 완료되지 않았습니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
+
+        // UserDTO를 User 엔티티로 변환하여 저장
         User user = userDTO.toEntity();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
@@ -80,8 +93,25 @@ public class UserController {
         response.put("token", token);
         return ResponseEntity.ok(response);
     }
-
     @Transactional
+    @RestController
+@RequestMapping("/auth")
+public class AuthController {
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private EmailTokenRepository emailTokenRepository; // DB 저장소
+
+    @Autowired
+    private StringRedisTemplate redisTemplate; // Redis 사용
+
+    private static final long VERIFICATION_CODE_TTL = 10; // 인증 코드 TTL(분)
+
+    /**
+     * 이메일 인증 코드 요청
+     */
     @PostMapping("/request-email-verification")
     public ResponseEntity<?> requestEmailVerification(@RequestBody Map<String, String> request) {
         String email = request.get("email");
@@ -89,65 +119,71 @@ public class UserController {
             return ResponseEntity.badRequest().body("이메일을 입력해 주세요.");
         }
 
-        // 기존 이메일 토큰 확인
-        EmailToken existingToken = emailTokenRepository.findByEmail(email);
-
-        // 기존 코드가 존재하고 유효 기간이 남아 있는 경우
-        if (existingToken != null && existingToken.getExpiration_time().isAfter(LocalDateTime.now())) {
-            // 기존 코드를 이메일로 재전송
-            emailService.sendEmailWithCode(email, "이메일 인증 코드", existingToken.getToken());
+        // Redis에서 기존 인증 코드 확인
+        String existingCode = redisTemplate.opsForValue().get(email);
+        if (existingCode != null) {
+            // 기존 인증 코드가 유효한 경우 재전송
+            emailService.sendEmailWithCode(email, "이메일 인증 코드", existingCode);
             return ResponseEntity.ok(Map.of("message", "기존 이메일 인증 코드를 다시 발송했습니다."));
         }
 
         // 새로운 6자리 인증 코드 생성
         String newCode = String.format("%06d", new Random().nextInt(1000000));
-        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(10);
 
-        if (existingToken != null) {
-            // 기존 토큰이 있다면 업데이트
-            existingToken.setToken(newCode);
-            existingToken.setExpiration_time(expirationTime);
-            emailTokenRepository.save(existingToken);
-        } else {
-            // 새로운 토큰 생성
-            EmailToken emailToken = new EmailToken(newCode, expirationTime, email);
-            emailTokenRepository.save(emailToken);
-
-        }
+        // Redis에 인증 코드 저장 (10분 TTL)
+        redisTemplate.opsForValue().set(email, newCode, VERIFICATION_CODE_TTL, TimeUnit.MINUTES);
 
         // 이메일로 인증 코드 전송
         emailService.sendEmailWithCode(email, "이메일 인증 코드", newCode);
         return ResponseEntity.ok(Map.of("message", "새로운 이메일 인증 코드를 발송했습니다."));
     }
 
+    /**
+     * 인증 코드 검증
+     */
+    @PostMapping("/verify-code")
+    public ResponseEntity<?> verifyCode(@RequestBody VerifyCodeRequestDTO requestDTO) {
+        System.out.println("verifyCode 엔드포인트 호출됨: 이메일=" + requestDTO.getEmail() + ", 토큰=" + requestDTO.getToken());
+
+        if (requestDTO.getEmail() == null || requestDTO.getEmail().isEmpty()) {
+            return ResponseEntity.badRequest().body("이메일을 입력해 주세요.");
+        }
+
+        if (requestDTO.getToken() == null || requestDTO.getToken().isEmpty()) {
+            return ResponseEntity.badRequest().body("코드를 입력해 주세요.");
+        }
+
+        // Redis에서 인증 코드 조회
+        String savedCode = redisTemplate.opsForValue().get(requestDTO.getEmail());
+        if (savedCode == null) {
+            return ResponseEntity.badRequest().body("인증 코드가 만료되었거나 잘못된 요청입니다.");
+        }
+
+        if (!savedCode.equals(requestDTO.getToken())) {
+            return ResponseEntity.badRequest().body("인증 코드가 일치하지 않습니다.");
+        }
+
+        // 인증 성공 시 EmailToken 테이블에 상태 업데이트
+        EmailToken existingToken = emailTokenRepository.findByEmail(requestDTO.getEmail());
+        if (existingToken == null) {
+            // DB에 존재하지 않으면 새로운 토큰 생성
+            existingToken = new EmailToken();
+            existingToken.setEmail(requestDTO.getEmail());
+        }
+        existingToken.setToken(savedCode);
+        existingToken.setEmail_verified(true);
+        emailTokenRepository.save(existingToken);
+
+        // Redis에서 인증 코드 삭제
+        redisTemplate.delete(requestDTO.getEmail());
+
+        return ResponseEntity.ok("이메일 인증이 완료되었습니다.");
+    }
+}
+
 
     
-    //  인증 코드 검증
-    @PostMapping("/verify-code")
-    public ResponseEntity<String> verifyCode(@RequestParam String email, @RequestParam String token) {
-        System.out.println("이메일: " + email); // 디버깅 로그 추가
-        System.out.println("토큰: " + token); // 디버깅 로그 추가
-
-        boolean isVerified = authService.verifyCode(email, token);
-        if (isVerified) {
-            return ResponseEntity.ok("이메일 인증이 완료되었습니다.");
-        } else {
-            return ResponseEntity.badRequest().body("인증 번호가 유효하지 않거나 만료되었습니다.");
-        }
-    }
-
-    // Step 3: 최종 사용자 저장
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestParam String email, @RequestBody UserDTO userDTO) {
-        boolean isVerified = authService.registerUserIfVerified(email, userDTO);
-
-        if (isVerified) {
-            // 검증이 끝난 경우, signUp 메서드 호출
-            return signUp(userDTO);
-        } else {
-            return ResponseEntity.badRequest().body("이메일 인증이 완료되지 않았습니다.");
-        }
-    }
+    
 
     // 로그인
     @PostMapping("/login")

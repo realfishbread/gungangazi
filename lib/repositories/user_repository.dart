@@ -64,7 +64,9 @@ class UserRepository {
     try {
       final response = await _dio.post(
         '/verify-code', // 엔드포인트
-        queryParameters: {'email': email, 'code': code},
+        queryParameters: {'email': email, 'token': code},
+        data: {'email': email, 'token': code},
+        options: Options(headers: {'Content-Type': 'application/json'}),
       );
 
       // 서버 응답 메시지 반환

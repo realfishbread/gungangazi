@@ -24,6 +24,7 @@ com\example\demo\repository\userHealth\EmailTokenRepository.class
 com\example\demo\DTO\ProfileDto.class
 com\example\demo\repository\userHealth\SleepRepository.class
 com\example\demo\service\userHealth\BrushHistoryService.class
+com\example\demo\DTO\VerifyCodeRequestDTO.class
 com\example\demo\service\StatusService.class
 com\example\demo\service\EmailService.class
 com\example\demo\DemoApplication.class
@@ -34,6 +35,7 @@ com\example\demo\repository\StatusRepository.class
 com\example\demo\repository\userHealth\WaterIntakeRepository.class
 com\example\demo\entity\userHealth\Sleep.class
 com\example\demo\repository\userHealth\BloodPressureRepository.class
+com\example\demo\service\EmailVerificationService.class
 com\example\demo\repository\UserRepository.class
 com\example\demo\DTO\userHealth\BrushHistoryDTO.class
 com\example\demo\config\JwtAuthenticationFilter.class
@@ -47,6 +49,8 @@ com\example\demo\entity\userHealth\BloodPressure.class
 com\example\demo\repository\userHealth\BrushHistoryRepository.class
 com\example\demo\service\userHealth\WaterIntakeService.class
 com\example\demo\service\userHealth\MealService.class
+com\example\demo\controller\UserController$AuthController.class
 com\example\demo\controller\userHealth\WaterIntakeController.class
 com\example\demo\repository\userHealth\SupplementRepository.class
+com\example\demo\repository\EmailVerificationRepository.class
 com\example\demo\controller\userHealth\SupplementController.class

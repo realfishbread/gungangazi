@@ -1,4 +1,5 @@
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\entity\userHealth\Sleep.java
+D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\service\EmailVerificationService.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\entity\userHealth\BrushHistory.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\controller\userHealth\WaterIntakeController.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\DTO\userHealth\SleepDto.java
@@ -24,6 +25,7 @@ D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\repositor
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\repository\userHealth\SleepRepository.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\config\CorsConfig.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\entity\Status.java
+D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\DTO\VerifyCodeRequestDTO.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\DTO\ProfileDto.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\entity\userHealth\Supplement.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\entity\userHealth\SupplementId.java
@@ -36,6 +38,7 @@ D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\service\E
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\service\userHealth\BloodPressureService.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\DemoApplication.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\config\JwtAuthenticationFilter.java
+D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\repository\EmailVerificationRepository.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\service\userHealth\BrushHistoryService.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\controller\UserController.java
 D:\flutter\zolzak\gungangazi\gungangazi\src\main\java\com\example\demo\controller\userHealth\BloodPressureController.java

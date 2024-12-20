@@ -21,14 +21,18 @@ public class EmailToken {
      @Column(nullable = false, unique = true)
     private String email; // 이메일 필드 추가
 
+    @Column(name = "email_verified", nullable = false)
+    private boolean email_verified; // 기본값: false
+
     public EmailToken() {
         // 기본 생성자
     }
 
-    public EmailToken(String token, LocalDateTime expiration_time,  String email) {
+    public EmailToken(String token, LocalDateTime expiration_time,  String email, boolean email_verified) {
         this.token = token;
         this.expiration_time = expiration_time;
         this.email = email;
+        this.email_verified = email_verified;
     }
 
     public boolean isExpired() {
@@ -67,5 +71,13 @@ public class EmailToken {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+    // Getter & Setter
+    public boolean isEmail_verified() {
+        return email_verified;
+    }
+
+    public void setEmail_verified(boolean email_verified) {
+        this.email_verified = email_verified;
     }
 }

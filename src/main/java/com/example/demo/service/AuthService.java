@@ -1,18 +1,10 @@
 package com.example.demo.service;
-import java.util.Collections;
-
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Random;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.DTO.UserDTO;
 import com.example.demo.entity.EmailToken;
 import com.example.demo.repository.userHealth.EmailTokenRepository;
 
@@ -22,17 +14,14 @@ import jakarta.transaction.Transactional;
 public class AuthService {
 
     private final EmailTokenRepository emailTokenRepository;
-    private final UserService userService;
 
-    private final Set<String> verifiedEmails = Collections.synchronizedSet(new HashSet<String>());
 
 
     @Autowired
-    public AuthService(EmailTokenRepository emailTokenRepository, UserService userService) {
+    public AuthService(EmailTokenRepository emailTokenRepository) {
         this.emailTokenRepository = emailTokenRepository;
-        this.userService = userService;
     }
-    
+
     @Transactional
     public String sendVerificationCode(String email) {
         // 이메일로 기존 데이터 검색
@@ -56,7 +45,7 @@ public class AuthService {
             emailToken = existingToken;
         } else {
             // 기존 데이터가 없으면 새 객체 생성
-            emailToken = new EmailToken(email, expirationTime, newCode);
+            emailToken = new EmailToken(email, expirationTime, newCode, false);
         }
 
         // 데이터 저장
@@ -68,46 +57,22 @@ public class AuthService {
 
 
 
-    public boolean verifyCode(String email, String code) {
-        System.out.println("verifyCode 호출됨: 이메일=" + email + ", 코드=" + code);
+    public boolean verify(String email, String token) {
+        EmailToken emailToken = emailTokenRepository.findByEmail(email);
     
-        if (code == null || code.isEmpty()) {
-            System.out.println("코드가 null 또는 비어 있음");
+        if (emailToken == null || !emailToken.getToken().equals(token)) {
             return false;
         }
     
-        EmailToken token = emailTokenRepository.findByEmail(email);
-        if (token == null) {
-            System.out.println("토큰을 찾을 수 없음");
+        if (LocalDateTime.now().isAfter(emailToken.getExpiration_time())) {
             return false;
         }
     
-        if (token.getToken().equals(code) && LocalDateTime.now().isBefore(token.getExpiration_time())) {
-            System.out.println("토큰 검증 성공");
-            verifiedEmails.add(email);
-            emailTokenRepository.delete(token); // 데이터베이스에서 삭제
-            return true;
-        }
-    
-        if (LocalDateTime.now().isAfter(token.getExpiration_time())) {
-            System.out.println("토큰 만료됨");
-            emailTokenRepository.delete(token); // 만료된 토큰 삭제
-        }
-    
-        System.out.println("토큰 검증 실패");
-        return false;
-    }
-    
-
-    public boolean registerUserIfVerified(String email, UserDTO userDTO) {
-        if (!verifiedEmails.contains(email)) {
-            throw new IllegalStateException("이메일 인증이 완료되지 않았습니다.");
-        }
-
-        userService.registerUser(userDTO);
-        verifiedEmails.remove(email);
+        emailToken.setEmail_verified(true);
+        emailTokenRepository.save(emailToken);
         return true;
     }
+    
 
     private String generateVerificationCode() {
         Random random = new Random();

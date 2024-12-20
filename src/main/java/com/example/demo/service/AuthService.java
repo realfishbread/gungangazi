@@ -69,32 +69,35 @@ public class AuthService {
 
 
     public boolean verifyCode(String email, String code) {
-        System.out.println("verifyCode 호출됨: " + email + ", " + code); // 디버깅 로그 추가
+        System.out.println("verifyCode 호출됨: 이메일=" + email + ", 코드=" + code);
     
         if (code == null || code.isEmpty()) {
-            System.out.println("코드가 null 또는 비어 있음"); // 디버깅 로그 추가
+            System.out.println("코드가 null 또는 비어 있음");
             return false;
         }
     
         EmailToken token = emailTokenRepository.findByEmail(email);
         if (token == null) {
-            System.out.println("토큰을 찾을 수 없음"); // 디버깅 로그 추가
+            System.out.println("토큰을 찾을 수 없음");
             return false;
         }
     
         if (token.getToken().equals(code) && LocalDateTime.now().isBefore(token.getExpiration_time())) {
+            System.out.println("토큰 검증 성공");
             verifiedEmails.add(email);
             emailTokenRepository.delete(token); // 데이터베이스에서 삭제
             return true;
         }
     
         if (LocalDateTime.now().isAfter(token.getExpiration_time())) {
-            System.out.println("토큰 만료됨"); // 디버깅 로그 추가
+            System.out.println("토큰 만료됨");
             emailTokenRepository.delete(token); // 만료된 토큰 삭제
         }
     
+        System.out.println("토큰 검증 실패");
         return false;
     }
+    
 
     public boolean registerUserIfVerified(String email, UserDTO userDTO) {
         if (!verifiedEmails.contains(email)) {

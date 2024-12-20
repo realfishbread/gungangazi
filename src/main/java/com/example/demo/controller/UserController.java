@@ -110,8 +110,9 @@ public class UserController {
             emailTokenRepository.save(existingToken);
         } else {
             // 새로운 토큰 생성
-            EmailToken newToken = new EmailToken(newCode, expirationTime, email);
-            emailTokenRepository.save(newToken);
+            EmailToken emailToken = new EmailToken(newCode, expirationTime, email);
+            emailTokenRepository.save(emailToken);
+
         }
 
         // 이메일로 인증 코드 전송

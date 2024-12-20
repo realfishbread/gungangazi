@@ -3,6 +3,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;  // JWT 발급 서비스 (새로 추가)
@@ -86,36 +87,42 @@ public class UserController {
             return ResponseEntity.badRequest().body("이메일을 입력해 주세요.");
         }
 
-        // 이메일 인증 코드 생성 및 이메일 전송
-        User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new IllegalArgumentException("이메일이 존재하지 않습니다."));
+        // 기존 이메일 토큰 확인
+        EmailToken existingToken = emailTokenRepository.findByEmail(email);
 
-        // 6자리 인증 코드 생성
-        String verificationCode = emailService.generateVerificationCode();
+        // 기존 코드가 존재하고 유효 기간이 남아 있는 경우
+        if (existingToken != null && existingToken.getExpiration_time().isAfter(LocalDateTime.now())) {
+            // 기존 코드를 이메일로 재전송
+            emailService.sendEmailWithCode(email, "이메일 인증 코드", existingToken.getToken());
+            return ResponseEntity.ok(Map.of("message", "기존 이메일 인증 코드를 다시 발송했습니다."));
+        }
+
+        // 새로운 6자리 인증 코드 생성
+        String newCode = String.format("%06d", new Random().nextInt(1000000));
         LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(10);
 
-        // 인증 코드를 데이터베이스에 저장
-        emailTokenRepository.save(new EmailToken(verificationCode, expirationTime, email));
+        if (existingToken != null) {
+            // 기존 토큰이 있다면 업데이트
+            existingToken.setToken(newCode);
+            existingToken.setExpiration_time(expirationTime);
+            emailTokenRepository.save(existingToken);
+        } else {
+            // 새로운 토큰 생성
+            EmailToken newToken = new EmailToken(newCode, expirationTime, email);
+            emailTokenRepository.save(newToken);
+        }
 
-        // 이메일 전송
-        emailService.sendEmailWithCode(email, "이메일 인증 코드", verificationCode);
-        return ResponseEntity.ok(Map.of("message", "이메일 인증 코드를 발송했습니다."));
+        // 이메일로 인증 코드 전송
+        emailService.sendEmailWithCode(email, "이메일 인증 코드", newCode);
+        return ResponseEntity.ok(Map.of("message", "새로운 이메일 인증 코드를 발송했습니다."));
     }
 
 
-
-    // 이메일 인증
-    // Step 1: 이메일로 인증 코드 전송
-    @PostMapping("/send-verification-code")
-    public ResponseEntity<String> sendVerificationCode(@RequestParam String email) {
-        authService.sendVerificationCode(email);
-        return ResponseEntity.ok("인증 코드가 이메일로 전송되었습니다.");
-    }
     
-    // Step 2: 인증 코드 검증
+    //  인증 코드 검증
     @PostMapping("/verify-code")
-    public ResponseEntity<String> verifyCode(@RequestParam String email, @RequestParam String code) {
-        boolean isVerified = authService.verifyCode(email, code);
+    public ResponseEntity<String> verifyCode(@RequestParam String email, @RequestParam String token) {
+        boolean isVerified = authService.verifyCode(email, token);
         if (isVerified) {
             return ResponseEntity.ok("이메일 인증이 완료되었습니다.");
         } else {

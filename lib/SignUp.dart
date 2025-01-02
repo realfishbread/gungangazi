@@ -79,32 +79,46 @@ class _SignUpPageState extends State<SignUpPage>
 
   // 회원가입 완료 함수
 void _completeSignUp() async {
-  if (await _isFormValid()) {
-    String? selectedGender = _isMaleSelected ? '남성' : '여성';
+  // 이메일 인증이 완료되지 않았다면 회원가입 요청을 중단합니다.
+  if (!_isVerificationFieldVisible) {
+    _showErrorDialog('이메일 인증을 완료해 주세요.');
+    return;
+  }
 
-    final user = UserDTO(
-      username: _nameController.text,
-      email: _emailController.text,
-      realname: _realnameController.text,
-      password: _passwordController.text,
-      gender: selectedGender,
-    );
+  // 성별 선택 여부 확인
+  if (!_isMaleSelected && !_isFemaleSelected) {
+    _showErrorDialog('성별을 선택해 주세요.');
+    return;
+  }
 
-    try {
-      final userRepository = UserRepository();
-      final message = await userRepository.registerUser(user);
+  // 회원가입 데이터 준비
+  String? selectedGender = _isMaleSelected ? '남성' : '여성';
 
-      if (message == "아이디가 이미 존재합니다.") {
-        _showErrorDialog('아이디가 이미 존재합니다.');
-      } else {
-        _showErrorDialog('회원가입 성공');
-        Future.delayed(Duration(seconds: 1), () {
-          Navigator.pushReplacementNamed(context, '/login');
-        });
-      }
-    } catch (e) {
-      _showErrorDialog('회원가입에 실패했습니다: $e');
+  final user = UserDTO(
+    username: _nameController.text,
+    email: _emailController.text,
+    realname: _realnameController.text,
+    password: _passwordController.text,
+    gender: selectedGender,
+  );
+
+  try {
+    final userRepository = UserRepository();
+    final message = await userRepository.registerUser(user);
+
+    // 서버 응답 처리
+    if (message == "아이디가 이미 존재합니다.") {
+      _showErrorDialog('아이디가 이미 존재합니다.');
+    } else if (message == "회원가입 성공") {
+      _showErrorDialog('회원가입 성공');
+      Future.delayed(const Duration(seconds: 1), () {
+        Navigator.pushReplacementNamed(context, '/login');
+      });
+    } else {
+      _showErrorDialog('회원가입에 실패했습니다.');
     }
+  } catch (e) {
+    _showErrorDialog('회원가입에 실패했습니다: $e');
   }
 }
 
@@ -113,26 +127,9 @@ void _completeSignUp() async {
   Future<bool> _isFormValid() async {
   // 이메일과 비밀번호 유효성 검사
   if (!_validateEmailAndPassword()) {
-    return false; // 유효성 검사가 실패하면 false 반환
-  }
-
-  final email = _emailController.text;
-
-  try {
-    final userRepository = UserRepository();
-    final response = await userRepository.sendEmailVerification(email);
-
-    if (response == "이메일 인증 요청 발송됨") {
-      _showErrorDialog('이메일 인증 링크를 발송했습니다. 메일을 확인해 주세요.');
-      return true; // 이메일 인증 요청 성공
-    } else {
-      _showErrorDialog('$response');
-      return false;
-    }
-  } catch (e) {
-    _showErrorDialog('이메일 인증 발송 중 오류가 발생했습니다: $e');
     return false;
   }
+  return true; // 이메일과 비밀번호가 유효하면 true 반환
 }
 
 
@@ -260,20 +257,26 @@ Widget _buildPasswordField() {
             ),
             const SizedBox(width: 8), // 입력 필드와 버튼 간격
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow[100],
-                foregroundColor: Colors.black,
-              ),
-              onPressed: () async {
-                await _isFormValid(); // 이메일 인증 호출
-                setState(() {
-                  _isVerificationFieldVisible = true; // 인증 코드 입력칸 표시
-                });
-              },
-              child: const Text('인증'),
-            ),
-          ],
-        ),
+            onPressed: () async {
+              final email = _emailController.text;
+              final userRepository = UserRepository();
+
+              try {
+                final response = await userRepository.sendEmailVerification(email);
+                if (response == "이메일 인증 요청 발송됨") {
+                  _showErrorDialog('이메일 인증 링크를 발송했습니다. 메일을 확인해 주세요.');
+                  setState(() {
+                    _isVerificationFieldVisible = true; // 인증 코드 입력칸 표시
+                  });
+                } else {
+                  _showErrorDialog('$response');
+                }
+              } catch (e) {
+                _showErrorDialog('이메일 인증 요청 중 오류가 발생했습니다: $e');
+              }
+            },
+            child: const Text('인증'),
+          ),
         const SizedBox(height: 8),
         if (_isVerificationFieldVisible) // 인증 코드 입력칸 표시 조건
           Row(
@@ -305,6 +308,8 @@ Widget _buildPasswordField() {
 
       ],
     ),
+      ],
+    )
   );
 }
 

@@ -81,8 +81,8 @@ class _SignUpPageState extends State<SignUpPage>
 
   // 회원가입 완료 함수
 void _completeSignUp() async {
-  // 이메일 인증 상태 확인
-  if (ver != 1) {
+  // 이메일 인증이 완료되지 않았다면 회원가입 요청을 중단합니다.
+  if (!_isVerificationFieldVisible) {
     _showErrorDialog('이메일 인증을 완료해 주세요.');
     return;
   }
@@ -255,7 +255,7 @@ Widget _buildPasswordField() {
 
 
 
- Widget _buildEmailFieldWithButton() {
+  Widget _buildEmailFieldWithButton() {
   return Container(
     width: 300, // 전체 너비 제한
     child: Column(
@@ -281,39 +281,17 @@ Widget _buildPasswordField() {
                 foregroundColor: Colors.black,
               ),
               onPressed: () async {
-                // 이메일 인증 API 호출
-                final email = _emailController.text;
-
-                if (email.isEmpty) {
-                  _showErrorDialog('이메일을 입력해 주세요.');
-                  return;
-                }
-
-                final userRepository = UserRepository();
-
-                try {
-                  final response = await userRepository.sendEmailVerification(email);
-
-                  if (response == "이메일 인증 요청 발송됨") {
-                    _showErrorDialog('이메일 인증 링크를 발송했습니다. 메일을 확인해 주세요.');
-                    setState(() {
-                      _isVerificationFieldVisible = true; // 인증 코드 입력칸 표시
-                    });
-                  } else {
-                    _showErrorDialog('$response');
-                  }
-                } catch (e) {
-                  _showErrorDialog('이메일 인증 요청 중 오류가 발생했습니다: $e');
-                }
+                await _isFormValid(); // 이메일 인증 호출
+                setState(() {
+                  _isVerificationFieldVisible = true; // 인증 코드 입력칸 표시
+                });
               },
               child: const Text('인증'),
             ),
           ],
         ),
         const SizedBox(height: 8),
-
-        // 인증 코드 입력칸 표시
-        if (_isVerificationFieldVisible)
+        if (_isVerificationFieldVisible) // 인증 코드 입력칸 표시 조건
           Row(
             children: [
               Expanded(
@@ -333,38 +311,14 @@ Widget _buildPasswordField() {
                   backgroundColor: Colors.green[100],
                   foregroundColor: Colors.black,
                 ),
-                onPressed: () async {
-                  // 인증 코드 검증
-                  final token = _verificationCodeController.text;
-
-                  if (token.isEmpty) {
-                    _showErrorDialog('인증 코드를 입력해 주세요.');
-                    return;
-                  }
-
-                  final userRepository = UserRepository();
-                  try {
-                    final result = await userRepository.verifyEmailCode(
-                      _emailController.text,
-                      token,
-                    );
-
-                    if (result == '이메일 인증이 완료되었습니다.') {
-                      _showErrorDialog('인증 성공!');
-                      setState(() {
-                        _isVerificationFieldVisible = false; // 인증 필드 숨기기
-                      });
-                    } else {
-                      _showErrorDialog(result);
-                    }
-                  } catch (e) {
-                    _showErrorDialog('인증 중 오류가 발생했습니다: $e');
-                  }
+                onPressed: () {
+                  _verifyCode(); // 인증 코드 검증 함수 호출
                 },
                 child: const Text('확인'),
               ),
             ],
           ),
+
       ],
     ),
   );
@@ -388,10 +342,11 @@ void _verifyCode() async {
     final result = await userRepository.verifyEmailCode(email, token);
 
     if (result == '이메일 인증이 완료되었습니다.') {
-      ver = 1; // 인증 성공 상태 저장
+      ver =1;
       _showErrorDialog('인증 성공!');
       setState(() {
         _isVerificationFieldVisible = false; // 인증 필드 숨기기
+        _nextStep(); // 다음 단계로 이동
       });
     } else {
       _showErrorDialog(result); // 오류 메시지 표시
@@ -401,7 +356,6 @@ void _verifyCode() async {
     _showErrorDialog('서버 요청 중 오류가 발생했습니다: $e');
   }
 }
-
 
 
 

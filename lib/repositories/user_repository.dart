@@ -77,7 +77,7 @@ class UserRepository {
     );
 
     if (response.statusCode == 200) {
-      return response.data['message'] ?? '인증이 완료되었습니다.';
+      return response.data['message'] ?? '이메일 인증이 완료되었습니다.';
     } else {
       return '서버 응답 오류: ${response.statusCode}';
     }

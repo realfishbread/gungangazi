@@ -60,13 +60,13 @@ class UserRepository {
   }
 }
      // 이메일 인증 코드 검증 요청
-  Future<String> verifyEmailCode(String email, String code) async {
+  Future<String> verifyEmailCode(String email, String token) async {
   try {
     final response = await _dio.post(
       '/verify-code',
       data: {
         'email': email,
-        'token': code,
+        'token': token,
       },
       options: Options(
         headers: {

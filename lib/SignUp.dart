@@ -311,9 +311,9 @@ Widget _buildPasswordField() {
 
 void _verifyCode() async {
   final email = _emailController.text;
-  final code = _verificationCodeController.text;
+  final token = _verificationCodeController.text;
 
-  if (code.isEmpty) {
+  if (token.isEmpty) {
     _showErrorDialog('인증 코드를 입력해 주세요.');
     return;
   }
@@ -321,9 +321,9 @@ void _verifyCode() async {
   final userRepository = UserRepository();
   try {
     // 디버깅 로그 추가
-    print('이메일: $email, 인증 코드: $code');
+    print('이메일: $email, 인증 코드: $token');
 
-    final result = await userRepository.verifyEmailCode(email, code);
+    final result = await userRepository.verifyEmailCode(email, token);
 
     if (result == '이메일 인증이 완료되었습니다.') {
       _showErrorDialog('인증 성공!');

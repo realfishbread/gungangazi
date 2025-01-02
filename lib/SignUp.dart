@@ -319,18 +319,27 @@ void _verifyCode() async {
   }
 
   final userRepository = UserRepository();
-  final result = await userRepository.verifyEmailCode(email, code);
+  try {
+    // 디버깅 로그 추가
+    print('이메일: $email, 인증 코드: $code');
 
-  if (result == '이메일 인증이 완료되었습니다.') {
-    _showErrorDialog('인증 성공!');
-    setState(() {
-      _isVerificationFieldVisible = false; // 인증 필드 숨기기
-      _nextStep(); // 다음 단계로 이동
-    });
-  } else {
-    _showErrorDialog(result); // 오류 메시지 표시
+    final result = await userRepository.verifyEmailCode(email, code);
+
+    if (result == '이메일 인증이 완료되었습니다.') {
+      _showErrorDialog('인증 성공!');
+      setState(() {
+        _isVerificationFieldVisible = false; // 인증 필드 숨기기
+        _nextStep(); // 다음 단계로 이동
+      });
+    } else {
+      _showErrorDialog(result); // 오류 메시지 표시
+    }
+  } catch (e) {
+    print('인증 오류: $e');
+    _showErrorDialog('서버 요청 중 오류가 발생했습니다: $e');
   }
 }
+
 
 
 

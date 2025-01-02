@@ -61,20 +61,32 @@ class UserRepository {
 }
      // 이메일 인증 코드 검증 요청
   Future<String> verifyEmailCode(String email, String code) async {
-    try {
-      final response = await _dio.post(
-        '/verify-code', // 엔드포인트
-        data: {'email': email, 'token': code},
-        options: Options(headers: {'Content-Type': 'application/json'}),
-      );
+  try {
+    final response = await _dio.post(
+      '/verify-code',
+      data: {
+        'email': email,
+        'token': code,
+      },
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      ),
+    );
 
-      // 서버 응답 메시지 반환
+    if (response.statusCode == 200) {
       return response.data['message'] ?? '인증이 완료되었습니다.';
-    } catch (e) {
-      // 예외 발생 시 오류 메시지 반환
-      return '서버 요청 실패: $e';
+    } else {
+      return '서버 응답 오류: ${response.statusCode}';
     }
+  } on DioException catch (e) {
+    print('Dio Exception: ${e.response?.data}');
+    return '서버 요청 실패: ${e.message}';
   }
+}
+
  
 
 }

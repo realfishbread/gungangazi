@@ -283,6 +283,12 @@ Widget _buildPasswordField() {
               onPressed: () async {
                 // 이메일 인증 API 호출
                 final email = _emailController.text;
+
+                if (email.isEmpty) {
+                  _showErrorDialog('이메일을 입력해 주세요.');
+                  return;
+                }
+
                 final userRepository = UserRepository();
 
                 try {
@@ -305,7 +311,9 @@ Widget _buildPasswordField() {
           ],
         ),
         const SizedBox(height: 8),
-        if (_isVerificationFieldVisible) // 인증 코드 입력칸 표시 조건
+
+        // 인증 코드 입력칸 표시
+        if (_isVerificationFieldVisible)
           Row(
             children: [
               Expanded(
@@ -325,8 +333,33 @@ Widget _buildPasswordField() {
                   backgroundColor: Colors.green[100],
                   foregroundColor: Colors.black,
                 ),
-                onPressed: () {
-                  _verifyCode(); // 인증 코드 검증 함수 호출
+                onPressed: () async {
+                  // 인증 코드 검증
+                  final token = _verificationCodeController.text;
+
+                  if (token.isEmpty) {
+                    _showErrorDialog('인증 코드를 입력해 주세요.');
+                    return;
+                  }
+
+                  final userRepository = UserRepository();
+                  try {
+                    final result = await userRepository.verifyEmailCode(
+                      _emailController.text,
+                      token,
+                    );
+
+                    if (result == '이메일 인증이 완료되었습니다.') {
+                      _showErrorDialog('인증 성공!');
+                      setState(() {
+                        _isVerificationFieldVisible = false; // 인증 필드 숨기기
+                      });
+                    } else {
+                      _showErrorDialog(result);
+                    }
+                  } catch (e) {
+                    _showErrorDialog('인증 중 오류가 발생했습니다: $e');
+                  }
                 },
                 child: const Text('확인'),
               ),
@@ -336,6 +369,7 @@ Widget _buildPasswordField() {
     ),
   );
 }
+
 
 void _verifyCode() async {
   final email = _emailController.text;

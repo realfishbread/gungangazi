@@ -145,7 +145,7 @@ public class UserController {
         // 인증 성공 처리 (Redis에서 인증 코드 삭제)
         emailVerificationService.deleteVerificationCode(requestDTO.getEmail());
 
-        return ResponseEntity.ok("이메일 인증이 완료되었습니다.");
+        return ResponseEntity.ok(Map.of("message", "이메일 인증이 완료되었습니다."));
     }
 
 

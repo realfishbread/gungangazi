@@ -302,6 +302,7 @@ Widget _buildPasswordField() {
               ),
             ],
           ),
+
       ],
     ),
   );
@@ -323,13 +324,14 @@ void _verifyCode() async {
   if (result == '이메일 인증이 완료되었습니다.') {
     _showErrorDialog('인증 성공!');
     setState(() {
-      _isVerificationFieldVisible = false;
+      _isVerificationFieldVisible = false; // 인증 필드 숨기기
       _nextStep(); // 다음 단계로 이동
     });
   } else {
     _showErrorDialog(result); // 오류 메시지 표시
   }
 }
+
 
 
 Widget _buildStepForm() {

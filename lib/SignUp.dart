@@ -260,7 +260,6 @@ Widget _buildPasswordField() {
 }
 
 
-
 Widget _buildEmailFieldWithButton() {
   return Container(
     width: 300, // 전체 너비 제한
@@ -299,33 +298,39 @@ Widget _buildEmailFieldWithButton() {
           ],
         ),
         const SizedBox(height: 8),
-        if (_isVerificationFieldVisible) // 인증 코드 입력칸 표시 조건
-          Row(
-            children: [
-              Expanded(
-                flex: 3,
-                child: TextField(
-                  controller: _verificationCodeController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: '인증 코드 입력',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green[100],
-                  foregroundColor: Colors.black,
-                ),
-                onPressed: () {
-                  _verifyCode(); // 인증 코드 검증 함수 호출
-                },
-                child: const Text('확인'),
-              ),
-            ],
-          ),
+        AnimatedOpacity(
+          opacity: _isVerificationFieldVisible ? 1.0 : 0.0, // 애니메이션 투명도 조정
+          duration: const Duration(milliseconds: 500), // 애니메이션 지속 시간
+          curve: Curves.easeInOut, // 애니메이션 곡선
+          child: _isVerificationFieldVisible
+              ? Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: TextField(
+                        controller: _verificationCodeController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: '인증 코드 입력',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green[100],
+                        foregroundColor: Colors.black,
+                      ),
+                      onPressed: () {
+                        _verifyCode(); // 인증 코드 검증 함수 호출
+                      },
+                      child: const Text('확인'),
+                    ),
+                  ],
+                )
+              : const SizedBox(), // 인증 필드가 숨겨진 경우 빈 컨테이너
+        ),
       ],
     ),
   );

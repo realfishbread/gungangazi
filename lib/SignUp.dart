@@ -81,8 +81,14 @@ class _SignUpPageState extends State<SignUpPage>
 
   // 회원가입 완료 함수
 void _completeSignUp() async {
+  // 비밀번호 유효성 검사
+  if (!_isPasswordValid) {
+    _showErrorDialog('비밀번호가 유효하지 않습니다. 다시 확인해 주세요.');
+    return;
+  }
+
   // 이메일 인증이 완료되지 않았다면 회원가입 요청을 중단합니다.
-  if (ver ==0) {
+  if (ver == 0) {
     _showErrorDialog('이메일 인증을 완료해 주세요.');
     return;
   }

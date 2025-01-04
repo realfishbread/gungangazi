@@ -261,7 +261,7 @@ Widget _buildPasswordField() {
 
 
 
-  Widget _buildEmailFieldWithButton() {
+Widget _buildEmailFieldWithButton() {
   return Container(
     width: 300, // 전체 너비 제한
     child: Column(
@@ -287,9 +287,11 @@ Widget _buildPasswordField() {
                 foregroundColor: Colors.black,
               ),
               onPressed: () async {
-                await _isFormValid(); // 이메일 인증 호출
+                final isValid = await _isFormValid(); // 이메일 인증 호출
                 setState(() {
-                  _isVerificationFieldVisible = true; // 인증 코드 입력칸 표시
+                  if (isValid) {
+                    _isVerificationFieldVisible = true; // 인증 코드 입력칸 표시
+                  }
                 });
               },
               child: const Text('인증'),
@@ -324,11 +326,11 @@ Widget _buildPasswordField() {
               ),
             ],
           ),
-
       ],
     ),
   );
 }
+
 
 
 void _verifyCode() async {

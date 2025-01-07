@@ -17,6 +17,8 @@ import 'ChatPage.dart';
 import 'loginPge.dart';
 import '../dto/profile_dto.dart';
 import '../repositories/profile_repository.dart';
+import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 
 class WebHomePage extends StatefulWidget {
@@ -100,6 +102,44 @@ class _WebHomePageState extends State<WebHomePage> {
     },
   );
 }
+
+void _showCalendar(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,       // 모달 높이 조절 가능
+      backgroundColor: Colors.transparent, // 배경 투명
+      builder: (BuildContext context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.8, // 초기 높이 비율
+          minChildSize: 0.5,     // 최소 높이 비율
+          maxChildSize: 0.95,    // 최대 높이 비율
+          builder: (context, scrollController) {
+            return Container(
+              margin: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(30.0),
+                child: SupplementsPage(
+                  popupHandler: _popupHandler,
+                  // ...필요한 인자 그대로...
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -251,13 +291,11 @@ class _WebHomePageState extends State<WebHomePage> {
                   ),
                 ],
               ),
-              SideMenuItem(
+               SideMenuItem(
                 title: '캘린더',
                 onTap: (index, _) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SupplementsPage(popupHandler: _popupHandler)),
-                  );
+                  // 기존 Navigator.push -> BottomSheet 호출
+                  _showCalendar(context);
                 },
                 icon: const Icon(Icons.calendar_today),
               ),

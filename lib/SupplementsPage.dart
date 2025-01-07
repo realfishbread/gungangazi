@@ -6,7 +6,6 @@ import '../dto/userHealth/supplementDto.dart';
 import '../services/TokenService.dart';
 import 'PopupHandler.dart';
 
-
 class SupplementsPage extends StatefulWidget {
   final PopupHandler popupHandler;
   const SupplementsPage({Key? key, required this.popupHandler}) : super(key: key);
@@ -25,6 +24,10 @@ class _SupplementsPageState extends State<SupplementsPage> {
   late final SupplementRepository supplementRepository;
   bool _addSupplement = false;
 
+  // 할 일 목록 데이터
+  final List<Map<String, dynamic>> _todoList = [];
+  final TextEditingController _todoController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -42,190 +45,219 @@ class _SupplementsPageState extends State<SupplementsPage> {
   }
 
   Future<void> _saveData() async {
-  String? username = await tokenService.getUsername();
-  if (username == null) {
-    print("Username을 가져올 수 없습니다.");
-    return;
-  }
+    String? username = await tokenService.getUsername();
+    if (username == null) {
+      print("Username을 가져올 수 없습니다.");
+      return;
+    }
 
-  try {
-    // 모든 날짜 데이터를 순회하면서 덮어쓰기 방식으로 저장
-    await Future.wait(_supplementTaken.entries.map((entry) async {
-      DateTime date = entry.key;
-      bool isSupplementTaken = entry.value;
-      bool isMenstruationRecorded = _selectedMenstruationDays.contains(date);
+    try {
+      // 모든 날짜 데이터를 순회하면서 덮어쓰기 방식으로 저장
+      await Future.wait(_supplementTaken.entries.map((entry) async {
+        DateTime date = entry.key;
+        bool isSupplementTaken = entry.value;
+        bool isMenstruationRecorded = _selectedMenstruationDays.contains(date);
 
-      // DTO 생성
-      SupplementDto dto = SupplementDto(
-        date: date,
-        supplement_taken: isSupplementTaken,
-        menstruation_recorded: isMenstruationRecorded,
-        username: username,
+        // DTO 생성
+        SupplementDto dto = SupplementDto(
+          date: date,
+          supplement_taken: isSupplementTaken,
+          menstruation_recorded: isMenstruationRecorded,
+          username: username,
+        );
+
+        print("Saving DTO: ${dto.toJson()}");
+        await supplementRepository.saveSupplement(dto);
+      }));
+
+      print("All data saved successfully");
+
+      // 애니메이션 상태 업데이트
+      setState(() {
+        _addSupplement = true;
+      });
+
+      // 데이터 다시 로드
+      await _loadData();
+    } catch (e) {
+      print("Error while saving data: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('데이터 저장 중 오류가 발생했습니다.')),
       );
-
-      print("Saving DTO: ${dto.toJson()}");
-      await supplementRepository.saveSupplement(dto);
-    }));
-
-    print("All data saved successfully");
-
-    // 애니메이션 상태 업데이트
-    setState(() {
-      _addSupplement = true;
-    });
-
-    // 데이터 다시 로드
-    await _loadData();
-  } catch (e) {
-    print("Error while saving data: $e");
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('데이터 저장 중 오류가 발생했습니다.')),
-    );
+    }
   }
-}
-
 
   Future<void> _loadData() async {
-  try {
-    final supplements = await supplementRepository.fetchSupplements();
-    setState(() {
-      _supplementTaken.clear();
-      _selectedMenstruationDays.clear();
-      for (var supplement in supplements) {
-        _supplementTaken[supplement.date] = supplement.supplement_taken;
-        if (supplement.menstruation_recorded) {
-          _selectedMenstruationDays.add(supplement.date);
-        }
-      }
-    });
-
-    print('_supplementTaken: $_supplementTaken');
-    print('_selectedMenstruationDays: $_selectedMenstruationDays');
-  } catch (e) {
-    print("Error while loading data: $e");
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('데이터 로드 중 오류가 발생했습니다.')),
-    );
-  }
-}
-
-
- Future<void> _fetchSingleDayData(DateTime selectedDay) async {
-  String? username = await tokenService.getUsername();
-  if (username == null) {
-    print("Username을 가져올 수 없습니다.");
-    return;
-  }
-
-  try {
-    final singleDayData = await supplementRepository.fetchSingleSupplement(username, selectedDay);
-
-    setState(() {
-      _supplementTaken[selectedDay] = singleDayData?.supplement_taken ?? false;
-      if (singleDayData?.menstruation_recorded ?? false) {
-        _selectedMenstruationDays.add(selectedDay);
-      } else {
-        _selectedMenstruationDays.remove(selectedDay);
-      }
-    });
-
-    print('Single day data fetched: $singleDayData');
-    print('_selectedMenstruationDays after update: $_selectedMenstruationDays');
-  } catch (e) {
-    print('Failed to fetch single day data: $e');
-  }
-}
-
-void _showBottomSheet(DateTime selectedDay) {
-  showModalBottomSheet(
-    context: context,
-    builder: (context) {
-      return FutureBuilder<void>(
-        future: _fetchSingleDayData(selectedDay), // 선택된 날짜의 데이터를 가져옴
-        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator()); // 로딩 표시
+    try {
+      final supplements = await supplementRepository.fetchSupplements();
+      setState(() {
+        _supplementTaken.clear();
+        _selectedMenstruationDays.clear();
+        for (var supplement in supplements) {
+          _supplementTaken[supplement.date] = supplement.supplement_taken;
+          if (supplement.menstruation_recorded) {
+            _selectedMenstruationDays.add(supplement.date);
           }
+        }
+      });
 
-          return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setModalState) {
-              // 최신 데이터를 반영하여 Switch 초기화
-              bool initialSupplementTaken = _supplementTaken[selectedDay] ?? false;
-              bool initialMenstruationRecorded = _selectedMenstruationDays.contains(selectedDay);
+      print('_supplementTaken: $_supplementTaken');
+      print('_selectedMenstruationDays: $_selectedMenstruationDays');
+    } catch (e) {
+      print("Error while loading data: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('데이터 로드 중 오류가 발생했습니다.')),
+      );
+    }
+  }
 
-              return Container(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '날짜: ${selectedDay.year}-${selectedDay.month}-${selectedDay.day}',
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('영양제 복용', style: TextStyle(fontSize: 16)),
-                        Switch(
-                          value: initialSupplementTaken,
-                          onChanged: (value) {
-                            setModalState(() {
-                              initialSupplementTaken = value;
-                              _supplementTaken[selectedDay] = value;
-                            });
-                            print('영양제 복용 상태 변경: $value');
-                          },
-                        ),
-                      ],
-                    ),
-                    if (_gender != '남성') ...[
-                      const SizedBox(height: 10),
+  Future<void> _fetchSingleDayData(DateTime selectedDay) async {
+    String? username = await tokenService.getUsername();
+    if (username == null) {
+      print("Username을 가져올 수 없습니다.");
+      return;
+    }
+
+    try {
+      final singleDayData = await supplementRepository.fetchSingleSupplement(username, selectedDay);
+
+      setState(() {
+        _supplementTaken[selectedDay] = singleDayData?.supplement_taken ?? false;
+        if (singleDayData?.menstruation_recorded ?? false) {
+          _selectedMenstruationDays.add(selectedDay);
+        } else {
+          _selectedMenstruationDays.remove(selectedDay);
+        }
+      });
+
+      print('Single day data fetched: $singleDayData');
+      print('_selectedMenstruationDays after update: $_selectedMenstruationDays');
+    } catch (e) {
+      print('Failed to fetch single day data: $e');
+    }
+  }
+
+  void _showBottomSheet(DateTime selectedDay) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return FutureBuilder<void>(
+          future: _fetchSingleDayData(selectedDay), // 선택된 날짜의 데이터를 가져옴
+          builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator()); // 로딩 표시
+            }
+
+            return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setModalState) {
+                // 최신 데이터를 반영하여 Switch 초기화
+                bool initialSupplementTaken = _supplementTaken[selectedDay] ?? false;
+                bool initialMenstruationRecorded = _selectedMenstruationDays.contains(selectedDay);
+
+                return Container(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '날짜: ${selectedDay.year}-${selectedDay.month}-${selectedDay.day}',
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('생리 기록', style: TextStyle(fontSize: 16)),
+                          const Text('영양제 복용', style: TextStyle(fontSize: 16)),
                           Switch(
-                            value: initialMenstruationRecorded,
+                            value: initialSupplementTaken,
                             onChanged: (value) {
                               setModalState(() {
-                                initialMenstruationRecorded = value;
+                                initialSupplementTaken = value;
+                                _supplementTaken[selectedDay] = value;
                               });
-                              setState(() {
-                                if (value) {
-                                  _selectedMenstruationDays.add(selectedDay);
-                                } else {
-                                  _selectedMenstruationDays.remove(selectedDay);
-                                }
-                              });
-                              print('_selectedMenstruationDays after update: $_selectedMenstruationDays');
+                              print('영양제 복용 상태 변경: $value');
                             },
                           ),
                         ],
                       ),
+                      if (_gender != '남성') ...[
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('생리 기록', style: TextStyle(fontSize: 16)),
+                            Switch(
+                              value: initialMenstruationRecorded,
+                              onChanged: (value) {
+                                setModalState(() {
+                                  initialMenstruationRecorded = value;
+                                });
+                                setState(() {
+                                  if (value) {
+                                    _selectedMenstruationDays.add(selectedDay);
+                                  } else {
+                                    _selectedMenstruationDays.remove(selectedDay);
+                                  }
+                                });
+                                print('_selectedMenstruationDays after update: $_selectedMenstruationDays');
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                      const SizedBox(height: 20),
+                      GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('할 일 추가'),
+                                content: TextField(
+                                  controller: _todoController,
+                                  decoration: const InputDecoration(hintText: '할 일을 입력하세요'),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      if (_todoController.text.isNotEmpty) {
+                                        setState(() {
+                                          _todoList.add({'task': _todoController.text, 'completed': false});
+                                          _todoController.clear();
+                                        });
+                                        Navigator.pop(context);
+                                      }
+                                    },
+                                    child: const Text('추가'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: const Text(
+                          '할 일 추가 +',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () async {
+                          await _saveData();
+                          Navigator.pop(context); // 서랍 닫기
+                        },
+                        child: const Text('저장'),
+                      ),
                     ],
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () async {
-                        await _saveData();
-                        Navigator.pop(context); // 서랍 닫기
-                      },
-                      child: const Text('저장'),
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        },
-      );
-    },
-  );
-}
-
-
-
-
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

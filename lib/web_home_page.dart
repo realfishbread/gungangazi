@@ -166,7 +166,7 @@ void _showCalendar(BuildContext context) {
               displayMode: SideMenuDisplayMode.auto,
               showHamburger: true,
               hoverColor: Colors.purple[100],
-              selectedHoverColor: Colors.purple[100],
+              selectedHoverColor: const Color.fromARGB(255, 230, 207, 235),
               selectedColor: const Color.fromARGB(255, 229, 176, 238),
               selectedTitleTextStyle: const TextStyle(color: Colors.black),
               selectedIconColor: Colors.black,

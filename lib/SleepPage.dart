@@ -41,11 +41,11 @@ class _SleepPageState extends State<SleepPage> {
     List<SleepDto> serverData = await sleepRepository.fetchSleepDataFromDatabase();
     setState(() {
       _sleepRecords = serverData.map((dto) => {
-        'date': dto.date,
-        'sleep_time': dto.sleep_time,
-        'wake_up_time': dto.wake_up_time,
-        'username': dto.username,
-      }).toList();
+            'date': dto.date,
+            'sleep_time': dto.sleep_time,
+            'wake_up_time': dto.wake_up_time,
+            'username': dto.username,
+          }).toList();
     });
     print('_sleepRecords: $_sleepRecords'); // 디버깅용 출력
   }
@@ -87,7 +87,7 @@ class _SleepPageState extends State<SleepPage> {
 
         // 동일한 날짜에 같은 수면 기록이 있는지 확인
         bool isDuplicate = existingRecords.any((record) =>
-        record.date == formattedDate &&
+            record.date == formattedDate &&
             record.sleep_time == newSleepRecord.sleep_time &&
             record.wake_up_time == newSleepRecord.wake_up_time);
 
@@ -240,6 +240,17 @@ class _SleepPageState extends State<SleepPage> {
         appBar: AppBar(
           title: const Text('수면'),
           backgroundColor: const Color(0xFFFFF9C4),
+          // 그래프 아이콘 추가 (actions 프로퍼티)
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.bar_chart),
+              onPressed: () {
+                // TODO: 아이콘 클릭 시 동작을 정의하세요.
+                // 예: 다른 페이지 이동, 다이얼로그 표시 등
+                print("그래프 아이콘 클릭됨!");
+              },
+            ),
+          ],
         ),
         body: Center(
           child: Container(
@@ -257,7 +268,7 @@ class _SleepPageState extends State<SleepPage> {
                         backgroundColor: const Color(0xFFFFF9C4),
                         foregroundColor: Colors.black,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)
+                          borderRadius: BorderRadius.circular(30),
                         ),
                       ),
                       label: Text(
@@ -273,7 +284,7 @@ class _SleepPageState extends State<SleepPage> {
                         backgroundColor: const Color(0xFFFFF9C4),
                         foregroundColor: Colors.black,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)
+                          borderRadius: BorderRadius.circular(30),
                         ),
                       ),
                       label: Text(
@@ -289,12 +300,12 @@ class _SleepPageState extends State<SleepPage> {
                 ElevatedButton(
                   onPressed: _saveSleepDataToServer,
                   style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFFF9C4),
-                        foregroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)
-                        ),
-                      ),
+                    backgroundColor: const Color(0xFFFFF9C4),
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
                   child: const Text('저장'),
                 ),
                 const SizedBox(height: 20),

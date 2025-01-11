@@ -12,6 +12,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  
     
   mysql1: ^0.19.2
   image_picker: ^1.1.2
@@ -57,12 +58,14 @@ dev_dependencies:
 
 
 flutter:
-
+      
 
   uses-material-design: true
 
 
+  # 에셋(이미지, 폴더 등) 등록
   assets:
+    - assets/fonts/
     - assets/person/
     - assets/person/jindan_normal.jpg
     - assets/person/jindan_armsick1.jpg
@@ -73,6 +76,13 @@ flutter:
     - assets/splash/
     - assets/dog.jpg
     - assets/
+
+  # 폰트 등록
+  fonts:
+    - family: NanumGothic
+      fonts:
+        - asset: assets/fonts/NanumSquareB.ttf
+
 
 
 

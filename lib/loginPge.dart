@@ -134,26 +134,29 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 16),
                           TextField(
-                            controller: _passwordController,
-                            decoration: InputDecoration(
-                              labelText: '비밀번호',
-                              border: const OutlineInputBorder(),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _obscurePassword ? Icons.visibility : Icons.visibility_off,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _obscurePassword = !_obscurePassword;
-                                  });
-                                },
+                          controller: _passwordController,
+                          obscureText: _obscurePassword,
+                          obscuringCharacter: '●',
+                          // 엔터 버튼의 동작 설정
+                          textInputAction: TextInputAction.done,
+                          onSubmitted: (value) {
+                            _login(); // 엔터를 누르면 로그인 시도
+                          },
+                          decoration: InputDecoration(
+                            labelText: '비밀번호',
+                            border: const OutlineInputBorder(),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscurePassword ? Icons.visibility : Icons.visibility_off,
                               ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscurePassword = !_obscurePassword;
+                                });
+                              },
                             ),
-                            obscureText: _obscurePassword,
-                            onSubmitted: (value) {
-                              _login(); // Enter 키로 로그인 실행
-                            },
                           ),
+                        ),
 
                         const SizedBox(height: 16),
                         if (_loginFailed)

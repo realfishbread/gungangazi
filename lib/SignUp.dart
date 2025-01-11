@@ -227,7 +227,11 @@ Widget _buildPasswordField() {
         TextField(
           controller: _passwordController,
           keyboardType: TextInputType.text,
-          obscureText: !_isPasswordVisible, // 상태에 따라 토글
+          // !를 사용해 _isPasswordVisible이 false일 때 obscureText를 true로 만듦
+          obscureText: !_isPasswordVisible,
+          // 추가: obscureText가 true일 때 표시될 마스킹 문자
+          obscuringCharacter: '●',
+
           onChanged: _validatePassword,
           decoration: InputDecoration(
             labelText: '비밀번호',
@@ -236,11 +240,12 @@ Widget _buildPasswordField() {
               icon: Icon(
                 _isPasswordVisible
                     ? Icons.visibility_off // 비밀번호 숨김 아이콘
-                    : Icons.visibility, // 비밀번호 보임 아이콘
+                    : Icons.visibility,     // 비밀번호 보임 아이콘
               ),
               onPressed: () {
                 setState(() {
-                  _isPasswordVisible = !_isPasswordVisible; // 상태 토글
+                  // 아이콘 누를 때마다 true <-> false 토글
+                  _isPasswordVisible = !_isPasswordVisible;
                 });
               },
             ),

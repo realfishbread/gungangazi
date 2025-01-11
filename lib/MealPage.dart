@@ -287,6 +287,21 @@ Future<void> _deleteMeal(String mealId, String date) async {
   }
 }
 
+Color _getMealTypeColor(String? mealType) {
+  switch (mealType) {
+    case '아침':
+      return const Color(0xFFFFCD28); // 아침: 밝은 주황색
+    case '점심':
+      return Color(0xFF9DF0E1); // 점심: 밝은 초록색
+    case '저녁':
+      return Color.fromARGB(255, 171, 129, 240); // 저녁: 밝은 파란색
+    case '간식':
+      return Color.fromARGB(255, 84, 180, 105); // 간식: 밝은 분홍색
+    default:
+      return Colors.grey[200]!; // 기본: 밝은 회색
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -415,43 +430,53 @@ Future<void> _deleteMeal(String mealId, String date) async {
                     ),
                     const SizedBox(height: 10),
                     Expanded(
-                      child: _mealsByDate.isEmpty
-                          ? const Center(child: Text('기록된 식사가 없습니다.'))
-                          : ListView(
-                              children: _mealsByDate.keys.map((date) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ExpansionTile(
-                                      title: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            date,
-                                            style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          _getCalorieStatusWidget(date),
-                                        ],
-                                      ),
-                                      children: _mealsByDate[date]!
-                                          .map((meal) => ListTile(
+                    child: _mealsByDate.isEmpty
+                        ? const Center(child: Text('기록된 식사가 없습니다.'))
+                        : ListView(
+                            children: _mealsByDate.keys.map((date) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ExpansionTile(
+                                    title: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          date,
+                                          style: const TextStyle(
+                                              fontSize: 16, fontWeight: FontWeight.bold),
+                                        ),
+                                        _getCalorieStatusWidget(date),
+                                      ],
+                                    ),
+                                    children: _mealsByDate[date]!
+                                        .map((meal) => Container(
+                                              decoration: BoxDecoration(
+                                                color: _getMealTypeColor(meal['meal_type']), // 배경색
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                              margin: const EdgeInsets.symmetric(vertical: 4),
+                                              child: ListTile(
                                                 title: Text(
-                                                    "${meal['meal']} (${meal['calories']} Kcal)"),
+                                                  "${meal['meal_type']}  ${meal['meal']} [${meal['calories']} Kcal]",
+                                                  style: const TextStyle(
+                                                      fontSize: 14, color: Colors.black),
+                                                ),
                                                 trailing: IconButton(
                                                   icon: const Icon(Icons.close),
-                                                  onPressed: () => _deleteMeal(meal['id'], date),
+                                                  onPressed: () =>
+                                                      _deleteMeal(meal['id'], date),
                                                   tooltip: '삭제',
                                                 ),
-                                              ))
-                                          .toList(),
-                                    ),
-                                  ],
-                                );
-                              }).toList(),
-                            ),
-                    ),
+                                              ),
+                                            ))
+                                        .toList(),
+                                  ),
+                                ],
+                              );
+                            }).toList(),
+                          ),
+                  ),
                     _buildCalorieSummary(_getFormattedDate()),
                   ],
                 ),

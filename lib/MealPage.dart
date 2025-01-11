@@ -102,9 +102,22 @@ int _calculateRecommendedCalories(int age, String gender, int weight, int height
 
   // 기존 _buildCalorieSummary() 메서드 수정
 Widget _buildCalorieSummary(String date) {
-    final int totalCalories = _calculateTotalCalories(date);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+  final int totalCalories = _calculateTotalCalories(date);
+  final int remainingCalories = _recommendedCalories - totalCalories;
+  final bool isExceeding = remainingCalories < 0;
+
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 10),
+    child: Container(
+      decoration: BoxDecoration(
+        color: isExceeding ? Colors.red.withOpacity(0.1) : Colors.green.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isExceeding ? Colors.red : Colors.green,
+          width: 1.5,
+        ),
+      ),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -112,20 +125,22 @@ Widget _buildCalorieSummary(String date) {
             "오늘 총 칼로리 섭취: $totalCalories Kcal",
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
-          if (totalCalories > _recommendedCalories)
+          const SizedBox(height: 8),
+          if (isExceeding)
             Text(
               "초과된 칼로리: ${totalCalories - _recommendedCalories} Kcal",
               style: const TextStyle(color: Colors.red, fontSize: 14),
             )
           else
             Text(
-              "남은 칼로리: ${_recommendedCalories - totalCalories} Kcal",
+              "남은 칼로리: $remainingCalories Kcal",
               style: const TextStyle(color: Colors.green, fontSize: 14),
             ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 Widget _getCalorieStatusWidget(String date) {
     final int totalCalories = _calculateTotalCalories(date);
     final int calorieDifference = totalCalories - _recommendedCalories;

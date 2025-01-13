@@ -86,3 +86,4 @@ NTUSER.DAT*
 # Other unnecessary files
 *.log
 
+/shd-1.0.0-b1/

@@ -20,7 +20,6 @@ import '../repositories/profile_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-
 class WebHomePage extends StatefulWidget {
   const WebHomePage({Key? key}) : super(key: key);
 
@@ -60,50 +59,51 @@ class _WebHomePageState extends State<WebHomePage> {
       }
     });
   }
+
   void _navigateToProfile(BuildContext context) async {
-  String? username = await _tokenService.getUsername();
+    String? username = await _tokenService.getUsername();
 
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true, // 높이를 조절하기 위해 필요한 설정
-    backgroundColor: Colors.transparent, // 배경 투명
-    builder: (context) {
-      return DraggableScrollableSheet(
-        initialChildSize: 0.8, // 초기 높이 비율 (전체 화면의 80%)
-        minChildSize: 0.5, // 최소 높이 비율
-        maxChildSize: 0.95, // 최대 높이 비율
-        builder: (BuildContext context, ScrollController scrollController) {
-          return Container(
-            margin: const EdgeInsets.all(16.0), // 스마트폰처럼 모서리에 여백 추가
-            decoration: BoxDecoration(
-              color: Colors.white, // 모달 배경색
-              borderRadius: BorderRadius.circular(30.0), // 전체적으로 둥근 모서리
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1), // 그림자 색상
-                  blurRadius: 10, // 그림자 흐림 정도
-                  offset: const Offset(0, 5), // 그림자 위치
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(30.0), // 내부 내용도 둥글게
-              child: Profile2(
-                username: username ?? "기본아이디",
-                onProfileUpdated: () {
-                  // 프로필 변경 후 동기화
-                  fetchProfile();
-                },
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // 높이를 조절하기 위해 필요한 설정
+      backgroundColor: Colors.transparent, // 배경 투명
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.8, // 초기 높이 비율 (전체 화면의 80%)
+          minChildSize: 0.5, // 최소 높이 비율
+          maxChildSize: 0.95, // 최대 높이 비율
+          builder: (BuildContext context, ScrollController scrollController) {
+            return Container(
+              margin: const EdgeInsets.all(16.0), // 스마트폰처럼 모서리에 여백 추가
+              decoration: BoxDecoration(
+                color: Colors.white, // 모달 배경색
+                borderRadius: BorderRadius.circular(30.0), // 전체적으로 둥근 모서리
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1), // 그림자 색상
+                    blurRadius: 10, // 그림자 흐림 정도
+                    offset: const Offset(0, 5), // 그림자 위치
+                  ),
+                ],
               ),
-            ),
-          );
-        },
-      );
-    },
-  );
-}
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(30.0), // 내부 내용도 둥글게
+                child: Profile2(
+                  username: username ?? "기본아이디",
+                  onProfileUpdated: () {
+                    // 프로필 변경 후 동기화
+                    fetchProfile();
+                  },
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
-void _showCalendar(BuildContext context) {
+  void _showCalendar(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,       // 모달 높이 조절 가능
@@ -155,6 +155,18 @@ void _showCalendar(BuildContext context) {
         ),
         leadingWidth: 150, // leading의 너비를 120으로 설정
         backgroundColor: const Color(0xFFFFF9C4), // 앱바 배경색
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            color: Colors.black, // 아이콘 색상
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const WebHomePage()),
+              );
+            },
+          ),
+        ],
       ),
 
       body: Row(
@@ -356,4 +368,4 @@ void _showCalendar(BuildContext context) {
       ),
     );
   }
-} 
+}

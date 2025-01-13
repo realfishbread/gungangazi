@@ -305,11 +305,11 @@ Future<void> _deleteMeal(String mealId, String date) async {
 Color _getMealTypeColor(String? mealType) {
   switch (mealType) {
     case '아침':
-      return const Color.fromARGB(255, 250, 220, 120); // 아침: 밝은 주황색
+      return const Color.fromARGB(255, 253, 238, 190); // 아침: 밝은 주황색
     case '점심':
-      return Color.fromARGB(255, 200, 245, 236); // 점심: 밝은 초록색
+      return Color.fromARGB(255, 197, 255, 243); // 점심: 밝은 초록색
     case '저녁':
-      return Color.fromARGB(255, 216, 199, 243); // 저녁: 밝은 파란색
+      return Color.fromARGB(255, 231, 217, 253); // 저녁: 밝은 파란색
     case '간식':
       return Color.fromARGB(255, 162, 209, 173); // 간식: 밝은 분홍색
     default:

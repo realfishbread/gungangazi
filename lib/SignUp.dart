@@ -18,6 +18,7 @@ class _SignUpPageState extends State<SignUpPage>
   final TextEditingController _realnameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _verificationCodeController = TextEditingController(); // 인증 코드 입력 컨트롤러
+  final TextEditingController _confirmPasswordController = TextEditingController(); // 비밀번호 확인 컨트롤러 추가
 
   late AnimationController _animationController; // 애니메이션 컨트롤러
   late Animation<Offset> _slideAnimation; // 슬라이드 애니메이션
@@ -26,6 +27,8 @@ class _SignUpPageState extends State<SignUpPage>
   bool _isMaleSelected = false;
   bool _isFemaleSelected = false;
   String _passwordFeedback = ''; // 비밀번호 유효성 검사 메시지
+  String _confirmPasswordFeedback = ''; // 비밀번호 확인 메시지
+  bool _isPasswordMatching = false; // 비밀번호 일치 여부
   bool _isPasswordValid = false; // 비밀번호 유효 여부
   bool _isPasswordVisible = false; // 비밀번호 표시 여부
   bool _isVerificationFieldVisible = false; // 인증 코드 입력 필드 표시 여부
@@ -77,6 +80,26 @@ class _SignUpPageState extends State<SignUpPage>
         _completeSignUp();  // 회원가입 완료 후 토큰 저장
       }
     });
+  }
+
+   // 비밀번호 확인 입력 처리
+  void _validateConfirmPassword(String confirmPassword) {
+    if (confirmPassword.isEmpty) {
+      setState(() {
+        _confirmPasswordFeedback = '비밀번호 확인을 입력해 주세요.';
+        _isPasswordMatching = false;
+      });
+    } else if (confirmPassword != _passwordController.text) {
+      setState(() {
+        _confirmPasswordFeedback = '비밀번호가 일치하지 않습니다.';
+        _isPasswordMatching = false;
+      });
+    } else {
+      setState(() {
+        _confirmPasswordFeedback = '비밀번호가 일치합니다.';
+        _isPasswordMatching = true;
+      });
+    }
   }
 
   // 회원가입 완료 함수
@@ -180,6 +203,8 @@ void _validatePassword(String password) {
       _isPasswordValid = true;
     });
   }
+   // 비밀번호 유효성 검사 후 비밀번호 확인도 다시 검사
+    _validateConfirmPassword(_confirmPasswordController.text);
 }
 
   // 오류 다이얼로그 표시 함수

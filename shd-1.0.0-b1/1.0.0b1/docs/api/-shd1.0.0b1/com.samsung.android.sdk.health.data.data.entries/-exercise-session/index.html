@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>ExerciseSession</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+</head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+                    <a class="library-name--link" href="../../../index.html">
+                            Samsung Health Data SDK 1.0.0 beta1
+                    </a>
+            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":SDK:dokkaHtml/client">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="Samsung Health Data SDK 1.0.0 beta1::com.samsung.android.sdk.health.data.data.entries/ExerciseSession///PointingToDeclaration//-1784854612">
+  <div class="breadcrumbs"><a href="../../../index.html">Samsung Health Data SDK 1.0.0 beta1</a><span class="delimiter">/</span><a href="../index.html">com.samsung.android.sdk.health.data.data.entries</a><span class="delimiter">/</span><span class="current">ExerciseSession</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Exercise</span><wbr></wbr><span><span>Session</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">ExerciseSession</a> : <span data-unresolved-link="android.os/Parcelable///PointingToDeclaration/">Parcelable</span></div><p class="paragraph">It specifies the exercise session. One or more exercise sessions can be included in one exercise data record. For instance, if a user performs a TRIATHLON multisport exercise, each session contains data for one of the three exercises performed during a specific time interval.</p><span class="kdoc-tag"><h4 class="">Since</h4><p class="paragraph">1.0.0</p></span></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="1141139854%2FProperties%2F-1784854612" anchor-label="altitudeGain" id="1141139854%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="altitude-gain.html"><span>altitude</span><wbr></wbr><span><span>Gain</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1141139854%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="altitude-gain.html">altitudeGain</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The altitude gain during the activity, in meters.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2073325974%2FProperties%2F-1784854612" anchor-label="altitudeLoss" id="-2073325974%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="altitude-loss.html"><span>altitude</span><wbr></wbr><span><span>Loss</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2073325974%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="altitude-loss.html">altitudeLoss</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The altitude loss during the activity, in meters.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="269052009%2FProperties%2F-1784854612" anchor-label="calories" id="269052009%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="calories.html"><span><span>calories</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="269052009%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="calories.html">calories</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span></div><div class="brief "><p class="paragraph">The calories burned during the exercise, in kilocalories.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="302885644%2FProperties%2F-1784854612" anchor-label="comment" id="302885644%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="comment.html"><span><span>comment</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="302885644%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="comment.html">comment</a><span class="token operator">: </span><span data-unresolved-link="kotlin/String///PointingToDeclaration/">String</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The comment entered by the user for the session.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-782988836%2FProperties%2F-1784854612" anchor-label="count" id="-782988836%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="count.html"><span><span>count</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-782988836%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="count.html">count</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Various types of count value for the exercise.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1923155902%2FProperties%2F-1784854612" anchor-label="countType" id="-1923155902%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="count-type.html"><span>count</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1923155902%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="count-type.html">countType</a><span class="token operator">: </span><a href="../../com.samsung.android.sdk.health.data.request/-data-type/-exercise-type/-count-type/index.html">DataType.ExerciseType.CountType</a></div><div class="brief "><p class="paragraph">The count type.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-678046204%2FProperties%2F-1784854612" anchor-label="customTitle" id="-678046204%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="custom-title.html"><span>custom</span><wbr></wbr><span><span>Title</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-678046204%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="custom-title.html">customTitle</a><span class="token operator">: </span><span data-unresolved-link="kotlin/String///PointingToDeclaration/">String</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">A custom exercise type, which can be defined by the user.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-157448224%2FProperties%2F-1784854612" anchor-label="declineDistance" id="-157448224%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="decline-distance.html"><span>decline</span><wbr></wbr><span><span>Distance</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-157448224%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="decline-distance.html">declineDistance</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The distance covered on a declined surface during the exercise, in meters.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-832421286%2FProperties%2F-1784854612" anchor-label="distance" id="-832421286%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="distance.html"><span><span>distance</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-832421286%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="distance.html">distance</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The distance covered during the exercise, in meters.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="741687707%2FProperties%2F-1784854612" anchor-label="duration" id="741687707%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="duration.html"><span><span>duration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="741687707%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="duration.html">duration</a><span class="token operator">: </span><span data-unresolved-link="java.time/Duration///PointingToDeclaration/">Duration</span></div><div class="brief "><p class="paragraph">The duration of the exercise, as <code class="lang-kotlin">Duration</code>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1826436931%2FProperties%2F-1784854612" anchor-label="endTime" id="1826436931%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="end-time.html"><span>end</span><wbr></wbr><span><span>Time</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1826436931%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="end-time.html">endTime</a><span class="token operator">: </span><span data-unresolved-link="java.time/Instant///PointingToDeclaration/">Instant</span></div><div class="brief "><p class="paragraph">The time at which measurement was ended.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-833807683%2FProperties%2F-1784854612" anchor-label="exerciseType" id="-833807683%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="exercise-type.html"><span>exercise</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-833807683%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="exercise-type.html">exerciseType</a><span class="token operator">: </span><a href="../../com.samsung.android.sdk.health.data.request/-data-type/-exercise-type/-predefined-exercise-type/index.html">DataType.ExerciseType.PredefinedExerciseType</a></div><div class="brief "><p class="paragraph">The exercise type.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1153700476%2FProperties%2F-1784854612" anchor-label="inclineDistance" id="-1153700476%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="incline-distance.html"><span>incline</span><wbr></wbr><span><span>Distance</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1153700476%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="incline-distance.html">inclineDistance</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The distance covered on an inclined surface during the exercise, in meters.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1430677703%2FProperties%2F-1784854612" anchor-label="log" id="1430677703%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="log.html"><span><span>log</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1430677703%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="log.html">log</a><span class="token operator">: </span><span data-unresolved-link="kotlin.collections/List///PointingToDeclaration/">List</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-exercise-log/index.html">ExerciseLog</a><span class="token operator">&gt;</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The <a href="../-exercise-log/index.html">ExerciseLog</a> of the exercise.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1836159013%2FProperties%2F-1784854612" anchor-label="maxAltitude" id="1836159013%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="max-altitude.html"><span>max</span><wbr></wbr><span><span>Altitude</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1836159013%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="max-altitude.html">maxAltitude</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The highest altitude, in meters.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1759397054%2FProperties%2F-1784854612" anchor-label="maxCadence" id="-1759397054%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="max-cadence.html"><span>max</span><wbr></wbr><span><span>Cadence</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1759397054%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="max-cadence.html">maxCadence</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The highest value for the cadence, as either cycle/min or swing/min.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1537728951%2FProperties%2F-1784854612" anchor-label="maxCalorieBurnRate" id="1537728951%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="max-calorie-burn-rate.html"><span>max</span><wbr></wbr><span>Calorie</span><wbr></wbr><span>Burn</span><wbr></wbr><span><span>Rate</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1537728951%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="max-calorie-burn-rate.html">maxCalorieBurnRate</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The highest value for the calorie burn rate.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1126972589%2FProperties%2F-1784854612" anchor-label="maxHeartRate" id="1126972589%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="max-heart-rate.html"><span>max</span><wbr></wbr><span>Heart</span><wbr></wbr><span><span>Rate</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1126972589%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="max-heart-rate.html">maxHeartRate</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The highest heart rate, in beats per minute (BPM).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1910718002%2FProperties%2F-1784854612" anchor-label="maxPower" id="-1910718002%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="max-power.html"><span>max</span><wbr></wbr><span><span>Power</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1910718002%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="max-power.html">maxPower</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The highest power, in Watts.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1292570204%2FProperties%2F-1784854612" anchor-label="maxRpm" id="-1292570204%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="max-rpm.html"><span>max</span><wbr></wbr><span><span>Rpm</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1292570204%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="max-rpm.html">maxRpm</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The highest value for revolutions per minute (RPM).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1327654708%2FProperties%2F-1784854612" anchor-label="maxSpeed" id="-1327654708%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="max-speed.html"><span>max</span><wbr></wbr><span><span>Speed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1327654708%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="max-speed.html">maxSpeed</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The highest speed, in meters per second (m/s).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="248439551%2FProperties%2F-1784854612" anchor-label="meanCadence" id="248439551%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="mean-cadence.html"><span>mean</span><wbr></wbr><span><span>Cadence</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="248439551%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="mean-cadence.html">meanCadence</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The average value for the cadence, as either cycle/min or swing/min.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1178338188%2FProperties%2F-1784854612" anchor-label="meanCalorieBurnRate" id="-1178338188%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="mean-calorie-burn-rate.html"><span>mean</span><wbr></wbr><span>Calorie</span><wbr></wbr><span>Burn</span><wbr></wbr><span><span>Rate</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1178338188%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="mean-calorie-burn-rate.html">meanCalorieBurnRate</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The average calorie burn rate.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2077333206%2FProperties%2F-1784854612" anchor-label="meanHeartRate" id="-2077333206%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="mean-heart-rate.html"><span>mean</span><wbr></wbr><span>Heart</span><wbr></wbr><span><span>Rate</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2077333206%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="mean-heart-rate.html">meanHeartRate</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The average heart rate, in beats per minute (BPM).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1702540491%2FProperties%2F-1784854612" anchor-label="meanPower" id="1702540491%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="mean-power.html"><span>mean</span><wbr></wbr><span><span>Power</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1702540491%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="mean-power.html">meanPower</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The average power, in Watts.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="977108961%2FProperties%2F-1784854612" anchor-label="meanRpm" id="977108961%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="mean-rpm.html"><span>mean</span><wbr></wbr><span><span>Rpm</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="977108961%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="mean-rpm.html">meanRpm</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The average value for revolutions per minute (RPM).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2009363511%2FProperties%2F-1784854612" anchor-label="meanSpeed" id="-2009363511%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="mean-speed.html"><span>mean</span><wbr></wbr><span><span>Speed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2009363511%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="mean-speed.html">meanSpeed</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The average speed, in meters per second (m/s).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1090118903%2FProperties%2F-1784854612" anchor-label="minAltitude" id="1090118903%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="min-altitude.html"><span>min</span><wbr></wbr><span><span>Altitude</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1090118903%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="min-altitude.html">minAltitude</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The lowest altitude, in meters.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-525434341%2FProperties%2F-1784854612" anchor-label="minHeartRate" id="-525434341%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="min-heart-rate.html"><span>min</span><wbr></wbr><span>Heart</span><wbr></wbr><span><span>Rate</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-525434341%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="min-heart-rate.html">minHeartRate</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Float///PointingToDeclaration/">Float</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The lowest heart rate, in beats per minute (BPM).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="396172770%2FProperties%2F-1784854612" anchor-label="route" id="396172770%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="route.html"><span><span>route</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="396172770%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="route.html">route</a><span class="token operator">: </span><span data-unresolved-link="kotlin.collections/List///PointingToDeclaration/">List</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-exercise-location/index.html">ExerciseLocation</a><span class="token operator">&gt;</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">A list of <a href="../-exercise-location/index.html">ExerciseLocation</a> objects of the exercise.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-882089572%2FProperties%2F-1784854612" anchor-label="startTime" id="-882089572%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="start-time.html"><span>start</span><wbr></wbr><span><span>Time</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-882089572%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="start-time.html">startTime</a><span class="token operator">: </span><span data-unresolved-link="java.time/Instant///PointingToDeclaration/">Instant</span></div><div class="brief "><p class="paragraph">The time at which measurement started.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2130297924%2FProperties%2F-1784854612" anchor-label="swimmingLog" id="2130297924%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="swimming-log.html"><span>swimming</span><wbr></wbr><span><span>Log</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2130297924%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="swimming-log.html">swimmingLog</a><span class="token operator">: </span><a href="../-swimming-log/index.html">SwimmingLog</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The <a href="../-swimming-log/index.html">SwimmingLog</a> of the exercise.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>Copyright ⓒ Samsung Electronics, Co., Ltd. All rights reserved.</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

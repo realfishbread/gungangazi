@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>DataType</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+</head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+                    <a class="library-name--link" href="../../../index.html">
+                            Samsung Health Data SDK 1.0.0 beta1
+                    </a>
+            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":SDK:dokkaHtml/client">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="Samsung Health Data SDK 1.0.0 beta1::com.samsung.android.sdk.health.data.request/DataType///PointingToDeclaration//-1784854612">
+  <div class="breadcrumbs"><a href="../../../index.html">Samsung Health Data SDK 1.0.0 beta1</a><span class="delimiter">/</span><a href="../index.html">com.samsung.android.sdk.health.data.request</a><span class="delimiter">/</span><span class="current">DataType</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Data</span><wbr></wbr><span><span>Type</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">class </span><a href="index.html">DataType</a> : <span data-unresolved-link="android.os/Parcelable///PointingToDeclaration/">Parcelable</span></div><p class="paragraph">The type of health data.</p><p class="paragraph">Each data type has different fields and supports different operations, so refer to the details of each data type.</p><p class="paragraph">Among the attributes (member variables) of the data type, <a href="../../com.samsung.android.sdk.health.data.data/-field/index.html">Field</a> is an attribute used for read, insert, and update operations, and <a href="../../com.samsung.android.sdk.health.data.data/-aggregate-operation/index.html">AggregateOperation</a> is a type of aggregation used to obtain its value through aggregate operation.</p><span class="kdoc-tag"><h4 class="">Since</h4><p class="paragraph">1.0.0</p></span><h4 class="">Inheritors</h4><div class="table"><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-sleep-type/index.html">SleepType</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-steps-type/index.html">StepsType</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-heart-rate-type/index.html">HeartRateType</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-exercise-type/index.html">ExerciseType</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-exercise-location-type/index.html">ExerciseLocationType</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-blood-oxygen-type/index.html">BloodOxygenType</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-skin-temperature-type/index.html">SkinTemperatureType</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-activity-summary-type/index.html">ActivitySummaryType</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-floors-climbed-type/index.html">FloorsClimbedType</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-blood-glucose-type/index.html">BloodGlucoseType</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-blood-pressure-type/index.html">BloodPressureType</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-sleep-goal-type/index.html">SleepGoalType</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-steps-goal-type/index.html">StepsGoalType</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-active-calories-burned-goal-type/index.html">ActiveCaloriesBurnedGoalType</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-active-time-goal-type/index.html">ActiveTimeGoalType</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-water-intake-type/index.html">WaterIntakeType</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-water-intake-goal-type/index.html">WaterIntakeGoalType</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-nutrition-type/index.html">NutritionType</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-nutrition-goal-type/index.html">NutritionGoalType</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-body-composition-type/index.html">BodyCompositionType</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-user-profile-data-type/index.html">UserProfileDataType</a></div></span></div><div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="768261734%2FClasslikes%2F-1784854612" anchor-label="ActiveCaloriesBurnedGoalType" id="768261734%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-active-calories-burned-goal-type/index.html"><span>Active</span><wbr></wbr><span>Calories</span><wbr></wbr><span>Burned</span><wbr></wbr><span>Goal</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="768261734%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-active-calories-burned-goal-type/index.html">ActiveCaloriesBurnedGoalType</a> : <a href="index.html">DataType</a></div><div class="brief "><p class="paragraph">The data type for the active calories burned goal that a user sets.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1064109171%2FClasslikes%2F-1784854612" anchor-label="ActiveTimeGoalType" id="-1064109171%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-active-time-goal-type/index.html"><span>Active</span><wbr></wbr><span>Time</span><wbr></wbr><span>Goal</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1064109171%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-active-time-goal-type/index.html">ActiveTimeGoalType</a> : <a href="index.html">DataType</a></div><div class="brief "><p class="paragraph">The data type for the active time goal that a user sets.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-37541116%2FClasslikes%2F-1784854612" anchor-label="ActivitySummaryType" id="-37541116%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-activity-summary-type/index.html"><span>Activity</span><wbr></wbr><span>Summary</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-37541116%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-activity-summary-type/index.html">ActivitySummaryType</a> : <a href="index.html">DataType</a></div><div class="brief "><p class="paragraph">The data type for the Activity Summary.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="177387871%2FClasslikes%2F-1784854612" anchor-label="BloodGlucoseType" id="177387871%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-blood-glucose-type/index.html"><span>Blood</span><wbr></wbr><span>Glucose</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="177387871%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-blood-glucose-type/index.html">BloodGlucoseType</a> : <a href="index.html">DataType</a>, <a href="-readable/index.html">DataType.Readable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a><span class="token operator">&gt; </span>, <a href="-change-readable/index.html">DataType.ChangeReadable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">The data type for measured blood glucose levels.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1966661311%2FClasslikes%2F-1784854612" anchor-label="BloodOxygenType" id="-1966661311%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-blood-oxygen-type/index.html"><span>Blood</span><wbr></wbr><span>Oxygen</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1966661311%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-blood-oxygen-type/index.html">BloodOxygenType</a> : <a href="index.html">DataType</a>, <a href="-readable/index.html">DataType.Readable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a><span class="token operator">&gt; </span>, <a href="-change-readable/index.html">DataType.ChangeReadable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">Data type for measured blood oxygen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="271589436%2FClasslikes%2F-1784854612" anchor-label="BloodPressureType" id="271589436%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-blood-pressure-type/index.html"><span>Blood</span><wbr></wbr><span>Pressure</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="271589436%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-blood-pressure-type/index.html">BloodPressureType</a> : <a href="index.html">DataType</a>, <a href="-readable/index.html">DataType.Readable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a><span class="token operator">&gt; </span>, <a href="-change-readable/index.html">DataType.ChangeReadable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">The data type for measured blood pressure.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="894582675%2FClasslikes%2F-1784854612" anchor-label="BodyCompositionType" id="894582675%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-body-composition-type/index.html"><span>Body</span><wbr></wbr><span>Composition</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="894582675%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-body-composition-type/index.html">BodyCompositionType</a> : <a href="index.html">DataType</a>, <a href="-readable/index.html">DataType.Readable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a><span class="token operator">&gt; </span>, <a href="-change-readable/index.html">DataType.ChangeReadable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">The data type for the body composition of the user.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1665104589%2FClasslikes%2F-1784854612" anchor-label="ChangeReadable" id="1665104589%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-change-readable/index.html"><span>Change</span><wbr></wbr><span><span>Readable</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1665104589%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-change-readable/index.html">ChangeReadable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-change-readable/index.html">T</a><span class="token operator"> : </span><a href="../../com.samsung.android.sdk.health.data.data/-data-point/index.html">DataPoint</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1591507255%2FClasslikes%2F-1784854612" anchor-label="Companion" id="-1591507255%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-companion/index.html"><span><span>Companion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1591507255%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1573450522%2FClasslikes%2F-1784854612" anchor-label="ExerciseLocationType" id="-1573450522%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-exercise-location-type/index.html"><span>Exercise</span><wbr></wbr><span>Location</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1573450522%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-exercise-location-type/index.html">ExerciseLocationType</a> : <a href="index.html">DataType</a></div><div class="brief "><p class="paragraph">The data type representing location in which the exercise took place.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1864771739%2FClasslikes%2F-1784854612" anchor-label="ExerciseType" id="1864771739%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-exercise-type/index.html"><span>Exercise</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1864771739%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-exercise-type/index.html">ExerciseType</a> : <a href="index.html">DataType</a>, <a href="-readable/index.html">DataType.Readable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a><span class="token operator">&gt; </span>, <a href="-change-readable/index.html">DataType.ChangeReadable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">The data type for the exercise. The data type defines the user's exercise data. The exercise data type supports read, change by read, and aggregate operations.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="640528174%2FClasslikes%2F-1784854612" anchor-label="FloorsClimbedType" id="640528174%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-floors-climbed-type/index.html"><span>Floors</span><wbr></wbr><span>Climbed</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="640528174%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-floors-climbed-type/index.html">FloorsClimbedType</a> : <a href="index.html">DataType</a></div><div class="brief "><p class="paragraph">The data type for the measured number of floors climbed.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1675192395%2FClasslikes%2F-1784854612" anchor-label="HeartRateType" id="-1675192395%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-heart-rate-type/index.html"><span>Heart</span><wbr></wbr><span>Rate</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1675192395%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-heart-rate-type/index.html">HeartRateType</a> : <a href="index.html">DataType</a>, <a href="-readable/index.html">DataType.Readable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a><span class="token operator">&gt; </span>, <a href="-change-readable/index.html">DataType.ChangeReadable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">The data type for measured heart rate.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1626551472%2FClasslikes%2F-1784854612" anchor-label="NutritionGoalType" id="-1626551472%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-nutrition-goal-type/index.html"><span>Nutrition</span><wbr></wbr><span>Goal</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1626551472%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-nutrition-goal-type/index.html">NutritionGoalType</a> : <a href="index.html">DataType</a></div><div class="brief "><p class="paragraph">The data type for nutrition goals that a user sets.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1265216605%2FClasslikes%2F-1784854612" anchor-label="NutritionType" id="-1265216605%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-nutrition-type/index.html"><span>Nutrition</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1265216605%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-nutrition-type/index.html">NutritionType</a> : <a href="index.html">DataType</a>, <a href="-readable/index.html">DataType.Readable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a><span class="token operator">&gt; </span>, <a href="-change-readable/index.html">DataType.ChangeReadable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">The data type for the nutrition that a user intakes.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1297789539%2FClasslikes%2F-1784854612" anchor-label="Readable" id="-1297789539%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-readable/index.html"><span><span>Readable</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1297789539%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-readable/index.html">Readable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-readable/index.html">T</a><span class="token operator"> : </span><a href="../../com.samsung.android.sdk.health.data.data/-data-point/index.html">DataPoint</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1537688804%2FClasslikes%2F-1784854612" anchor-label="SkinTemperatureType" id="1537688804%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-skin-temperature-type/index.html"><span>Skin</span><wbr></wbr><span>Temperature</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1537688804%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-skin-temperature-type/index.html">SkinTemperatureType</a> : <a href="index.html">DataType</a>, <a href="-readable/index.html">DataType.Readable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a><span class="token operator">&gt; </span>, <a href="-change-readable/index.html">DataType.ChangeReadable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">The data type for measured skin temperature.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2039901681%2FClasslikes%2F-1784854612" anchor-label="SleepGoalType" id="2039901681%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-sleep-goal-type/index.html"><span>Sleep</span><wbr></wbr><span>Goal</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2039901681%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-sleep-goal-type/index.html">SleepGoalType</a> : <a href="index.html">DataType</a></div><div class="brief "><p class="paragraph">The data type for the sleep goal that a user sets.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-539726140%2FClasslikes%2F-1784854612" anchor-label="SleepType" id="-539726140%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-sleep-type/index.html"><span>Sleep</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-539726140%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-sleep-type/index.html">SleepType</a> : <a href="index.html">DataType</a>, <a href="-readable/index.html">DataType.Readable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a><span class="token operator">&gt; </span>, <a href="-change-readable/index.html">DataType.ChangeReadable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">The data type for the estimated sleep score.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="964989857%2FClasslikes%2F-1784854612" anchor-label="StepsGoalType" id="964989857%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-steps-goal-type/index.html"><span>Steps</span><wbr></wbr><span>Goal</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="964989857%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-steps-goal-type/index.html">StepsGoalType</a> : <a href="index.html">DataType</a></div><div class="brief "><p class="paragraph">The data type for the step goal a user sets.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1231491980%2FClasslikes%2F-1784854612" anchor-label="StepsType" id="-1231491980%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-steps-type/index.html"><span>Steps</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1231491980%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-steps-type/index.html">StepsType</a> : <a href="index.html">DataType</a></div><div class="brief "><p class="paragraph">The data type for the total number of steps that a user takes. This is the result of merging the data from various types of watches and phones.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1047608851%2FClasslikes%2F-1784854612" anchor-label="UserProfileDataType" id="1047608851%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-user-profile-data-type/index.html"><span>User</span><wbr></wbr><span>Profile</span><wbr></wbr><span>Data</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1047608851%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-user-profile-data-type/index.html">UserProfileDataType</a> : <a href="index.html">DataType</a></div><div class="brief "><p class="paragraph">The data type for the User Profile.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1621508133%2FClasslikes%2F-1784854612" anchor-label="WaterIntakeGoalType" id="1621508133%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-water-intake-goal-type/index.html"><span>Water</span><wbr></wbr><span>Intake</span><wbr></wbr><span>Goal</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1621508133%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-water-intake-goal-type/index.html">WaterIntakeGoalType</a> : <a href="index.html">DataType</a></div><div class="brief "><p class="paragraph">The data type for the water intake goal that a user sets.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1888650504%2FClasslikes%2F-1784854612" anchor-label="WaterIntakeType" id="-1888650504%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-water-intake-type/index.html"><span>Water</span><wbr></wbr><span>Intake</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1888650504%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-water-intake-type/index.html">WaterIntakeType</a> : <a href="index.html">DataType</a>, <a href="-readable/index.html">DataType.Readable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a><span class="token operator">&gt; </span>, <a href="-change-readable/index.html">DataType.ChangeReadable</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">The data type for water that a user intakes.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="93789614%2FProperties%2F-1784854612" anchor-label="allAggregateOperations" id="93789614%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="all-aggregate-operations.html"><span>all</span><wbr></wbr><span>Aggregate</span><wbr></wbr><span><span>Operations</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="93789614%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="all-aggregate-operations.html">allAggregateOperations</a><span class="token operator">: </span><span data-unresolved-link="kotlin.collections/List///PointingToDeclaration/">List</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-aggregate-operation/index.html">AggregateOperation</a><span class="token operator">&lt;</span><span class="token operator">*</span><span class="token punctuation">, </span><span class="token operator">*</span><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">All aggregate operations of a specified data type.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-393833720%2FProperties%2F-1784854612" anchor-label="allFields" id="-393833720%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="all-fields.html"><span>all</span><wbr></wbr><span><span>Fields</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-393833720%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="all-fields.html">allFields</a><span class="token operator">: </span><span data-unresolved-link="kotlin.collections/List///PointingToDeclaration/">List</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.samsung.android.sdk.health.data.data/-field/index.html">Field</a><span class="token operator">&lt;</span><span class="token operator">*</span><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">All fields of a specified data type.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="577090221%2FProperties%2F-1784854612" anchor-label="name" id="577090221%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="name.html"><span><span>name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="577090221%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">val </span><a href="name.html">name</a><span class="token operator">: </span><span data-unresolved-link="kotlin/String///PointingToDeclaration/">String</span></div><div class="brief "><p class="paragraph">The name of a data type as a string.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>Copyright ⓒ Samsung Electronics, Co., Ltd. All rights reserved.</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

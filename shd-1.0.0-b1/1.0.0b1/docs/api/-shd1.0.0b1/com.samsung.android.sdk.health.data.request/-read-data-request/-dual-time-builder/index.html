@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>DualTimeBuilder</title>
+    <link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+</head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+                    <a class="library-name--link" href="../../../../index.html">
+                            Samsung Health Data SDK 1.0.0 beta1
+                    </a>
+            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":SDK:dokkaHtml/client">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="Samsung Health Data SDK 1.0.0 beta1::com.samsung.android.sdk.health.data.request/ReadDataRequest.DualTimeBuilder///PointingToDeclaration//-1784854612">
+  <div class="breadcrumbs"><a href="../../../../index.html">Samsung Health Data SDK 1.0.0 beta1</a><span class="delimiter">/</span><a href="../../index.html">com.samsung.android.sdk.health.data.request</a><span class="delimiter">/</span><a href="../index.html">ReadDataRequest</a><span class="delimiter">/</span><span class="current">DualTimeBuilder</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Dual</span><wbr></wbr><span>Time</span><wbr></wbr><span><span>Builder</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">DualTimeBuilder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator"> : </span><a href="../../../com.samsung.android.sdk.health.data.data/-data-point/index.html">DataPoint</a><span class="token operator">&gt;</span></div><p class="paragraph">Provides a convenient and safe way to set the fields and create a <a href="../index.html">ReadDataRequest</a>.</p><p class="paragraph">This allows for two types of time filters:</p><ul><li><p class="paragraph"><a href="../../-instant-time-filter/index.html">InstantTimeFilter</a> - with an <code class="lang-kotlin">Instant</code> type time interval as a condition. The time interval is represented as a standard time.</p></li><li><p class="paragraph"><a href="../../-local-time-filter/index.html">LocalTimeFilter</a> - with a <code class="lang-kotlin">LocalDateTime</code> type time interval as a condition. The time interval is represented as a local date and time.</p></li></ul><p class="paragraph">The instance of this class can be obtained from the the <code class="lang-kotlin">readDataRequestBuilder</code> field that each data type provides, not directly by a constructor.</p><span class="kdoc-tag"><h4 class="">Since</h4><p class="paragraph">1.0.0</p></span></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-553870191%2FFunctions%2F-1784854612" anchor-label="build" id="-553870191%2FFunctions%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="build.html"><span><span>build</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-553870191%2FFunctions%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="build.html"><span class="token function">build</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../index.html">ReadDataRequest</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Builds a <a href="../index.html">ReadDataRequest</a> from the configuration of this builder.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-798110446%2FFunctions%2F-1784854612" anchor-label="setIdFilter" id="-798110446%2FFunctions%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-id-filter.html"><span>set</span><wbr></wbr><span>Id</span><wbr></wbr><span><span>Filter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-798110446%2FFunctions%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-id-filter.html"><span class="token function">setIdFilter</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">idFilter<span class="token operator">: </span><a href="../../-id-filter/index.html">IdFilter</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">ReadDataRequest.DualTimeBuilder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Sets the ID filter of the request.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2134628406%2FFunctions%2F-1784854612" anchor-label="setInstantTimeFilter" id="-2134628406%2FFunctions%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-instant-time-filter.html"><span>set</span><wbr></wbr><span>Instant</span><wbr></wbr><span>Time</span><wbr></wbr><span><span>Filter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2134628406%2FFunctions%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-instant-time-filter.html"><span class="token function">setInstantTimeFilter</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">instantTimeFilter<span class="token operator">: </span><a href="../../-instant-time-filter/index.html">InstantTimeFilter</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">ReadDataRequest.DualTimeBuilder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Sets the instant time filter of the request.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1930717632%2FFunctions%2F-1784854612" anchor-label="setLimit" id="1930717632%2FFunctions%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-limit.html"><span>set</span><wbr></wbr><span><span>Limit</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1930717632%2FFunctions%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-limit.html"><span class="token function">setLimit</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">limit<span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">ReadDataRequest.DualTimeBuilder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Sets the size limit of the result.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1442955082%2FFunctions%2F-1784854612" anchor-label="setLocalTimeFilter" id="1442955082%2FFunctions%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-local-time-filter.html"><span>set</span><wbr></wbr><span>Local</span><wbr></wbr><span>Time</span><wbr></wbr><span><span>Filter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1442955082%2FFunctions%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-local-time-filter.html"><span class="token function">setLocalTimeFilter</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">localTimeFilter<span class="token operator">: </span><a href="../../-local-time-filter/index.html">LocalTimeFilter</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">ReadDataRequest.DualTimeBuilder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Sets the local time filter of the request.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1935566128%2FFunctions%2F-1784854612" anchor-label="setOrdering" id="-1935566128%2FFunctions%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-ordering.html"><span>set</span><wbr></wbr><span><span>Ordering</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1935566128%2FFunctions%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-ordering.html"><span class="token function">setOrdering</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">ordering<span class="token operator">: </span><a href="../../-ordering/index.html">Ordering</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">ReadDataRequest.DualTimeBuilder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Sets the order of the result.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1109690965%2FFunctions%2F-1784854612" anchor-label="setPageSize" id="-1109690965%2FFunctions%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-page-size.html"><span>set</span><wbr></wbr><span>Page</span><wbr></wbr><span><span>Size</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1109690965%2FFunctions%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-page-size.html"><span class="token function">setPageSize</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pageSize<span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">ReadDataRequest.DualTimeBuilder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Sets the page size of the result.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-254305870%2FFunctions%2F-1784854612" anchor-label="setPageToken" id="-254305870%2FFunctions%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-page-token.html"><span>set</span><wbr></wbr><span>Page</span><wbr></wbr><span><span>Token</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-254305870%2FFunctions%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-page-token.html"><span class="token function">setPageToken</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pageToken<span class="token operator">: </span><span data-unresolved-link="kotlin/String///PointingToDeclaration/">String</span><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">ReadDataRequest.DualTimeBuilder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Sets the page token of the result.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1895709084%2FFunctions%2F-1784854612" anchor-label="setSourceFilter" id="1895709084%2FFunctions%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-source-filter.html"><span>set</span><wbr></wbr><span>Source</span><wbr></wbr><span><span>Filter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1895709084%2FFunctions%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-source-filter.html"><span class="token function">setSourceFilter</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">sourceFilter<span class="token operator">: </span><a href="../../-read-source-filter/index.html">ReadSourceFilter</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">ReadDataRequest.DualTimeBuilder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Sets the source filter of the request.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>Copyright ⓒ Samsung Electronics, Co., Ltd. All rights reserved.</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

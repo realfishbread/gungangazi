@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>ResolvablePlatformException</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+</head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+                    <a class="library-name--link" href="../../../index.html">
+                            Samsung Health Data SDK 1.0.0 beta1
+                    </a>
+            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":SDK:dokkaHtml/client">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="Samsung Health Data SDK 1.0.0 beta1::com.samsung.android.sdk.health.data.error/ResolvablePlatformException///PointingToDeclaration//-1784854612">
+  <div class="breadcrumbs"><a href="../../../index.html">Samsung Health Data SDK 1.0.0 beta1</a><span class="delimiter">/</span><a href="../index.html">com.samsung.android.sdk.health.data.error</a><span class="delimiter">/</span><span class="current">ResolvablePlatformException</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Resolvable</span><wbr></wbr><span>Platform</span><wbr></wbr><span><span>Exception</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">ResolvablePlatformException</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">errorCode<span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">errorMessage<span class="token operator">: </span><span data-unresolved-link="kotlin/String///PointingToDeclaration/">String</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>hasResolution<span class="token operator">: </span><span data-unresolved-link="kotlin/Boolean///PointingToDeclaration/">Boolean</span></span></span><span class="token punctuation">)</span> : <a href="../-health-data-exception/index.html">HealthDataException</a></div><p class="paragraph">An exception to indicate that the Samsung Health platform is not ready to serve the specified operation.</p><p class="paragraph">In some cases, this error can be resolved by the user at runtime. It is strongly recommended for the application to show the right message to the user if <a href="has-resolution.html">hasResolution</a> returns <code class="lang-kotlin">true</code> and call a <a href="resolve.html">resolve</a> method if the user agrees. Here is a sample code which checks if the thrown exception can be solved in this way:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">try {<br> //API call that can throw an exception<br>} catch (error: HealthDataException) {<br>     if (error is ResolvablePlatformException &amp;&amp; error.hasResolution) {<br>         error.resolve(activity)<br>     }<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">The following error codes are defined and can be helpful to application developers.</p><ul><li><p class="paragraph"><a href="../-error-code/-e-r-r_-p-l-a-t-f-o-r-m_-n-o-t_-i-n-s-t-a-l-l-e-d.html">ErrorCode.ERR_PLATFORM_NOT_INSTALLED</a>: Samsung Health is not installed.</p></li><li><p class="paragraph"><a href="../-error-code/-e-r-r_-o-l-d_-v-e-r-s-i-o-n_-p-l-a-t-f-o-r-m.html">ErrorCode.ERR_OLD_VERSION_PLATFORM</a>: The version of Samsung Health is old so it can't support this function of the SDK.</p></li><li><p class="paragraph"><a href="../-error-code/-e-r-r_-p-l-a-t-f-o-r-m_-d-i-s-a-b-l-e-d.html">ErrorCode.ERR_PLATFORM_DISABLED</a>: Samsung Health has been installed but it is disabled.</p></li><li><p class="paragraph"><a href="../-error-code/-e-r-r_-p-l-a-t-f-o-r-m_-n-o-t_-i-n-i-t-i-a-l-i-z-e-d.html">ErrorCode.ERR_PLATFORM_NOT_INITIALIZED</a>: Samsung Health has been installed but the user didn't perform an initial process, such as agreeing to the Terms and Conditions.</p></li></ul><span class="kdoc-tag"><h4 class="">Since</h4><p class="paragraph">1.0.0</p></span><h4 class="">Parameters</h4><div class="table"><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>error</span><wbr></wbr><span><span>Code</span></span></u></div></span></div><div><div class="title"><p class="paragraph">The code for this error.</p></div></div></div></div><div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>error</span><wbr></wbr><span><span>Message</span></span></u></div></span></div><div><div class="title"><p class="paragraph">The message for this error.</p></div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="635173921%2FConstructors%2F-1784854612" anchor-label="ResolvablePlatformException" id="635173921%2FConstructors%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-resolvable-platform-exception.html"><span>Resolvable</span><wbr></wbr><span>Platform</span><wbr></wbr><span><span>Exception</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="635173921%2FConstructors%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">errorCode<span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">errorMessage<span class="token operator">: </span><span data-unresolved-link="kotlin/String///PointingToDeclaration/">String</span><span class="token punctuation">, </span></span><span class="parameter ">hasResolution<span class="token operator">: </span><span data-unresolved-link="kotlin/Boolean///PointingToDeclaration/">Boolean</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">A constructor.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="1304841674%2FProperties%2F-1784854612" anchor-label="hasResolution" id="1304841674%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="has-resolution.html"><span>has</span><wbr></wbr><span><span>Resolution</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1304841674%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="has-resolution.html">hasResolution</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Boolean///PointingToDeclaration/">Boolean</span></div><div class="brief "><p class="paragraph">Returns whether this exception has a resolution.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="760535145%2FFunctions%2F-1784854612" anchor-label="resolve" id="760535145%2FFunctions%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="resolve.html"><span><span>resolve</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="760535145%2FFunctions%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="resolve.html"><span class="token function">resolve</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">activity<span class="token operator">: </span><span data-unresolved-link="android.app/Activity///PointingToDeclaration/">Activity</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Resolves the exception with an activity that is able to retrieve the user's feedback for possible error cases.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>Copyright ⓒ Samsung Electronics, Co., Ltd. All rights reserved.</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

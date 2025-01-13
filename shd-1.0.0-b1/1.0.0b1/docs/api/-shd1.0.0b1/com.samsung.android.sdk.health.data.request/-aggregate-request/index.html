@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>AggregateRequest</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+</head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+                    <a class="library-name--link" href="../../../index.html">
+                            Samsung Health Data SDK 1.0.0 beta1
+                    </a>
+            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":SDK:dokkaHtml/client">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="Samsung Health Data SDK 1.0.0 beta1::com.samsung.android.sdk.health.data.request/AggregateRequest///PointingToDeclaration//-1784854612">
+  <div class="breadcrumbs"><a href="../../../index.html">Samsung Health Data SDK 1.0.0 beta1</a><span class="delimiter">/</span><a href="../index.html">com.samsung.android.sdk.health.data.request</a><span class="delimiter">/</span><span class="current">AggregateRequest</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Aggregate</span><wbr></wbr><span><span>Request</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">AggregateRequest</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator"> : </span><span data-unresolved-link="kotlin/Any///PointingToDeclaration/">Any</span><span class="token operator">&gt;</span> : <span data-unresolved-link="android.os/Parcelable///PointingToDeclaration/">Parcelable</span></div><p class="paragraph">Represents a request for an aggregation query over a period of time after running aggregate operations, such as <code class="lang-kotlin">TOTAL</code>, <code class="lang-kotlin">LAST</code>, and so on for <a href="../../com.samsung.android.sdk.health.data.data/-health-data-point/index.html">HealthDataPoint</a>.</p><p class="paragraph">An available aggregation operation is different for each data type. See a data type's member properties with <a href="../../com.samsung.android.sdk.health.data.data/-aggregate-operation/index.html">AggregateOperation</a>. For example, <a href="../-data-type/-nutrition-type/index.html">NutritionType</a> has <a href="../-data-type/-nutrition-type/-companion/-t-o-t-a-l_-c-a-l-o-r-i-e-s.html">TOTAL_CALORIES</a>.</p><p class="paragraph">This request can include filters, such as the source filter and time filter. For example, if both of the following conditions have been applied for an aggregate request:</p><ul><li><p class="paragraph">the specific time is set with <a href="../-local-time-filter/index.html">LocalTimeFilter</a></p></li><li><p class="paragraph">Samsung Health is set as the source of the data with <a href="../-aggregate-source-filter/index.html">AggregateSourceFilter</a></p></li></ul><p class="paragraph">then the SDK checks for all data with the specified time that has been generated by Samsung Health.</p><p class="paragraph">This is a sample code for retrieving aggregated data, in this case retrieving the total count of real steps:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">suspend fun readStepsData() {<br>     val healthDataStore = HealthDataService.getStore(context)<br>     val readRequest = DataType.StepsType.TOTAL.requestBuilder<br>         // set some filters or conditions<br>         .build()<br><br>     // make asynchronous call for result<br>     val result = healthDataStore.aggregateData(readRequest)<br>     // process data<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><span class="kdoc-tag"><h4 class="">Since</h4><p class="paragraph">1.0.0</p></span></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="-874781205%2FClasslikes%2F-1784854612" anchor-label="AllSourceLocalDateBuilder" id="-874781205%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-all-source-local-date-builder/index.html"><span>All</span><wbr></wbr><span>Source</span><wbr></wbr><span>Local</span><wbr></wbr><span>Date</span><wbr></wbr><span><span>Builder</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-874781205%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-all-source-local-date-builder/index.html">AllSourceLocalDateBuilder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-all-source-local-date-builder/index.html">T</a><span class="token operator"> : </span><span data-unresolved-link="kotlin/Any///PointingToDeclaration/">Any</span><span class="token operator">&gt;</span> : <a href="-builder/index.html">AggregateRequest.Builder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-all-source-local-date-builder/index.html">T</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">Provides a safe and convenient way to set the fields and create an <a href="index.html">AggregateRequest</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1497188402%2FClasslikes%2F-1784854612" anchor-label="Builder" id="-1497188402%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-builder/index.html"><span><span>Builder</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1497188402%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-builder/index.html">Builder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-builder/index.html">T</a><span class="token operator"> : </span><span data-unresolved-link="kotlin/Any///PointingToDeclaration/">Any</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">The interface of the builder for making an <a href="index.html">AggregateRequest</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2065883479%2FClasslikes%2F-1784854612" anchor-label="DualTimeBuilder" id="2065883479%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-dual-time-builder/index.html"><span>Dual</span><wbr></wbr><span>Time</span><wbr></wbr><span><span>Builder</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2065883479%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-dual-time-builder/index.html">DualTimeBuilder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-dual-time-builder/index.html">T</a><span class="token operator"> : </span><span data-unresolved-link="kotlin/Any///PointingToDeclaration/">Any</span><span class="token operator">&gt;</span> : <a href="-builder/index.html">AggregateRequest.Builder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-dual-time-builder/index.html">T</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">Provides a safe and convenient way to set the fields and create an <a href="index.html">AggregateRequest</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-370219273%2FClasslikes%2F-1784854612" anchor-label="LocalDateBuilder" id="-370219273%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-local-date-builder/index.html"><span>Local</span><wbr></wbr><span>Date</span><wbr></wbr><span><span>Builder</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-370219273%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-local-date-builder/index.html">LocalDateBuilder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-local-date-builder/index.html">T</a><span class="token operator"> : </span><span data-unresolved-link="kotlin/Any///PointingToDeclaration/">Any</span><span class="token operator">&gt;</span> : <a href="-builder/index.html">AggregateRequest.Builder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-local-date-builder/index.html">T</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">Provides a safe and convenient way to set the fields and create an <a href="index.html">AggregateRequest</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1194717674%2FClasslikes%2F-1784854612" anchor-label="LocalTimeBuilder" id="-1194717674%2FClasslikes%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-local-time-builder/index.html"><span>Local</span><wbr></wbr><span>Time</span><wbr></wbr><span><span>Builder</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1194717674%2FClasslikes%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword">class </span><a href="-local-time-builder/index.html">LocalTimeBuilder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-local-time-builder/index.html">T</a><span class="token operator"> : </span><span data-unresolved-link="kotlin/Any///PointingToDeclaration/">Any</span><span class="token operator">&gt;</span> : <a href="-builder/index.html">AggregateRequest.Builder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-local-time-builder/index.html">T</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">Provides a safe and convenient way to set the fields and create an <a href="index.html">AggregateRequest</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="974415008%2FProperties%2F-1784854612" anchor-label="dataType" id="974415008%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="data-type.html"><span>data</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="974415008%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="data-type.html">dataType</a><span class="token operator">: </span><a href="../-data-type/index.html">DataType</a></div><div class="brief "><p class="paragraph">The data type of this request.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="239733392%2FProperties%2F-1784854612" anchor-label="instantTimeFilter" id="239733392%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="instant-time-filter.html"><span>instant</span><wbr></wbr><span>Time</span><wbr></wbr><span><span>Filter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="239733392%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="instant-time-filter.html">instantTimeFilter</a><span class="token operator">: </span><a href="../-instant-time-filter/index.html">InstantTimeFilter</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The <code class="lang-kotlin">InstantTimeFilter</code> of this request.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="234338675%2FProperties%2F-1784854612" anchor-label="instantTimeGroup" id="234338675%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="instant-time-group.html"><span>instant</span><wbr></wbr><span>Time</span><wbr></wbr><span><span>Group</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="234338675%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="instant-time-group.html">instantTimeGroup</a><span class="token operator">: </span><a href="../-instant-time-group/index.html">InstantTimeGroup</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The <code class="lang-kotlin">InstantTimeGroup</code> of this request.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1310203654%2FProperties%2F-1784854612" anchor-label="localTimeFilter" id="1310203654%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="local-time-filter.html"><span>local</span><wbr></wbr><span>Time</span><wbr></wbr><span><span>Filter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1310203654%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="local-time-filter.html">localTimeFilter</a><span class="token operator">: </span><a href="../-local-time-filter/index.html">LocalTimeFilter</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The <code class="lang-kotlin">LocalTimeFilter</code> of this request.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-562414019%2FProperties%2F-1784854612" anchor-label="localTimeGroup" id="-562414019%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="local-time-group.html"><span>local</span><wbr></wbr><span>Time</span><wbr></wbr><span><span>Group</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-562414019%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="local-time-group.html">localTimeGroup</a><span class="token operator">: </span><a href="../-local-time-group/index.html">LocalTimeGroup</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The <code class="lang-kotlin">LocalTimeGroup</code> of this request.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1122978096%2FProperties%2F-1784854612" anchor-label="ordering" id="-1122978096%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="ordering.html"><span><span>ordering</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1122978096%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="ordering.html">ordering</a><span class="token operator">: </span><a href="../-ordering/index.html">Ordering</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The ordering of this request.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="433849588%2FProperties%2F-1784854612" anchor-label="pageSize" id="433849588%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="page-size.html"><span>page</span><wbr></wbr><span><span>Size</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="433849588%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="page-size.html">pageSize</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The page size of this request, which means the size of the data in one results page.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1376630988%2FProperties%2F-1784854612" anchor-label="pageToken" id="1376630988%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="page-token.html"><span>page</span><wbr></wbr><span><span>Token</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1376630988%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="page-token.html">pageToken</a><span class="token operator">: </span><span data-unresolved-link="kotlin/String///PointingToDeclaration/">String</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The page token of this request.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1627278703%2FProperties%2F-1784854612" anchor-label="sourceFilter" id="-1627278703%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="source-filter.html"><span>source</span><wbr></wbr><span><span>Filter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1627278703%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="source-filter.html">sourceFilter</a><span class="token operator">: </span><a href="../-aggregate-source-filter/index.html">AggregateSourceFilter</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The <code class="lang-kotlin">AggregateSourceFilter</code> of this request.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-565103264%2FProperties%2F-1784854612" anchor-label="targetOperation" id="-565103264%2FProperties%2F-1784854612" data-filterable-set=":SDK:dokkaHtml/client"></a>
+          <div class="table-row" data-filterable-current=":SDK:dokkaHtml/client" data-filterable-set=":SDK:dokkaHtml/client">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="target-operation.html"><span>target</span><wbr></wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-565103264%2FProperties%2F-1784854612"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":SDK:dokkaHtml/client"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="target-operation.html">targetOperation</a><span class="token operator">: </span><a href="../../com.samsung.android.sdk.health.data.data/-aggregate-operation/index.html">AggregateOperation</a><span class="token operator">&lt;</span><span class="token operator">*</span><span class="token punctuation">, </span><span class="token operator">*</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">This is the target <code class="lang-kotlin">AggregateOperation</code>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>Copyright ⓒ Samsung Electronics, Co., Ltd. All rights reserved.</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

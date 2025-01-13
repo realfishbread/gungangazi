@@ -123,17 +123,17 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       children: [
                         TextField(
-                            controller: _nameController,
-                            decoration: const InputDecoration(
-                              labelText: '아이디',
-                              border: OutlineInputBorder(),
-                            ),
-                            onSubmitted: (value) {
-                              FocusScope.of(context).nextFocus(); // 다음 필드로 포커스를 이동
-                            },
+                          controller: _nameController,
+                          decoration: const InputDecoration(
+                            labelText: '아이디',
+                            border: OutlineInputBorder(),
                           ),
-                          const SizedBox(height: 16),
-                          TextField(
+                          onSubmitted: (value) {
+                            FocusScope.of(context).nextFocus(); // 다음 필드로 포커스를 이동
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        TextField(
                           controller: _passwordController,
                           obscureText: _obscurePassword,
                           obscuringCharacter: '●',
@@ -157,7 +157,6 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
-
                         const SizedBox(height: 16),
                         if (_loginFailed)
                           const Text(
@@ -173,19 +172,73 @@ class _LoginPageState extends State<LoginPage> {
                           child: const Text('로그인'),
                         ),
                         const SizedBox(height: 16),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            foregroundColor: Colors.black, // 텍스트 색상을 검정으로 설정
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              '회원이 아니신가요?',
+                              style: TextStyle(
+                                color: Colors.grey,
+                              ),
+                            ),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.black, // 텍스트 색상을 검정으로 설정
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const SignUpPage()),
+                                );
+                              },
+                              child: const Text('회원가입'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 32),
+                        const Divider(),
+                        const SizedBox(height: 10),
+                        const Text(
+                          'SNS로 로그인하기',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black54,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton.icon(
+                          icon: Image.asset(
+                            'assets/icons/kakao_icon.png',
+                            width: 30,
+                            height: 30,
+                          ),
+                          label: const Text('카카오로 로그인'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFFFEE500),
+                            foregroundColor: Colors.black,
                           ),
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const SignUpPage()),
-                            );
+                            // 카카오 로그인 로직
                           },
-                          child: const Text('회원가입'),
                         ),
-
+                        const SizedBox(height: 16),
+                        ElevatedButton.icon(
+                          icon: Image.asset(
+                            'assets/icons/google_icon.png',
+                            width: 22,
+                            height: 22,
+                          ),
+                          label: const Text('구글로 로그인'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black,
+                            side: const BorderSide(color: Colors.grey),
+                          ),
+                          onPressed: () {
+                            // 구글 로그인 로직
+                          },
+                        ),
                       ],
                     ),
                   ),

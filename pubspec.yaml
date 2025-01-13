@@ -76,6 +76,7 @@ flutter:
     - assets/splash/
     - assets/dog.jpg
     - assets/
+    - assets/icons/
 
   # 폰트 등록
   fonts:

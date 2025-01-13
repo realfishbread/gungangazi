@@ -26,6 +26,16 @@
 
     <dependencies>
 
+       <dependency>
+            <groupId>com.samsung.health</groupId>
+            <artifactId>samsung-health-data-api</artifactId>
+            <version>1.0.0-b1</version>
+            <type>aar</type>
+        </dependency>
+
+        
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>

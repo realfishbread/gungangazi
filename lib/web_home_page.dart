@@ -175,11 +175,12 @@ class _WebHomePageState extends State<WebHomePage> {
           SideMenu(
             controller: sideMenu,
             style: SideMenuStyle(
+              backgroundColor: const Color.fromARGB(255, 247, 247, 247), // 드로어 배경색 추가
               displayMode: SideMenuDisplayMode.auto,
               showHamburger: true,
-              hoverColor: Colors.purple[100],
-              selectedHoverColor: const Color.fromARGB(255, 230, 207, 235),
-              selectedColor: const Color.fromARGB(255, 229, 176, 238),
+              hoverColor: const Color.fromARGB(255, 242, 217, 247),
+              selectedHoverColor: const Color.fromARGB(255, 217, 145, 235),
+              selectedColor: const Color.fromARGB(255, 225, 171, 235),
               selectedTitleTextStyle: const TextStyle(color: Colors.black),
               selectedIconColor: Colors.black,
             ),
@@ -356,7 +357,6 @@ class _WebHomePageState extends State<WebHomePage> {
               ),
             ],
           ),
-          const VerticalDivider(width: 0),
           Expanded(
             child: Center(
               child: _popupHandler.buildImageAnimationWithTouch(context, (selectedImagePath) {

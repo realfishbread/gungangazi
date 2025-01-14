@@ -1,6 +1,7 @@
 import 'SignUp.dart'; // 회원가입 페이지를 불러오기 위해 추가
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart'; // Kakao SDK import
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import '../../repositories/auth_repository.dart'; // AuthRepository import
 import '../../dto/login_dto.dart'; // Login DTO import
 
@@ -77,6 +78,16 @@ class _LoginPageState extends State<LoginPage> {
       _showErrorDialog('카카오 로그인 중 오류가 발생했습니다.');
     }
   }
+
+  Future<void> fetchUserInfo() async {
+  try {
+    User user = await UserApi.instance.me();
+    print('사용자 정보: ${user.kakaoAccount?.profile?.nickname}');
+  } catch (error) {
+    print('사용자 정보 요청 실패: $error');
+  }
+}
+
 
   void _showErrorDialog(String message) {
     showDialog(

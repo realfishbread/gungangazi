@@ -45,6 +45,8 @@ dependencies:
   web_smooth_scroll: ^1.1.0
   flutter_slider_drawer: ^2.1.3
   kakao_flutter_sdk: ^1.2.2
+  kakao_flutter_sdk_user: ^1.0.0
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
    

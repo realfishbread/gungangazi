@@ -23,10 +23,14 @@ android {
     
     defaultConfig {
         applicationId = "com.example.example4"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 34
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders = [
+            applicationName     : "io.flutter.app.FlutterApplication",
+            KAKAO_NATIVE_APP_KEY: System.getenv("KAKAO_NATIVE_APP_KEY") ?: ""
+        ]
     }
     buildTypes {
         release {
@@ -61,4 +65,5 @@ dependencies {
 
     // MySQL 연결을 위한 드라이버 (옵션)
     implementation 'mysql:mysql-connector-java:8.0.25'
+    implementation 'com.kakao.sdk:v2-user:2.17.0'
 }

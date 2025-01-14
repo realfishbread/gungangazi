@@ -20,7 +20,8 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://jitpack.io" }
+        maven { url "https://devrepo.kakao.com/nexus/content/groups/public/" } // 카카오 SDK 저장소
+        maven { url "https://jitpack.io" } // 다른 의존성에 필요할 수 있음
     }
 }
 

@@ -276,8 +276,6 @@ class _WebHomePageState extends State<WebHomePage> {
                     },
                     icon: const Icon(Icons.water_drop),
                   ),
-
-                  
                 ],
               ),
               SideMenuExpansionItem(

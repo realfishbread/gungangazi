@@ -2,13 +2,12 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
+    id "org.jetbrains.kotlin.android" version "1.7.10" apply false
 }
-
-
 
 android {
     namespace = "com.example.example4"
-    compileSdk = 34
+    compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -20,23 +19,17 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
-    
     defaultConfig {
         applicationId = "com.example.example4"
-        minSdk = 23
-        targetSdk = 34
+        minSdk = flutter.minSdkVersion
+        targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        manifestPlaceholders = [
-            applicationName     : "io.flutter.app.FlutterApplication",
-            KAKAO_NATIVE_APP_KEY: System.getenv("KAKAO_NATIVE_APP_KEY") ?: ""
-        ]
     }
+
     buildTypes {
         release {
             signingConfig = signingConfigs.debug
-            minifyEnabled false // R8 비활성화
-            shrinkResources false
         }
     }
 }
@@ -65,5 +58,4 @@ dependencies {
 
     // MySQL 연결을 위한 드라이버 (옵션)
     implementation 'mysql:mysql-connector-java:8.0.25'
-    implementation 'com.kakao.sdk:v2-user:2.17.0'
 }

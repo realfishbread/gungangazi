@@ -2,17 +2,13 @@ import '../splash/SplashPage.dart';
 import 'package:flutter/material.dart';
 import 'mobile_home_page.dart'; // 앱 전용 페이지
 import 'loginPge.dart'; // 통합된 로그인 페이지
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
-void main() async {
-  await dotenv.load();
-  KakaoSdk.init(
-    nativeAppKey: dotenv.env['KAKAO_NATIVE_APP_KEY']!,
-  );
-  runApp(MyApp());
+
+void main() {
+  runApp(const MyApp());
 }
+
 
 
 class MyApp extends StatelessWidget {

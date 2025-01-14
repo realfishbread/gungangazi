@@ -1,6 +1,5 @@
-
 buildscript {
-    ext.kotlin_version = '1.8.22'
+    ext.kotlin_version = '1.7.10'
     repositories {
         google()
         mavenCentral()
@@ -8,24 +7,17 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.android.tools.build:gradle:8.1.1'
+        classpath 'com.android.tools.build:gradle:7.3.0'
     }
-}
-
-plugins {
-    id "org.jetbrains.kotlin.android" version "1.8.22" apply false
 }
 
 allprojects {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://devrepo.kakao.com/nexus/content/groups/public/" } // 카카오 SDK 저장소
-        maven { url "https://jitpack.io" } // 다른 의존성에 필요할 수 있음
+        maven { url "https://jitpack.io" }
     }
 }
-
-
 
 rootProject.buildDir = "../build"
 subprojects {

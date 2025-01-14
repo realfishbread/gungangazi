@@ -1,7 +1,5 @@
 import 'SignUp.dart'; // 회원가입 페이지를 불러오기 위해 추가
 import 'package:flutter/material.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart'; // Kakao SDK import
-import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import '../../repositories/auth_repository.dart'; // AuthRepository import
 import '../../dto/login_dto.dart'; // Login DTO import
 
@@ -20,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscurePassword = true;
 
   Future<void> _login() async {
+    // 서버로 로그인 요청 보내기
     LoginRequestDto loginRequest = LoginRequestDto(
       username: _nameController.text,
       password: _passwordController.text,
@@ -33,6 +32,7 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
 
+      // 로컬 테스트용 가짜 아이디와 비밀번호 체크
       if (_nameController.text == 'testUser' && _passwordController.text == 'password123') {
         print('로컬 로그인 성공, 가짜 유저 로그인');
         setState(() {
@@ -42,11 +42,13 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
 
+      // 로그인 API 호출
       LoginResponseDto? loginResponse = await _authRepository.login(loginRequest);
 
       if (loginResponse != null) {
         String token = loginResponse.token;
-        print('로그인 성공, 토큰: $token');
+        String message = loginResponse.message;
+        print('로그인 성공, 메시지: $message, 토큰: $token');
         setState(() {
           _loginFailed = false;
         });
@@ -62,32 +64,6 @@ class _LoginPageState extends State<LoginPage> {
       _showErrorDialog('로그인 중 오류가 발생했습니다.');
     }
   }
-
-  Future<void> _loginWithKakao() async {
-    try {
-      bool isInstalled = await isKakaoTalkInstalled();
-
-      OAuthToken token = isInstalled
-          ? await UserApi.instance.loginWithKakaoTalk()
-          : await UserApi.instance.loginWithKakaoAccount();
-
-      print('카카오 로그인 성공: ${token.accessToken}');
-      Navigator.pushReplacementNamed(context, '/homeApp');
-    } catch (e) {
-      print('카카오 로그인 실패: $e');
-      _showErrorDialog('카카오 로그인 중 오류가 발생했습니다.');
-    }
-  }
-
-  Future<void> fetchUserInfo() async {
-  try {
-    User user = await UserApi.instance.me();
-    print('사용자 정보: ${user.kakaoAccount?.profile?.nickname}');
-  } catch (error) {
-    print('사용자 정보 요청 실패: $error');
-  }
-}
-
 
   void _showErrorDialog(String message) {
     showDialog(
@@ -116,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Container(
         decoration: const BoxDecoration(
           color: Color(0xFFFFFAEC),
-        ),
+        ), // 배경색을 파스텔 옐로우로 설정
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
@@ -125,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    'assets/splash/splash_image.png',
+                    'assets/splash/splash_image.png', // 로고 아이콘을 이미지로 변경
                     width: 200,
                     height: 200,
                   ),
@@ -153,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                             border: OutlineInputBorder(),
                           ),
                           onSubmitted: (value) {
-                            FocusScope.of(context).nextFocus();
+                            FocusScope.of(context).nextFocus(); // 다음 필드로 포커스를 이동
                           },
                         ),
                         const SizedBox(height: 16),
@@ -161,9 +137,10 @@ class _LoginPageState extends State<LoginPage> {
                           controller: _passwordController,
                           obscureText: _obscurePassword,
                           obscuringCharacter: '●',
+                          // 엔터 버튼의 동작 설정
                           textInputAction: TextInputAction.done,
                           onSubmitted: (value) {
-                            _login();
+                            _login(); // 엔터를 누르면 로그인 시도
                           },
                           decoration: InputDecoration(
                             labelText: '비밀번호',
@@ -188,8 +165,8 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.yellow[100],
-                            foregroundColor: Colors.black,
+                            backgroundColor: Colors.yellow[100], // 버튼 배경색을 검정으로 설정
+                            foregroundColor: Colors.black, // 텍스트 색상을 흰색으로 설정
                           ),
                           onPressed: _login,
                           child: const Text('로그인'),
@@ -206,7 +183,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             TextButton(
                               style: TextButton.styleFrom(
-                                foregroundColor: Colors.black,
+                                foregroundColor: Colors.black, // 텍스트 색상을 검정으로 설정
                               ),
                               onPressed: () {
                                 Navigator.push(
@@ -241,7 +218,9 @@ class _LoginPageState extends State<LoginPage> {
                             backgroundColor: Color(0xFFFEE500),
                             foregroundColor: Colors.black,
                           ),
-                          onPressed: _loginWithKakao,
+                          onPressed: () {
+                            // 카카오 로그인 로직
+                          },
                         ),
                         const SizedBox(height: 16),
                         ElevatedButton.icon(

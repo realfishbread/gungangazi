@@ -2,10 +2,12 @@ import '../splash/SplashPage.dart';
 import 'package:flutter/material.dart';
 import 'mobile_home_page.dart'; // 앱 전용 페이지
 import 'loginPge.dart'; // 통합된 로그인 페이지
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
 
 
 void main() {
+  KakaoSdk.init(nativeAppKey: '1187720'); // 카카오 개발자 콘솔에서 가져온 키 입력
   runApp(const MyApp());
 }
 

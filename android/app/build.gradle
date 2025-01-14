@@ -2,12 +2,13 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
-    id "org.jetbrains.kotlin.android" version "1.7.10" apply false
 }
+
+
 
 android {
     namespace = "com.example.example4"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 34
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -19,17 +20,19 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
+    
     defaultConfig {
         applicationId = "com.example.example4"
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        minSdk = 21
+        targetSdk = 34
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
-
     buildTypes {
         release {
             signingConfig = signingConfigs.debug
+            minifyEnabled false // R8 비활성화
+            shrinkResources false
         }
     }
 }

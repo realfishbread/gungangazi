@@ -2,12 +2,12 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
-    id "org.jetbrains.kotlin.android" version "1.7.10" apply false
+    id "org.jetbrains.kotlin.android" version "1.8.22" apply false
 }
 
 android {
     namespace = "com.example.example4"
-    compileSdk = flutter.compileSdkVersion
+    compileSdkVersion 34 // 34로 낮추기
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -30,6 +30,8 @@ android {
     buildTypes {
         release {
             signingConfig = signingConfigs.debug
+            minifyEnabled false // R8 최적화 비활성화
+            shrinkResources false // 리소스 최적화 비활성화
         }
     }
 }

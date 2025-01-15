@@ -1,13 +1,14 @@
-// repositories/auth_repository.dart
 import 'package:dio/dio.dart';
 import '../dto/login_dto.dart';
 import '../services/dio_service.dart';
 import '../services/TokenService.dart'; // TokenService를 임포트
+import 'package:google_sign_in/google_sign_in.dart'; // Google Sign-In 패키지 추가
 import 'dart:convert';
 
 class AuthRepository {
   final Dio _dio;
   final TokenService _tokenService = TokenService(); // TokenService 인스턴스 생성
+  final GoogleSignIn _googleSignIn = GoogleSignIn(); // GoogleSignIn 인스턴스 생성
 
   // 생성자에서 DioService를 사용하여 Dio 인스턴스를 가져옴
   AuthRepository() : _dio = DioService().getDio();
@@ -26,7 +27,7 @@ class AuthRepository {
       if (response.statusCode == 200) {
         // 응답 데이터에서 토큰 추출
         String token = response.data['token'];
-        
+
         // TokenService를 통해 토큰 저장
         await _tokenService.saveToken(token);
         print("토큰 저장 완료: $token");
@@ -37,8 +38,10 @@ class AuthRepository {
         return null; // 로그인 실패
       }
     } on DioException catch (e) {
-      print('로그인 오류:  ${e.response?.data ?? e.message}');
+      print('로그인 오류: ${e.response?.data ?? e.message}');
       return null; // 예외 발생 시 null 반환
     }
   }
+
+  
 }

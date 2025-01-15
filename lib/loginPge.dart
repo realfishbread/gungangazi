@@ -2,6 +2,9 @@ import 'SignUp.dart'; // 회원가입 페이지를 불러오기 위해 추가
 import 'package:flutter/material.dart';
 import '../../repositories/auth_repository.dart'; // AuthRepository import
 import '../../dto/login_dto.dart'; // Login DTO import
+import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:convert';
+import 'package:dio/dio.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,10 +13,13 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
+final GoogleSignIn _googleSignIn = GoogleSignIn();
+
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final AuthRepository _authRepository = AuthRepository();
+  final Dio _dio = Dio(); // Dio 인스턴스 추가
   bool _loginFailed = false;
   bool _obscurePassword = true;
 
@@ -62,6 +68,47 @@ class _LoginPageState extends State<LoginPage> {
     } catch (e) {
       print('로그인 중 에러 발생: $e');
       _showErrorDialog('로그인 중 오류가 발생했습니다.');
+    }
+  }
+
+   Future<void> _googleLogin() async {
+    try {
+      // Google Sign-In으로 사용자 로그인
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        print('Google 로그인 취소됨');
+        return;
+      }
+
+      // Google 인증 정보 가져오기
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final String? idToken = googleAuth.idToken;
+
+      if (idToken != null) {
+        print('Google ID Token: $idToken');
+
+        // Dio를 사용하여 서버에 ID Token 전송
+        final response = await _dio.post(
+          'https://gungangazi.site/api/auth/google-login', // 서버의 Google 로그인 엔드포인트
+          data: {'idToken': idToken},
+          options: Options(headers: {'Content-Type': 'application/json'}),
+        );
+
+        if (response.statusCode == 200) {
+          final responseBody = response.data;
+          print('서버 응답: $responseBody');
+
+          // 로그인 성공 시 홈 화면으로 이동
+          Navigator.pushReplacementNamed(context, '/homeApp');
+        } else {
+          _showErrorDialog('Google 로그인 실패: 서버 오류');
+        }
+      }
+    } catch (e) {
+      print('Google 로그인 중 오류 발생: $e');
+      _showErrorDialog('Google 로그인 중 오류가 발생했습니다.');
     }
   }
 

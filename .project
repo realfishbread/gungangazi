@@ -25,6 +25,13 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>target/test-classes</name>
+			<type>2</type>
+			<location>//D:/flutter/zolzak/gungangazi/gungangazi/target/test-classes/</location>
+		</link>
+	</linkedResources>
 	<filteredResources>
 		<filter>
 			<id>1728743908632</id>

@@ -53,7 +53,10 @@ jobs:
           scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem -r ./build/web/* ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com:/var/www/html/
           scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ./target/demo-0.0.1-SNAPSHOT.jar ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com:/var/app/demo.jar
           ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com 'sudo systemctl restart nginx && nohup java -jar /var/app/demo.jar > /dev/null 2>&1 &'
-
+          
+          env:
+            GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+            GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           
       - name: Cleanup
         run: rm -f GUNGANGAZI.pem

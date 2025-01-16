@@ -14,6 +14,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - run: touch ./src/main/resources/application.properties
+      - run: echo "${{secrets.APPLICATION}}" > ./src/main/resources/application.properties
+      - uses: actions/upload-artifact@v2
+        with:
+          name: application.properties
+          path: ./src/main/resources/application.properties
 
       - name: Set up JDK
         uses: actions/setup-java@v3

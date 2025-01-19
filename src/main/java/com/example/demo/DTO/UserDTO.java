@@ -9,6 +9,7 @@ public class UserDTO {
     private String email;
     private String realname;
     private String gender;
+   
 
     public long getId() {
         return id;
@@ -69,6 +70,7 @@ public class UserDTO {
         user.setGender(this.gender);
         return user;
     }
+    
 
     // 엔티티를 DTO로 변환하는 메서드
     public static UserDTO fromEntity(User user) {

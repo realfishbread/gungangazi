@@ -72,6 +72,7 @@ public class SecurityConfig {
                 .requestMatchers(new AntPathRequestMatcher("/bloodPressure/saveBloodPressureData", "POST")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/bloodPressure/getBloodPressureData", "GET")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/supplements/single", "GET")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/api/auth/google-login", "POST")).permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가

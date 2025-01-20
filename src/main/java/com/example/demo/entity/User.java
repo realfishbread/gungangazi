@@ -149,7 +149,7 @@ public class User {
     public void setEmailVerified(boolean emailVerified) {
         this.emailVerified = emailVerified;
     }
-    public boolean isGoogleUser() {
+    public boolean getGoogleUser() {
         return isGoogleUser;
     }
 

@@ -1,30 +1,20 @@
 package com.example.demo.controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection; // URL 클래스
-import java.net.URL; // IOException 클래스
-import java.nio.charset.StandardCharsets;
-
-import org.springframework.web.reactive.function.client.WebClient; // WebClient
-import org.springframework.web.reactive.function.client.WebClientResponseException; // 예외 처리용
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.LoggerFactory; // URL 클래스
+import org.springframework.beans.factory.annotation.Autowired; // IOException 클래스
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus; // WebClient
+import org.springframework.http.ResponseEntity; // 예외 처리용
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;

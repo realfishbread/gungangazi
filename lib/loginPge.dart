@@ -17,7 +17,7 @@ final _googleSignIn = GoogleSignIn(
   clientId: '423735826070-9dq9dd52a4t5u66krjlg2nm0cpq8f92o.apps.googleusercontent.com',
   scopes: <String>[
     'email',
-    'https://www.googleapis.com/auth/contacts.readonly',
+    'profile',
   ],
 );
 
@@ -78,60 +78,48 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-   Future<void> _googleLogin() async {
-  try {
-    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-    if (googleUser == null) {
-      print('Google 로그인 취소됨');
-      return;
-    }
+  // Google 로그인 로직
+  Future<void> _googleLogin() async {
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        print('Google 로그인 취소됨');
+        return;
+      }
 
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-    final String? idToken = googleAuth.idToken;
-    final String? accessToken = googleAuth.accessToken;
+      final String? idToken = googleAuth.idToken;
+      final String? accessToken = googleAuth.accessToken;
 
-    if (idToken != null && accessToken != null) {
-      print('Google ID Token: $idToken');
-      print('Google Access Token: $accessToken');
+      if (idToken != null && accessToken != null) {
+        print('Google ID Token: $idToken');
+        print('Google Access Token: $accessToken');
 
-      // 서버로 Google ID Token과 Access Token 전달
-      final response = await _dio.post(
-        'https://gungangazi.site/api/auth/google-login',
-        data: {'idToken': idToken, 'accessToken': accessToken},
-        options: Options(headers: {'Content-Type': 'application/json'}),
-      );
+        final response = await _dio.post(
+          'https://gungangazi.site/api/auth/google-login',
+          data: {
+            'idToken': idToken,
+            'accessToken': accessToken,
+          },
+          options: Options(headers: {'Content-Type': 'application/json'}),
+        );
 
-      if (response.statusCode == 200) {
-        final responseBody = response.data;
-        print('서버 응답: $responseBody');
-
-        if (responseBody['existingUser'] == true) {
-          // 기존 회원이라면 팝업 표시
-          _showConfirmDialog(
-            title: '기존 회원 확인',
-            content: '기존 계정이 있습니다. 구글로 연결하시겠습니까?',
-            onConfirm: () {
-              // 기존 계정과 구글 계정을 연결하는 로직 추가
-              print('구글 계정으로 연결 선택');
-              Navigator.pushReplacementNamed(context, '/homeApp');
-            },
-          );
-        } else {
-          // 신규 회원 로그인
+        if (response.statusCode == 200) {
+          final responseBody = response.data;
+          print('서버 응답: $responseBody');
           Navigator.pushReplacementNamed(context, '/homeApp');
+        } else {
+          _showErrorDialog('Google 로그인 실패: 서버 오류');
         }
       } else {
-        _showErrorDialog('Google 로그인 실패: 서버 오류');
+        _showErrorDialog('Google 인증 정보가 부족합니다.');
       }
-    } else {
-      _showErrorDialog('Google 인증 정보가 부족합니다.');
+    } catch (e) {
+      print('Google 로그인 중 오류 발생: $e');
+      _showErrorDialog('Google 로그인 중 오류가 발생했습니다.');
     }
-  } catch (e) {
-    print('Google 로그인 중 오류 발생: $e');
-    _showErrorDialog('Google 로그인 중 오류가 발생했습니다.');
   }
-}
 
 void _showConfirmDialog({
   required String title,

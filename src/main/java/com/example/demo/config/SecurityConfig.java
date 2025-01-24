@@ -78,10 +78,12 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .anyRequest().authenticated()
         )
         .headers(headers -> headers
-            .contentSecurityPolicy(
-                "script-src 'self' https://accounts.google.com https://www.gstatic.com; object-src 'none';"
+            .contentSecurityPolicy(csp -> csp
+                .policyDirectives("script-src 'self' https://accounts.google.com https://www.gstatic.com; " +
+                                "connect-src 'self' https://accounts.google.com; " +
+                                "object-src 'none';")
             )
-        ) // Content-Security-Policy 설정 추가
+        )// Content-Security-Policy 설정 추가
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가
     return http.build();
 }

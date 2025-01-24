@@ -36,48 +36,55 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .cors(cors -> cors.configurationSource(request -> {
-                CorsConfiguration config = new CorsConfiguration();
-                config.setAllowCredentials(true);
-                config.addAllowedOrigin("https://gungangazi.site");
-                config.addAllowedOrigin("http://localhost:8080");
-                config.addAllowedHeader("*");
-                config.addAllowedMethod("*");
-                return config;
-            }))
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(authz -> authz
-                .requestMatchers(new AntPathRequestMatcher("/login", "POST")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/signup", "POST")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/verify-code", "POST")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/request-email-verification", "POST")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/profile", "GET")).authenticated()
-                .requestMatchers(new AntPathRequestMatcher("/{username}/update", "PUT")).authenticated()
-                .requestMatchers(new AntPathRequestMatcher("/waterIntake", "GET")).authenticated()
-                .requestMatchers(new AntPathRequestMatcher("/waterIntake/{username}", "PUT")).authenticated()
-                .requestMatchers(new AntPathRequestMatcher("/brushHistory/{username}", "GET")).authenticated()
-                .requestMatchers(new AntPathRequestMatcher("/brushHistory/{username}/save", "PUT")).authenticated()
-                .requestMatchers(new AntPathRequestMatcher("/sleep/getSleepData", "GET")).authenticated()
-                .requestMatchers(new AntPathRequestMatcher("/sleep/saveSleepData", "POST")).authenticated()
-                .requestMatchers(new AntPathRequestMatcher("/meals/post", "POST")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/meals/put", "PUT")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/supplements/save", "POST")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/supplements/all", "GET")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/character/status", "POST")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/character/status", "GET")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/brushHistory/{id}", "DELETE")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/bloodPressure/deleteBloodPressureData", "DELETE")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/bloodPressure/saveBloodPressureData", "POST")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/bloodPressure/getBloodPressureData", "GET")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/supplements/single", "GET")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/api/auth/google-login", "POST")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/api/auth/link-google", "POST")).permitAll()
-                .anyRequest().authenticated()
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .cors(cors -> cors.configurationSource(request -> {
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowCredentials(true);
+            config.addAllowedOrigin("https://gungangazi.site");
+            config.addAllowedOrigin("http://localhost:8080");
+            config.addExposedHeader("Authorization"); // Authorization 헤더 노출 설정
+            config.addAllowedHeader("*");
+            config.addAllowedMethod("*");
+            return config;
+        }))
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(authz -> authz
+            .requestMatchers(new AntPathRequestMatcher("/login", "POST")).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/signup", "POST")).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/verify-code", "POST")).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/request-email-verification", "POST")).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/profile", "GET")).authenticated()
+            .requestMatchers(new AntPathRequestMatcher("/{username}/update", "PUT")).authenticated()
+            .requestMatchers(new AntPathRequestMatcher("/waterIntake", "GET")).authenticated()
+            .requestMatchers(new AntPathRequestMatcher("/waterIntake/{username}", "PUT")).authenticated()
+            .requestMatchers(new AntPathRequestMatcher("/brushHistory/{username}", "GET")).authenticated()
+            .requestMatchers(new AntPathRequestMatcher("/brushHistory/{username}/save", "PUT")).authenticated()
+            .requestMatchers(new AntPathRequestMatcher("/sleep/getSleepData", "GET")).authenticated()
+            .requestMatchers(new AntPathRequestMatcher("/sleep/saveSleepData", "POST")).authenticated()
+            .requestMatchers(new AntPathRequestMatcher("/meals/post", "POST")).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/meals/put", "PUT")).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/supplements/save", "POST")).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/supplements/all", "GET")).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/character/status", "POST")).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/character/status", "GET")).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/brushHistory/{id}", "DELETE")).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/bloodPressure/deleteBloodPressureData", "DELETE")).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/bloodPressure/saveBloodPressureData", "POST")).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/bloodPressure/getBloodPressureData", "GET")).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/supplements/single", "GET")).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/api/auth/google-login", "POST")).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/api/auth/link-google", "POST")).permitAll()
+            .anyRequest().authenticated()
+        )
+        .headers(headers -> headers
+            .contentSecurityPolicy(
+                "script-src 'self' https://accounts.google.com https://www.gstatic.com; object-src 'none';"
             )
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가
-        return http.build();
-    }
+        ) // Content-Security-Policy 설정 추가
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가
+    return http.build();
+}
+
 }
 

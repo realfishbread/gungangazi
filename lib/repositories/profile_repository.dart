@@ -48,5 +48,20 @@ class ProfileRepository {
       return false;
     }
   }
+
+  Future<bool> linkGoogleAccount(String? idToken, String? accessToken) async {
+    try {
+      final response = await _dio.post('/api/auth/link-google', data: {
+        'idToken': idToken,
+        'accessToken': accessToken,
+      });
+
+      return response.statusCode == 200;
+    } catch (e) {
+      print("Google 계정 연동 중 오류: $e");
+      return false;
+    }
+  }
+
 }
 

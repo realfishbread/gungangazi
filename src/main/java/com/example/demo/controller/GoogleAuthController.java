@@ -7,6 +7,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection; // URL 클래스
 import java.net.URL; // IOException 클래스
 import java.nio.charset.StandardCharsets;
+
+import org.springframework.web.reactive.function.client.WebClient; // WebClient
+import org.springframework.web.reactive.function.client.WebClientResponseException; // 예외 처리용
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -118,40 +122,35 @@ public ResponseEntity<?> googleLogin(@RequestBody Map<String, String> request) {
 
     
     // Access Token 검증 메서드 예시 (Google API 호출)
-   private boolean validateAccessToken(String accessToken) {
+private boolean validateAccessToken(String accessToken) {
     String url = "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=" + accessToken;
 
     try {
-        // HTTP 요청 실행
-        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-        connection.setRequestMethod("GET");
-        connection.setConnectTimeout(5000);
-        connection.setReadTimeout(5000);
+        // WebClient를 사용하여 Google API에 요청
+        WebClient webClient = WebClient.builder()
+            .baseUrl("https://www.googleapis.com")
+            .build();
 
-        int responseCode = connection.getResponseCode();
+        // 비동기로 요청을 보내고 결과를 기다림
+        Map<String, Object> response = webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/oauth2/v1/tokeninfo")
+                .queryParam("access_token", accessToken)
+                .build())
+            .retrieve()
+            .bodyToMono(Map.class)
+            .block(); // 비동기 작업을 동기적으로 변환
 
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            // 응답이 200이면 토큰이 유효
-            try (InputStream is = connection.getInputStream();
-                 InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
-                 BufferedReader br = new BufferedReader(isr)) {
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = br.readLine()) != null) {
-                    response.append(line);
-                }
-
-                // JSON 파싱으로 토큰 정보 확인 가능
-                System.out.println("Google Token Info: " + response);
-            }
-            return true;
+        if (response != null) {
+            // 응답 데이터 출력 (JSON 형태)
+            System.out.println("Google Token Info: " + response);
+            return true; // 토큰이 유효한 경우
         } else {
-            // 응답이 200이 아니면 토큰이 유효하지 않음
-            System.out.println("Invalid Access Token. Response Code: " + responseCode);
-            return false;
+            System.out.println("Invalid Access Token. No response from Google API.");
+            return false; // 응답이 없는 경우
         }
-    } catch (IOException e) {
-        // 요청 중 오류 처리
+    } catch (Exception e) {
+        // 요청 중 예외 처리
         System.err.println("Access Token 검증 실패: " + e.getMessage());
         return false;
     }

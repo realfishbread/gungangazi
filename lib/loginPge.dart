@@ -86,8 +86,7 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
     final String? idToken = googleAuth.idToken;
     final String? accessToken = googleAuth.accessToken;
@@ -96,6 +95,7 @@ class _LoginPageState extends State<LoginPage> {
       print('Google ID Token: $idToken');
       print('Google Access Token: $accessToken');
 
+      // 서버로 Google ID Token과 Access Token 전달
       final response = await _dio.post(
         'https://gungangazi.site/api/auth/google-login',
         data: {'idToken': idToken, 'accessToken': accessToken},
@@ -105,7 +105,22 @@ class _LoginPageState extends State<LoginPage> {
       if (response.statusCode == 200) {
         final responseBody = response.data;
         print('서버 응답: $responseBody');
-        Navigator.pushReplacementNamed(context, '/homeApp');
+
+        if (responseBody['existingUser'] == true) {
+          // 기존 회원이라면 팝업 표시
+          _showConfirmDialog(
+            title: '기존 회원 확인',
+            content: '기존 계정이 있습니다. 구글로 연결하시겠습니까?',
+            onConfirm: () {
+              // 기존 계정과 구글 계정을 연결하는 로직 추가
+              print('구글 계정으로 연결 선택');
+              Navigator.pushReplacementNamed(context, '/homeApp');
+            },
+          );
+        } else {
+          // 신규 회원 로그인
+          Navigator.pushReplacementNamed(context, '/homeApp');
+        }
       } else {
         _showErrorDialog('Google 로그인 실패: 서버 오류');
       }
@@ -117,6 +132,39 @@ class _LoginPageState extends State<LoginPage> {
     _showErrorDialog('Google 로그인 중 오류가 발생했습니다.');
   }
 }
+
+void _showConfirmDialog({
+  required String title,
+  required String content,
+  required VoidCallback onConfirm,
+}) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // 팝업 닫기
+            },
+            child: const Text('취소'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // 팝업 닫기
+              onConfirm(); // 확인 버튼 눌렀을 때 실행할 작업
+            },
+            child: const Text('확인'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
 
   void _showErrorDialog(String message) {
     showDialog(

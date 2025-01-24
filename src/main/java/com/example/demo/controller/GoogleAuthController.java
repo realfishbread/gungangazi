@@ -1,5 +1,12 @@
 package com.example.demo.controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection; // URL 클래스
+import java.net.URL; // IOException 클래스
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -41,13 +48,23 @@ public class GoogleAuthController {
     @PostMapping("/google-login")
 public ResponseEntity<?> googleLogin(@RequestBody Map<String, String> request) {
     String idToken = request.get("idToken");
+    String accessToken = request.get("accessToken");
 
     if (idToken == null || idToken.isEmpty()) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID Token이 필요합니다.");
     }
 
+    if (accessToken == null || accessToken.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Access Token이 필요합니다.");
+    }
+
     try {
-        // 구글 ID 토큰 검증
+        // Access Token 검증
+        if (!validateAccessToken(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 Access Token입니다.");
+        }
+
+        // 구글 ID 토큰 검증 로직은 동일
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
                 new NetHttpTransport(), new GsonFactory())
                 .setAudience(Collections.singletonList(googleClientId))
@@ -60,12 +77,6 @@ public ResponseEntity<?> googleLogin(@RequestBody Map<String, String> request) {
             String email = payload.getEmail(); // 이메일 기준으로 사용자를 찾음
             String realname = (String) payload.get("name");
             String gender = (String) payload.get("gender");
-
-            // Access Token을 추출
-            String accessToken = request.get("accessToken"); // 클라이언트에서 accessToken도 함께 전달하도록 요청해야 합니다.
-            if (accessToken == null || accessToken.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Access Token이 필요합니다.");
-            }
 
             // 이메일로 사용자 검색
             Optional<User> optionalUser = userRepository.findByEmail(email);
@@ -89,79 +100,113 @@ public ResponseEntity<?> googleLogin(@RequestBody Map<String, String> request) {
                 }
             }
 
-            // JWT 발급
+            // JWT 발급 및 응답
             String token = jwtTokenProvider.createToken(email);
             return ResponseEntity.ok(Map.of(
                 "message", "Google 로그인 성공",
                 "token", token,
                 "email", email,
-                "realname", realname,
-                "accessToken", accessToken // Access Token을 응답에 포함
+                "realname", realname
             ));
         } else {
-            logger.error("Invalid ID Token");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 ID Token입니다.");
         }
     } catch (Exception e) {
-        logger.error("Google 로그인 실패", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Google 로그인 실패: " + e.getMessage());
     }
 }
 
     
     // Access Token 검증 메서드 예시 (Google API 호출)
-    private boolean validateAccessToken(String accessToken) {
-        // Google Access Token 검증 로직 추가 (예: HTTP 요청으로 검증)
-        return true; // 실제 검증 로직 구현 필요
+   private boolean validateAccessToken(String accessToken) {
+    String url = "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=" + accessToken;
+
+    try {
+        // HTTP 요청 실행
+        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        connection.setRequestMethod("GET");
+        connection.setConnectTimeout(5000);
+        connection.setReadTimeout(5000);
+
+        int responseCode = connection.getResponseCode();
+
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            // 응답이 200이면 토큰이 유효
+            try (InputStream is = connection.getInputStream();
+                 InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
+                 BufferedReader br = new BufferedReader(isr)) {
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    response.append(line);
+                }
+
+                // JSON 파싱으로 토큰 정보 확인 가능
+                System.out.println("Google Token Info: " + response);
+            }
+            return true;
+        } else {
+            // 응답이 200이 아니면 토큰이 유효하지 않음
+            System.out.println("Invalid Access Token. Response Code: " + responseCode);
+            return false;
+        }
+    } catch (IOException e) {
+        // 요청 중 오류 처리
+        System.err.println("Access Token 검증 실패: " + e.getMessage());
+        return false;
     }
+}
+
     
 
-        @PostMapping("/link-google")
-        public ResponseEntity<?> linkGoogleAccount(@RequestBody Map<String, String> request) {
-            String idToken = request.get("idToken");
-            String email = request.get("email"); // 회원가입 시 사용한 이메일
-        
-            if (idToken == null || idToken.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID Token이 필요합니다.");
+@PostMapping("/link-google")
+public ResponseEntity<?> linkGoogleAccount(@RequestBody Map<String, String> request) {
+    String idToken = request.get("idToken");
+    String email = request.get("email"); // 기존 회원가입 시 사용한 이메일
+
+    if (idToken == null || idToken.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID Token이 필요합니다.");
+    }
+
+    try {
+        // Google ID Token 검증
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
+                new NetHttpTransport(), new GsonFactory())
+                .setAudience(Collections.singletonList(googleClientId))
+                .build();
+
+        GoogleIdToken googleIdToken = verifier.verify(idToken);
+        if (googleIdToken != null) {
+            GoogleIdToken.Payload payload = googleIdToken.getPayload();
+            String googleEmail = payload.getEmail();
+
+            // 기존 사용자 계정 찾기
+            Optional<User> optionalUser = userRepository.findByEmail(email);
+            if (optionalUser.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
             }
-        
-            try {
-                GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
-                        new NetHttpTransport(), new GsonFactory())
-                        .setAudience(Collections.singletonList(googleClientId))
-                        .build();
-        
-                GoogleIdToken googleIdToken = verifier.verify(idToken);
-                if (googleIdToken != null) {
-                    GoogleIdToken.Payload payload = googleIdToken.getPayload();
-                    String googleEmail = payload.getEmail();
-        
-                    // 이메일로 사용자 찾기
-                    Optional<User> optionalUser = userRepository.findByEmail(email);
-                    if (optionalUser.isEmpty()) {
-                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
-                    }
-        
-                    User user = optionalUser.get();
-        
-                    // 구글 계정 이메일이 일치하지 않으면 오류 반환
-                    if (!email.equals(googleEmail)) {
-                        return ResponseEntity.status(HttpStatus.CONFLICT)
-                                .body("구글 계정 이메일이 기존 계정 이메일과 일치하지 않습니다.");
-                    }
-        
-                    // 구글 계정 연동
-                    user.setIsGoogleUser(true);
-                    userRepository.save(user);
-        
-                    return ResponseEntity.ok("구글 계정 연동 성공");
-                } else {
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 ID Token입니다.");
-                }
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("구글 계정 연동 실패: " + e.getMessage());
+
+            User user = optionalUser.get();
+
+            // Google 계정 이메일이 기존 이메일과 다르면 오류 반환
+            if (!googleEmail.equals(email)) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("Google 계정 이메일이 기존 계정 이메일과 일치하지 않습니다.");
             }
+
+            // 기존 사용자 계정과 Google 계정을 연결
+            user.setIsGoogleUser(true);
+            userRepository.save(user);
+
+            return ResponseEntity.ok(Map.of(
+                "message", "Google 계정이 성공적으로 연결되었습니다."
+            ));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 ID Token입니다.");
         }
-        
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Google 계정 연결 실패: " + e.getMessage());
+    }
+}
 
 }

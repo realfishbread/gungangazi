@@ -149,11 +149,11 @@ public class User {
     public void setEmailVerified(boolean emailVerified) {
         this.emailVerified = emailVerified;
     }
-    public boolean getGoogleUser() {
+    public boolean getIsGoogleUser() {
         return isGoogleUser;
     }
 
-    public void setGoogleUser(boolean isGoogleUser) {
+    public void setIsGoogleUser(boolean isGoogleUser) {
         this.isGoogleUser = isGoogleUser;
     }
      

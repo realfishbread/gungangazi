@@ -79,45 +79,44 @@ class _LoginPageState extends State<LoginPage> {
   }
 
    Future<void> _googleLogin() async {
-    try {
-      // Google Sign-In으로 사용자 로그인
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        print('Google 로그인 취소됨');
-        return;
-      }
-
-      // Google 인증 정보 가져오기
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      final String? idToken = googleAuth.idToken;
-
-      if (idToken != null) {
-        print('Google ID Token: $idToken');
-
-        // Dio를 사용하여 서버에 ID Token 전송
-        final response = await _dio.post(
-          'https://gungangazi.site/api/auth/google-login', // 서버의 Google 로그인 엔드포인트
-          data: {'idToken': idToken},
-          options: Options(headers: {'Content-Type': 'application/json'}),
-        );
-
-        if (response.statusCode == 200) {
-          final responseBody = response.data;
-          print('서버 응답: $responseBody');
-
-          // 로그인 성공 시 홈 화면으로 이동
-          Navigator.pushReplacementNamed(context, '/homeApp');
-        } else {
-          _showErrorDialog('Google 로그인 실패: 서버 오류');
-        }
-      }
-    } catch (e) {
-      print('Google 로그인 중 오류 발생: $e');
-      _showErrorDialog('Google 로그인 중 오류가 발생했습니다.');
+  try {
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+    if (googleUser == null) {
+      print('Google 로그인 취소됨');
+      return;
     }
+
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    final String? idToken = googleAuth.idToken;
+    final String? accessToken = googleAuth.accessToken;
+
+    if (idToken != null && accessToken != null) {
+      print('Google ID Token: $idToken');
+      print('Google Access Token: $accessToken');
+
+      final response = await _dio.post(
+        'https://gungangazi.site/api/auth/google-login',
+        data: {'idToken': idToken, 'accessToken': accessToken},
+        options: Options(headers: {'Content-Type': 'application/json'}),
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = response.data;
+        print('서버 응답: $responseBody');
+        Navigator.pushReplacementNamed(context, '/homeApp');
+      } else {
+        _showErrorDialog('Google 로그인 실패: 서버 오류');
+      }
+    } else {
+      _showErrorDialog('Google 인증 정보가 부족합니다.');
+    }
+  } catch (e) {
+    print('Google 로그인 중 오류 발생: $e');
+    _showErrorDialog('Google 로그인 중 오류가 발생했습니다.');
   }
+}
 
   void _showErrorDialog(String message) {
     showDialog(

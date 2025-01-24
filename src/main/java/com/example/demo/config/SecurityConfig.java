@@ -78,11 +78,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .anyRequest().authenticated()
         )
         .headers(headers -> headers
-            .contentSecurityPolicy(csp -> csp
-                .policyDirectives("script-src 'self' https://accounts.google.com https://www.gstatic.com; " +
-                                "connect-src 'self' https://accounts.google.com; " +
-                                "object-src 'none';")
-            )
+        .contentSecurityPolicy("script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://www.gstatic.com https://apis.google.com")
         )// Content-Security-Policy 설정 추가
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가
     return http.build();

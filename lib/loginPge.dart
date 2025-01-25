@@ -16,8 +16,10 @@ class LoginPage extends StatefulWidget {
 final _googleSignIn = GoogleSignIn(
   clientId: '423735826070-9dq9dd52a4t5u66krjlg2nm0cpq8f92o.apps.googleusercontent.com',
   scopes: <String>[
-    'email',
-    'profile',
+    'email', // 이메일
+    'profile', // 기본 프로필 정보
+    'https://www.googleapis.com/auth/userinfo.profile', // 추가로 프로필 데이터 접근
+    'https://www.googleapis.com/auth/userinfo.email',   // 이메일 데이터 접근
   ],
 );
 
@@ -102,7 +104,9 @@ class _LoginPageState extends State<LoginPage> {
             'idToken': idToken,
             'accessToken': accessToken,
           },
-          options: Options(headers: {'Content-Type': 'application/json'}),
+              options: Options(headers: {
+      'Content-Type': 'application/json',
+    }),
         );
 
         if (response.statusCode == 200) {

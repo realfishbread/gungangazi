@@ -46,18 +46,18 @@ public class User {
     private boolean emailVerified = false;
 
     @Column(name = "is_google_user", nullable = false)
-    private boolean isGoogleUser =false; // Google 사용자 여부 추가
+    private boolean is_google_user =false; // Google 사용자 여부 추가
 
     // 기본 생성자
     public User() {}
 
     // Google 사용자 생성자
-    public User(String username, String email, String realname, String gender, boolean isGoogleUser) {
+    public User(String username, String email, String realname, String gender, boolean is_google_user) {
         this.username = username;
         this.email = email;
         this.realname = realname;
         this.gender = gender;
-        this.isGoogleUser = isGoogleUser;
+        this.is_google_user = is_google_user;
     }
     
     
@@ -149,12 +149,12 @@ public class User {
     public void setEmailVerified(boolean emailVerified) {
         this.emailVerified = emailVerified;
     }
-    public boolean getIsGoogleUser() {
-        return isGoogleUser;
+    public boolean getIs_google_user() {
+        return is_google_user;
     }
 
-    public void setIsGoogleUser(boolean isGoogleUser) {
-        this.isGoogleUser = isGoogleUser;
+    public void setIs_google_user(boolean is_google_user) {
+        this.is_google_user = is_google_user;
     }
      
 

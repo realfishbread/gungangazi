@@ -85,14 +85,14 @@ public class GoogleAuthController {
                     user.setEmail(email);
                     user.setRealname(realname);
                     user.setGender(gender);
-                    user.setIsGoogleUser(true); // 구글 계정 여부 설정
+                    user.setIs_google_user(true); // 구글 계정 여부 설정
                     userRepository.save(user);
 
                     logger.info("새로운 구글 계정으로 사용자 등록: {}", email);
                 } else {
                     // 기존 사용자와 이메일이 동일한 경우 처리
                     User user = optionalUser.get();
-                    if (!user.getIsGoogleUser()) {
+                    if (!user.getIs_google_user()) {
                         return ResponseEntity.status(HttpStatus.CONFLICT)
                                 .body("이미 일반 회원가입으로 등록된 이메일입니다.");
                     }
@@ -125,13 +125,11 @@ public class GoogleAuthController {
 
             // Google API 호출하여 Access Token 검증
             Map<String, Object> response = webClient.get()
-                    .uri(uriBuilder -> uriBuilder
-                            .path("/oauth2/v3/tokeninfo")
-                            .queryParam("access_token", accessToken)
-                            .build())
-                    .retrieve()
-                    .bodyToMono(Map.class)
-                    .block(); // 동기적으로 결과 대기
+            .uri("/oauth2/v1/userinfo?alt=json&access_token=" + accessToken)
+            .retrieve()
+            .bodyToMono(Map.class)
+            .block();
+         // 동기적으로 결과 대기
 
             if (response != null && response.containsKey("email")) {
                 logger.info("Google Access Token 검증 성공: {}", response);
@@ -184,7 +182,7 @@ public ResponseEntity<?> linkGoogleAccount(@RequestBody Map<String, String> requ
             }
 
             // 기존 사용자 계정과 Google 계정을 연결
-            user.setIsGoogleUser(true);
+            user.setIs_google_user(true);
             userRepository.save(user);
 
             return ResponseEntity.ok(Map.of(

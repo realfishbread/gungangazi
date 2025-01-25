@@ -18,8 +18,6 @@ final _googleSignIn = GoogleSignIn(
   scopes: <String>[
     'email', // 이메일
     'profile', // 기본 프로필 정보
-    'https://www.googleapis.com/auth/userinfo.profile', // 추가로 프로필 데이터 접근
-    'https://www.googleapis.com/auth/userinfo.email',   // 이메일 데이터 접근
   ],
 );
 

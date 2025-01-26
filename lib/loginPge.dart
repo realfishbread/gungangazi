@@ -80,58 +80,92 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-   Future<void> _googleLogin() async {
-  try {
-    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-    if (googleUser == null) {
-      print('Google 로그인 취소됨');
-      return;
-    }
-
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-    final String? idToken = googleAuth.idToken;
-    final String? accessToken = googleAuth.accessToken;
-
-    if (idToken != null && accessToken != null) {
-      print('Google ID Token: $idToken');
-      print('Google Access Token: $accessToken');
-
-      // 서버로 Google ID Token과 Access Token 전달
-      final response = await _dio.post(
-        'https://gungangazi.site/api/auth/google-login',
-        data: {'idToken': idToken, 'accessToken': accessToken},
-        options: Options(headers: {'Content-Type': 'application/json'}),
-      );
-
-      if (response.statusCode == 200) {
-        final responseBody = response.data;
-        print('서버 응답: $responseBody');
-
-        // JWT 토큰 저장
-        final String token = responseBody['token'];
-        await _saveToken(token);
-
-        // 로그인 후 바로 홈으로 이동
-        Navigator.pushReplacementNamed(context, '/homeApp');
-      } else {
-        _showErrorDialog('Google 로그인 실패: 서버 오류');
+     Future<void> _googleLogin() async {
+    try {
+      // Google 계정 로그인
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        print('Google 로그인 취소됨');
+        return;
       }
-    } else {
-      _showErrorDialog('Google 인증 정보가 부족합니다.');
-    }
-  } catch (e) {
-    print('Google 로그인 중 오류 발생: $e');
-    _showErrorDialog('Google 로그인 중 오류가 발생했습니다.');
-  }
-}
 
-// JWT 토큰 저장
-Future<void> _saveToken(String token) async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setString('jwtToken', token);
-  print('JWT 토큰 저장 완료');
-}
+      // ID 토큰 및 Access Token 가져오기
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final String? idToken = googleAuth.idToken;
+      final String? accessToken = googleAuth.accessToken;
+
+      if (idToken != null || accessToken != null) {
+        print('Google ID Token: $idToken');
+        print('Google Access Token: $accessToken');
+
+        // 서버로 토큰 전송
+        final response = await _dio.post(
+          'https://gungangazi.site/api/auth/google-login',
+          data: {'idToken': idToken, 'accessToken': accessToken},
+          options: Options(headers: {'Content-Type': 'application/json'}),
+        );
+
+        if (response.statusCode == 200) {
+          final responseBody = response.data;
+          print('서버 응답: $responseBody');
+
+          // JWT 토큰 저장
+          final String token = responseBody['token'];
+          await _saveToken(token);
+
+          // 기존 사용자 여부 확인
+          final bool existingUser = responseBody['existingUser'] ?? false;
+
+          // 홈 화면으로 이동
+          Navigator.pushReplacementNamed(context, '/homeApp');
+
+          // 필요 시 팝업 표시
+          if (existingUser) {
+            _showInfoDialog('기존 회원으로 로그인되었습니다.');
+          } else {
+            _showInfoDialog('신규 회원으로 가입되었습니다.');
+          }
+        } else {
+          _showErrorDialog('Google 로그인 실패: 서버 오류');
+        }
+      } else {
+        _showErrorDialog('Google 인증 정보가 부족합니다.');
+      }
+    } catch (e) {
+      print('Google 로그인 중 오류 발생: $e');
+      _showErrorDialog('Google 로그인 중 오류가 발생했습니다.');
+    }
+  }
+
+  // JWT 토큰 저장
+  Future<void> _saveToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('jwtToken', token);
+    print('JWT 토큰 저장 완료: $token');
+  }
+
+  // 정보 팝업 표시
+  void _showInfoDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('알림'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('확인'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  
 
 void _showConfirmDialog({
   required String title,

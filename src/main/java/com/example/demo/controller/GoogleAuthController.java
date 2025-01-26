@@ -65,50 +65,52 @@ public ResponseEntity<?> googleLogin(@RequestBody Map<String, String> request) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 ID Token입니다.");
         }
 
+        // ID 토큰에서 사용자 정보 추출
         GoogleIdToken.Payload payload = googleIdToken.getPayload();
         String email = payload.getEmail();
         String realname = (String) payload.get("name");
-        String gender = (String) payload.get("gender");
+        String gender = (String) payload.getOrDefault("gender", "unknown");
 
-        // Access Token 검증
-        if (!validateAccessToken(accessToken)) {
-            logger.warn("유효하지 않은 Access Token: {}", accessToken);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 Access Token입니다.");
-        }
-
-        // 사용자 검색 및 등록
+        // 사용자 검색
         Optional<User> optionalUser = userRepository.findByEmail(email);
+        boolean existingUser = optionalUser.isPresent();
+
         User user;
-        if (optionalUser.isEmpty()) {
+        if (existingUser) {
+            // 기존 사용자 확인
+            user = optionalUser.get();
+            if (!user.getIs_google_user()) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("이미 일반 회원가입으로 등록된 이메일입니다.");
+            }
+        } else {
+            // 신규 사용자 등록
             user = new User();
             user.setEmail(email);
             user.setRealname(realname);
             user.setGender(gender);
             user.setIs_google_user(true);
             userRepository.save(user);
-
             logger.info("새로운 구글 계정으로 사용자 등록: {}", email);
-        } else {
-            user = optionalUser.get();
-            if (!user.getIs_google_user()) {
-                return ResponseEntity.status(HttpStatus.CONFLICT)
-                        .body("이미 일반 회원가입으로 등록된 이메일입니다.");
-            }
         }
 
         // JWT 토큰 발급
         String token = jwtTokenProvider.createToken(email);
+
+        // 응답 반환
         return ResponseEntity.ok(Map.of(
                 "message", "Google 로그인 성공",
                 "token", token,
                 "email", email,
-                "realname", realname
+                "realname", realname,
+                "existingUser", existingUser
         ));
     } catch (Exception e) {
         logger.error("Google 로그인 실패: {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Google 로그인 실패: " + e.getMessage());
     }
 }
+    
 
 // Access Token 검증
 private boolean validateAccessToken(String accessToken) {

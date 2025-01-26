@@ -5,6 +5,8 @@ import '../../dto/login_dto.dart'; // Login DTO import
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -106,21 +108,12 @@ class _LoginPageState extends State<LoginPage> {
         final responseBody = response.data;
         print('서버 응답: $responseBody');
 
-        if (responseBody['existingUser'] == true) {
-          // 기존 회원이라면 팝업 표시
-          _showConfirmDialog(
-            title: '기존 회원 확인',
-            content: '기존 계정이 있습니다. 구글로 연결하시겠습니까?',
-            onConfirm: () {
-              // 기존 계정과 구글 계정을 연결하는 로직 추가
-              print('구글 계정으로 연결 선택');
-              Navigator.pushReplacementNamed(context, '/homeApp');
-            },
-          );
-        } else {
-          // 신규 회원 로그인
-          Navigator.pushReplacementNamed(context, '/homeApp');
-        }
+        // JWT 토큰 저장
+        final String token = responseBody['token'];
+        await _saveToken(token);
+
+        // 로그인 후 바로 홈으로 이동
+        Navigator.pushReplacementNamed(context, '/homeApp');
       } else {
         _showErrorDialog('Google 로그인 실패: 서버 오류');
       }
@@ -131,6 +124,13 @@ class _LoginPageState extends State<LoginPage> {
     print('Google 로그인 중 오류 발생: $e');
     _showErrorDialog('Google 로그인 중 오류가 발생했습니다.');
   }
+}
+
+// JWT 토큰 저장
+Future<void> _saveToken(String token) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('jwtToken', token);
+  print('JWT 토큰 저장 완료');
 }
 
 void _showConfirmDialog({

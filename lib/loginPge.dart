@@ -19,7 +19,7 @@ final _googleSignIn = GoogleSignIn(
   clientId: '423735826070-9dq9dd52a4t5u66krjlg2nm0cpq8f92o.apps.googleusercontent.com',
   scopes: <String>[
     'email',
-    'profile',
+    'https://www.googleapis.com/auth/contacts.readonly',
   ],
 );
 

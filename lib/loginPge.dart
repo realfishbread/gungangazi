@@ -16,7 +16,7 @@ class LoginPage extends StatefulWidget {
 }
 
 final _googleSignIn = GoogleSignIn(
-  clientId: '423735826070-9dq9dd52a4t5u66krjlg2nm0cpq8f92o.apps.googleusercontent.com',
+  serverClientId: '423735826070-9dq9dd52a4t5u66krjlg2nm0cpq8f92o.apps.googleusercontent.com',
   scopes: <String>[
     'email',
     'https://www.googleapis.com/auth/userinfo.profile',
@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-     Future<void> _googleLogin() async {
+     Future<void> _googleLogin(String? idToken, String? accessToken) async {
     try {
       // Google 계정 로그인
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
@@ -370,10 +370,31 @@ void _showConfirmDialog({
                             foregroundColor: Colors.black,
                             side: const BorderSide(color: Colors.grey),
                           ),
-                          onPressed: () {
-                             _googleLogin();
-                          },
-                        ),
+                          onPressed: ()  async{
+                            try {
+                                  // Google Sign-In 실행
+                                  final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+                                  if (googleUser == null) {
+                                    print('Google 로그인 취소됨');
+                                    return;
+                                  }
+
+                                  // ID Token 및 Access Token 가져오기
+                                  final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+                                  final String? idToken = googleAuth.idToken;
+                                  final String? accessToken = googleAuth.accessToken;
+
+                                  // _googleLogin 호출
+                                  if (idToken != null && accessToken != null) {
+                                    await _googleLogin(idToken, accessToken);
+                                  } else {
+                                    print('Google 인증 정보가 없습니다.');
+                                  }
+                                } catch (e) {
+                                  print('Google 로그인 중 오류 발생: $e');
+                                }
+                              },
+                            ),
                       ],
                     ),
                   ),

@@ -16,11 +16,12 @@ class LoginPage extends StatefulWidget {
 }
 
 final _googleSignIn = GoogleSignIn(
-  serverClientId: '423735826070-9dq9dd52a4t5u66krjlg2nm0cpq8f92o.apps.googleusercontent.com',
+  forceCodeForRefreshToken: true,
   scopes: <String>[
     'openid',
-    'email',
+    'https://www.googleapis.com/auth/userinfo.email',
     'https://www.googleapis.com/auth/userinfo.profile',
+    'https://www.googleapis.com/auth/contacts.readonly',
   ],
 );
 

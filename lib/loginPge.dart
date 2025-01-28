@@ -31,6 +31,7 @@ class _LoginPageState extends State<LoginPage> {
   final Dio _dio = Dio(); // Dio 인스턴스 추가
   bool _loginFailed = false;
   bool _obscurePassword = true;
+  bool _isLoading = false;
 
   Future<void> _login() async {
     // 서버로 로그인 요청 보내기
@@ -80,62 +81,73 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-     Future<void> _googleLogin(String? idToken, String? accessToken) async {
-    try {
-      // Google 계정 로그인
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        print('Google 로그인 취소됨');
-        return;
-      }
+    Future<void> _sendTokenToServer(String? idToken, String? accessToken) async {
+  try {
+    final response = await _dio.post(
+      'https://gungangazi.site/api/auth/google-login',
+      data: {'idToken': idToken, 'accessToken': accessToken},
+      options: Options(headers: {'Content-Type': 'application/json'}),
+    );
 
-      // ID 토큰 및 Access Token 가져오기
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final String? idToken = googleAuth.idToken;
-      final String? accessToken = googleAuth.accessToken;
+    if (response.statusCode == 200) {
+      final responseBody = response.data;
+      print('서버 응답: $responseBody');
 
-      if (idToken != null || accessToken != null) {
-        print('Google ID Token: $idToken');
-        print('Google Access Token: $accessToken');
+      // JWT 토큰 저장
+      final String token = responseBody['token'];
+      await _saveToken(token);
 
-        // 서버로 토큰 전송
-        final response = await _dio.post(
-          'https://gungangazi.site/api/auth/google-login',
-          data: {'idToken': idToken, 'accessToken': accessToken},
-          options: Options(headers: {'Content-Type': 'application/json'}),
-        );
+      // 기존 사용자 여부 확인
+      final bool existingUser = responseBody['existingUser'] ?? false;
 
-        if (response.statusCode == 200) {
-          final responseBody = response.data;
-          print('서버 응답: $responseBody');
+      // 홈 화면으로 이동
+      Navigator.pushReplacementNamed(context, '/homeApp');
 
-          // JWT 토큰 저장
-          final String token = responseBody['token'];
-          await _saveToken(token);
-
-          // 기존 사용자 여부 확인
-          final bool existingUser = responseBody['existingUser'] ?? false;
-
-          // 홈 화면으로 이동
-          Navigator.pushReplacementNamed(context, '/homeApp');
-
-          // 필요 시 팝업 표시
-          if (existingUser) {
-            _showInfoDialog('기존 회원으로 로그인되었습니다.');
-          } else {
-            _showInfoDialog('신규 회원으로 가입되었습니다.');
-          }
-        } else {
-          _showErrorDialog('Google 로그인 실패: 서버 오류');
-        }
+      // 필요 시 팝업 표시
+      if (existingUser) {
+        _showInfoDialog('기존 회원으로 로그인되었습니다.');
       } else {
-        _showErrorDialog('Google 인증 정보가 부족합니다.');
+        _showInfoDialog('신규 회원으로 가입되었습니다.');
       }
-    } catch (e) {
-      print('Google 로그인 중 오류 발생: $e');
-      _showErrorDialog('Google 로그인 중 오류가 발생했습니다.');
+    } else {
+      _showErrorDialog('Google 로그인 실패: 서버 오류 (${response.statusCode})');
     }
+  } catch (e) {
+    print('서버 요청 중 오류 발생: $e');
+    _showErrorDialog('서버 요청 중 오류가 발생했습니다.');
   }
+}
+Future<void> _googleLogin() async {
+  try {
+    // Google 계정 로그인
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+    if (googleUser == null) {
+      print('Google 로그인 취소됨');
+      return;
+    }
+
+    // ID 토큰 및 Access Token 가져오기
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final String? idToken = googleAuth.idToken;
+    final String? accessToken = googleAuth.accessToken;
+
+    if (idToken != null || accessToken != null) {
+      print('Google ID Token: $idToken');
+      print('Google Access Token: $accessToken');
+
+      // 서버로 토큰 전송
+      await _sendTokenToServer(idToken, accessToken);
+    } else {
+      _showErrorDialog('Google 인증 정보가 부족합니다.');
+    }
+  } catch (e) {
+    print('Google 로그인 중 오류 발생: $e');
+    _showErrorDialog('Google 로그인 중 오류가 발생했습니다.');
+  }
+}
+
+
+
 
   // JWT 토큰 저장
   Future<void> _saveToken(String token) async {
@@ -370,31 +382,21 @@ void _showConfirmDialog({
                             foregroundColor: Colors.black,
                             side: const BorderSide(color: Colors.grey),
                           ),
-                          onPressed: ()  async{
-                            try {
-                                  // Google Sign-In 실행
-                                  final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-                                  if (googleUser == null) {
-                                    print('Google 로그인 취소됨');
-                                    return;
+                          onPressed: _isLoading
+                              ? null // 로딩 중일 때 버튼 비활성화
+                              : () async {
+                                  setState(() {
+                                    _isLoading = true; // 로딩 시작
+                                  });
+                                  try {
+                                    await _googleLogin(); // Google 로그인 실행
+                                  } finally {
+                                    setState(() {
+                                      _isLoading = false; // 로딩 종료
+                                    });
                                   }
-
-                                  // ID Token 및 Access Token 가져오기
-                                  final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-                                  final String? idToken = googleAuth.idToken;
-                                  final String? accessToken = googleAuth.accessToken;
-
-                                  // _googleLogin 호출
-                                  if (idToken != null && accessToken != null) {
-                                    await _googleLogin(idToken, accessToken);
-                                  } else {
-                                    print('Google 인증 정보가 없습니다.');
-                                  }
-                                } catch (e) {
-                                  print('Google 로그인 중 오류 발생: $e');
-                                }
-                              },
-                            ),
+                                },
+                        ),
                       ],
                     ),
                   ),

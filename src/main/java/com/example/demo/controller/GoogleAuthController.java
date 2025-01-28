@@ -55,9 +55,11 @@ public ResponseEntity<?> googleLogin(@RequestBody Map<String, String> request) {
     try {
         // ID 토큰 검증
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
-                new NetHttpTransport(), new GsonFactory())
-                .setAudience(Collections.singletonList(googleClientId))
-                .build();
+        new NetHttpTransport(),
+        GsonFactory.getDefaultInstance())
+        .setAudience(Collections.singletonList(googleClientId))
+        .build();
+
 
         GoogleIdToken googleIdToken = verifier.verify(idToken);
         if (googleIdToken == null) {

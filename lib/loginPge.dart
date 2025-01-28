@@ -21,8 +21,10 @@ final _googleSignIn = GoogleSignIn(
     'openid',
     'https://www.googleapis.com/auth/userinfo.email',
     'https://www.googleapis.com/auth/userinfo.profile',
-    'https://www.googleapis.com/auth/contacts.readonly',
-  ],
+    'https://www.googleapis.com/auth/user.birthday.read',
+    'https://www.googleapis.com/auth/user.gender.read',
+
+  ]
 );
 
 

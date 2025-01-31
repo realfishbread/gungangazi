@@ -16,7 +16,7 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-final _googleSignIn = GoogleSignIn(
+final GoogleSignIn _googleSignIn = GoogleSignIn(
   clientId: '423735826070-9dq9dd52a4t5u66krjlg2nm0cpq8f92o.apps.googleusercontent.com',
   scopes: <String>[
     'openid', 'email', 'profile'

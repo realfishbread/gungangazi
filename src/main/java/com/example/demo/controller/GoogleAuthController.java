@@ -49,8 +49,7 @@ public ResponseEntity<?> googleLoginWithAccessToken(
         @RequestBody Map<String, String> request,
         @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
 
-    String accessToken = null;
-
+            final String accessToken; // final로 선언
     if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
         accessToken = authorizationHeader.substring(7); // 헤더에서 토큰 추출
     } else {
@@ -67,12 +66,15 @@ public ResponseEntity<?> googleLoginWithAccessToken(
                 .baseUrl("https://www.googleapis.com")
                 .build();
 
-        Map<String, Object> response = webClient.get()
-                .uri("/oauth2/v1/userinfo?alt=json&access_token=" + accessToken)
+                Map<String, Object> response = webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/oauth2/v3/userinfo")
+                        .queryParam("alt", "json")
+                        .queryParam("access_token", accessToken)
+                        .build())
                 .retrieve()
                 .bodyToMono(Map.class)
                 .block();
-
         if (response == null || !response.containsKey("email")) {
             logger.warn("Access Token 검증 실패: {}", accessToken);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 Access Token입니다.");

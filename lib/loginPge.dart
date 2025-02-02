@@ -93,10 +93,16 @@ class _LoginPageState extends State<LoginPage> {
 
   try {
     final response = await _dio.post(
-      '/api/auth/google-login',
-      data: {'accessToken': accessToken},
-      options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
-    );
+        '/api/auth/google-login',
+        data: {'accessToken': accessToken},
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $accessToken',
+          },
+        ),
+      );
+
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseBody = response.data;

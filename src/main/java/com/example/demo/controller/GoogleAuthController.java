@@ -27,6 +27,8 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 
+import reactor.core.publisher.Mono;
+
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Transactional
 @RestController
@@ -67,14 +69,17 @@ public ResponseEntity<?> googleLoginWithAccessToken(
                 .build();
 
                 Map<String, Object> response = webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/oauth2/v3/userinfo")
-                        .queryParam("alt", "json")
-                        .queryParam("access_token", accessToken)
-                        .build())
-                .retrieve()
-                .bodyToMono(Map.class)
-                .block();
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/oauth2/v3/userinfo")
+                            .queryParam("access_token", accessToken)
+                            .build())
+                    .retrieve()
+                    .bodyToMono(Map.class)
+                    .onErrorResume(e -> {
+                        logger.error("Google API 호출 실패: {}", e.getMessage());
+                        return Mono.empty();
+                    })
+                    .block();
         if (response == null || !response.containsKey("email")) {
             logger.warn("Access Token 검증 실패: {}", accessToken);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 Access Token입니다.");

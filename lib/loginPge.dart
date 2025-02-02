@@ -91,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
     final response = await _dio.post(
       'https://gungangazi.site/api/auth/google-login',
       data: {'accessToken': accessToken},
-      options: Options(headers: {'Content-Type': 'application/json'}),
+      options: Options(headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $accessToken',}),
     );
 
     if (response.statusCode == 200) {
@@ -131,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _googleLogin() async {
   
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signInSilently();
       if (googleUser == null) {
         print('Google 로그인 취소됨');
         return;

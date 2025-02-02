@@ -32,7 +32,7 @@ import reactor.core.publisher.Mono;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Transactional
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping
 public class GoogleAuthController {
 
     private static final Logger logger = LoggerFactory.getLogger(GoogleAuthController.class);
@@ -46,7 +46,7 @@ public class GoogleAuthController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    @PostMapping("/google-login")
+    @PostMapping("/api/auth/google-login")
 public ResponseEntity<?> googleLoginWithAccessToken(
         @RequestBody Map<String, String> request,
         @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {

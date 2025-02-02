@@ -29,7 +29,11 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final AuthRepository _authRepository = AuthRepository();
-  final Dio _dio = Dio(); // Dio 인스턴스 추가
+  final Dio _dio = Dio(BaseOptions(
+  baseUrl: 'https://gungangazi.site',
+  connectTimeout:  const Duration(seconds: 10),
+  receiveTimeout:  const Duration(seconds: 10),
+)); // Dio 인스턴스 추가
   bool _loginFailed = false;
   bool _obscurePassword = true;
   bool _isLoading = false;

@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -44,8 +45,17 @@ public class GoogleAuthController {
     private JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/google-login")
-public ResponseEntity<?> googleLoginWithAccessToken(@RequestBody Map<String, String> request) {
-    String accessToken = request.get("accessToken");
+public ResponseEntity<?> googleLoginWithAccessToken(
+        @RequestBody Map<String, String> request,
+        @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+
+    String accessToken = null;
+
+    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+        accessToken = authorizationHeader.substring(7); // 헤더에서 토큰 추출
+    } else {
+        accessToken = request.get("accessToken"); // 본문에서 토큰 추출
+    }
 
     if (accessToken == null || accessToken.isEmpty()) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Access Token이 필요합니다.");

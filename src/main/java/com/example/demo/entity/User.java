@@ -18,7 +18,7 @@ public class User {
     @Column(name = "username", nullable = false, unique = true) // 사용자명은 null이 아니고 고유해야 함
     private String username;
 
-    @Column(name = "password", nullable = false) // 비밀번호는 null이 아니어야 함
+    @Column(name = "password", nullable = true) // 비밀번호는 null이 아니어야 함
     private String password;
 
     @Column(name = "email", nullable = false, unique = true) // 이메일은 null이 아니고 고유해야 함

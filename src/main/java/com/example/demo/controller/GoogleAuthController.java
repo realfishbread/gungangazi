@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -29,7 +28,7 @@ import com.google.api.client.json.gson.GsonFactory;
 
 import reactor.core.publisher.Mono;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+
 @Transactional
 @RestController
 @RequestMapping
@@ -109,6 +108,7 @@ public ResponseEntity<?> googleLoginWithAccessToken(
             user.setRealname(realname);
             user.setGender(gender);
             user.setIs_google_user(true);
+            user.setUsername(email);
             userRepository.save(user);
             logger.info("새로운 구글 계정으로 사용자 등록: {}", email);
         }

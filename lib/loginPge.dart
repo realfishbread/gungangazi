@@ -128,30 +128,15 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-Future<void> _googleLogin() async {
-  try {
-    // 먼저 silent login 시도
-    final GoogleSignInAccount? googleUser = await _googleSignIn.signInSilently();
-
-    if (googleUser == null) {
-      // silent login 실패 시 명시적 로그인 요청
-      final GoogleSignInAccount? explicitUser = await _googleSignIn.signIn();
-      if (explicitUser == null) {
+  Future<void> _googleLogin() async {
+  
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
         print('Google 로그인 취소됨');
         return;
       }
 
-      final GoogleSignInAuthentication explicitAuth = await explicitUser.authentication;
-      final String? explicitAccessToken = explicitAuth.accessToken;
-
-      if (explicitAccessToken != null) {
-        print('Explicit Google Access Token: $explicitAccessToken');
-        await _sendTokenToServer(explicitAccessToken);
-      } else {
-        _showErrorDialog('Google 인증 정보가 부족합니다.');
-      }
-    } else {
-      // silent login 성공 시
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       final String? accessToken = googleAuth.accessToken;
 
@@ -161,13 +146,12 @@ Future<void> _googleLogin() async {
       } else {
         _showErrorDialog('Google 인증 정보가 부족합니다.');
       }
+    } catch (e) {
+      print('Google 로그인 중 오류 발생: $e');
+      _showErrorDialog('Google 로그인 중 오류가 발생했습니다.');
     }
-  } catch (e) {
-    print('Google 로그인 중 오류 발생: $e');
-    _showErrorDialog('Google 로그인 중 오류가 발생했습니다.');
-  }
+  
 }
-
 
  
 

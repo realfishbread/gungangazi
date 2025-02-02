@@ -95,15 +95,30 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     if (response.statusCode == 200) {
-      final responseBody = response.data;
+      final Map<String, dynamic> responseBody = response.data;
+
       print('서버 응답: $responseBody');
 
+      // 서버에서 반환된 데이터 파싱
       final String token = responseBody['token'];
-      await _saveToken(token);
-      Navigator.pushReplacementNamed(context, '/homeApp');
+      final String email = responseBody['email'];
+      final String realname = responseBody['realname'];
+      final bool existingUser = responseBody['existingUser'];
 
-      final bool existingUser = responseBody['existingUser'] ?? false;
-      _showInfoDialog(existingUser ? '기존 회원으로 로그인되었습니다.' : '신규 회원으로 가입되었습니다.');
+      // 저장 및 UI 업데이트
+      await _saveToken(token);
+
+      // Navigator를 통해 다음 화면으로 이동
+      Navigator.pushReplacementNamed(context, '/homeApp', arguments: {
+        'email': email,
+        'realname': realname,
+        'existingUser': existingUser,
+      });
+
+      // 사용자에게 알림
+      _showInfoDialog(
+        existingUser ? '기존 회원으로 로그인되었습니다.' : '신규 회원으로 가입되었습니다.',
+      );
     } else {
       _showErrorDialog('Google 로그인 실패: 서버 오류 (${response.statusCode})');
     }

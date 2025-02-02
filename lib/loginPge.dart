@@ -89,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
 
   try {
     final response = await _dio.post(
-      'https://gungangazi.site/api/auth/google-login',
+      '/api/auth/google-login',
       data: {'accessToken': accessToken},
       options: Options(headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $accessToken',}),
     );

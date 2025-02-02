@@ -44,34 +44,34 @@ public class GoogleAuthController {
     private JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/google-login")
-public ResponseEntity<?> googleLogin(@RequestBody Map<String, String> request) {
-    String idToken = request.get("idToken");
+public ResponseEntity<?> googleLoginWithAccessToken(@RequestBody Map<String, String> request) {
     String accessToken = request.get("accessToken");
 
-    if (idToken == null || idToken.isEmpty()) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID Token이 필요합니다.");
+    if (accessToken == null || accessToken.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Access Token이 필요합니다.");
     }
 
     try {
-        // ID 토큰 검증
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
-        new NetHttpTransport(),
-        GsonFactory.getDefaultInstance())
-        .setAudience(Collections.singletonList(googleClientId))
-        .build();
+        // Access Token 검증 및 사용자 정보 가져오기
+        WebClient webClient = WebClient.builder()
+                .baseUrl("https://www.googleapis.com")
+                .build();
 
+        Map<String, Object> response = webClient.get()
+                .uri("/oauth2/v1/userinfo?alt=json&access_token=" + accessToken)
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
 
-        GoogleIdToken googleIdToken = verifier.verify(idToken);
-        if (googleIdToken == null) {
-            logger.warn("유효하지 않은 ID Token: {}", idToken);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 ID Token입니다.");
+        if (response == null || !response.containsKey("email")) {
+            logger.warn("Access Token 검증 실패: {}", accessToken);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 Access Token입니다.");
         }
 
-        // ID 토큰에서 사용자 정보 추출
-        GoogleIdToken.Payload payload = googleIdToken.getPayload();
-        String email = payload.getEmail();
-        String realname = (String) payload.get("name");
-        String gender = (String) payload.getOrDefault("gender", "unknown");
+        // 사용자 정보 추출
+        String email = (String) response.get("email");
+        String realname = (String) response.getOrDefault("name", "unknown");
+        String gender = (String) response.getOrDefault("gender", "unknown");
 
         // 사용자 검색
         Optional<User> optionalUser = userRepository.findByEmail(email);

@@ -22,7 +22,6 @@ final GoogleSignIn _googleSignIn = GoogleSignIn(
     'openid',
     'email',
     'profile',
-    'https://www.googleapis.com/auth/contacts.readonly',
   ],
 );
 
@@ -80,34 +79,42 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<void> _sendTokenToServer(String? idToken, String? accessToken) async {
-    try {
-      final response = await _dio.post(
-        'https://gungangazi.site/api/auth/google-login',
-        data: {'idToken': idToken, 'accessToken': accessToken},
-        options: Options(headers: {'Content-Type': 'application/json'}),
-      );
+ 
 
-      if (response.statusCode == 200) {
-        final responseBody = response.data;
-        print('서버 응답: $responseBody');
-
-        final String token = responseBody['token'];
-        await _saveToken(token);
-        Navigator.pushReplacementNamed(context, '/homeApp');
-
-        final bool existingUser = responseBody['existingUser'] ?? false;
-        _showInfoDialog(existingUser ? '기존 회원으로 로그인되었습니다.' : '신규 회원으로 가입되었습니다.');
-      } else {
-        _showErrorDialog('Google 로그인 실패: 서버 오류 (${response.statusCode})');
-      }
-    } catch (e) {
-      print('서버 요청 중 오류 발생: $e');
-      _showErrorDialog('서버 요청 중 오류가 발생했습니다.');
-    }
+  Future<void> _sendTokenToServer(String? accessToken) async {
+  if (accessToken == null) {
+    _showErrorDialog('Google 인증에 실패했습니다. 액세스 토큰이 없습니다.');
+    return;
   }
 
+  try {
+    final response = await _dio.post(
+      'https://gungangazi.site/api/auth/google-login',
+      data: {'accessToken': accessToken},
+      options: Options(headers: {'Content-Type': 'application/json'}),
+    );
+
+    if (response.statusCode == 200) {
+      final responseBody = response.data;
+      print('서버 응답: $responseBody');
+
+      final String token = responseBody['token'];
+      await _saveToken(token);
+      Navigator.pushReplacementNamed(context, '/homeApp');
+
+      final bool existingUser = responseBody['existingUser'] ?? false;
+      _showInfoDialog(existingUser ? '기존 회원으로 로그인되었습니다.' : '신규 회원으로 가입되었습니다.');
+    } else {
+      _showErrorDialog('Google 로그인 실패: 서버 오류 (${response.statusCode})');
+    }
+  } catch (e) {
+    print('서버 요청 중 오류 발생: $e');
+    _showErrorDialog('서버 요청 중 오류가 발생했습니다.');
+  }
+}
+
   Future<void> _googleLogin() async {
+  
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
@@ -116,13 +123,11 @@ class _LoginPageState extends State<LoginPage> {
       }
 
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final String? idToken = googleAuth.idToken;
       final String? accessToken = googleAuth.accessToken;
 
-      if (idToken != null || accessToken != null) {
-        print('Google ID Token: $idToken');
+      if (accessToken != null) {
         print('Google Access Token: $accessToken');
-        await _sendTokenToServer(idToken, accessToken);
+        await _sendTokenToServer(accessToken);
       } else {
         _showErrorDialog('Google 인증 정보가 부족합니다.');
       }
@@ -130,22 +135,10 @@ class _LoginPageState extends State<LoginPage> {
       print('Google 로그인 중 오류 발생: $e');
       _showErrorDialog('Google 로그인 중 오류가 발생했습니다.');
     }
-  }
+  
+}
 
-  Future<void> _checkScopes() async {
-    final bool isAuthorized = await _googleSignIn.canAccessScopes(
-      ['https://www.googleapis.com/auth/contacts.readonly'],
-    );
-
-    if (!isAuthorized) {
-      final bool granted = await _googleSignIn.requestScopes(
-        ['https://www.googleapis.com/auth/contacts.readonly'],
-      );
-      if (!granted) {
-        _showErrorDialog('필요한 권한이 거부되었습니다.');
-      }
-    }
-  }
+ 
 
   Future<void> _saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();

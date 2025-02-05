@@ -121,34 +121,10 @@ class _Profile2State extends State<Profile2> {
   }
 
   Future<void> _linkGoogleAccount() async {
-  final GoogleSignIn googleSignIn = GoogleSignIn();
+    final GoogleSignIn googleSignIn = GoogleSignIn();
 
-  try {
-    // Google 계정 로그인
-    final GoogleSignInAccount? account = await googleSignIn.signIn();
-
-    if (account != null) {
-      // 인증 정보 가져오기
-      final GoogleSignInAuthentication auth = await account.authentication;
-
-      final String? idToken = auth.idToken; // ID 토큰
-      final String? accessToken = auth.accessToken; // 액세스 토큰
-
-      // 서버로 토큰 전송
-      bool success = await _profileRepository.linkGoogleAccount(idToken, accessToken);
-
-      if (success) {
-        print("Google 계정 연동 성공: ${account.email}");
-      } else {
-        print("Google 계정 연동 실패");
-      }
-    } else {
-      print("사용자가 Google 계정 선택을 취소했습니다.");
-    }
-  } catch (error) {
-    print("Google 계정 연동 중 오류 발생: $error");
+   
   }
-}
 
 
 
@@ -181,6 +157,7 @@ class _Profile2State extends State<Profile2> {
 
   Widget buildProfileContent() {
     final profile = _profile ?? defaultProfile;
+    final bool isGoogleUser = profile.is_google_user ?? false; // Google 로그인 여부 확인
 
     return SingleChildScrollView(
       child: Container(
@@ -291,14 +268,15 @@ class _Profile2State extends State<Profile2> {
             Center(
             child: Column(
               children: [
-                TextButton.icon(
-                  onPressed: _linkGoogleAccount, // 구글 연동 로직
-                  icon: const Icon(Icons.link, color: Colors.blue),
-                  label: const Text('구글 계정 연동', style: TextStyle(color: Colors.black)),
-                ),
+                if (!isGoogleUser) // Google 로그인 사용자는 연동 버튼 숨기기
+                  TextButton.icon(
+                    onPressed: _linkGoogleAccount,
+                    icon: const Icon(Icons.link, color: Colors.blue),
+                    label: const Text('구글 계정 연동', style: TextStyle(color: Colors.black)),
+                  ),
                 const SizedBox(height: 10),
                 TextButton.icon(
-                  onPressed: _linkSamsungHealth, // 삼성 헬스 연동 로직
+                  onPressed: _linkSamsungHealth,
                   icon: const Icon(Icons.health_and_safety, color: Colors.green),
                   label: const Text('삼성 헬스 연동', style: TextStyle(color: Colors.black)),
                 ),

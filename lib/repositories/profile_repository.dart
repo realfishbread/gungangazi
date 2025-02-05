@@ -49,12 +49,19 @@ class ProfileRepository {
     }
   }
 
-  Future<bool> linkGoogleAccount(String? idToken, String? accessToken) async {
+  Future<bool> linkGoogleAccount(String? accessToken) async {
     try {
-      final response = await _dio.post('/api/auth/link-google', data: {
-        'idToken': idToken,
+      final response = await _dio.post('/api/auth/google-login',
+       data: {
         'accessToken': accessToken,
-      });
+      },
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $accessToken',
+          },
+        ),
+      );
 
       return response.statusCode == 200;
     } catch (e) {

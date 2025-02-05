@@ -359,6 +359,22 @@ class _LoginPageState extends State<LoginPage> {
                                   }
                                 },
                         ),
+                        const SizedBox(height: 16),
+                        ElevatedButton.icon(
+                          icon: Image.asset(
+                            'assets/icons/kakao_icon.png',
+                            width: 30,
+                            height: 30,
+                          ),
+                          label: const Text('카카오로 로그인'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFFFEE500),
+                            foregroundColor: Colors.black,
+                          ),
+                          onPressed: () {
+                            // 카카오 로그인 로직
+                          },
+                        ),
                       ],
                     ),
                   ),

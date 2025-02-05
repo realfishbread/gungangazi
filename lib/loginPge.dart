@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
+import '../services/TokenService.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -30,6 +31,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final AuthRepository _authRepository = AuthRepository();
+  final TokenService _tokenService =TokenService();
   final Dio _dio = Dio(BaseOptions(
   baseUrl: 'https://gungangazi.site',
   connectTimeout:  const Duration(seconds: 10),
@@ -116,15 +118,20 @@ class _LoginPageState extends State<LoginPage> {
       final String realname = responseBody['realname'];
       final String gender =responseBody['gender'];
       final bool existingUser = responseBody['existingUser'];
+      final String username = responseBody['username'];
 
       // 저장 및 UI 업데이트
       await _saveToken(token);
+      await _tokenService.saveToken(token);
 
       // Navigator를 통해 다음 화면으로 이동
       Navigator.pushReplacementNamed(context, '/homeApp', arguments: {
         'email': email,
         'realname': realname,
         'existingUser': existingUser,
+        'gender': gender,
+        'username': username,
+        'token': token,
       });
 
       // 사용자에게 알림

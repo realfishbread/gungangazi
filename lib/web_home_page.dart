@@ -356,22 +356,21 @@ class _WebHomePageState extends State<WebHomePage> {
                 },
               ),
               SideMenuItem(
-                title: '로그아웃',
-                onTap: (index, _) async {
-                  // 토큰 삭제 및 로그아웃 처리
-                  logout(context);
-                },
-                icon: const Icon(Icons.logout),
-              ),
-          Expanded(
-            child: Center(
-              child: _popupHandler.buildImageAnimationWithTouch(context, (selectedImagePath) {
-                print('Selected image path: $selectedImagePath');
-              }),
+              title: '로그아웃',
+              onTap: (index, _) async {
+                logout(context);
+              },
+              icon: const Icon(Icons.logout),
             ),
-          ),
-        ],
-      ),
+            ],
+            ),
+            Expanded(
+              child: Center(
+                child: _popupHandler.buildImageAnimationWithTouch(context, (selectedImagePath) {
+                  print('Selected image path: $selectedImagePath');
+                }),
+              ),
+            ),
         ]
       )
     );

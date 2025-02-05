@@ -12,6 +12,7 @@ import 'ChatPage.dart';
 import '../services/TokenService.dart';
 import '../services/dio_service.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 import 'web_home_page.dart';
@@ -101,6 +102,13 @@ class _MobileHomePageState extends State<MobileHomePage> {
     }
   }
 
+void logout(BuildContext context) async {
+  await _tokenService.deleteToken(); // 토큰 삭제
+  print('토큰이 삭제되었습니다.');
+
+  // 로그인 화면으로 이동
+  Navigator.pushReplacementNamed(context, '/login');
+}
  
 
  @override
@@ -132,7 +140,8 @@ Widget build(BuildContext context) {
         IconButton(
           icon: const Icon(Icons.logout),
           onPressed: () {
-            Navigator.pushReplacementNamed(context, '/login');
+            
+            logout(context); // 로그아웃 메서드 호출
           },
         ),
       ],

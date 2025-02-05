@@ -59,6 +59,16 @@ class _WebHomePageState extends State<WebHomePage> {
       }
     });
   }
+  void logout(BuildContext context) async {
+  await _tokenService.deleteToken(); // 토큰 삭제
+  setState(() {
+    _profile = null;
+    _imageData = null;
+  });
+  Navigator.pushReplacementNamed(context, '/login');
+}
+
+
 
   void _navigateToProfile(BuildContext context) async {
     String? username = await _tokenService.getUsername();
@@ -347,16 +357,12 @@ class _WebHomePageState extends State<WebHomePage> {
               ),
               SideMenuItem(
                 title: '로그아웃',
-                onTap: (index, _) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
-                  );
+                onTap: (index, _) async {
+                  // 토큰 삭제 및 로그아웃 처리
+                  logout(context);
                 },
-                icon: const Icon(Icons.login),
+                icon: const Icon(Icons.logout),
               ),
-            ],
-          ),
           Expanded(
             child: Center(
               child: _popupHandler.buildImageAnimationWithTouch(context, (selectedImagePath) {
@@ -366,6 +372,8 @@ class _WebHomePageState extends State<WebHomePage> {
           ),
         ],
       ),
+        ]
+      )
     );
   }
 }

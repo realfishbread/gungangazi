@@ -44,6 +44,7 @@ class _Profile2State extends State<Profile2> {
     weight: '70kg',
     gender: '남성',
     age: '25', // 기본 age 값 추가
+    is_google_user: false,
   );
 
   @override
@@ -91,6 +92,7 @@ class _Profile2State extends State<Profile2> {
     gender: _profile?.gender ?? defaultProfile.gender,
     age: fieldName == '나이' ? newValue : _profile?.age ?? defaultProfile.age,
     profile_image: _imageData != null ? base64Encode(_imageData!) : _profile?.profile_image,
+    is_google_user: _profile?.is_google_user ??defaultProfile.is_google_user,
   );
 
   print("Sending data to server: ${jsonEncode(updatedProfile.toJson())}");

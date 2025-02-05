@@ -22,6 +22,7 @@ final GoogleSignIn _googleSignIn = GoogleSignIn(
     'openid',
     'email',
     'profile',
+    'https://www.googleapis.com/auth/user.gender.read',
   ],
 );
 
@@ -113,6 +114,7 @@ class _LoginPageState extends State<LoginPage> {
       final String token = responseBody['token'];
       final String email = responseBody['email'];
       final String realname = responseBody['realname'];
+      final String gender =responseBody['gender'];
       final bool existingUser = responseBody['existingUser'];
 
       // 저장 및 UI 업데이트

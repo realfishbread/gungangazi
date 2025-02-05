@@ -47,7 +47,7 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         
         // ProfileDto로 필요한 정보만 반환
-        return new ProfileDto(user.getUsername(), user.getRealname(), user.getEmail(), user.getHeight(), user.getWeight(), user.getGender(), user.getProfile_image(), user.getAge());
+        return new ProfileDto(user.getUsername(), user.getRealname(), user.getEmail(), user.getHeight(), user.getWeight(), user.getGender(), user.getProfile_image(), user.getAge(), user.getIs_google_user());
     }
     
 

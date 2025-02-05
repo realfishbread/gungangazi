@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,11 +20,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.GooglePeopleService;
 import com.example.demo.service.JwtTokenProvider;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
 
 import reactor.core.publisher.Mono;
 
@@ -45,147 +42,141 @@ public class GoogleAuthController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    @PostMapping("/api/auth/google-login")
-    public ResponseEntity<?> googleLoginWithAccessToken(
-            @RequestBody Map<String, String> request,
-            @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+    @Autowired
+private GooglePeopleService googlePeopleService;
+@PostMapping("/api/auth/google-login")
+public ResponseEntity<?> googleLoginWithAccessToken(
+        @RequestBody Map<String, String> request,
+        @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
 
-        final String accessToken;
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            accessToken = authorizationHeader.substring(7);
-        } else {
-            accessToken = request.get("accessToken");
-        }
-
-        if (accessToken == null || accessToken.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Access Token이 필요합니다.");
-        }
-
-        try {
-            // Access Token 검증 및 사용자 정보 가져오기
-            WebClient webClient = WebClient.builder()
-                    .baseUrl("https://www.googleapis.com")
-                    .build();
-
-            Map<String, Object> response = webClient.get()
-                    .uri(uriBuilder -> uriBuilder
-                            .path("/oauth2/v3/userinfo")
-                            .queryParam("access_token", accessToken)
-                            .build())
-                    .retrieve()
-                    .bodyToMono(Map.class)
-                    .onErrorResume(e -> {
-                        logger.error("Google API 호출 실패: {}", e.getMessage());
-                        return Mono.empty();
-                    })
-                    .block();
-
-            if (response == null || !response.containsKey("email")) {
-                logger.warn("Access Token 검증 실패: {}", accessToken);
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 Access Token입니다.");
-            }
-
-            // 사용자 정보 추출
-            String email = (String) response.get("email");
-            String realname = (String) response.getOrDefault("name", "unknown");
-            String gender = (String) response.getOrDefault("gender", "unknown");
-
-            // 사용자 검색
-            Optional<User> optionalUser = userRepository.findByEmail(email);
-            boolean existingUser = optionalUser.isPresent();
-
-            User user;
-            if (existingUser) {
-                // 기존 사용자 정보 업데이트
-                user = optionalUser.get();
-                if (!user.getIs_google_user()) {
-                    // 기존 일반 가입 사용자도 Google 로그인 허용
-                    user.setIs_google_user(true);
-                    userRepository.save(user);
-                    logger.info("일반 계정을 Google 계정으로 전환: {}", email);
-                }
-            } else {
-                // 신규 사용자 등록
-                user = new User();
-                user.setEmail(email);
-                user.setRealname(realname);
-                user.setGender(gender);
-                user.setIs_google_user(true);
-                user.setUsername(email);
-                userRepository.save(user);
-                logger.info("새로운 Google 계정으로 사용자 등록: {}", email);
-            }
-
-            // JWT 토큰 발급
-            String token = jwtTokenProvider.createToken(email);
-
-            // 응답 반환
-            return ResponseEntity.ok(Map.of(
-                    "message", "Google 로그인 성공",
-                    "token", token,
-                    "email", email,
-                    "realname", realname,
-                    "existingUser", existingUser
-            ));
-        } catch (Exception e) {
-            logger.error("Google 로그인 실패: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Google 로그인 실패: " + e.getMessage());
-        }
+    final String accessToken;
+    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+        accessToken = authorizationHeader.substring(7);
+    } else {
+        accessToken = request.get("accessToken");
     }
 
-    
-
-
-    
-
-@PostMapping("/link-google")
-public ResponseEntity<?> linkGoogleAccount(@RequestBody Map<String, String> request) {
-    String idToken = request.get("idToken");
-    String email = request.get("email"); // 기존 회원가입 시 사용한 이메일
-
-    if (idToken == null || idToken.isEmpty()) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID Token이 필요합니다.");
+    if (accessToken == null || accessToken.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Access Token이 필요합니다.");
     }
 
     try {
-        // Google ID Token 검증
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
-                new NetHttpTransport(), new GsonFactory())
-                .setAudience(Collections.singletonList(googleClientId))
+        // Access Token 검증 및 기본 사용자 정보 가져오기
+        WebClient webClient = WebClient.builder()
+                .baseUrl("https://www.googleapis.com")
                 .build();
 
-        GoogleIdToken googleIdToken = verifier.verify(idToken);
-        if (googleIdToken != null) {
-            GoogleIdToken.Payload payload = googleIdToken.getPayload();
-            String googleEmail = payload.getEmail();
+        Map<String, Object> response = webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/oauth2/v3/userinfo")
+                        .queryParam("access_token", accessToken)
+                        .build())
+                .retrieve()
+                .bodyToMono(Map.class)
+                .onErrorResume(e -> {
+                    logger.error("Google API 호출 실패: {}", e.getMessage());
+                    return Mono.empty();
+                })
+                .block();
 
-            // 기존 사용자 계정 찾기
-            Optional<User> optionalUser = userRepository.findByEmail(email);
-            if (optionalUser.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
-            }
-
-            User user = optionalUser.get();
-
-            // Google 계정 이메일이 기존 이메일과 다르면 오류 반환
-            if (!googleEmail.equals(email)) {
-                return ResponseEntity.status(HttpStatus.CONFLICT)
-                        .body("Google 계정 이메일이 기존 계정 이메일과 일치하지 않습니다.");
-            }
-
-            // 기존 사용자 계정과 Google 계정을 연결
-            user.setIs_google_user(true);
-            userRepository.save(user);
-
-            return ResponseEntity.ok(Map.of(
-                "message", "Google 계정이 성공적으로 연결되었습니다."
-            ));
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 ID Token입니다.");
+        if (response == null || !response.containsKey("email")) {
+            logger.warn("Access Token 검증 실패: {}", accessToken);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 Access Token입니다.");
         }
+
+        // 사용자 정보 추출
+        String email = (String) response.get("email");
+        String realname = (String) response.getOrDefault("name", "unknown");
+
+       // 추가 사용자 정보 (People API 호출)
+        Map<String, Object> profile = googlePeopleService.fetchUserGender(accessToken);
+        String gender = null;
+
+        // 성별 데이터 추출
+        if (profile != null && profile.containsKey("genders")) {
+            // "genders" 필드를 List<Map<String, Object>>로 처리
+            List<Map<String, Object>> genders = (List<Map<String, Object>>) profile.get("genders");
+            if (!genders.isEmpty()) {
+                // 첫 번째 성별 값을 가져옴
+                gender = (String) genders.get(0).get("value");
+            }
+        }
+
+        // 사용자 검색
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        boolean existingUser = optionalUser.isPresent();
+
+        User user;
+        if (existingUser) {
+            // 기존 사용자 정보 업데이트
+            user = optionalUser.get();
+            if (!user.getIs_google_user()) {
+                user.setIs_google_user(true);
+            }
+            if (gender != null) {
+                user.setGender(gender);
+            }
+            userRepository.save(user);
+            logger.info("기존 사용자를 Google 계정으로 업데이트: {}", email);
+        } else {
+            // 신규 사용자 등록
+            user = new User();
+            user.setEmail(email);
+            user.setRealname(realname);
+            user.setGender(gender);
+            user.setIs_google_user(true);
+            user.setUsername(email);
+            userRepository.save(user);
+            logger.info("새로운 Google 계정으로 사용자 등록: {}", email);
+        }
+
+        // JWT 토큰 발급
+        String token = jwtTokenProvider.createToken(email);
+
+        // 응답 반환
+        return ResponseEntity.ok(Map.of(
+                "message", "Google 로그인 성공",
+                "token", token,
+                "email", email,
+                "realname", realname,
+                "gender", gender,
+                "existingUser", existingUser
+        ));
     } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Google 계정 연결 실패: " + e.getMessage());
+        logger.error("Google 로그인 실패: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Google 로그인 실패: " + e.getMessage());
     }
 }
 
+public void fetchAndSaveUserInfo(String accessToken, User user) {
+    Map<String, Object> profile = googlePeopleService.fetchUserGender(accessToken);
+    if (profile != null) {
+        logger.debug("Google People API 응답: {}", profile);
+
+        // 성별 처리
+        String gender = "기타"; // 기본값 설정
+        if (profile.containsKey("genders")) {
+            try {
+                // "genders" 필드를 List<Map<String, Object>>로 처리
+                List<?> genders = (List<?>) profile.get("genders");
+                if (genders != null && !genders.isEmpty() && genders.get(0) instanceof Map) {
+                    Map<?, ?> genderMap = (Map<?, ?>) genders.get(0);
+                    Object genderValueObj = genderMap.get("value");
+                    if (genderValueObj instanceof String) {
+                        String genderValue = (String) genderValueObj;
+                        if ("female".equalsIgnoreCase(genderValue)) {
+                            gender = "여성";
+                        } else if ("male".equalsIgnoreCase(genderValue)) {
+                            gender = "남성";
+                        }
+                    }
+                }
+            } catch (ClassCastException e) {
+                logger.error("genders 데이터 타입 변환 실패: {}", e.getMessage());
+            }
+        } else {
+            logger.warn("genders 정보가 응답에 포함되지 않았습니다.");
+        }
+    }
+}
 }

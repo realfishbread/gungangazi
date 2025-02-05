@@ -12,8 +12,9 @@ public class ProfileDto {
     private String gender;
     private String profile_image;
     private String age;
+    private boolean is_google_user;
 
-    public ProfileDto(String username, String realname, String email, String height, String weight, String gender, String profile_image, String age) {
+    public ProfileDto(String username, String realname, String email, String height, String weight, String gender, String profile_image, String age, boolean is_google_user) {
         this.username = username;
         this.realname = realname;
         this.email = email;
@@ -22,6 +23,7 @@ public class ProfileDto {
         this.gender = gender;
         this.profile_image = profile_image;
         this.age =age;
+        this.is_google_user=is_google_user;
     }
 
     
@@ -89,6 +91,14 @@ public class ProfileDto {
 
     public void setAge(String age) {
         this.age = age;
+    }
+
+    public boolean getIs_google_user(boolean is_google_user){
+        return is_google_user;
+    }
+
+    public void setIs_google_user(boolean is_google_user){
+        this.is_google_user=is_google_user;
     }
 
     

@@ -52,5 +52,6 @@ com\example\demo\repository\userHealth\BrushHistoryRepository.class
 com\example\demo\service\userHealth\WaterIntakeService.class
 com\example\demo\service\userHealth\MealService.class
 com\example\demo\controller\userHealth\WaterIntakeController.class
+com\example\demo\service\GooglePeopleService.class
 com\example\demo\repository\userHealth\SupplementRepository.class
 com\example\demo\controller\userHealth\SupplementController.class

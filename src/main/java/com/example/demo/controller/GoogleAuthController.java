@@ -97,12 +97,20 @@ public ResponseEntity<?> googleLoginWithAccessToken(
             try {
                 List<Map<String, Object>> genders = (List<Map<String, Object>>) profile.get("genders");
                 if (!genders.isEmpty()) {
-                    gender = (String) genders.get(0).get("value");
+                    String genderValue = (String) genders.get(0).get("value");
+                    if ("female".equalsIgnoreCase(genderValue)) {
+                        gender = "여성";
+                    } else if ("male".equalsIgnoreCase(genderValue)) {
+                        gender = "남성";
+                    } else {
+                        gender = "비공개"; // 알 수 없는 값에 대해 기본값 설정
+                    }
                 }
             } catch (Exception e) {
                 logger.error("성별 데이터 처리 중 오류 발생: {}", e.getMessage());
             }
         }
+        
 
         // 성별 정보가 없는 경우 기본값 설정
         if (gender == null || gender.isEmpty()) {

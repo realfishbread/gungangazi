@@ -127,8 +127,6 @@ public ResponseEntity<?> googleLoginWithAccessToken(
                 user.setRealname(realname);
             }
 
-            // 기존 사용자 정보 업데이트
-            userRepository.save(user);
             logger.info("기존 사용자를 Google 계정으로 업데이트: {}", email);
         } else {
             // 신규 사용자 등록
@@ -137,7 +135,10 @@ public ResponseEntity<?> googleLoginWithAccessToken(
             user.setRealname(realname);
             user.setGender(gender);
             user.setIs_google_user(true);
+
+            // username이 없으면 이메일을 username으로 설정
             user.setUsername(email);
+
             userRepository.save(user);
             logger.info("새로운 Google 계정으로 사용자 등록: {}", email);
         }
@@ -150,6 +151,7 @@ public ResponseEntity<?> googleLoginWithAccessToken(
                 "message", "Google 로그인 성공",
                 "token", token,
                 "email", email,
+                "username", user.getUsername(), // username 유지
                 "realname", user.getRealname(), // 기존 값 유지
                 "gender", user.getGender(),     // 기존 값 유지
                 "existingUser", existingUser
@@ -160,4 +162,3 @@ public ResponseEntity<?> googleLoginWithAccessToken(
     }
 }
 }
-

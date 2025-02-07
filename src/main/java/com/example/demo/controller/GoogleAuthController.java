@@ -61,7 +61,7 @@ public ResponseEntity<?> googleLoginWithAccessToken(
     }
 
     try {
-        // Access Token 검증 및 기본 사용자 정보 가져오기
+        // Google API를 이용하여 사용자 정보 가져오기
         WebClient webClient = WebClient.builder()
                 .baseUrl("https://www.googleapis.com")
                 .build();
@@ -88,11 +88,10 @@ public ResponseEntity<?> googleLoginWithAccessToken(
         String email = (String) response.get("email");
         String realname = (String) response.getOrDefault("name", "unknown");
 
-        // 추가 사용자 정보 (People API 호출)
+        // Google People API로 성별 정보 가져오기
         Map<String, Object> profile = googlePeopleService.fetchUserGender(accessToken);
-        String gender = null;
+        String gender = "비공개"; // 기본값 설정
 
-        // 성별 데이터 추출
         if (profile != null && profile.containsKey("genders")) {
             try {
                 List<Map<String, Object>> genders = (List<Map<String, Object>>) profile.get("genders");
@@ -102,19 +101,11 @@ public ResponseEntity<?> googleLoginWithAccessToken(
                         gender = "여성";
                     } else if ("male".equalsIgnoreCase(genderValue)) {
                         gender = "남성";
-                    } else {
-                        gender = "비공개"; // 알 수 없는 값에 대해 기본값 설정
                     }
                 }
             } catch (Exception e) {
                 logger.error("성별 데이터 처리 중 오류 발생: {}", e.getMessage());
             }
-        }
-        
-
-        // 성별 정보가 없는 경우 기본값 설정
-        if (gender == null || gender.isEmpty()) {
-            gender = "비공개"; // 기본값을 '비공개'로 설정
         }
 
         // 사용자 검색
@@ -124,22 +115,18 @@ public ResponseEntity<?> googleLoginWithAccessToken(
         User user;
         if (existingUser) {
             user = optionalUser.get();
-            
-            // Google 계정 연동 여부 업데이트 (필요한 경우만)
-            if (user.getIs_google_user() == null || !user.getIs_google_user()) {
-                user.setIs_google_user(true);
-            }
-        
-            // 성별 정보 업데이트 (gender가 비어 있으면만)
-            if ((user.getGender() == null || user.getGender().isEmpty()) && gender != null) {
+
+            // Google 계정 연동 여부 설정
+            user.setIs_google_user(true);
+
+            // 기존 값이 없을 경우에만 업데이트
+            if (user.getGender() == null || user.getGender().isEmpty()) {
                 user.setGender(gender);
             }
-        
-            // 이름 업데이트 (realname이 비어 있으면만)
-            if ((user.getRealname() == null || user.getRealname().isEmpty()) && realname != null) {
+            if (user.getRealname() == null || user.getRealname().isEmpty()) {
                 user.setRealname(realname);
             }
-        
+
             // 기존 사용자 정보 업데이트
             userRepository.save(user);
             logger.info("기존 사용자를 Google 계정으로 업데이트: {}", email);
@@ -150,7 +137,7 @@ public ResponseEntity<?> googleLoginWithAccessToken(
             user.setRealname(realname);
             user.setGender(gender);
             user.setIs_google_user(true);
-            user.setUsername(email);  // 기존 username과 충돌되지 않도록 설정
+            user.setUsername(email);
             userRepository.save(user);
             logger.info("새로운 Google 계정으로 사용자 등록: {}", email);
         }
@@ -163,8 +150,8 @@ public ResponseEntity<?> googleLoginWithAccessToken(
                 "message", "Google 로그인 성공",
                 "token", token,
                 "email", email,
-                "realname", realname,
-                "gender", gender,
+                "realname", user.getRealname(), // 기존 값 유지
+                "gender", user.getGender(),     // 기존 값 유지
                 "existingUser", existingUser
         ));
     } catch (Exception e) {
@@ -172,36 +159,5 @@ public ResponseEntity<?> googleLoginWithAccessToken(
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Google 로그인 실패: " + e.getMessage());
     }
 }
-
-public void fetchAndSaveUserInfo(String accessToken, User user) {
-    Map<String, Object> profile = googlePeopleService.fetchUserGender(accessToken);
-    if (profile != null) {
-        logger.debug("Google People API 응답: {}", profile);
-
-        // 성별 처리
-        String gender = "기타"; // 기본값 설정
-        if (profile.containsKey("genders")) {
-            try {
-                // "genders" 필드를 List<Map<String, Object>>로 처리
-                List<?> genders = (List<?>) profile.get("genders");
-                if (genders != null && !genders.isEmpty() && genders.get(0) instanceof Map) {
-                    Map<?, ?> genderMap = (Map<?, ?>) genders.get(0);
-                    Object genderValueObj = genderMap.get("value");
-                    if (genderValueObj instanceof String) {
-                        String genderValue = (String) genderValueObj;
-                        if ("female".equalsIgnoreCase(genderValue)) {
-                            gender = "여성";
-                        } else if ("male".equalsIgnoreCase(genderValue)) {
-                            gender = "남성";
-                        }
-                    }
-                }
-            } catch (ClassCastException e) {
-                logger.error("genders 데이터 타입 변환 실패: {}", e.getMessage());
-            }
-        } else {
-            logger.warn("genders 정보가 응답에 포함되지 않았습니다.");
-        }
-    }
 }
-}
+

@@ -88,18 +88,25 @@ public ResponseEntity<?> googleLoginWithAccessToken(
         String email = (String) response.get("email");
         String realname = (String) response.getOrDefault("name", "unknown");
 
-       // 추가 사용자 정보 (People API 호출)
+        // 추가 사용자 정보 (People API 호출)
         Map<String, Object> profile = googlePeopleService.fetchUserGender(accessToken);
         String gender = null;
 
         // 성별 데이터 추출
         if (profile != null && profile.containsKey("genders")) {
-            // "genders" 필드를 List<Map<String, Object>>로 처리
-            List<Map<String, Object>> genders = (List<Map<String, Object>>) profile.get("genders");
-            if (!genders.isEmpty()) {
-                // 첫 번째 성별 값을 가져옴
-                gender = (String) genders.get(0).get("value");
+            try {
+                List<Map<String, Object>> genders = (List<Map<String, Object>>) profile.get("genders");
+                if (!genders.isEmpty()) {
+                    gender = (String) genders.get(0).get("value");
+                }
+            } catch (Exception e) {
+                logger.error("성별 데이터 처리 중 오류 발생: {}", e.getMessage());
             }
+        }
+
+        // 성별 정보가 없는 경우 기본값 설정
+        if (gender == null || gender.isEmpty()) {
+            gender = "비공개"; // 기본값을 '비공개'로 설정
         }
 
         // 사용자 검색
@@ -108,14 +115,24 @@ public ResponseEntity<?> googleLoginWithAccessToken(
 
         User user;
         if (existingUser) {
-            // 기존 사용자 정보 업데이트
             user = optionalUser.get();
-            if (!user.getIs_google_user()) {
+            
+            // Google 계정 연동 여부 업데이트 (필요한 경우만)
+            if (user.getIs_google_user() == null || !user.getIs_google_user()) {
                 user.setIs_google_user(true);
             }
-            if (gender != null) {
+        
+            // 성별 정보 업데이트 (gender가 비어 있으면만)
+            if ((user.getGender() == null || user.getGender().isEmpty()) && gender != null) {
                 user.setGender(gender);
             }
+        
+            // 이름 업데이트 (realname이 비어 있으면만)
+            if ((user.getRealname() == null || user.getRealname().isEmpty()) && realname != null) {
+                user.setRealname(realname);
+            }
+        
+            // 기존 사용자 정보 업데이트
             userRepository.save(user);
             logger.info("기존 사용자를 Google 계정으로 업데이트: {}", email);
         } else {
@@ -125,7 +142,7 @@ public ResponseEntity<?> googleLoginWithAccessToken(
             user.setRealname(realname);
             user.setGender(gender);
             user.setIs_google_user(true);
-            user.setUsername(email);
+            user.setUsername(email);  // 기존 username과 충돌되지 않도록 설정
             userRepository.save(user);
             logger.info("새로운 Google 계정으로 사용자 등록: {}", email);
         }

@@ -291,6 +291,14 @@ class PopupHandler {
             'assets/person/0amarm2.jpg',
             'assets/person/0amarm1.jpg',
 
+          ],
+          '0amhead': [
+            'assets/person/slhead1.jpg',
+            'assets/person/slhead2.jpg',
+            'assets/person/slhead3.jpg',
+            'assets/person/slhead3.jpg',
+            'assets/person/slhead2.jpg',
+            'assets/person/slhead1.jpg',
           ]
 
         } {
@@ -600,7 +608,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
         popupMessage = '좋은 꿈꾸세요!';
           if (relativeY < headHeight) {
           popupMessage = '주무실 시간이네요!';
-          triggerAnimation('0amtouch');
+          triggerAnimation('0amhead');
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
             popupMessage = '오늘의 파자마는 보라색이예요.';

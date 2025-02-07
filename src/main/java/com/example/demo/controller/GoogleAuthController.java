@@ -89,6 +89,7 @@ public ResponseEntity<?> googleLoginWithAccessToken(
         String realname = (String) response.getOrDefault("name", "unknown");
 
         // Google People API로 성별 정보 가져오기
+        
         Map<String, Object> profile = googlePeopleService.fetchUserGender(accessToken);
         String gender = "비공개"; // 기본값 설정
 
@@ -97,16 +98,26 @@ public ResponseEntity<?> googleLoginWithAccessToken(
                 List<Map<String, Object>> genders = (List<Map<String, Object>>) profile.get("genders");
                 if (!genders.isEmpty()) {
                     String genderValue = (String) genders.get(0).get("value");
-                    if ("female".equalsIgnoreCase(genderValue)) {
-                        gender = "여성";
-                    } else if ("male".equalsIgnoreCase(genderValue)) {
-                        gender = "남성";
+
+                    // 올바른 한글 변환 적용
+                    switch (genderValue.toLowerCase()) {
+                        case "female":
+                            gender = "여성";
+                            break;
+                        case "male":
+                            gender = "남성";
+                            break;
+                        default:
+                            gender = "비공개";
                     }
                 }
             } catch (Exception e) {
                 logger.error("성별 데이터 처리 중 오류 발생: {}", e.getMessage());
             }
         }
+
+// 최종 성별 값 로그 출력
+logger.info("성별 저장 값: {}", gender);
 
         // 사용자 검색
         Optional<User> optionalUser = userRepository.findByEmail(email);

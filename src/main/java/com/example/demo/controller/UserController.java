@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;  // JWT 발급 서비스 (새로 추가)
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;  // JWT 발급 서비스 (새로 추가)
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -174,12 +176,30 @@ public class UserController {
 
     // UserController.java
 
-    @GetMapping("/profile")
-    public ResponseEntity<?> getProfile(Authentication authentication) {
-        String username = authentication.getName(); // 현재 로그인한 사용자의 이름 가져오기
-        ProfileDto profileDto = userService.getUserProfileByUsername(username);
-        return ResponseEntity.ok(profileDto);
+   @GetMapping("/profile")
+public ResponseEntity<?> getProfile(@AuthenticationPrincipal Object principal) {
+    String username = null;
+
+    if (principal instanceof UserDetails) {
+        // 일반 로그인 사용자
+        username = ((UserDetails) principal).getUsername();
+    } else if (principal instanceof OAuth2User) {
+        // OAuth2 사용자 (구글 로그인)
+        OAuth2User oAuth2User = (OAuth2User) principal;
+        String email = oAuth2User.getAttribute("email");
+
+        // 이메일로 사용자 정보 조회
+        username = userService.getUsernameByEmail(email); 
     }
+
+    if (username == null) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자를 찾을 수 없습니다.");
+    }
+
+    ProfileDto profileDto = userService.getUserProfileByUsername(username);
+    return ResponseEntity.ok(profileDto);
+}
+
     
 
     @PutMapping("/{username}/update")

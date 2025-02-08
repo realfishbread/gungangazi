@@ -8,9 +8,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.Optional; // Optional 사용
+
+
 
 import com.example.demo.entity.Status;
+import com.example.demo.repository.StatusRepository;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.StatusService;
+import com.example.demo.entity.User;
 
 @RestController
 @RequestMapping("/character/status")
@@ -18,6 +24,12 @@ public class StatusController {
 
     @Autowired
     private StatusService statusService;
+
+    @Autowired
+    private StatusRepository statusRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     // 상태 저장 API
     @PostMapping
@@ -36,6 +48,18 @@ public class StatusController {
         return statusService.getStatusByUsername(username)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    public Optional<Status> getStatusByUsername(String loginValue) {
+        if (loginValue.contains("@")) { // 이메일이면 변환
+            Optional<User> user = userRepository.findByEmail(loginValue);
+            if (user.isPresent()) {
+                String realUsername = user.get().getUsername();
+                System.out.println("📢 이메일을 username으로 변환: " + loginValue + " → " + realUsername);
+                return statusRepository.findByUsername(realUsername);
+            }
+        }
+        return statusRepository.findByUsername(loginValue);
     }
 
 }

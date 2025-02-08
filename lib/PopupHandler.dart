@@ -330,6 +330,11 @@ Future<void> saveStatusToServer() async {
     String? username = await TokenService().getUsername();
     String? jwtToken = await TokenService().getToken(); // 토큰 가져오기
 
+    // username이 이메일이면 변환
+    if (username != null && username.contains("@")) {
+      username = await fetchUsernameFromServer(username);
+    }
+
     print('Saving status - Username: $username, Water Level: $waterLevel, Meal Level: $mealLevel, Sleep Level: $sleepLevel'); // 확인용 로그
 
     await DioService().getDio().post(
@@ -350,6 +355,19 @@ Future<void> saveStatusToServer() async {
     print('Status saved to server successfully');
   } catch (e) {
     print('Failed to save status to server: $e');
+  }
+}
+
+Future<String> fetchUsernameFromServer(String email) async {
+  try {
+    final response = await DioService().getDio().get(
+      '/getUsernameByEmail',
+      queryParameters: {'email': email},
+    );
+    return response.data['username'];
+  } catch (e) {
+    print("❌ Error fetching username: $e");
+    return email; // 오류 시 기존 이메일 유지
   }
 }
 

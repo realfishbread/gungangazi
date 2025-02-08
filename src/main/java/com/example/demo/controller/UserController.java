@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.DTO.LoginRequestDto;
@@ -250,6 +252,13 @@ public ResponseEntity<?> getProfile(@AuthenticationPrincipal Object principal) {
         userRepository.delete(userOptional.get());
 
         return ResponseEntity.ok(createSuccessResponse("사용자가 삭제되었습니다."));
+    }
+
+    @GetMapping("/getUsernameByEmail")
+    public ResponseEntity<?> getUsernameByEmail(@RequestParam String email) {
+        return userRepository.findByEmail(email)
+                .map(user -> ResponseEntity.ok(Collections.singletonMap("username", user.getUsername())))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     // 성공 응답 생성

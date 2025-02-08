@@ -77,6 +77,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .requestMatchers(new AntPathRequestMatcher("/supplements/single", "GET")).permitAll()
             .requestMatchers(new AntPathRequestMatcher("/api/auth/google-login", "POST")).permitAll()
             .requestMatchers(new AntPathRequestMatcher("/api/auth/link-google", "POST")).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/getUsernameByEmail", "GET")).permitAll()
             .anyRequest().authenticated()
         )
         .headers(headers -> headers

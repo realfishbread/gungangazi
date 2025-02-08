@@ -44,11 +44,26 @@ public class StatusController {
 
     // 상태 불러오기 API
     @GetMapping
-    public ResponseEntity<Status> getStatus(@RequestParam String username) {
-        return statusService.getStatusByUsername(username)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+public ResponseEntity<Status> getStatus(@RequestParam String username) {
+    // 이메일인지 확인
+    if (username.contains("@")) {
+        Optional<User> user = userRepository.findByEmail(username);
+        if (user.isPresent()) {
+            username = user.get().getUsername(); // 이메일 -> username 변환
+            System.out.println("📢 이메일을 username으로 변환: " + username);
+        } else {
+            System.out.println("❌ 이메일에 해당하는 사용자가 없습니다: " + username);
+            return ResponseEntity.notFound().build(); // 사용자를 찾지 못한 경우 404 반환
+        }
     }
+
+    // username으로 상태 조회
+    return statusRepository.findByUsername(username)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+}
+
+
 
     public Optional<Status> getStatusByUsername(String loginValue) {
         if (loginValue.contains("@")) { // 이메일이면 변환

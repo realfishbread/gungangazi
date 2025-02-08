@@ -35,7 +35,11 @@ public class GooglePeopleService {
                     .bodyToMono(Map.class)
                     .block();
     
+            // 응답 데이터 확인
             logger.debug("Google People API 응답: {}", response);
+            if (response != null && response.containsKey("genders")) {
+                logger.debug("genders 필드 데이터: {}", response.get("genders"));
+            }
             return response;
         } catch (Exception e) {
             logger.error("Google People API 호출 실패: {}", e.getMessage());

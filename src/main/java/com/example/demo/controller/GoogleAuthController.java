@@ -88,36 +88,59 @@ public ResponseEntity<?> googleLoginWithAccessToken(
         String email = (String) response.get("email");
         String realname = (String) response.getOrDefault("name", "unknown");
 
-        // Google People API로 성별 정보 가져오기
-        
-        Map<String, Object> profile = googlePeopleService.fetchUserGender(accessToken);
-        String gender = "비공개"; // 기본값 설정
+       // Google People API로 성별 정보 가져오기
+Map<String, Object> profile = googlePeopleService.fetchUserGender(accessToken);
+String gender = "비공개"; // 기본값 설정
 
-        if (profile != null && profile.containsKey("genders")) {
-            try {
-                List<Map<String, Object>> genders = (List<Map<String, Object>>) profile.get("genders");
-                if (!genders.isEmpty()) {
-                    String genderValue = (String) genders.get(0).get("value");
+if (profile != null && profile.containsKey("genders")) {
+    try {
+        List<Map<String, Object>> genders = (List<Map<String, Object>>) profile.get("genders");
+        if (!genders.isEmpty()) {
+            Map<String, Object> genderInfo = genders.get(0);
+            String genderFormatted = (String) genderInfo.get("formattedValue");
+            String genderValue = (String) genderInfo.get("value");
 
-                    // 올바른 한글 변환 적용
-                    switch (genderValue.toLowerCase()) {
-                        case "female":
-                            gender = "여성";
-                            break;
-                        case "male":
-                            gender = "남성";
-                            break;
-                        default:
-                            gender = "비공개";
-                    }
+            logger.info("Google People API 성별 응답 - formattedValue: {}, value: {}", genderFormatted, genderValue);
+
+            if (genderFormatted != null && !genderFormatted.isEmpty()) {
+                if ("여성".equalsIgnoreCase(genderFormatted) || "female".equalsIgnoreCase(genderFormatted)) {
+                    gender = "여성";
+                } else if ("남성".equalsIgnoreCase(genderFormatted) || "male".equalsIgnoreCase(genderFormatted)) {
+                    gender = "남성";
+                } else {
+                    gender = "비공개"; 
                 }
-            } catch (Exception e) {
-                logger.error("성별 데이터 처리 중 오류 발생: {}", e.getMessage());
+            } else if (genderValue != null) {
+                switch (genderValue.toLowerCase()) {
+                    case "female":
+                        gender = "여성";
+                        break;
+                    case "male":
+                        gender = "남성";
+                        break;
+                    default:
+                        gender = "비공개";
+                        break;
+                }
             }
         }
+    } catch (Exception e) {
+        logger.error("성별 데이터 처리 중 오류 발생: {}", e.getMessage());
+    }
+}
+
+logger.info("최종 변환된 성별: {}", gender);
+
+// 최종 성별 값 출력
+logger.info("변환된 최종 성별 값: {}", gender);
+
 
 // 최종 성별 값 로그 출력
 logger.info("성별 저장 값: {}", gender);
+
+
+// 최종 성별 값 로그 출력
+
 
         // 사용자 검색
         Optional<User> optionalUser = userRepository.findByEmail(email);
@@ -126,10 +149,10 @@ logger.info("성별 저장 값: {}", gender);
         User user;
         if (existingUser) {
             user = optionalUser.get();
-
+        
             // Google 계정 연동 여부 설정
             user.setIs_google_user(true);
-
+        
             // 기존 값이 없을 경우에만 업데이트
             if (user.getGender() == null || user.getGender().isEmpty()) {
                 user.setGender(gender);
@@ -137,7 +160,10 @@ logger.info("성별 저장 값: {}", gender);
             if (user.getRealname() == null || user.getRealname().isEmpty()) {
                 user.setRealname(realname);
             }
-
+        
+            // 변경된 값 저장
+            userRepository.save(user); // 저장 명시적으로 호출
+        
             logger.info("기존 사용자를 Google 계정으로 업데이트: {}", email);
         } else {
             // 신규 사용자 등록
@@ -146,26 +172,25 @@ logger.info("성별 저장 값: {}", gender);
             user.setRealname(realname);
             user.setGender(gender);
             user.setIs_google_user(true);
-
-            // username이 없으면 이메일을 username으로 설정
             user.setUsername(email);
-
+        
             userRepository.save(user);
             logger.info("새로운 Google 계정으로 사용자 등록: {}", email);
         }
+        
 
         // JWT 토큰 발급
         String token = jwtTokenProvider.createToken(email);
 
         // 응답 반환
         return ResponseEntity.ok(Map.of(
-                "message", "Google 로그인 성공",
-                "token", token,
-                "email", email,
-                "username", user.getUsername(), // username 유지
-                "realname", user.getRealname(), // 기존 값 유지
-                "gender", user.getGender(),     // 기존 값 유지
-                "existingUser", existingUser
+            "message", "Google 로그인 성공",
+            "token", token,
+            "email", email,
+            "username", existingUser ? user.getUsername() : email,  // ✅ 기존 유저는 username 변경 ❌
+            "realname", user.getRealname(),
+            "gender", user.getGender(), // 최신 user.getGender() 값 사용
+            "existingUser", existingUser
         ));
     } catch (Exception e) {
         logger.error("Google 로그인 실패: {}", e.getMessage());

@@ -132,7 +132,6 @@ class PopupHandler {
             'assets/person/dizzy1.jpg',
             'assets/person/dizzy2.jpg',
             'assets/person/dizzy3.jpg',
-            'assets/person/dizzy4.jpg',
             'assets/person/dizzy3.jpg',
             'assets/person/dizzy2.jpg',
             'assets/person/dizzy1.jpg',

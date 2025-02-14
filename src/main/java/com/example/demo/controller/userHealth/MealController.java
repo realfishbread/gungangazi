@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.DTO.userHealth.MealDTO;
+import com.example.demo.service.UserService;
 import com.example.demo.service.userHealth.MealService;
 
 @RestController
@@ -23,25 +24,53 @@ public class MealController {
 
     private final MealService mealService;
 
-    public MealController(MealService mealService) {
+    private final UserService userService; // 추가
+
+    public MealController(MealService mealService, UserService userService) {
         this.mealService = mealService;
+        this.userService = userService; // 추가
     }
 
     // 새로운 식사 기록 추가
     @PostMapping("/post")
-    public void addMeal(@RequestBody MealDTO mealDTO) {
+    public ResponseEntity<String> addMeal(@RequestBody MealDTO mealDTO) {
+        String username = mealDTO.getUsername(); // JSON에서 받은 username
+
+        if (username != null && username.contains("@")) {
+            // 이메일이면 username 변환
+            String foundUsername = userService.getUsernameByEmail(username);
+            if (foundUsername == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("User not found with email: " + username);
+            }
+            mealDTO.setUsername(foundUsername);
+        }
+
         mealService.addMeal(mealDTO);
+        return ResponseEntity.ok("Meal added successfully");
     }
+
 
     // 특정 사용자의 모든 식사 기록 조회
     @GetMapping("/get")
     public List<MealDTO> getAllMealsByUsername(
             @RequestParam(value = "username", required = false) String username, 
             Principal principal) {
-        if (username == null) {
-            // 인증된 사용자 이름 사용
+        
+        if (username == null && principal != null) {
+            // 인증된 사용자라면 Principal에서 가져오기
             username = principal.getName();
         }
+
+        if (username != null && username.contains("@")) {
+            // 이메일이면 username 변환
+            String foundUsername = userService.getUsernameByEmail(username);
+            if (foundUsername == null) {
+                throw new IllegalArgumentException("User not found with email: " + username);
+            }
+            username = foundUsername;
+        }
+
         return mealService.getAllMealsByUsername(username);
     }
 

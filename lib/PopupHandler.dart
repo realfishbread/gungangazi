@@ -88,8 +88,6 @@ class PopupHandler {
             'assets/person/arm1.jpg',
             'assets/person/arm2.jpg',
             'assets/person/arm3.jpg',
-            'assets/person/arm4.jpg',
-            'assets/person/arm4.jpg',
             'assets/person/arm3.jpg',
             'assets/person/arm2.jpg',
             'assets/person/arm1.jpg',
@@ -291,6 +289,22 @@ class PopupHandler {
             'assets/person/slhead3.jpg',
             'assets/person/slhead2.jpg',
             'assets/person/slhead1.jpg',
+          ],
+          '0amnobrush': [
+            'assets/person/0amnobrush1.jpg',
+            'assets/person/0amnobrush2.jpg',
+            'assets/person/0amnobrush3.jpg',
+            'assets/person/0amnobrush3.jpg',
+            'assets/person/0amnobrush2.jpg',
+            'assets/person/0amnobrush1.jpg',
+          ],
+          'waist': [
+            'assets/person/waist1.jpg',
+            'assets/person/waist2.jpg',
+            'assets/person/waist3.jpg',
+            'assets/person/waist3.jpg',
+            'assets/person/waist2.jpg',
+            'assets/person/waist1.jpg',
           ]
 
         } {
@@ -645,7 +659,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
             _currentBodyPart = 'arm';
           } else {
             popupMessage = '식사 하셨나요?';
-            _currentBodyPart = 'smile';
+            _currentBodyPart = 'waist';
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
           popupMessage = '다리가 아프신가요?';

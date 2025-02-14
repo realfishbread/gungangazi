@@ -8,6 +8,7 @@ import 'PopupHandler.dart';
 import '../repositories/userHealth/sleep_repository.dart'; // SleepRepository 임포트
 import '../dto/userHealth/sleep_dto.dart'; // SleepDTO 임포트
 
+
 class ToothCarePage extends StatefulWidget {
   final PopupHandler popupHandler;
 
@@ -33,6 +34,10 @@ class _ToothCarePageState extends State<ToothCarePage> {
   int _duration = 0;
   bool _flossed = false;
   bool _currentTooth = false;
+  DateTime now = DateTime.now();
+
+ 
+
 
   @override
   void initState() {
@@ -92,9 +97,16 @@ class _ToothCarePageState extends State<ToothCarePage> {
 
       bool brushed = brushData.any((brush) => brush.date == latestSleepDate);
 
+      bool isNightTime = now.hour >= 22; // 22시(10PM) 이후인지 확인
+
+
       if (!brushed) {
-        widget.popupHandler.triggerAnimation('nobrush', delayMilliseconds: 1000);
-      } else if (_currentTooth = true) {
+        if (isNightTime) {
+          widget.popupHandler.triggerAnimation('0amnobrush', delayMilliseconds: 1000);
+        } else {
+          widget.popupHandler.triggerAnimation('nobrush', delayMilliseconds: 1000);
+        }
+      } else if (_currentTooth == true) { 
         widget.popupHandler.triggerAnimation('brush', delayMilliseconds: 1000);
       } else {
         print("No significant tooth level change, no animation triggered.");

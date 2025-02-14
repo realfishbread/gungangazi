@@ -124,8 +124,6 @@ class _Profile2State extends State<Profile2> {
 
   Future<void> _linkGoogleAccount() async {
     final GoogleSignIn googleSignIn = GoogleSignIn();
-
-   
   }
 
 

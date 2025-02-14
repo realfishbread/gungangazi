@@ -478,16 +478,12 @@ Widget build(BuildContext context) {
             mainAxisAlignment: MainAxisAlignment.center, // 수직 중앙 정렬
             crossAxisAlignment: CrossAxisAlignment.center, // 수평 중앙 정렬
             children: [
-              Text(
-                'Gunganghazi?', // 건강아지 로고 텍스트
-                style: TextStyle(
-                  fontSize: 40, // 텍스트 크기
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green[800],
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
+              Image.asset(
+                    'assets/logo.png',
+                    width: 300,
+                    height: 200,
+                  ),
+              const SizedBox(height: 12),
               // 애니메이션 비활성화 및 Container 크기 조정
               isWebSize
                   ? SlideTransition(

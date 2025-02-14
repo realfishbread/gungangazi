@@ -66,6 +66,17 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
 
+
+
+       // 로컬 테스트용 가짜 아이디와 비밀번호 체크
+      if (_nameController.text == 'testUser' && _passwordController.text == 'password123') {
+        print('로컬 로그인 성공, 가짜 유저 로그인');
+        setState(() {
+          _loginFailed = false;
+        });
+        Navigator.pushReplacementNamed(context, '/homeApp');
+        return;
+      }
       // 로그인 API 호출
       LoginResponseDto? loginResponse = await _authRepository.login(loginRequest);
 
@@ -238,11 +249,11 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    'assets/splash/splash_image.png',
-                    width: 200,
+                    'assets/logo.png',
+                    width: 300,
                     height: 200,
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 1),
                   Container(
                     constraints: const BoxConstraints(maxWidth: 400),
                     padding: const EdgeInsets.all(16.0),

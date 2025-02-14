@@ -19,6 +19,7 @@ import '../dto/profile_dto.dart';
 import '../repositories/profile_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'walking_page.dart';
 
 class WebHomePage extends StatefulWidget {
   const WebHomePage({Key? key}) : super(key: key);
@@ -159,11 +160,13 @@ class _WebHomePageState extends State<WebHomePage> {
         centerTitle: true, // 제목(아이콘)을 가운데로 설정
         leading: SizedBox(
           child: Image.asset(
-            'assets/logo.png', // 이미지 경로
-            fit: BoxFit.contain,
-          ),
+            'assets/logo.png',
+            width: MediaQuery.of(context).size.width * 0.5, // 화면 너비의 50%
+            height: MediaQuery.of(context).size.width * 0.5, // 화면 너비의 50%
+            fit: BoxFit.contain, // 비율을 유지하면서 꽉 채우기
+          )
         ),
-        leadingWidth: 150, // leading의 너비를 120으로 설정
+        leadingWidth: 140, // leading의 너비를 120으로 설정
         backgroundColor: const Color(0xFFFFF9C4), // 앱바 배경색
         actions: [
           IconButton(
@@ -244,7 +247,7 @@ class _WebHomePageState extends State<WebHomePage> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
                   child: Text(
-                    '건강아지',
+                    '건강하지',
                     style: TextStyle(fontSize: 15, color: Colors.grey[800]),
                   ),
                 ),
@@ -252,8 +255,8 @@ class _WebHomePageState extends State<WebHomePage> {
             ),
             items: [
               SideMenuExpansionItem(
-                title: "내과",
-                icon: const Icon(Icons.medical_services_outlined),
+                title: "관리",
+                icon: const Icon(FontAwesomeIcons.book),
                 children: [
                   SideMenuItem(
                     title: '수면',
@@ -286,12 +289,6 @@ class _WebHomePageState extends State<WebHomePage> {
                     },
                     icon: const Icon(Icons.water_drop),
                   ),
-                ],
-              ),
-              SideMenuExpansionItem(
-                title: "외과",
-                icon: const Icon(Icons.local_hospital_outlined),
-                children: [
                   SideMenuItem(
                     title: '치아 건강',
                     onTap: (index, _) {
@@ -312,6 +309,23 @@ class _WebHomePageState extends State<WebHomePage> {
                     },
                     icon: const Icon(Icons.favorite),
                   ),
+                ],
+              ),
+              SideMenuExpansionItem(
+                title: "운동",
+                icon: const Icon(Icons.local_hospital_outlined),
+                children: [
+                   SideMenuItem(
+                    title: '만보기',
+                    onTap: (index, _) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => WalkingPage()),
+                      );
+                    },
+                    icon: const Icon(Icons.directions_walk),
+                  ),
+
                 ],
               ),
                SideMenuItem(

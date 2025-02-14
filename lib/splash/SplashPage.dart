@@ -47,9 +47,9 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
         child: FadeTransition(
           opacity: _animation,
           child: Image.asset(
-            'assets/splash/splash_image.png', // 로고를 이미지로 변경
-            width: 200,
-            height: 200,
+            'assets/logo.png', // 로고를 이미지로 변경
+            width: 500,
+            height: 500,
           ),
         ),
       ),

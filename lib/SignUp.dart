@@ -478,12 +478,12 @@ Widget build(BuildContext context) {
             mainAxisAlignment: MainAxisAlignment.center, // 수직 중앙 정렬
             crossAxisAlignment: CrossAxisAlignment.center, // 수평 중앙 정렬
             children: [
-              Image.asset(
-                    'assets/logo.png',
+                  Image.asset(
+                    'assets/signin.png',
                     width: 300,
-                    height: 200,
+                    height: 100,
                   ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 4),
               // 애니메이션 비활성화 및 Container 크기 조정
               isWebSize
                   ? SlideTransition(
@@ -517,7 +517,7 @@ Widget build(BuildContext context) {
 Widget _buildContainer(bool isWebSize) {
   return Container(
     constraints: BoxConstraints(
-      maxWidth: isWebSize ? 600 : 400, // 모바일 화면에서는 너비 작게
+      maxWidth: isWebSize ? 500 : 400, // 모바일 화면에서는 너비 작게
       minHeight: isWebSize ? 500 : 250, // 모바일 화면에서는 높이 작게
     ),
     padding: const EdgeInsets.all(16.0), // 내부 여백

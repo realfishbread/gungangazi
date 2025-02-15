@@ -50,7 +50,7 @@ class BloodPressureRepository {
 
       final response = await dio.get(
         '/bloodPressure/getBloodPressureData',
-        queryParameters: {'username': username},
+        queryParameters: {'identifier': username},
       );
 
       if (response.statusCode == 200) {

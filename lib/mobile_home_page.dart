@@ -1,3 +1,5 @@
+import 'package:gungangazi/walking_page.dart';
+
 import 'BloodPressure.dart';
 import 'ToothCarePage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -58,7 +60,8 @@ class _MobileHomePageState extends State<MobileHomePage> {
       '식단': MealPage(popupHandler: _popupHandler),
       '영양제': SupplementsPage(popupHandler: _popupHandler),
       '혈압': const BloodPressurePage(),
-      '치아건강': ToothCarePage(popupHandler: _popupHandler)
+      '치아건강': ToothCarePage(popupHandler: _popupHandler),
+      '만보기': WalkingPage(),
     };
 
     final page = routes[title];
@@ -168,11 +171,11 @@ Widget build(BuildContext context) {
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.medical_services_outlined),
-          label: '내과',
+          label: '자기 관리',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.local_hospital_outlined),
-          label: '외과',
+          label: '운동',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.calendar_today),
@@ -208,11 +211,13 @@ Widget _getDrawerContent() {
       return ListView(
         padding: EdgeInsets.zero,
         children: _buildDrawerItems(
-          '내과',
+          '자기 관리',
           [
             {'icon': Icons.dark_mode, 'title': '수면'},
             {'icon': Icons.restaurant, 'title': '식단'},
             {'icon': Icons.water_drop_outlined, 'title': '수분'},
+            {'icon': FontAwesomeIcons.tooth, 'title': '치아건강'},
+            {'icon': FontAwesomeIcons.heartPulse, 'title': '혈압'},
           ],
         ),
       );
@@ -220,10 +225,9 @@ Widget _getDrawerContent() {
       return ListView(
         padding: EdgeInsets.zero,
         children: _buildDrawerItems(
-          '외과',
+          '운동',
           [
-            {'icon': FontAwesomeIcons.tooth, 'title': '치아건강'},
-            {'icon': FontAwesomeIcons.heartPulse, 'title': '혈압'},
+            {'icon': FontAwesomeIcons.dumbbell, 'title':'만보기'},
           ],
         ),
       );

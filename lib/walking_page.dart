@@ -45,7 +45,7 @@ class _WalkingPageState extends State<WalkingPage> {
             SizedBox(height: 10),
             Text(
               '$_steps 걸음',
-              style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.purple),
+              style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: const Color(0xFFFFF9C4)),
             ),
             SizedBox(height: 20),
             Icon(Icons.directions_walk, size: 100, color: Colors.purpleAccent),

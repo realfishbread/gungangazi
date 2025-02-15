@@ -20,6 +20,7 @@ import '../repositories/profile_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'walking_page.dart';
+import 'home_page.dart';
 
 class WebHomePage extends StatefulWidget {
   const WebHomePage({Key? key}) : super(key: key);
@@ -169,17 +170,21 @@ class _WebHomePageState extends State<WebHomePage> {
         leadingWidth: 140, // leading의 너비를 120으로 설정
         backgroundColor: const Color(0xFFFFF9C4), // 앱바 배경색
         actions: [
-          IconButton(
-            icon: const Icon(Icons.home),
-            color: Colors.black, // 아이콘 색상
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const WebHomePage()),
-              );
-            },
+          Tooltip(
+            message: '홈페이지',
+            child: IconButton(
+              icon: const Icon(Icons.home),
+              color: Colors.black,
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomePage()),
+                );
+              },
+            ),
           ),
         ],
+
       ),
 
       body: Row(
@@ -255,7 +260,7 @@ class _WebHomePageState extends State<WebHomePage> {
             ),
             items: [
               SideMenuExpansionItem(
-                title: "관리",
+                title: " 자기관리",
                 icon: const Icon(FontAwesomeIcons.book),
                 children: [
                   SideMenuItem(
@@ -312,8 +317,8 @@ class _WebHomePageState extends State<WebHomePage> {
                 ],
               ),
               SideMenuExpansionItem(
-                title: "운동",
-                icon: const Icon(Icons.local_hospital_outlined),
+                title: " 운동",
+                icon: const Icon(FontAwesomeIcons.dumbbell),
                 children: [
                    SideMenuItem(
                     title: '만보기',

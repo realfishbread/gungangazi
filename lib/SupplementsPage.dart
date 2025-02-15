@@ -23,6 +23,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
   final TokenService tokenService = TokenService();
   late final SupplementRepository supplementRepository;
   bool _addSupplement = false;
+  DateTime now = DateTime.now();
 
   // 할 일 목록 데이터
   final List<Map<String, dynamic>> _todoList = [];
@@ -264,7 +265,12 @@ class _SupplementsPageState extends State<SupplementsPage> {
     return WillPopScope(
       onWillPop: () async {
         if (_addSupplement) {
+
+           if(now.hour>=22 || now.hour<=6){
+            widget.popupHandler.triggerAnimation('0amsupplement', delayMilliseconds: 1000);
+           }else{
           widget.popupHandler.triggerAnimation('medication', delayMilliseconds: 1000);
+           }
         }
         return true;
       },

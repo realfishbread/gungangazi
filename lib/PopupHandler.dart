@@ -568,19 +568,19 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
 
       // 물 부족 상태일 때 팝업 메시지 설정
     if (_currentBodyPart == 'thirsty') {
-      popupMessage = '목이 말라요... 물을 주세요!';
+      popupMessage = '목이 말라요... \n물을 주세요!';
     } else if (_currentBodyPart == 'hungry') {
-        popupMessage = '배고파요... 식사를 해주세요!!';
+        popupMessage = '배고파요... \n식사를 해주세요!!';
         // 부위별 팝업 메시지 설정
         if (relativeY < headHeight) {
           popupMessage = '식사를 잘 챙겨주세요!';
           _currentBodyPart = 'angry';
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
-            popupMessage = '목을 축이고 싶고, 배가 고파요';
+            popupMessage = '목을 축이고 싶고,\n배가 고파요';
             _currentBodyPart = 'angry';
           } else {
-            popupMessage = '수분섭취를 잊지 말아주세요';
+            popupMessage = '수분섭취를\n잊지 말아주세요';
             _currentBodyPart = 'angry';
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
@@ -588,14 +588,14 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
           _currentBodyPart = 'angry';
         }
       } else if (_currentBodyPart == 'thirsty_and_dizzy') {
-        popupMessage = '충분한 숙면을 취하지 못했어요, 목도 말라요.';
+        popupMessage = '충분한 숙면을 \n취하지 못했어요,\n목도 말라요.';
         // 부위별 팝업 메시지 설정
         if (relativeY < headHeight) {
           popupMessage = '식사를 잘 챙겨주세요!';
           _currentBodyPart = 'angry';
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
-            popupMessage = '목을 축이고 싶고, 배가 고파요';
+            popupMessage = '목을 축이고 싶고,\n배가 고파요';
             _currentBodyPart = 'angry';
           } else {
             popupMessage = '수분섭취를 잊지 말아주세요';
@@ -613,10 +613,10 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
           _currentBodyPart = 'angry';
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
-            popupMessage = '목을 축이고 싶고, 배가 고파요';
+            popupMessage = '목을 축이고 싶고, \n배가 고파요';
             _currentBodyPart = 'angry';
           } else {
-            popupMessage = '수분섭취를 잊지 말아주세요';
+            popupMessage = '수분 섭취를\n잊지 말아주세요';
             _currentBodyPart = 'angry';
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
@@ -624,17 +624,17 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
           _currentBodyPart = 'angry';
         }
       } else if (_currentBodyPart == 'thirsty_and_hungry') {
-        popupMessage = '목도 마르고 배도 고파요... 물과 식사가 필요해요!';
+        popupMessage = '목도 마르고 \n배도 고파요,\n 물과 식사가 필요해요!';
         // 부위별 팝업 메시지 설정
         if (relativeY < headHeight) {
           popupMessage = '식사를 잘 챙겨주세요!';
           _currentBodyPart = 'angry';
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
-            popupMessage = '목을 축이고 싶고, 배가 고파요';
+            popupMessage = '목을 축이고 싶고, \n배가 고파요';
             _currentBodyPart = 'angry';
           } else {
-            popupMessage = '수분섭취를 잊지 말아주세요';
+            popupMessage = '수분섭취를\n잊지 말아주세요';
             _currentBodyPart = 'angry';
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
@@ -642,7 +642,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
           _currentBodyPart = 'angry';
         }
       } else if (_currentBodyPart == 'hungry_and_dizzy') {
-        popupMessage = '충분한 숙면과 밥을 챙겨주세요';
+        popupMessage = '충분한 숙면과\n밥을 챙겨주세요';
       } else if (_currentBodyPart == '0am'){
         popupMessage = '좋은 꿈꾸세요!';
           if (relativeY < headHeight) {
@@ -650,18 +650,18 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
           triggerAnimation('0amhead');
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
-            popupMessage = '오늘의 파자마는 보라색이예요.';
+            popupMessage = '오늘의 파자마는\n 보라색이예요.';
             triggerAnimation('0amarm');
           } else {
-            popupMessage = '오늘은 어떤 하루였나요?';
+            popupMessage = '오늘은 \n어떤 하루였나요?';
             triggerAnimation('0amtouch');
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
-          popupMessage = '오늘 하루도 수고 많으셨어요.';
+          popupMessage = '오늘 하루도 \n수고 많으셨어요.';
           triggerAnimation('0amtouch');
         } 
       }else if (_currentBodyPart == '0amstomach'){
-        popupMessage = '몸을 조금 더 챙겨주세요.';
+        popupMessage = '몸을 조금 \n더 챙겨주세요.';
           if (relativeY < headHeight) {
           popupMessage = '아파요';
           triggerAnimation('0amstomach');
@@ -700,40 +700,115 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
     }
     
       // 말풍선 형태의 팝업 표시
-      showMenu(
-        context: context,
-        position: RelativeRect.fromLTRB(tapPosition.dx, tapPosition.dy, tapPosition.dx, tapPosition.dy),
-        items: [
-          PopupMenuItem(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(popupMessage),
-                const SizedBox(height: 10),
-                listData.isNotEmpty
-                    ? SizedBox(
-                  height: 150,
-                  child: ListView.builder(
-                    itemCount: listData.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(listData[index]['title'].toString()),
-                        onTap: () {
-                          onImageSelected(listData[index]['imagePath']);
-                          Navigator.of(context).pop();
-                        },
-                      );
-                    },
-                  ),
-                )
-                    : const SizedBox(),
-                const SizedBox(height: 10),
+     showDialog(
+  context: context,
+  barrierColor: Colors.transparent, // ✅ 배경 완전 투명화
+  builder: (BuildContext context) {
+    // 현재 화면 크기 가져오기
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
 
-              ],
+    // 팝업 위치 조정 (말풍선이 화면을 벗어나지 않도록)
+    double adjustedLeft = tapPosition.dx;
+    double adjustedTop = tapPosition.dy;
+
+    // 가로 위치 조정 (말풍선이 우측 화면을 벗어나지 않도록)
+    if (adjustedLeft + 220 > screenWidth) {
+      adjustedLeft = screenWidth - 230;
+    }
+    if (adjustedLeft < 10) {
+      adjustedLeft = 10;
+    }
+
+    // 세로 위치 조정 (말풍선이 하단 화면을 벗어나지 않도록)
+    if (adjustedTop + 150 > screenHeight) {
+      adjustedTop = screenHeight - 180;
+    }
+    if (adjustedTop < 10) {
+      adjustedTop = 10;
+    }
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        double opacityLevel = 1.0; // ✅ 초기 투명도 (완전히 보이게)
+
+        void fadeOutAndClose() {
+          setState(() {
+            opacityLevel = 0.0; // ✅ 서서히 투명하게 만들기
+          });
+          Future.delayed(const Duration(milliseconds: 1000), () {
+            Navigator.of(context).pop(); // ✅ 애니메이션 후 팝업 닫기
+          });
+        }
+
+        return Stack(
+          children: [
+            Positioned(
+              left: adjustedLeft,
+              top: adjustedTop,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: fadeOutAndClose, // ✅ 터치하면 서서히 사라짐
+                  borderRadius: BorderRadius.circular(17),
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  child: AnimatedOpacity(
+                    duration: const Duration(milliseconds: 2300), // 페이드아웃
+                    opacity: opacityLevel,
+                    child: Container(
+                      width: 220,
+                      constraints: BoxConstraints(
+                        minWidth: 150,
+                        maxWidth: screenWidth * 0.6,
+                      ),
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(17),
+                        border: Border.all(
+                          color: Colors.black,
+                          width: 2.5,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.15),
+                            blurRadius: 10,
+                            spreadRadius: 0,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              popupMessage,
+                              textAlign: TextAlign.center,
+                              softWrap: true,
+                              maxLines: null,
+                              overflow: TextOverflow.visible,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
-        ],
-      );
+          ],
+        );
+      },
+    );
+  },
+);
     }
   }
 

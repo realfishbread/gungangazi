@@ -72,18 +72,7 @@ flutter:
 
   # 에셋(이미지, 폴더 등) 등록
   assets:
-    - assets/fonts/
-    - assets/person/
-    - assets/person/jindan_normal.jpg
-    - assets/person/jindan_armsick1.jpg
-    - assets/person/jindan_armsick3.jpg
-    - assets/person/jindan_armsick5.jpg
-    - assets/person/jindan_armsick7.jpg
-    - assets/person/jindan_armsick9.jpg
-    - assets/splash/
-    - assets/dog.jpg
     - assets/
-    - assets/icons/
 
   # 폰트 등록
   fonts:

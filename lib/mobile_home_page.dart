@@ -170,11 +170,11 @@ Widget build(BuildContext context) {
       backgroundColor: const Color(0xFFFFF9C4),
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.medical_services_outlined),
+          icon: Icon(FontAwesomeIcons.book),
           label: '자기 관리',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.local_hospital_outlined),
+          icon: Icon(FontAwesomeIcons.dumbbell),
           label: '운동',
         ),
         BottomNavigationBarItem(

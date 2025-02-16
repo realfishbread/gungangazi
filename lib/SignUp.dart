@@ -518,7 +518,7 @@ Widget _buildContainer(bool isWebSize) {
   return Container(
     constraints: BoxConstraints(
       maxWidth: isWebSize ? 500 : 400, // 모바일 화면에서는 너비 작게
-      minHeight: isWebSize ? 500 : 250, // 모바일 화면에서는 높이 작게
+      minHeight: isWebSize ? 500 : 200, // 모바일 화면에서는 높이 작게
     ),
     padding: const EdgeInsets.all(16.0), // 내부 여백
     decoration: BoxDecoration(

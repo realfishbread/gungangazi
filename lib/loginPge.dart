@@ -356,7 +356,7 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(height: 20),
                         ElevatedButton.icon(
                           icon: Image.asset(
-                            'icons/google_icon.png',
+                            'assets/icons/google_icon.png',
                             width: 22,
                             height: 22,
                           ),
@@ -384,7 +384,7 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(height: 16),
                         ElevatedButton.icon(
                           icon: Image.asset(
-                            'icons/kakao_icon.png',
+                            'assets/icons/kakao_icon.png',
                             width: 30,
                             height: 30,
                           ),

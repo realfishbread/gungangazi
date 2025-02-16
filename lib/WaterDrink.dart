@@ -112,10 +112,7 @@ class _WaterDrinkState extends State<WaterDrink> {
     int todayWaterIntake = _dailyWaterIntake[today] ?? 0;
 
     // 오전 6시 이전에는 PopupHandler 상태를 업데이트하지 않음
-    if (currentHour < 6) {
-      print("PopupHandler status not updated before 6:00 AM.");
-      return;
-    }
+    
     widget.popupHandler.updateStatus(
       newWaterLevel: todayWaterIntake,
       newMealLevel: widget.popupHandler.mealLevel,

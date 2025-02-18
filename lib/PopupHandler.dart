@@ -491,42 +491,42 @@ Future<void> loadStatusFromServer() async {
   }
 
    /// 특정 상태에 맞는 애니메이션 실행
+bool _isAnimating = false; // ✅ 애니메이션 진행 여부 변수 추가
+
 void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
-  print("Triggering animation for: $bodyPart");
-
-  // 해당 bodyPart에 대한 이미지가 있는지 확인
-  if (imagePathsByBodyPart[bodyPart]?.isEmpty ?? true) {
-    print("No images available for body part: $bodyPart");
-    return;
+  if (_isAnimating) {
+    print("🚫 Animation already in progress, ignoring new request for: $bodyPart");
+    return; // ✅ 이미 애니메이션이 실행 중이면 중복 실행 방지
   }
+  
+  print("Triggering animation for: $bodyPart");
+  _isAnimating = true; // ✅ 애니메이션 시작 표시
 
-  // 기존 타이머 중지
+  // 기존 애니메이션 취소
   _imageTimer?.cancel();
-  _imageNotifier.value = 0; // 애니메이션 초기화
-  String previousBodyPart = _currentBodyPart; // ✅ 이전 상태 저장
-  _currentBodyPart = bodyPart; // 현재 애니메이션 상태 설정
+  _imageNotifier.value = 0;
+  String previousBodyPart = _currentBodyPart;
+  _currentBodyPart = bodyPart;
 
-  // 애니메이션 실행을 위한 타이머 시작
   _imageTimer = Timer.periodic(frameDuration, (timer) {
-    // 이미지 인덱스를 업데이트
     _currentImageIndex = (_currentImageIndex + 1) % imagePathsByBodyPart[bodyPart]!.length;
     _imageNotifier.value = _currentImageIndex;
 
-    // 마지막 이미지에 도달했을 때 타이머 중지
     if (_currentImageIndex == imagePathsByBodyPart[bodyPart]!.length - 1) {
-      print("Animation for $bodyPart completed");
+      print("✅ Animation for $bodyPart completed");
       timer.cancel();
 
-      // ✅ 일정 시간 후 원래 상태 복구
       Future.delayed(Duration(milliseconds: delayMilliseconds), () {
-        _currentBodyPart = previousBodyPart; // 이전 상태로 복구
-        setBodyPartStatus(); // 상태 업데이트
-        startImageAnimation(); // 복구된 상태로 애니메이션 재시작
-        print("Character state restored to $_currentBodyPart");
+        _currentBodyPart = previousBodyPart;
+        setBodyPartStatus();
+        startImageAnimation();
+        _isAnimating = false; // ✅ 애니메이션 완료 후 다시 실행 가능하도록 설정
+        print("🎭 Character state restored to $_currentBodyPart");
       });
     }
   });
 }
+
 
 
 
@@ -543,6 +543,48 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
       } else {
         _currentBodyPart = 'default'; // 기본 상태
       }
+   }else if(_currentBodyPart == 'thirsty_and_hungry_dizzy'){
+    if (hour >= 22 || hour < 6) {
+        _currentBodyPart = '0am'; // 잠옷바람 상태
+      } else {
+        _currentBodyPart = 'default'; // 기본 상태
+      }
+
+   }else if(_currentBodyPart=='thirsty_and_hungry'){
+    if (hour >= 22 || hour < 6) {
+        _currentBodyPart = '0am'; // 잠옷바람 상태
+      } else {
+        _currentBodyPart = 'default'; // 기본 상태
+      }
+
+   }else if(_currentBodyPart =='thirsty_and_dizzy'){
+    if (hour >= 22 || hour < 6) {
+        _currentBodyPart = '0am'; // 잠옷바람 상태
+      } else {
+        _currentBodyPart = 'default'; // 기본 상태
+      }
+
+   }else if(_currentBodyPart=='thirsty'){
+    if (hour >= 22 || hour < 6) {
+        _currentBodyPart = '0am'; // 잠옷바람 상태
+      } else {
+        _currentBodyPart = 'default'; // 기본 상태
+      }
+
+   }else if(_currentBodyPart=='hungry'){
+    if (hour >= 22 || hour < 6) {
+        _currentBodyPart = '0am'; // 잠옷바람 상태
+      } else {
+        _currentBodyPart = 'default'; // 기본 상태
+      }
+
+   }else if(_currentBodyPart=='dizzy'){
+    if (hour >= 22 || hour < 6) {
+        _currentBodyPart = '0am'; // 잠옷바람 상태
+      } else {
+        _currentBodyPart = 'default'; // 기본 상태
+      }
+
    }
 
     

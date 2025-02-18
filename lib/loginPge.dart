@@ -40,6 +40,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _loginFailed = false;
   bool _obscurePassword = true;
   bool _isLoading = false;
+  bool _isAnimating = false;
 
   @override
   void initState() {

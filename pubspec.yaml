@@ -48,6 +48,7 @@ dependencies:
   google_sign_in_web: ^0.12.4+3
   google_identity_services_web: ^0.3.3
   pedometer: ^4.0.2
+  flutter_image_compress: ^2.0.3
   
   
   

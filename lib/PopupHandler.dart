@@ -6,6 +6,8 @@ import 'dart:async';
 import '../services/dio_service.dart'; // DioService 추가
 import '../services/TokenService.dart';
 import 'package:dio/dio.dart';
+import 'image_compressor.dart'; // 이미지 압축 파일 import
+
 
 class PopupHandler {
   final List<dynamic> listData;
@@ -20,6 +22,8 @@ class PopupHandler {
   int waterLevel = 100; // 수분 상태 변수 추가
   int mealLevel = 100;
   int sleepLevel = 100; // 수면 상태 변수
+  
+
 
   
   
@@ -56,13 +60,6 @@ class PopupHandler {
             'assets/person/default/jindan_stomach1.jpg',
             'assets/person/default/jindan_stomach2.jpg',
             'assets/person/default/jindan_stomach3.jpg',
-            'assets/person/default/jindan_stomach4.jpg',
-            'assets/person/default/jindan_stomach5.jpg',
-            'assets/person/default/jindan_stomach6.jpg',
-            'assets/person/default/jindan_stomach7.jpg',
-            'assets/person/default/jindan_stomach6.jpg',
-            'assets/person/default/jindan_stomach5.jpg',
-            'assets/person/default/jindan_stomach4.jpg',
             'assets/person/default/jindan_stomach3.jpg',
             'assets/person/default/jindan_stomach2.jpg',
             'assets/person/default/jindan_stomach1.jpg',
@@ -306,6 +303,31 @@ class PopupHandler {
             'assets/person/0am/0ambrush2',
             'assets/person/0am/0ambrush1',
             'assets/person/0am/0ambrush2',
+          ],
+          '0amheadache':[
+            'assets/person/0am/0amheadache1',
+            'assets/person/0am/0amheadache2',
+            'assets/person/0am/0amheadache3',
+            'assets/person/0am/0amheadache3',
+            'assets/person/0am/0amheadache2',
+            'assets/person/0am/0amheadache1',
+          ],
+          '0amtired': [
+            'assets/person/0am/0amtired1',
+            'assets/person/0am/0amtired2',
+            'assets/person/0am/0amtired3',
+            'assets/person/0am/0amtired3',
+            'assets/person/0am/0amtired2',
+            'assets/person/0am/0amtired1',
+
+          ],
+          '0amdizzy': [
+            'assets/person/0am/0amdizzy1',
+            'assets/person/0am/0amdizzy2',
+            'assets/person/0am/0amdizzy3',
+            'assets/person/0am/0amdizzy3',
+            'assets/person/0am/0amdizzy2',
+            'assets/person/0am/0amdizzy1',
           ]
 
         } {
@@ -501,6 +523,27 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
 }
 
 
+// 압축된 이미지 가져오기
+  Future<Widget> _getImageWidget(String imagePath) async {
+    final compressedImage = await ImageCompressor.getCompressedImage(imagePath);
+    if (compressedImage != null) {
+      return Image.memory(
+        compressedImage.bytes,
+        fit: BoxFit.cover,
+        key: _imageKey,
+        gaplessPlayback: true,
+      );
+    } else {
+      return Image.asset(
+        imagePath,
+        fit: BoxFit.cover,
+        key: _imageKey,
+        gaplessPlayback: true,
+      );
+    }
+  }
+
+
   void updateCharacterStatusBasedOnTime() {
     DateTime now = DateTime.now(); // 현재 시간 가져오기
     int hour = now.hour;
@@ -511,19 +554,19 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
     // 10시 이후 상태 변경
       if (hour >= 22 || hour < 6) {
         if( _currentBodyPart == 'thirsty_and_hungry_dizzy'){
-          _currentBodyPart='0amstomach';
+          _currentBodyPart='0amdizzy';
         }else if(_currentBodyPart=='thirsty_and_hungry'){
           _currentBodyPart='0amstomach';
         }else if(_currentBodyPart == 'thirsty_and_dizzy'){
           _currentBodyPart='0amstomach';
         }else if(_currentBodyPart == 'hungry_and_dizzy'){
-          _currentBodyPart='0amstomach';
+          _currentBodyPart='0amheadache';
         }else if(_currentBodyPart =='thirsty'){
           _currentBodyPart='0amstomach';
         }else if(_currentBodyPart=='hungry'){
           _currentBodyPart='0amstomach';
         }else if(_currentBodyPart =='dizzy'){
-          _currentBodyPart='0amstomach';
+          _currentBodyPart='0amtired';
         }else {
         _currentBodyPart = '0am'; // 잠옷바람 상태
         }
@@ -675,9 +718,11 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
           popupMessage = '아파요';
-          triggerAnimation('0amtouch');
+          triggerAnimation('0amstomach');
         } 
-      }else if (_currentBodyPart == 'dizzy') {
+      }
+      
+      else if (_currentBodyPart == 'dizzy') {
         popupMessage = '수면 시간을 늘려주세요!';
       }
       else {
@@ -812,37 +857,46 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
     }
   }
 
-  Widget buildImageAnimationWithTouch(BuildContext context, Function(String) onImageSelected) {
-  startImageAnimation(); // 애니메이션 시작
+ Widget buildImageAnimationWithTouch(BuildContext context, Function(String) onImageSelected) {
+    startImageAnimation();
 
-  return LayoutBuilder(
-    builder: (context, constraints) {
-      return GestureDetector(
-        onTapDown: (TapDownDetails details) {
-          _calculateImageRect();
-          final tapPosition = details.globalPosition;
-          
-          showPopupForCoordinates(context, tapPosition, onImageSelected);
-          
-           setBodyPartStatus();
-        },
-        child: ValueListenableBuilder<int>(
-          valueListenable: _imageNotifier,
-          builder: (context, value, child) {
-            return Image.asset(
-              _currentBodyPart == 'default'
-                  ? defaultImagePaths[value]
-                  : imagePathsByBodyPart[_currentBodyPart]![value],
-              fit: BoxFit.cover,
-              key: _imageKey,
-              gaplessPlayback: true,
-            );
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GestureDetector(
+          onTapDown: (TapDownDetails details) {
+            _calculateImageRect();
+            final tapPosition = details.globalPosition;
+            showPopupForCoordinates(context, tapPosition, onImageSelected);
+            setBodyPartStatus();
           },
-        ),
-      );
-    },
-  );
-}
+          child: ValueListenableBuilder<int>(
+            valueListenable: _imageNotifier,
+            builder: (context, value, child) {
+              String imagePath = _currentBodyPart == 'default'
+                  ? defaultImagePaths[value]
+                  : imagePathsByBodyPart[_currentBodyPart]![value];
+
+              return FutureBuilder<Widget>(
+                future: _getImageWidget(imagePath),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                    return snapshot.data!;
+                  } else {
+                    return Image.asset(
+                      imagePath,
+                      fit: BoxFit.cover,
+                      key: _imageKey,
+                      gaplessPlayback: true,
+                    );
+                  }
+                },
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
 
 
   // 리소스 해제

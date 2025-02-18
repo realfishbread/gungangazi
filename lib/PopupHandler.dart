@@ -6,7 +6,6 @@ import 'dart:async';
 import '../services/dio_service.dart'; // DioService 추가
 import '../services/TokenService.dart';
 import 'package:dio/dio.dart';
-import 'image_compressor.dart'; // 이미지 압축 파일 import
 
 
 class PopupHandler {
@@ -262,12 +261,12 @@ class PopupHandler {
 
           ],
           '0amhead': [
-            'assets/person/slhead1.jpg',
-            'assets/person/slhead2.jpg',
-            'assets/person/slhead3.jpg',
-            'assets/person/slhead3.jpg',
-            'assets/person/slhead2.jpg',
-            'assets/person/slhead1.jpg',
+            'assets/person/0am/slhead1.jpg',
+            'assets/person/0am/slhead2.jpg',
+            'assets/person/0am/slhead3.jpg',
+            'assets/person/0am/slhead3.jpg',
+            'assets/person/0am/slhead2.jpg',
+            'assets/person/0am/slhead1.jpg',
           ],
           '0amnobrush': [
             'assets/person/0am/0amnobrush1.jpg',

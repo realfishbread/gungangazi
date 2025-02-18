@@ -434,38 +434,46 @@ Future<void> loadStatusFromServer() async {
 
 
   void setBodyPartStatus() {
-     String PreviousBodyPart =_currentBodyPart;
-    // 세 가지 상태의 조합에 따른 상태 설정
-    if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel <= 200) {
-      _currentBodyPart = 'thirsty_and_hungry_dizzy';
-    } else if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel >= 200) {
-      _currentBodyPart = 'thirsty_and_hungry';
-    } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel < 200) {
-      _currentBodyPart = 'thirsty_and_dizzy';
-    } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel < 200) {
-      _currentBodyPart = 'hungry_and_dizzy';
-    } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel >= 200) {
-      _currentBodyPart = 'thirsty';
-    } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel >= 200) {
-      _currentBodyPart = 'hungry';
-    } else if (waterLevel > 200 && mealLevel > 200 && sleepLevel < 200) {
-      _currentBodyPart = 'dizzy';
-    } else {
-      updateCharacterStatusBasedOnTime();
-    }
-    print("Body part status set to $_currentBodyPart based on Water: $waterLevel, Meal: $mealLevel, Sleep: $sleepLevel");
+  String previousBodyPart = _currentBodyPart;
+
+  if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel <= 200) {
+    _currentBodyPart = 'thirsty_and_hungry_dizzy';
+  } else if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel >= 200) {
+    _currentBodyPart = 'thirsty_and_hungry';
+  } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel < 200) {
+    _currentBodyPart = 'thirsty_and_dizzy';
+  } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel < 200) {
+    _currentBodyPart = 'hungry_and_dizzy';
+  } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel >= 200) {
+    _currentBodyPart = 'thirsty';
+  } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel >= 200) {
+    _currentBodyPart = 'hungry';
+  } else if (waterLevel > 200 && mealLevel > 200 && sleepLevel < 200) {
+    _currentBodyPart = 'dizzy';
+  } else {
+    updateCharacterStatusBasedOnTime(); // ⏰ 시간 기반 상태 업데이트
   }
+
+  // 🔥 상태가 바뀔 때만 애니메이션 다시 시작!
+  if (previousBodyPart != _currentBodyPart) {
+    print("📢 캐릭터 상태 변경됨: $_currentBodyPart → 애니메이션 재시작!");
+    startImageAnimation();
+  }
+}
 
   // 이미지 애니메이션 시작
   void startImageAnimation() {
-    _imageTimer?.cancel(); // 기존 타이머 중지
+  _imageTimer?.cancel(); // 기존 타이머 중지
 
-    _imageTimer = Timer.periodic(frameDuration, (timer) {
-      _currentImageIndex = (_currentImageIndex + 1) %
-          (imagePathsByBodyPart[_currentBodyPart]?.length ?? defaultImagePaths.length);
-      _imageNotifier.value = _currentImageIndex;
-    });
-  } 
+  _imageTimer = Timer.periodic(frameDuration, (timer) {
+    _currentImageIndex = (_currentImageIndex + 1) %
+        (imagePathsByBodyPart[_currentBodyPart]?.length ?? defaultImagePaths.length);
+
+    _imageNotifier.value = _currentImageIndex; // ✅ 애니메이션 적용
+    print("🎞 Updating image index: $_currentImageIndex for $_currentBodyPart"); // 🔥 로그 확인
+  });
+}
+
 
   // 이미지 애니메이션 중지
   void stopImageAnimation() {
@@ -522,34 +530,20 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
 
 
 
-  void updateCharacterStatusBasedOnTime() {
+   void updateCharacterStatusBasedOnTime() {
     DateTime now = DateTime.now(); // 현재 시간 가져오기
     int hour = now.hour;
 
     
 
-   
+   if (_currentBodyPart== 'default'){
     // 10시 이후 상태 변경
       if (hour >= 22 || hour < 6) {
-        if( _currentBodyPart == 'thirsty_and_hungry_dizzy'){
-          _currentBodyPart='0amstomach';
-        }else if(_currentBodyPart=='thirsty_and_hungry'){
-          _currentBodyPart='0amstomach';
-        }else if(_currentBodyPart == 'thirsty_and_dizzy'){
-          _currentBodyPart='0amheadache';
-        }else if(_currentBodyPart == 'hungry_and_dizzy'){
-          _currentBodyPart='0amstomach';
-        }else if(_currentBodyPart =='thirsty'){
-          _currentBodyPart='0amstomach';
-        }else if(_currentBodyPart=='hungry'){
-          _currentBodyPart='0amstomach';
-        }else if(_currentBodyPart =='dizzy'){
-          _currentBodyPart='0amstomach';
-        }else {
         _currentBodyPart = '0am'; // 잠옷바람 상태
-        }
-      } 
-   
+      } else {
+        _currentBodyPart = 'default'; // 기본 상태
+      }
+   }
 
     
     print("Character status updated based on time: $_currentBodyPart");
@@ -750,88 +744,98 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
     }
 
     return StatefulBuilder(
-      builder: (context, setState) {
-        double opacityLevel = 1.0; // ✅ 초기 투명도 (완전히 보이게)
+  builder: (context, setState) {
+    double opacityLevel = 1.0; // ✅ 초기 투명도 (완전히 보이게)
 
-        void fadeOutAndClose() {
-          setState(() {
-            opacityLevel = 0.0; // ✅ 서서히 투명하게 만들기
-          });
-          Future.delayed(const Duration(milliseconds: 1000), () {
-            Navigator.of(context).pop(); // ✅ 애니메이션 후 팝업 닫기
-          });
-        }
+    void fadeOutAndClose() {
+      print("🔄 Fade-out animation 시작");
+      
+      setState(() {
+        opacityLevel = 0.0; // ✅ 서서히 투명하게 만들기
+      });
 
-        return Stack(
-          children: [
-            Positioned(
-              left: adjustedLeft,
-              top: adjustedTop,
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: fadeOutAndClose, // ✅ 터치하면 서서히 사라짐
-                  borderRadius: BorderRadius.circular(17),
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  child: AnimatedOpacity(
-                    duration: const Duration(milliseconds: 2300), // 페이드아웃
-                    opacity: opacityLevel,
-                    child: Container(
-                      width: 220,
-                      constraints: BoxConstraints(
-                        minWidth: 150,
-                        maxWidth: screenWidth * 0.6,
-                      ),
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(17),
-                        border: Border.all(
-                          color: Colors.black,
-                          width: 2.5,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.15),
-                            blurRadius: 10,
-                            spreadRadius: 0,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Flexible(
-                            child: Text(
-                              popupMessage,
-                              textAlign: TextAlign.center,
-                              softWrap: true,
-                              maxLines: null,
-                              overflow: TextOverflow.visible,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                        ],
-                      ),
+      // onEnd를 사용해 애니메이션 완료 후 팝업 닫기
+    }
+
+    return Stack(
+      children: [
+        Positioned(
+          left: adjustedLeft,
+          top: adjustedTop,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: fadeOutAndClose, // ✅ 터치하면 서서히 사라짐
+              borderRadius: BorderRadius.circular(17),
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 1000), // ✅ 1초 동안 서서히 사라짐
+                curve: Curves.easeInOut, // ✅ 부드러운 애니메이션 추가
+                opacity: opacityLevel,
+                onEnd: () { // 애니메이션이 끝난 후 실행됨
+                  print("✅ Fade-out animation 완료 → 팝업 닫기 실행");
+                  if (Navigator.canPop(context)) {
+                    Navigator.of(context).pop(); // ✅ 팝업 닫기
+                  }
+                },
+                child: Container(
+                  width: 220,
+                  constraints: BoxConstraints(
+                    minWidth: 150,
+                    maxWidth: screenWidth * 0.6,
+                  ),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(17),
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 2.5,
                     ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.15),
+                        blurRadius: 10,
+                        spreadRadius: 0,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          popupMessage,
+                          textAlign: TextAlign.center,
+                          softWrap: true,
+                          maxLines: null,
+                          overflow: TextOverflow.visible,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                    ],
                   ),
                 ),
               ),
             ),
-          ],
-        );
-      },
+          ),
+        ),
+      ],
     );
   },
 );
+  },
+);
     }
-  }
+      }
+      
+  
 
   Widget buildImageAnimationWithTouch(BuildContext context, Function(String) onImageSelected) {
   startImageAnimation(); // 애니메이션 시작
@@ -864,7 +868,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
     },
   );
 }
-
+      
 
   // 리소스 해제
   void dispose() {

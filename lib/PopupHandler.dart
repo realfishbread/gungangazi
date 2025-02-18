@@ -330,8 +330,8 @@ class PopupHandler {
             'assets/person/0am/0amdizzy1',
           ]
 
-        } {
-    _imageNotifier = ValueNotifier<int>(_currentImageIndex);
+        }{
+           _imageNotifier = ValueNotifier<int>(_currentImageIndex);
     loadStatusFromServer();
   }
   void updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) async {
@@ -496,7 +496,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
   // 기존 타이머 중지
   _imageTimer?.cancel();
   _imageNotifier.value = 0; // 애니메이션 초기화
-  String previousBodyPart = _currentBodyPart; // 이전 상태 저장
+  String previousBodyPart = _currentBodyPart; // ✅ 이전 상태 저장
   _currentBodyPart = bodyPart; // 현재 애니메이션 상태 설정
 
   // 애니메이션 실행을 위한 타이머 시작
@@ -510,9 +510,8 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
       print("Animation for $bodyPart completed");
       timer.cancel();
 
-      // 일정 시간 후 원래 상태 복구
+      // ✅ 일정 시간 후 원래 상태 복구
       Future.delayed(Duration(milliseconds: delayMilliseconds), () {
-        // 상태 복구
         _currentBodyPart = previousBodyPart; // 이전 상태로 복구
         setBodyPartStatus(); // 상태 업데이트
         startImageAnimation(); // 복구된 상태로 애니메이션 재시작
@@ -522,26 +521,6 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
   });
 }
 
-
-// 압축된 이미지 가져오기
-  Future<Widget> _getImageWidget(String imagePath) async {
-    final compressedImage = await ImageCompressor.getCompressedImage(imagePath);
-    if (compressedImage != null) {
-      return Image.memory(
-        compressedImage.bytes,
-        fit: BoxFit.cover,
-        key: _imageKey,
-        gaplessPlayback: true,
-      );
-    } else {
-      return Image.asset(
-        imagePath,
-        fit: BoxFit.cover,
-        key: _imageKey,
-        gaplessPlayback: true,
-      );
-    }
-  }
 
 
   void updateCharacterStatusBasedOnTime() {
@@ -554,19 +533,19 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
     // 10시 이후 상태 변경
       if (hour >= 22 || hour < 6) {
         if( _currentBodyPart == 'thirsty_and_hungry_dizzy'){
-          _currentBodyPart='0amdizzy';
+          _currentBodyPart='0amstomach';
         }else if(_currentBodyPart=='thirsty_and_hungry'){
           _currentBodyPart='0amstomach';
         }else if(_currentBodyPart == 'thirsty_and_dizzy'){
-          _currentBodyPart='0amstomach';
-        }else if(_currentBodyPart == 'hungry_and_dizzy'){
           _currentBodyPart='0amheadache';
+        }else if(_currentBodyPart == 'hungry_and_dizzy'){
+          _currentBodyPart='0amstomach';
         }else if(_currentBodyPart =='thirsty'){
           _currentBodyPart='0amstomach';
         }else if(_currentBodyPart=='hungry'){
           _currentBodyPart='0amstomach';
         }else if(_currentBodyPart =='dizzy'){
-          _currentBodyPart='0amtired';
+          _currentBodyPart='0amstomach';
         }else {
         _currentBodyPart = '0am'; // 잠옷바람 상태
         }
@@ -718,11 +697,9 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
           popupMessage = '아파요';
-          triggerAnimation('0amstomach');
+          triggerAnimation('0amtouch');
         } 
-      }
-      
-      else if (_currentBodyPart == 'dizzy') {
+      }else if (_currentBodyPart == 'dizzy') {
         popupMessage = '수면 시간을 늘려주세요!';
       }
       else {
@@ -857,46 +834,37 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
     }
   }
 
- Widget buildImageAnimationWithTouch(BuildContext context, Function(String) onImageSelected) {
-    startImageAnimation();
+  Widget buildImageAnimationWithTouch(BuildContext context, Function(String) onImageSelected) {
+  startImageAnimation(); // 애니메이션 시작
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return GestureDetector(
-          onTapDown: (TapDownDetails details) {
-            _calculateImageRect();
-            final tapPosition = details.globalPosition;
-            showPopupForCoordinates(context, tapPosition, onImageSelected);
-            setBodyPartStatus();
-          },
-          child: ValueListenableBuilder<int>(
-            valueListenable: _imageNotifier,
-            builder: (context, value, child) {
-              String imagePath = _currentBodyPart == 'default'
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      return GestureDetector(
+        onTapDown: (TapDownDetails details) {
+          _calculateImageRect();
+          final tapPosition = details.globalPosition;
+          
+          showPopupForCoordinates(context, tapPosition, onImageSelected);
+          
+           setBodyPartStatus();
+        },
+        child: ValueListenableBuilder<int>(
+          valueListenable: _imageNotifier,
+          builder: (context, value, child) {
+            return Image.asset(
+              _currentBodyPart == 'default'
                   ? defaultImagePaths[value]
-                  : imagePathsByBodyPart[_currentBodyPart]![value];
-
-              return FutureBuilder<Widget>(
-                future: _getImageWidget(imagePath),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-                    return snapshot.data!;
-                  } else {
-                    return Image.asset(
-                      imagePath,
-                      fit: BoxFit.cover,
-                      key: _imageKey,
-                      gaplessPlayback: true,
-                    );
-                  }
-                },
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
+                  : imagePathsByBodyPart[_currentBodyPart]![value],
+              fit: BoxFit.cover,
+              key: _imageKey,
+              gaplessPlayback: true,
+            );
+          },
+        ),
+      );
+    },
+  );
+}
 
 
   // 리소스 해제

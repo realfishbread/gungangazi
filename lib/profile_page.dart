@@ -25,10 +25,10 @@ class ProfilePage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _Profile2State createState() => _Profile2State();
+  _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _Profile2State extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage> {
   Uint8List? _imageData;
   late ProfileRepository _profileRepository;
   final TokenService _tokenService = TokenService();

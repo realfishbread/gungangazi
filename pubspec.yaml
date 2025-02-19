@@ -49,7 +49,7 @@ dependencies:
   google_identity_services_web: ^0.3.3
   pedometer: ^4.0.2
   flutter_image_compress: ^2.0.3
-  flutter_riverpod: ^2.6.1
+  
   
   
   

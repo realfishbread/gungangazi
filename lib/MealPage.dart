@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../dto/userHealth/meal_dto.dart';
-import '../../repositories/userHealth/meal_repository.dart';
-import '../../services/dio_service.dart';
-import '../../services/TokenService.dart';
+import '../dto/userHealth/meal_dto.dart';
+import '../repositories/userHealth/meal_repository.dart';
+import '../../core_services/dio_service.dart';
+import '../../core_services/token_service.dart';
 import 'PopupHandler.dart';
 
 class MealPage extends StatefulWidget {

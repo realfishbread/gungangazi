@@ -5,8 +5,8 @@ import 'dart:convert';
 import 'package:fl_chart/fl_chart.dart';
 import '../dto/userHealth/sleep_dto.dart';
 import '../repositories/userHealth/sleep_repository.dart';
-import '../services/dio_service.dart';
-import '../services/TokenService.dart';
+import '../core_services/dio_service.dart';
+import '../core_services/token_service.dart';
 import 'PopupHandler.dart';
 
 class SleepPage extends StatefulWidget {

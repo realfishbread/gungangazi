@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import '../dto/user_dto.dart';
-import '../services/dio_service.dart';
+import '../../core_services/dio_service.dart';
 
 
 class UserRepository {

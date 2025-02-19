@@ -3,7 +3,7 @@ import 'package:gungangazi/walking_page.dart';
 import 'BloodPressure.dart';
 import 'ToothCarePage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'profile2.dart';
+import 'profile_page.dart';
 import 'package:flutter/material.dart';
 import 'PopupHandler.dart';
 import 'SupplementsPage.dart';
@@ -11,8 +11,8 @@ import 'SleepPage.dart';
 import 'WaterDrink.dart';
 import 'MealPage.dart';
 import 'ChatPage.dart';
-import '../services/TokenService.dart';
-import '../services/dio_service.dart';
+import '../core_services/token_service.dart';
+import '../core_services/dio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -84,7 +84,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Profile2(
+            builder: (context) => ProfilePage(
             username: username,
             onProfileUpdated: () {
               // 프로필 업데이트 후 동기화

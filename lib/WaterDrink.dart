@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import '../repositories/userHealth/water_repository.dart';
-import '../services/dio_service.dart';
-import '../services/TokenService.dart';
+import '../core_services/dio_service.dart';
+import '../core_services/token_service.dart';
 import '../repositories/profile_repository.dart';
 import 'PopupHandler.dart'; // PopupHandler 임포트
 import 'package:dio/dio.dart';

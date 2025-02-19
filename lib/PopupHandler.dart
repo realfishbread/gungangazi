@@ -3,8 +3,8 @@ import 'SleepPage.dart';
 import 'SupplementsPage.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../services/dio_service.dart'; // DioService 추가
-import '../services/TokenService.dart';
+import '../core_services/dio_service.dart'; // DioService 추가
+import '../core_services/token_service.dart';
 import 'package:dio/dio.dart';
 
 

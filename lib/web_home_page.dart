@@ -3,9 +3,9 @@ import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:convert';
 import 'dart:typed_data';
-import 'profile2.dart';
-import '../services/dio_service.dart';
-import '../services/TokenService.dart';
+import 'profile_page.dart';
+import '../core_services/dio_service.dart';
+import '../core_services/token_service.dart';
 import 'ToothCarePage.dart';
 import 'BloodPressure.dart';
 import 'PopupHandler.dart';
@@ -100,7 +100,7 @@ class _WebHomePageState extends State<WebHomePage> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(30.0), // 내부 내용도 둥글게
-                child: Profile2(
+                child: ProfilePage(
                   username: username ?? "기본아이디",
                   onProfileUpdated: () {
                     // 프로필 변경 후 동기화

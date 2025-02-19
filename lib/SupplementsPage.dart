@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../services/dio_service.dart';
+import '../core_services/dio_service.dart';
 import '../repositories/userHealth/supplement_repository.dart';
 import '../dto/userHealth/supplementDto.dart';
-import '../services/TokenService.dart';
+import '../core_services/token_service.dart';
 import 'PopupHandler.dart';
 
 class SupplementsPage extends StatefulWidget {

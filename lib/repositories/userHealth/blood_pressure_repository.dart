@@ -1,8 +1,7 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import '../../dto/userHealth/blood_pressure_dto.dart';
-import '../../services/dio_service.dart';
-import '../../services/TokenService.dart';
+import '../../core_services/dio_service.dart';
+import '../../core_services/token_service.dart';
 
 class BloodPressureRepository {
   final DioService dioService;

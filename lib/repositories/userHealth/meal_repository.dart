@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import '../../dto/userHealth/meal_dto.dart';
-import '../../services/dio_service.dart';
-import '../../services/TokenService.dart';
+import '../../../core_services/dio_service.dart';
+import '../../../core_services/token_service.dart';
 
 class MealRepository {
   final DioService dioService;

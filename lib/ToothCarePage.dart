@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // 날짜 포맷을 위한 패키지
-import 'repositories/userHealth/tooth_repository.dart';
-import 'dto/userHealth/brush_history.dart';
-import '../services/dio_service.dart';
-import '../services/TokenService.dart';
+import '../repositories/userHealth/tooth_repository.dart';
+import '../dto/userHealth/brush_history.dart';
+import '../core_services/dio_service.dart';
+import '../core_services/token_service.dart';
 import 'PopupHandler.dart';
 import '../repositories/userHealth/sleep_repository.dart'; // SleepRepository 임포트
 import '../dto/userHealth/sleep_dto.dart'; // SleepDTO 임포트

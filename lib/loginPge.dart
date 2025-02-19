@@ -1,14 +1,14 @@
 import 'SignUp.dart'; // 회원가입 페이지를 불러오기 위해 추가
 import 'package:flutter/material.dart';
 import '../../repositories/auth_repository.dart'; // AuthRepository import
-import '../../dto/login_dto.dart'; // Login DTO import
+import '../dto/login_dto.dart'; // Login DTO import
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_sign_in_web/google_sign_in_web.dart';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
-import '../services/TokenService.dart';
+import '../core_services/token_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -102,89 +102,39 @@ class _LoginPageState extends State<LoginPage> {
 
  
 
-  Future<void> _sendTokenToServer(String? accessToken) async {
-  if (accessToken == null) {
-    _showErrorDialog('Google 인증에 실패했습니다. 액세스 토큰이 없습니다.');
-    return;
-  }
-
-  try {
-    final response = await _dio.post(
-        '/api/auth/google-login',
-        data: {'accessToken': accessToken},
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $accessToken',
-          },
-        ),
-      );
-
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseBody = response.data;
-
-      print('서버 응답: $responseBody');
-
-      // 서버에서 반환된 데이터 파싱
-      final String token = responseBody['token'];
-      final String email = responseBody['email'];
-      final String realname = responseBody['realname'];
-      final String gender =responseBody['gender'];
-      final bool existingUser = responseBody['existingUser'];
-      final String username = responseBody['username'];
-
-      // 저장 및 UI 업데이트
-      await _saveToken(token);
-      await _tokenService.saveToken(token);
-
-      // Navigator를 통해 다음 화면으로 이동
-      Navigator.pushReplacementNamed(context, '/homeApp', arguments: {
-        'email': email,
-        'realname': realname,
-        'existingUser': existingUser,
-        'gender': gender,
-        'username': username,
-        'token': token,
-      });
-
-      // 사용자에게 알림
-      _showInfoDialog(
-        existingUser ? '기존 회원으로 로그인되었습니다.' : '신규 회원으로 가입되었습니다.',
-      );
-    } else {
-      _showErrorDialog('Google 로그인 실패: 서버 오류 (${response.statusCode})');
-    }
-  } catch (e) {
-    print('서버 요청 중 오류 발생: $e');
-    _showErrorDialog('서버 요청 중 오류가 발생했습니다.');
-  }
-}
-
-  Future<void> _googleLogin() async {
-  
+   /// **🔹 Google 로그인 버튼 누르면 호출**
+  Future<void> _handleGoogleLogin() async {
+    setState(() => _isLoading = true);
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        print('Google 로그인 취소됨');
-        return;
-      }
+      // 레포지토리 통해 구글 로그인
+      final responseBody = await _authRepository.googleLogin();
+      if (responseBody != null) {
+        // 로그인 성공 시
+        Navigator.pushReplacementNamed(context, '/homeApp', arguments: {
+          'email': responseBody['email'],
+          'realname': responseBody['realname'],
+          'existingUser': responseBody['existingUser'],
+          'gender': responseBody['gender'],
+          'username': responseBody['username'],
+          'token': responseBody['token'],
+        });
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final String? accessToken = googleAuth.accessToken;
-
-      if (accessToken != null) {
-        print('Google Access Token: $accessToken');
-        await _sendTokenToServer(accessToken);
+        _showInfoDialog(
+          responseBody['existingUser']
+              ? '기존 회원으로 로그인되었습니다.'
+              : '신규 회원으로 가입되었습니다.',
+        );
       } else {
-        _showErrorDialog('Google 인증 정보가 부족합니다.');
+        _showErrorDialog('Google 로그인 실패');
       }
     } catch (e) {
       print('Google 로그인 중 오류 발생: $e');
       _showErrorDialog('Google 로그인 중 오류가 발생했습니다.');
+    } finally {
+      setState(() => _isLoading = false);
     }
-  
-}
+  }
+
 
  
 
@@ -367,20 +317,7 @@ class _LoginPageState extends State<LoginPage> {
                             foregroundColor: Colors.black,
                             side: const BorderSide(color: Colors.grey),
                           ),
-                          onPressed: _isLoading
-                              ? null
-                              : () async {
-                                  setState(() {
-                                    _isLoading = true;
-                                  });
-                                  try {
-                                    await _googleLogin();
-                                  } finally {
-                                    setState(() {
-                                      _isLoading = false;
-                                    });
-                                  }
-                                },
+                          onPressed: _isLoading ? null : _handleGoogleLogin, // ✅ 여기만 수정!
                         ),
                       ],
                     ),

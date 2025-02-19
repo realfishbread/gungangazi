@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../dto/user_dto.dart';
 import '../repositories/user_repository.dart';
-import '../services/TokenService.dart';  // TokenService 임포트
+import '../core_services/token_service.dart';  // TokenService 임포트
 import 'package:flutter/material.dart';
 
 class SignUpPage extends StatefulWidget {

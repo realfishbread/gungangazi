@@ -1,6 +1,6 @@
-import '../../services/dio_service.dart';
+import '../../core_services/dio_service.dart';
 import '../../dto/userHealth/water_dto.dart';
-import '../../services/TokenService.dart'; // TokenService 추가
+import '../../../core_services/token_service.dart'; // TokenService 추가
 import 'package:dio/dio.dart';
 
 class WaterRepository {

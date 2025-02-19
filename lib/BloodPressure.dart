@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gungangazi/services/TokenService.dart';
 import 'package:intl/intl.dart';
-import '../../dto/userHealth/blood_pressure_dto.dart';
-import '../../repositories/userHealth/blood_pressure_repository.dart';
-import '../../services/dio_service.dart';
+import '../dto/userHealth/blood_pressure_dto.dart';
+import '../repositories/userHealth/blood_pressure_repository.dart';
+import '../core_services/dio_service.dart';
+import '../core_services/token_service.dart';
 
 class BloodPressurePage extends StatefulWidget {
   const BloodPressurePage({super.key});

@@ -19,20 +19,12 @@ class AuthRepository {
   AuthRepository() : _dio = DioService().getDio();
 
   // 로그인 API 호출
-  Future<LoginResponseDto?> login(LoginRequestDto loginRequest) async {
-
-    String? accessToken = await _googleAuthService.signInWithGoogle();
+ Future<LoginResponseDto?> login(LoginRequestDto loginRequest) async {
     try {
-      final response = await _dio.post(
-          '/api/auth/google-login',
-          data: {'accessToken': accessToken},
-          options: Options(
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $accessToken',
-            },
-          ),
-        );
+      Response response = await _dio.post(
+        '/login',
+        data: loginRequest.toJson(), // JSON 형태로 변환된 데이터를 전송
+      );
 
       // 응답 데이터를 JSON으로 변환하여 출력
       print('로그인 응답: ${response.data}'); // 응답 데이터 출력
@@ -57,10 +49,7 @@ class AuthRepository {
   }
 
 
-
   Future<Map<String, dynamic>?> googleLogin() async {
-
-
     try {
       final accessToken = await _googleAuthService.signInWithGoogle();
       final response = await _dio.post(

@@ -14,11 +14,8 @@ import '../userHealth/SleepPage.dart';
 import '../userHealth/water_drink.dart';
 import '../userHealth/MealPage.dart';
 import '../chat_page.dart';
-import '../auth/login_page.dart';
 import '../../dto/auth/profile_dto.dart';
 import '../../repositories/auth/profile_repository.dart';
-import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
 import '../userHealth/walking_page.dart';
 import 'home_page.dart';
 

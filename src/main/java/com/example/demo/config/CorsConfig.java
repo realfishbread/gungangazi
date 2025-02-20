@@ -14,7 +14,9 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowedOrigins(
                         "https://gungangazi.site", // 배포된 프론트엔드 URL
                         "http://localhost:8080",  // 로컬 개발 환경 (백엔드)
-                        "http://localhost:3000"   // 로컬 개발 환경 (프론트엔드)
+                        "http://localhost:3000",   // 로컬 개발 환경 (프론트엔드)
+                        "http://localhost:50626"
+                        
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD") // 허용할 HTTP 메소드
                 .allowedHeaders("Authorization", "Content-Type", "X-Requested-With", "Accept", "*") // 허용할 헤더

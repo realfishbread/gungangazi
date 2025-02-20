@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import '../../dto/userHealth/sleep_dto.dart';
-import '../../../core_services/dio_service.dart';
-import '../../../core_services/token_service.dart';
+import '../../core_services/dio_service.dart';
+import '../../core_services/token_service.dart';
 
 class SleepRepository {
   final DioService dioService;

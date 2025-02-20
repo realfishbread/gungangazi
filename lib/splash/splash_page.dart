@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart'; // ✅ 웹 감지를 위해 추가
-import '../loginPge.dart';
+import '../screen/auth/login_page.dart';
 import 'package:flutter/material.dart';
 
 class SplashPage extends StatefulWidget {

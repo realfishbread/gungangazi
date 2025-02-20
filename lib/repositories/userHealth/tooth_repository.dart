@@ -1,6 +1,6 @@
 import '../../core_services/dio_service.dart';
 import '../../dto/userHealth/brush_history.dart';
-import '../../../core_services/token_service.dart';
+import '../../core_services/token_service.dart';
 import 'package:dio/dio.dart';
 
 class ToothRepository {

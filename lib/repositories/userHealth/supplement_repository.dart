@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import '../../dto/userHealth/supplementDto.dart';
-import '../../../core_services/dio_service.dart';
-import '../../../core_services/token_service.dart';
+import '../../dto/userHealth/supplement_dto.dart';
+import '../../core_services/dio_service.dart';
+import '../../core_services/token_service.dart';
 import 'package:intl/intl.dart';
 
 

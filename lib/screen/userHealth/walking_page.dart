@@ -32,7 +32,7 @@ class _WalkingPageState extends State<WalkingPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('만보기'),
-        backgroundColor: Colors.purpleAccent,
+        backgroundColor: const Color(0xFFFFF9C4),
       ),
       body: Center(
         child: Column(
@@ -48,7 +48,7 @@ class _WalkingPageState extends State<WalkingPage> {
               style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: const Color(0xFFFFF9C4)),
             ),
             SizedBox(height: 20),
-            Icon(Icons.directions_walk, size: 100, color: Colors.purpleAccent),
+            Icon(Icons.directions_walk, size: 100, color: const Color(0xFFFFF9C4)),
           ],
         ),
       ),

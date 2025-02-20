@@ -20,7 +20,7 @@ class _SignUpPageState extends State<SignUpPage>
   final TextEditingController _realnameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _verificationCodeController = TextEditingController(); // 인증 코드 입력 컨트롤러
-  final TextEditingController _confirmPasswordController = TextEditingController(); // 비밀번호 확인 컨트롤러 추가
+
 
 
 
@@ -183,7 +183,7 @@ void _validatePassword(String password) {
     });
   }
    // 비밀번호 유효성 검사 후 비밀번호 확인도 다시 검사
-    _validateConfirmPassword(_confirmPasswordController.text);
+
 }
 
   
@@ -326,7 +326,6 @@ Widget _buildPasswordField() {
     ),
   );
 }
-
 Widget _buildEmailFieldWithButton() {
   return Container(
     width: 300, // 전체 너비 제한
@@ -352,51 +351,63 @@ Widget _buildEmailFieldWithButton() {
                 backgroundColor: Colors.yellow[100],
                 foregroundColor: Colors.black,
               ),
-              onPressed: () async {
-                  final isValid = await _isFormValid();
+             onPressed: () async {
+                // 1️⃣ 이메일 & 비밀번호 검증
+                final isValidInput = _validateEmailAndPassword();
+                
+                // 2️⃣ 만약 검증이 실패하면 아래 코드 실행 X
+                if (!isValidInput) return;
+
+                // 3️⃣ 이메일 인증 확인
+                final isEmailVerified = await _isFormValid();
+                
+                // 4️⃣ 이메일 인증이 통과하면 인증 코드 입력 칸 표시
+                if (mounted) {
                   setState(() {
-                    _isVerificationFieldVisible = isValid; // 항상 setState 실행
+                    _isVerificationFieldVisible = isEmailVerified;
                   });
-                },
+                }
+              },
+
               child: const Text('인증'),
             ),
           ],
         ),
         const SizedBox(height: 8),
-       AnimatedSwitcher(
-          duration: const Duration(milliseconds: 500),
-          child: _isVerificationFieldVisible
-              ? Row(
-                  key: ValueKey(_isVerificationFieldVisible), // ✅ 상태 변경 감지
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: TextField(
-                        controller: _verificationCodeController,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: '인증 코드 입력',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green[100],
-                        foregroundColor: Colors.black,
-                      ),
-                      onPressed: _verifyCode, // ✅ 인증 코드 검증 함수 호출
-                      child: const Text('확인'),
-                    ),
-                  ],
-                )
-              : const SizedBox(),
-        ),
+        if (_isVerificationFieldVisible) // 인증 코드 입력칸 표시 조건
+          Row(
+            children: [
+              Expanded(
+                flex: 3,
+                child: TextField(
+                  controller: _verificationCodeController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: '인증 코드 입력',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green[100],
+                  foregroundColor: Colors.black,
+                ),
+                onPressed: () {
+                  _verifyCode(); // 인증 코드 검증 함수 호출
+                },
+                child: const Text('확인'),
+              ),
+            ],
+          ),
+
       ],
     ),
   );
 }
+
+
 
 
 

@@ -48,8 +48,8 @@ class AppTheme {
       elevation: 0,
     ),
     textTheme: const TextTheme(
-      bodyLarge: TextStyle(fontSize: 18, color: Colors.white),
-      bodyMedium: TextStyle(fontSize: 16, color: Colors.white),
+      bodyLarge: TextStyle(fontSize: 18, color: Colors.black),
+      bodyMedium: TextStyle(fontSize: 16, color: Colors.black),
     ),
   );
 }

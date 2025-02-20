@@ -19,8 +19,6 @@ class UserRepository {
         data: user.toJson(),
       );
 
-      
-      // 응답 데이터 출력
       print('응답 데이터: ${response.data}');
 
 
@@ -29,7 +27,7 @@ class UserRepository {
         return {
         'message': responseData['message'],
         'token': responseData['token'],
-          };  // "회원가입 성공" 또는 "아이디가 이미 존재합니다." 등의 메시지 반환
+          };  
       } else {
         print('회원가입 실패: ${response.statusCode}');
         return null;
@@ -59,6 +57,7 @@ class UserRepository {
     return '서버와의 연결에 실패했습니다: ${e.toString()}';
   }
 }
+
      // 이메일 인증 코드 검증 요청
   Future<String> verifyEmailCode(String email, String token) async {
   try {

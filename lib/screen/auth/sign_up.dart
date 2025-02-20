@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../dto/auth/user_dto.dart';
 import '../../repositories/auth/user_repository.dart';
-import '../../core_services/token_service.dart';  // TokenService 임포트
 import '../../widget/alert.dart';
 import '../../widget/is_web.dart';
 import 'package:flutter/material.dart';
+import 'sign_up_utils/animation_helper.dart'; // 애니메이션 파일 import
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -22,12 +22,12 @@ class _SignUpPageState extends State<SignUpPage>
   final TextEditingController _verificationCodeController = TextEditingController(); // 인증 코드 입력 컨트롤러
   final TextEditingController _confirmPasswordController = TextEditingController(); // 비밀번호 확인 컨트롤러 추가
 
-  late AnimationController _animationController; // 애니메이션 컨트롤러
-  late Animation<Offset> _slideAnimation; // 슬라이드 애니메이션
+
 
   int _currentStep = 0;
   bool _isMaleSelected = false;
   bool _isFemaleSelected = false;
+
   String _passwordFeedback = ''; // 비밀번호 유효성 검사 메시지
   String _confirmPasswordFeedback = ''; // 비밀번호 확인 메시지
   bool _isPasswordMatching = false; // 비밀번호 일치 여부
@@ -35,37 +35,21 @@ class _SignUpPageState extends State<SignUpPage>
   bool _isPasswordVisible = false; // 비밀번호 표시 여부
   bool _isVerificationFieldVisible = false; // 인증 코드 입력 필드 표시 여부
 
+  late SlideAnimationHelper _slideAnimationHelper;
   int ver =0;
 
   final List<String> steps = ['아이디', '이메일', '이름', '비밀번호', '성별'];
-  final TokenService _tokenService = TokenService(); // 토큰 저장 서비스
 
   @override
   void initState() {
     super.initState();
-
-    // 애니메이션 컨트롤러 초기화
-    _animationController = AnimationController(
-      duration: const Duration(seconds: 1), // 애니메이션 지속 시간
-      vsync: this, // TickerProvider 사용
-    );
-
-    // 슬라이드 애니메이션 정의 (위에서 아래로)
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, -1), // 화면 밖 위쪽에서 시작
-      end: Offset.zero, // 화면 중앙으로 이동
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut, // 부드러운 움직임
-    ));
-
-    // 애니메이션 시작
-    _animationController.forward();
+   _slideAnimationHelper = SlideAnimationHelper(vsync: this);
+    _slideAnimationHelper.start();
   }
 
   @override
   void dispose() {
-    _animationController.dispose(); // 애니메이션 컨트롤러 해제
+    _slideAnimationHelper.dispose();
     super.dispose();
   }
 
@@ -109,20 +93,15 @@ void _completeSignUp() async {
     showErrorDialog(context,'비밀번호가 유효하지 않습니다. 다시 확인해 주세요.');
     return;
   }
-
-  // 이메일 인증이 완료되지 않았다면 회원가입 요청을 중단합니다.
   if (ver == 0) {
     showErrorDialog(context,'이메일 인증을 완료해 주세요.');
     return;
   }
-
-  // 성별 선택 여부 확인
   if (!_isMaleSelected && !_isFemaleSelected) {
     showErrorDialog(context,'성별을 선택해 주세요.');
     return;
   }
 
-  // 회원가입 데이터 준비
   String? selectedGender = _isMaleSelected ? '남성' : '여성';
 
   final user = UserDTO(
@@ -374,24 +353,21 @@ Widget _buildEmailFieldWithButton() {
                 foregroundColor: Colors.black,
               ),
               onPressed: () async {
-                final isValid = await _isFormValid(); // 이메일 인증 호출
-                setState(() {
-                  if (isValid) {
-                    _isVerificationFieldVisible = true; // 인증 코드 입력칸 표시
-                  }
-                });
-              },
+                  final isValid = await _isFormValid();
+                  setState(() {
+                    _isVerificationFieldVisible = isValid; // 항상 setState 실행
+                  });
+                },
               child: const Text('인증'),
             ),
           ],
         ),
         const SizedBox(height: 8),
-        AnimatedOpacity(
-          opacity: _isVerificationFieldVisible ? 1.0 : 0.0, // 애니메이션 투명도 조정
-          duration: const Duration(milliseconds: 500), // 애니메이션 지속 시간
-          curve: Curves.easeInOut, // 애니메이션 곡선
+       AnimatedSwitcher(
+          duration: const Duration(milliseconds: 500),
           child: _isVerificationFieldVisible
               ? Row(
+                  key: ValueKey(_isVerificationFieldVisible), // ✅ 상태 변경 감지
                   children: [
                     Expanded(
                       flex: 3,
@@ -410,14 +386,12 @@ Widget _buildEmailFieldWithButton() {
                         backgroundColor: Colors.green[100],
                         foregroundColor: Colors.black,
                       ),
-                      onPressed: () {
-                        _verifyCode(); // 인증 코드 검증 함수 호출
-                      },
+                      onPressed: _verifyCode, // ✅ 인증 코드 검증 함수 호출
                       child: const Text('확인'),
                     ),
                   ],
                 )
-              : const SizedBox(), // 인증 필드가 숨겨진 경우 빈 컨테이너
+              : const SizedBox(),
         ),
       ],
     ),
@@ -475,7 +449,7 @@ Widget build(BuildContext context) {
               // 애니메이션 비활성화 및 Container 크기 조정
               isWebSize
                   ? SlideTransition(
-                      position: _slideAnimation,
+                      position: _slideAnimationHelper.slideAnimation,
                       child: _buildContainer(isWebSize),
                     )
                   : _buildContainer(isWebSize), // 모바일에서는 애니메이션 없이 바로 표시
@@ -538,51 +512,51 @@ Widget _buildContainer(bool isWebSize) {
 
 
   Widget _buildGenderSelection() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.center, // 부모 Column의 중앙 정렬
-    children: [
-      const Text(
-        '성별',
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-      ),
-      const SizedBox(height: 8),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center, // Row 내부 항목 중앙 정렬
-        children: [
-          Row(
-            children: [
-              Checkbox(
-                value: _isMaleSelected,
-                onChanged: (bool? value) {
-                  setState(() {
-                    _isMaleSelected = value ?? false;
-                    _isFemaleSelected = !_isMaleSelected;
-                  });
-                },
-              ),
-              const Text('남성'),
-            ],
-          ),
-          const SizedBox(width: 32), // 남성과 여성 사이 간격
-          Row(
-            children: [
-              Checkbox(
-                value: _isFemaleSelected,
-                onChanged: (bool? value) {
-                  setState(() {
-                    _isFemaleSelected = value ?? false;
-                    _isMaleSelected = !_isFemaleSelected;
-                  });
-                },
-              ),
-              const Text('여성'),
-            ],
-          ),
-        ],
-      ),
-    ],
-  );
-}
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center, // 부모 Column의 중앙 정렬
+      children: [
+        const Text(
+          '성별',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center, // Row 내부 항목 중앙 정렬
+          children: [
+            Row(
+              children: [
+                Checkbox(
+                  value: _isMaleSelected,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _isMaleSelected = value ?? false;
+                      _isFemaleSelected = !_isMaleSelected;
+                    });
+                  },
+                ),
+                const Text('남성'),
+              ],
+            ),
+            const SizedBox(width: 32), // 남성과 여성 사이 간격
+            Row(
+              children: [
+                Checkbox(
+                  value: _isFemaleSelected,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _isFemaleSelected = value ?? false;
+                      _isMaleSelected = !_isFemaleSelected;
+                    });
+                  },
+                ),
+                const Text('여성'),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 
 
 Widget _buildTextField(

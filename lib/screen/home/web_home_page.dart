@@ -45,27 +45,28 @@ class _WebHomePageState extends State<WebHomePage> {
     _popupHandler.initialize();
   }
 
-  Future<void> fetchProfile() async {
-    String? token = await _tokenService.getToken();
-    DioService dioService = DioService(token: token);
-    ProfileRepository profileRepository = ProfileRepository(dioService: dioService, tokenService: _tokenService);
+    Future<void> fetchProfile() async {
+      String? token = await _tokenService.getToken();
+      DioService dioService = DioService(token: token);
+      ProfileRepository profileRepository = ProfileRepository(dioService: dioService, tokenService: _tokenService);
 
-    ProfileDto? profile = await profileRepository.fetchProfile('your-username'); // 서버에서 프로필 가져오기
-    setState(() {
-      _profile = profile;
-      if (_profile?.profile_image != null) {
-        _imageData = base64Decode(_profile!.profile_image!);
-      }
-    });
-  }
-  void logout(BuildContext context) async {
-  await _tokenService.deleteToken(); // 토큰 삭제
-  setState(() {
-    _profile = null;
-    _imageData = null;
-  });
-  Navigator.pushReplacementNamed(context, '/login');
-}
+      ProfileDto? profile = await profileRepository.fetchProfile('your-username'); // 서버에서 프로필 가져오기
+      setState(() {
+        _profile = profile;
+        if (_profile?.profile_image != null) {
+          _imageData = base64Decode(_profile!.profile_image!);
+        }
+      });
+    }
+    
+    void logout(BuildContext context) async {
+      await _tokenService.deleteToken(); // 토큰 삭제
+      setState(() {
+        _profile = null;
+        _imageData = null;
+      });
+      Navigator.pushReplacementNamed(context, '/login');
+    }
 
 
 

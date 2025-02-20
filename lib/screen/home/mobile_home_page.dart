@@ -13,8 +13,6 @@ import '../userHealth/MealPage.dart';
 import '../chat_page.dart';
 import '../../core_services/token_service.dart';
 import '../../core_services/dio_service.dart';
-import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../widget/is_web.dart';
 
 
@@ -31,9 +29,11 @@ class _MobileHomePageState extends State<MobileHomePage> {
   int _selectedIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final TokenService _tokenService = TokenService();
+  final DioService _dioService = DioService(token: 'your-auth-token');
+  
   final List<dynamic> _listData = [];
   late PopupHandler _popupHandler;
-  final DioService _dioService = DioService(token: 'your-auth-token');
+  
  
 
   

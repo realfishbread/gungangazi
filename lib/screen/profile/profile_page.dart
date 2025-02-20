@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gungangazi/repositories/auth/auth_repository.dart';
+import 'package:gungangazi/view_model/google_view_model.dart';
 import '../../dto/auth/profile_dto.dart';
 import '../../repositories/auth/profile_repository.dart';
 import '../../core_services/dio_service.dart';
@@ -13,6 +15,8 @@ import 'image/image_picker_web.dart';
 import 'image/image_picker_mobile.dart';
 import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../../widget/alert.dart';
+import '../../view_model/google_view_model.dart';
 
 class ProfilePage extends StatefulWidget {
   final String username;
@@ -31,10 +35,12 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   Uint8List? _imageData;
   late ProfileRepository _profileRepository;
+  late AuthRepository _authRepository;
   final TokenService _tokenService = TokenService();
   ProfileDto? _profile;
   bool isLoading = true;
   late ScrollController _scrollController;
+  late GoogleViewModel _googleViewModel;
 
   final ProfileDto defaultProfile = ProfileDto(
     username: '기본아이디',
@@ -50,6 +56,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
+    _googleViewModel = GoogleViewModel(AuthRepository()); // ✅ 의존성 주입
     _scrollController = ScrollController();
     _initialize();
   }
@@ -83,29 +90,29 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> updateProfileData({String? fieldName, dynamic newValue}) async {
-  final updatedProfile = ProfileDto(
-    username: _profile?.username ?? defaultProfile.username,
-    realname: fieldName == '이름' ? newValue : _profile?.realname ?? defaultProfile.realname,
-    email: fieldName == '이메일' ? newValue : _profile?.email ?? defaultProfile.email,
-    height: fieldName == '키' ? newValue : _profile?.height ?? defaultProfile.height,
-    weight: fieldName == '몸무게' ? newValue : _profile?.weight ?? defaultProfile.weight,
-    gender: _profile?.gender ?? defaultProfile.gender,
-    age: fieldName == '나이' ? newValue : _profile?.age ?? defaultProfile.age,
-    profile_image: _imageData != null ? base64Encode(_imageData!) : _profile?.profile_image,
-    is_google_user: _profile?.is_google_user ??defaultProfile.is_google_user,
-  );
+    final updatedProfile = ProfileDto(
+      username: _profile?.username ?? defaultProfile.username,
+      realname: fieldName == '이름' ? newValue : _profile?.realname ?? defaultProfile.realname,
+      email: fieldName == '이메일' ? newValue : _profile?.email ?? defaultProfile.email,
+      height: fieldName == '키' ? newValue : _profile?.height ?? defaultProfile.height,
+      weight: fieldName == '몸무게' ? newValue : _profile?.weight ?? defaultProfile.weight,
+      gender: _profile?.gender ?? defaultProfile.gender,
+      age: fieldName == '나이' ? newValue : _profile?.age ?? defaultProfile.age,
+      profile_image: _imageData != null ? base64Encode(_imageData!) : _profile?.profile_image,
+      is_google_user: _profile?.is_google_user ??defaultProfile.is_google_user,
+    );
 
-  print("Sending data to server: ${jsonEncode(updatedProfile.toJson())}");
+  
 
-  bool success = await _profileRepository.updateProfile(widget.username, updatedProfile.toJson());
+    bool success = await _profileRepository.updateProfile(widget.username, updatedProfile.toJson());
 
-  if (success) {
-    widget.onProfileUpdated();
-    await fetchProfile();
-  } else {
-    print('프로필 업데이트 실패');
+    if (success) {
+      widget.onProfileUpdated();
+      await fetchProfile();
+    } else {
+      showErrorDialog(context, '프로필 업데이트 실패');
+    }
   }
-}
 
   Future<void> fetchProfile() async {
     setState(() {
@@ -113,6 +120,7 @@ class _ProfilePageState extends State<ProfilePage> {
     });
 
     ProfileDto? profile = await _profileRepository.fetchProfile(widget.username);
+    
     setState(() {
       _profile = profile ?? defaultProfile;
       if (_profile?.profile_image != null) {
@@ -121,13 +129,10 @@ class _ProfilePageState extends State<ProfilePage> {
       isLoading = false;
     });
   }
+ 
+  
 
-  Future<void> _linkGoogleAccount() async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-  }
-
-
-
+  
   void _linkSamsungHealth() async {
     // TODO: Implement Samsung Health linking logic
     print("삼성 헬스 연동");
@@ -157,7 +162,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget buildProfileContent() {
     final profile = _profile ?? defaultProfile;
-    final bool isGoogleUser = profile.is_google_user ?? false; // Google 로그인 여부 확인
+    final bool isGoogleUser = _profile?.is_google_user ?? false;
 
     return SingleChildScrollView(
       child: Container(
@@ -265,15 +270,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
             const SizedBox(height: 20),
 
-            Center(
+          Center(
             child: Column(
               children: [
-                if (!isGoogleUser) // Google 로그인 사용자는 연동 버튼 숨기기
-                  TextButton.icon(
-                    onPressed: _linkGoogleAccount,
-                    icon: const Icon(Icons.link, color: Colors.blue),
-                    label: const Text('구글 계정 연동', style: TextStyle(color: Colors.black)),
-                  ),
+                
                 const SizedBox(height: 10),
                 TextButton.icon(
                   onPressed: _linkSamsungHealth,

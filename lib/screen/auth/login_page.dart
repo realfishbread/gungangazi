@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../repositories/auth/auth_repository.dart'; // AuthRepository import
 import '../../dto/auth/login_dto.dart'; // Login DTO import
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:google_sign_in_web/google_sign_in_web.dart';
 import 'package:flutter/foundation.dart';
 import '../../widget/alert.dart';
 

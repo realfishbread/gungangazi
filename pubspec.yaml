@@ -13,7 +13,6 @@ dependencies:
   flutter:
     sdk: flutter
   
-  web: ^1.0.0
   mysql1: ^0.20.0
   image_picker: ^1.1.2
   workmanager: ^0.5.1

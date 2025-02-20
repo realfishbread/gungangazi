@@ -351,24 +351,13 @@ Widget _buildEmailFieldWithButton() {
                 backgroundColor: Colors.yellow[100],
                 foregroundColor: Colors.black,
               ),
-             onPressed: () async {
-                // 1️⃣ 이메일 & 비밀번호 검증
-                final isValidInput = _validateEmailAndPassword();
-                
-                // 2️⃣ 만약 검증이 실패하면 아래 코드 실행 X
-                if (!isValidInput) return;
-
-                // 3️⃣ 이메일 인증 확인
-                final isEmailVerified = await _isFormValid();
-                
-                // 4️⃣ 이메일 인증이 통과하면 인증 코드 입력 칸 표시
-                if (mounted) {
-                  setState(() {
-                    _isVerificationFieldVisible = isEmailVerified;
-                  });
-                }
+              onPressed: () async {
+                 _validateEmailAndPassword();
+                await _isFormValid(); // 이메일 인증 호출
+                setState(() {
+                  _isVerificationFieldVisible = true; // 인증 코드 입력칸 표시
+                });
               },
-
               child: const Text('인증'),
             ),
           ],

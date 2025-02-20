@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.example4"
+    namespace = "com.example.gungangazi"
     compileSdkVersion 34 // 34로 낮추기
     ndkVersion = flutter.ndkVersion
 
@@ -20,7 +20,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.example4"
+        applicationId = "com.gungangazi"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -61,4 +61,5 @@ dependencies {
     // MySQL 연결을 위한 드라이버 (옵션)
     implementation 'mysql:mysql-connector-java:8.0.25'
     implementation 'com.google.android.gms:play-services-auth:20.6.0'
+    implementation "androidx.health.connect:connect-client:1.1.0-alph10"
 }

@@ -151,7 +151,9 @@ class _ProfilePageState extends State<ProfilePage> {
           ? const Center(child: CircularProgressIndicator())
           : WebSmoothScroll(
               controller: _scrollController,
-              scrollOffset: 100,
+              scrollSpeed: 2.1, // additional scroll extent for smooth animation
+              scrollAnimationLength: 800, // duration of animation of scroll in milliseconds
+              curve: Curves.easeInOutCirc, // curve of the animation
               child: SingleChildScrollView(
                 controller: _scrollController,
                 child: buildProfileContent(),
@@ -162,7 +164,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget buildProfileContent() {
     final profile = _profile ?? defaultProfile;
-    final bool isGoogleUser = _profile?.is_google_user ?? false;
+    
 
     return SingleChildScrollView(
       child: Container(

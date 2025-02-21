@@ -30,6 +30,8 @@ class _MealPageState extends State<MealPage> {
   int _weight = 0; // 사용자 체중
   int _height =0;
 
+  DateTime now = DateTime.now();
+
 
 
   @override
@@ -201,8 +203,7 @@ Widget _getCalorieStatusWidget(String date) {
   }
 
  
-
-
+   
 
   // PopupHandler 상태 업데이트
   void _updatePopupHandler() {

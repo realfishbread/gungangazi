@@ -14,6 +14,8 @@ import '../chat_page.dart';
 import '../../core_services/token_service.dart';
 import '../../core_services/dio_service.dart';
 import '../../widget/is_web.dart';
+import '../character/character_status.dart';
+import '../../repositories/status/character_repository.dart';
 
 
 import 'web_home_page.dart';
@@ -32,8 +34,9 @@ class _MobileHomePageState extends State<MobileHomePage> {
   final DioService _dioService = DioService(token: 'your-auth-token');
   
   final List<dynamic> _listData = [];
+  late final CharacterRepository _characterRepository;
+  late final CharacterStatus _characterStatus;
   late PopupHandler _popupHandler;
-  
  
 
   
@@ -41,7 +44,16 @@ class _MobileHomePageState extends State<MobileHomePage> {
   @override
   void initState() {
     super.initState();
-    _popupHandler = PopupHandler(listData: _listData, tokenService: _tokenService, dioService: _dioService);
+    // ✅ CharacterRepository를 주입하여 CharacterStatus 인스턴스 생성
+  _characterStatus = CharacterStatus();
+
+  // ✅ PopupHandler에서도 characterStatus 전달 가능
+  _popupHandler = PopupHandler(
+    listData: _listData,
+    tokenService: _tokenService,
+    dioService: _dioService,
+    characterStatus: _characterStatus, // ✅ 추가
+  );
     _popupHandler.initialize();
  
   }

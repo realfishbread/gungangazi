@@ -1,20 +1,22 @@
-
-
-import 'dart:ui';
+import '../userHealth/MealPage.dart';
+import '../userHealth/SleepPage.dart';
+import '../userHealth/supplement_page.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../../core_services/dio_service.dart'; // DioService 추가
 import '../../core_services/token_service.dart';
+import 'package:dio/dio.dart';
 import '../../repositories/status/character_repository.dart';
-import 'character_status.dart';
-import 'character_image.dart';
+import '../../dto/status/character_status_dto.dart'; // ✅ DTO 추가
+import 'character_status.dart'; // ✅ CharacterStatus 추가
+
 
 
 class PopupHandler {
   final List<dynamic> listData;
   final DioService dioService; // DioService 인스턴스
   final TokenService tokenService; // TokenService 인스턴스
-
+  final Map<String, List<String>> imagePathsByBodyPart;
   int _currentImageIndex = 0;
   late ValueNotifier<int> _imageNotifier;
   Timer? _imageTimer;
@@ -23,23 +25,21 @@ class PopupHandler {
   int waterLevel = 100; // 수분 상태 변수 추가
   int mealLevel = 100;
   int sleepLevel = 100; // 수면 상태 변수
-
   final CharacterRepository _characterRepository =CharacterRepository();
-  final CharacterStatus _characterStatus = CharacterStatus();
-  final ImagePaths _imagePaths =ImagePaths();
+  final CharacterStatus characterStatus; // ✅ CharacterStatus 추가
   
-  final Map<String, List<String>> imagePathsByBodyPart;
+
 
   
   
   final GlobalKey _imageKey = GlobalKey(); // 이미지를 위한 GlobalKey 선언
   Rect? _imageRect;
 
-   void initialize() async{
-      await _characterRepository.loadStatusFromServer();
-      setBodyPartStatus();
-    
-    }
+  /// ✅ 초기화 (서버에서 상태 불러오기)
+  Future<void> initialize() async {
+    await characterStatus.loadStatus(); // ✅ CharacterStatus에서 상태 불러오기
+    setBodyPartStatus();
+  }
 
 
   final List<String> defaultImagePaths = [
@@ -51,10 +51,7 @@ class PopupHandler {
     'assets/person/default/1.jpg',
   ];
 
- 
- 
-
-  PopupHandler({required this.listData, required this.dioService, required this.tokenService})
+  PopupHandler({required this.listData, required this.dioService, required this.tokenService, required this.characterStatus,})
       : imagePathsByBodyPart = {
           'head': [
             'assets/person/default/head1.jpg',
@@ -338,14 +335,24 @@ class PopupHandler {
             'assets/person/0am/0amdizzy1',
           ]
 
-        } {
+        }{
            _imageNotifier = ValueNotifier<int>(_currentImageIndex);
-           _characterRepository.loadStatusFromServer();
+    _characterRepository.loadStatusFromServer();
   }
+  /// ✅ 현재 상태 업데이트 및 서버 저장
+  Future<void> updateStatus({
+    required int newWaterLevel,
+    required int newMealLevel,
+    required int newSleepLevel,
+  }) async {
+    print("Updating status - Water: $newWaterLevel, Meal: $newMealLevel, Sleep: $newSleepLevel");
 
-  
-  Future<void> updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) async{
-    await _characterStatus.updateStatus(newWaterLevel: newWaterLevel, newMealLevel: newMealLevel, newSleepLevel: newSleepLevel);
+    await characterStatus.updateStatus(
+      newWaterLevel: newWaterLevel,
+      newMealLevel: newMealLevel,
+      newSleepLevel: newSleepLevel,
+    );
+
     setBodyPartStatus();
     startImageAnimation();
   }
@@ -353,49 +360,45 @@ class PopupHandler {
 
 
 
-
-
- 
-
-
   void setBodyPartStatus() {
-    String previousBodyPart = _currentBodyPart;
+  String previousBodyPart = _currentBodyPart;
 
-    if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel <= 200) {
-      _currentBodyPart = 'thirsty_and_hungry_dizzy';
-    } else if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel >= 200) {
-      _currentBodyPart = 'thirsty_and_hungry';
-    } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel < 200) {
-      _currentBodyPart = 'thirsty_and_dizzy';
-    } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel < 200) {
-      _currentBodyPart = 'hungry_and_dizzy';
-    } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel >= 200) {
-      _currentBodyPart = 'thirsty';
-    } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel >= 200) {
-      _currentBodyPart = 'hungry';
-    } else if (waterLevel > 200 && mealLevel > 200 && sleepLevel < 200) {
-      _currentBodyPart = 'dizzy';
-    } else {
-      updateCharacterStatusBasedOnTime(); // ⏰ 시간 기반 상태 업데이트
-    }
+  if (characterStatus.waterLevel <= 200 && characterStatus.mealLevel <= 200 && characterStatus.sleepLevel <= 200) {
+    _currentBodyPart = 'thirsty_and_hungry_dizzy';
+  } else if (characterStatus.waterLevel <= 200 && characterStatus.mealLevel <= 200 && characterStatus.sleepLevel >= 200) {
+    _currentBodyPart = 'thirsty_and_hungry';
+  } else if (characterStatus.waterLevel <= 200 && characterStatus.mealLevel > 200 && characterStatus.sleepLevel < 200) {
+    _currentBodyPart = 'thirsty_and_dizzy';
+  } else if (characterStatus.waterLevel > 200 && characterStatus.mealLevel <= 200 && characterStatus.sleepLevel < 200) {
+    _currentBodyPart = 'hungry_and_dizzy';
+  } else if (characterStatus.waterLevel <= 200 && characterStatus.mealLevel > 200 && characterStatus.sleepLevel >= 200) {
+    _currentBodyPart = 'thirsty';
+  } else if (characterStatus.waterLevel > 200 && characterStatus.mealLevel <= 200 && characterStatus.sleepLevel >= 200) {
+    _currentBodyPart = 'hungry';
+  } else if (characterStatus.waterLevel > 200 && characterStatus.mealLevel > 200 && characterStatus.sleepLevel < 200) {
+    _currentBodyPart = 'dizzy';
+  } else {
+    updateCharacterStatusBasedOnTime(); // ⏰ 시간 기반 상태 업데이트
+  }
 
-    // 🔥 상태가 바뀔 때만 애니메이션 다시 시작!
-    if (previousBodyPart != _currentBodyPart) {
-      startImageAnimation();
-    }
+  // 🔥 상태가 바뀔 때만 애니메이션 다시 시작!
+  if (previousBodyPart != _currentBodyPart) {
+    print("📢 캐릭터 상태 변경됨: $_currentBodyPart → 애니메이션 재시작!");
+    startImageAnimation();
+  }
 }
 
   // 이미지 애니메이션 시작
   void startImageAnimation() {
-    _imageTimer?.cancel(); // 기존 타이머 중지
+  _imageTimer?.cancel(); // 기존 타이머 중지
 
-    _imageTimer = Timer.periodic(frameDuration, (timer) {
-      _currentImageIndex = (_currentImageIndex + 1) %
-          (imagePathsByBodyPart[_currentBodyPart]?.length ?? defaultImagePaths.length);
+  _imageTimer = Timer.periodic(frameDuration, (timer) {
+    _currentImageIndex = (_currentImageIndex + 1) %
+        (imagePathsByBodyPart[_currentBodyPart]?.length ?? defaultImagePaths.length);
 
-      _imageNotifier.value = _currentImageIndex; // ✅ 애니메이션 적용
-      print("🎞 Updating image index: $_currentImageIndex for $_currentBodyPart"); // 🔥 로그 확인
-    });
+    _imageNotifier.value = _currentImageIndex; // ✅ 애니메이션 적용
+    print("🎞 Updating image index: $_currentImageIndex for $_currentBodyPart"); // 🔥 로그 확인
+  });
 }
 
 
@@ -460,38 +463,59 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
 
     
 
-        if (_currentBodyPart== 'default'){
-          // 10시 이후 상태 변경
-            if (hour >= 22 || hour < 6) {
-              _currentBodyPart = '0am'; // 잠옷바람 상태
-            } else {
-              _currentBodyPart = 'default'; // 기본 상태
-            }
-        }else if(_currentBodyPart == 'thirsty_and_hungry_dizzy'){
-          if (hour >= 22 || hour < 6) {
-              _currentBodyPart = '0amdizzy'; 
-            } 
-        }else if(_currentBodyPart=='thirsty_and_hungry'){
-          if (hour >= 22 || hour < 6) {
-              _currentBodyPart = '0amheadache'; 
-            } 
-        }else if(_currentBodyPart =='thirsty_and_dizzy'){
-          if (hour >= 22 || hour < 6) {
-              _currentBodyPart = '0amheadache'; 
-            } 
-        }else if(_currentBodyPart=='thirsty'){
-          if (hour >= 22 || hour < 6) {
-              _currentBodyPart = '0amheadache'; 
-            } 
-        }else if(_currentBodyPart=='hungry'){
-          if (hour >= 22 || hour < 6) {
-              _currentBodyPart = '0amstomach'; 
-            } 
-        }else if(_currentBodyPart=='dizzy'){
-          if (hour >= 22 || hour < 6) {
-              _currentBodyPart = '0amtired'; 
-            } 
-        }
+   if (_currentBodyPart== 'default'){
+    // 10시 이후 상태 변경
+      if (hour >= 22 || hour < 6) {
+        _currentBodyPart = '0am'; // 잠옷바람 상태
+      } else {
+        _currentBodyPart = 'default'; // 기본 상태
+      }
+   }else if(_currentBodyPart == 'thirsty_and_hungry_dizzy'){
+    if (hour >= 22 || hour < 6) {
+        _currentBodyPart = '0am'; // 잠옷바람 상태
+      } else {
+        _currentBodyPart = 'default'; // 기본 상태
+      }
+
+   }else if(_currentBodyPart=='thirsty_and_hungry'){
+    if (hour >= 22 || hour < 6) {
+        _currentBodyPart = '0am'; // 잠옷바람 상태
+      } else {
+        _currentBodyPart = 'default'; // 기본 상태
+      }
+
+   }else if(_currentBodyPart =='thirsty_and_dizzy'){
+    if (hour >= 22 || hour < 6) {
+        _currentBodyPart = '0am'; // 잠옷바람 상태
+      } else {
+        _currentBodyPart = 'default'; // 기본 상태
+      }
+
+   }else if(_currentBodyPart=='thirsty'){
+    if (hour >= 22 || hour < 6) {
+        _currentBodyPart = '0am'; // 잠옷바람 상태
+      } else {
+        _currentBodyPart = 'default'; // 기본 상태
+      }
+
+   }else if(_currentBodyPart=='hungry'){
+    if (hour >= 22 || hour < 6) {
+        _currentBodyPart = '0am'; // 잠옷바람 상태
+      } else {
+        _currentBodyPart = 'default'; // 기본 상태
+      }
+
+   }else if(_currentBodyPart=='dizzy'){
+    if (hour >= 22 || hour < 6) {
+        _currentBodyPart = '0am'; // 잠옷바람 상태
+      } else {
+        _currentBodyPart = 'default'; // 기본 상태
+      }
+
+   }
+
+    
+    print("Character status updated based on time: $_currentBodyPart");
   }
 
   void startPeriodicStatusUpdate() {
@@ -693,7 +717,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
     double opacityLevel = 1.0; // ✅ 초기 투명도 (완전히 보이게)
 
     void fadeOutAndClose() {
-     
+      print("🔄 Fade-out animation 시작");
       
       setState(() {
         opacityLevel = 0.0; // ✅ 서서히 투명하게 만들기

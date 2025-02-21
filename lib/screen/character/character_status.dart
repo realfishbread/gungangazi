@@ -1,27 +1,55 @@
 import '../../repositories/status/character_repository.dart';
 import 'PopupHandler.dart';
+import '../../dto/status/character_status_dto.dart';
+import '../../core_services/token_service.dart';
 
 class CharacterStatus {
+  // ✅ 싱글톤 인스턴스
+  static final CharacterStatus _instance = CharacterStatus._internal(CharacterRepository());
+
+  // ✅ 팩토리 생성자로 싱글톤 유지
+  factory CharacterStatus() => _instance;
+
+  // ✅ 의존성 주입 가능하도록 변경
+  final CharacterRepository _characterRepository;
+
+  // ✅ private 생성자로 외부에서 직접 인스턴스화 방지
+  CharacterStatus._internal(this._characterRepository);
+
   int waterLevel = 100;
   int mealLevel = 100;
   int sleepLevel = 100;
-  final CharacterRepository _characterRepository = CharacterRepository();
 
-  // 상태를 서버에서 불러오기
   Future<void> loadStatus() async {
-    await _characterRepository.loadStatusFromServer();
+    final statusData = await _characterRepository.loadStatusFromServer();
+    if (statusData != null) {
+      StatusDto status = StatusDto.fromJson(statusData);
+      waterLevel = status.waterLevel;
+      mealLevel = status.mealLevel;
+      sleepLevel = status.sleepLevel;
+    }
   }
 
-  // 상태를 서버에 저장하기
   Future<void> saveStatus() async {
-    await _characterRepository.saveStatusToServer();
+    String? username = await TokenService().getUsername() ?? "defaultUser";
+
+    StatusDto statusDto = StatusDto(
+      waterLevel: waterLevel,
+      mealLevel: mealLevel,
+      sleepLevel: sleepLevel,
+      username: username,
+    );
+    await _characterRepository.saveStatusToServer(statusDto);
   }
 
-  // 현재 상태 업데이트
-  Future<void> updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) async {
+  Future<void> updateStatus({
+    required int newWaterLevel,
+    required int newMealLevel,
+    required int newSleepLevel,
+  }) async {
     waterLevel = newWaterLevel;
     mealLevel = newMealLevel;
     sleepLevel = newSleepLevel;
-    saveStatus();
+    await saveStatus();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gungangazi/repositories/status/character_repository.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 import '../profile/profile_page.dart';
@@ -18,6 +19,7 @@ import '../../dto/auth/profile_dto.dart';
 import '../../repositories/auth/profile_repository.dart';
 import '../userHealth/walking_page.dart';
 import 'home_page.dart';
+import '../character/character_status.dart';
 
 class WebHomePage extends StatefulWidget {
   const WebHomePage({Key? key}) : super(key: key);
@@ -33,6 +35,9 @@ class _WebHomePageState extends State<WebHomePage> {
   late PopupHandler _popupHandler; // PopupHandler 선언
   final DioService _dioService = DioService(token: 'your-auth-token');
   final TokenService _tokenService = TokenService();
+  late final CharacterRepository _characterRepository;
+  late final CharacterStatus _characterStatus;
+
 
   ProfileDto? _profile;
   Uint8List? _imageData;
@@ -40,7 +45,7 @@ class _WebHomePageState extends State<WebHomePage> {
   @override
   void initState() {
     super.initState();
-    _popupHandler = PopupHandler(listData: [], tokenService: _tokenService, dioService: _dioService);
+    _popupHandler = PopupHandler(listData: [], tokenService: _tokenService, dioService: _dioService, characterStatus: _characterStatus);
     fetchProfile(); // 프로필 데이터 가져오기
     _popupHandler.initialize();
   }

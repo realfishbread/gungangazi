@@ -6,8 +6,10 @@ import 'package:dio/dio.dart';
 class WaterRepository {
   final DioService dioService;
   final TokenService tokenService; // TokenService 인스턴스 필드 추가
+  final Dio _dio;
 
-  WaterRepository({required this.dioService, required this.tokenService});
+  WaterRepository({required this.dioService, required this.tokenService})
+  : _dio = dioService.getDio();
 
   // 물 섭취 기록 데이터 불러오기
   Future<Map<String, int>> fetchWaterIntake() async {

@@ -60,6 +60,6 @@ dependencies {
 
     // MySQL 연결을 위한 드라이버 (옵션)
     implementation 'mysql:mysql-connector-java:8.0.25'
-    implementation 'com.google.android.gms:play-services-auth:20.6.0'
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
     
 }

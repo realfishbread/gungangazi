@@ -1,11 +1,10 @@
-import '../userHealth/MealPage.dart';
-import '../userHealth/SleepPage.dart';
-import '../userHealth/supplement_page.dart';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../../core_services/dio_service.dart'; // DioService 추가
 import '../../core_services/token_service.dart';
 import 'package:dio/dio.dart';
+import '../../repositories/status/character_repository.dart';
 
 
 class PopupHandler {
@@ -21,6 +20,7 @@ class PopupHandler {
   int waterLevel = 100; // 수분 상태 변수 추가
   int mealLevel = 100;
   int sleepLevel = 100; // 수면 상태 변수
+  final CharacterRepository _characterRepository =CharacterRepository();
   
 
 
@@ -30,7 +30,7 @@ class PopupHandler {
   Rect? _imageRect;
 
    void initialize() async{
-    await loadStatusFromServer();
+    await _characterRepository.loadStatusFromServer();
     setBodyPartStatus();
     
 }
@@ -225,12 +225,6 @@ class PopupHandler {
             'assets/person/0am/sleeping1.jpg',
             'assets/person/0am/sleeping2.jpg',
             'assets/person/0am/sleeping3.jpg',
-            'assets/person/0am/sleeping4.jpg',
-            'assets/person/0am/sleeping5.jpg',
-            'assets/person/0am/sleeping6.jpg',
-            'assets/person/0am/sleeping6.jpg',
-            'assets/person/0am/sleeping5.jpg',
-            'assets/person/0am/sleeping4.jpg',
             'assets/person/0am/sleeping3.jpg',
             'assets/person/0am/sleeping2.jpg',
             'assets/person/0am/sleeping1.jpg',
@@ -327,11 +321,19 @@ class PopupHandler {
             'assets/person/0am/0amdizzy3',
             'assets/person/0am/0amdizzy2',
             'assets/person/0am/0amdizzy1',
+          ],
+          '0ammeal': [
+            'assets/person/0am/0ammeal1',
+            'assets/person/0am/0ammeal2',
+            'assets/person/0am/0ammeal3',
+            'assets/person/0am/0ammeal3',
+            'assets/person/0am/0ammeal2',
+            'assets/person/0am/0ammeal1',
           ]
 
         }{
            _imageNotifier = ValueNotifier<int>(_currentImageIndex);
-    loadStatusFromServer();
+    _characterRepository.loadStatusFromServer();
   }
   void updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) async {
     print("Updating status - Water: $newWaterLevel, Meal: $newMealLevel, Sleep: $newSleepLevel");
@@ -343,7 +345,7 @@ class PopupHandler {
       sleepLevel = newSleepLevel;
 
       // 상태 업데이트 후 서버에 저장
-      await saveStatusToServer();
+      await _characterRepository.saveStatusToServer();
       
 
       
@@ -353,83 +355,11 @@ class PopupHandler {
       print("Status updated and animation started - Current Body Part: $_currentBodyPart");
 }
    /// 서버에 현재 상태 저장
-Future<void> saveStatusToServer() async {
-  try {
-    String? username = await TokenService().getUsername();
-    String? jwtToken = await TokenService().getToken(); // 토큰 가져오기
 
-    // username이 이메일이면 변환
-    if (username != null && username.contains("@")) {
-      username = await fetchUsernameFromServer(username);
-    }
 
-    print('Saving status - Username: $username, Water Level: $waterLevel, Meal Level: $mealLevel, Sleep Level: $sleepLevel'); // 확인용 로그
 
-    await DioService().getDio().post(
-      '/character/status',
-      data: {
-        'username': username,
-        'water_level': waterLevel,
-        'meal_level': mealLevel,
-        'sleep_level': sleepLevel,
-      },
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer $jwtToken', // JWT 토큰 헤더 추가
-        },
-      ),
-    );
 
-    print('Status saved to server successfully');
-  } catch (e) {
-    print('Failed to save status to server: $e');
-  }
-}
 
-Future<String> fetchUsernameFromServer(String email) async {
-  try {
-    final response = await DioService().getDio().get(
-      '/getUsernameByEmail',
-      queryParameters: {'email': email},
-    );
-    return response.data['username'];
-  } catch (e) {
-    print("❌ Error fetching username: $e");
-    return email; // 오류 시 기존 이메일 유지
-  }
-}
-
-/// 서버에서 현재 상태 불러오기
-Future<void> loadStatusFromServer() async {
-  try {
-    String? username = await TokenService().getUsername();
-    String? jwtToken = await TokenService().getToken(); // 토큰 가져오기
-
-    final response = await DioService().getDio().get(
-      '/character/status',
-      queryParameters: {
-        'username': username,
-      },
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer $jwtToken', // JWT 토큰 헤더 추가
-        },
-      ),
-    );
-
-    if (response.statusCode == 200) {
-      final data = response.data;
-      waterLevel = data['water_level'] ?? 100;
-      mealLevel = data['meal_level'] ?? 100;
-      sleepLevel = data['sleep_level'] ?? 100;
-      setBodyPartStatus();
-      startImageAnimation(); // 상태 업데이트 후 애니메이션 재시작
-      print('Status loaded from server successfully');
-    }
-  } catch (e) {
-    print('Failed to load status from server: $e');
-  }
-}
  
 
 
@@ -790,7 +720,7 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
     double opacityLevel = 1.0; // ✅ 초기 투명도 (완전히 보이게)
 
     void fadeOutAndClose() {
-      print("🔄 Fade-out animation 시작");
+     
       
       setState(() {
         opacityLevel = 0.0; // ✅ 서서히 투명하게 만들기

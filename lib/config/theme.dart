@@ -41,10 +41,10 @@ class AppTheme {
   /// 🌙 **다크 테마**
   static final ThemeData darkTheme = ThemeData(
     fontFamily: 'NanumGothic',
-    primarySwatch: createMaterialColor(const Color(0xFF1F1F1F)), // 어두운 회색
-    scaffoldBackgroundColor: const Color(0xFF121212), // 배경색 (다크 모드)
+    primarySwatch: createMaterialColor(Color.fromARGB(255, 201, 201, 201) ),//어두운 회색
+    scaffoldBackgroundColor: const Color.fromARGB(255, 179, 179, 179), // 배경색 (다크 모드)
     appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFF1F1F1F), // 다크 모드 앱바 색상
+      backgroundColor: Color.fromARGB(255, 185, 183, 206), // 다크 모드 앱바 색상
       elevation: 0,
     ),
     textTheme: const TextTheme(

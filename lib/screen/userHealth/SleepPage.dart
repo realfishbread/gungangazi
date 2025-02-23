@@ -38,14 +38,14 @@ class _SleepPageState extends State<SleepPage> {
   // 서버에서 수면 데이터 가져오기
   Future<void> _loadSleepDataFromServer() async {
     List<SleepDto> serverData = await sleepRepository.fetchSleepDataFromDatabase();
-    setState(() {
-      _sleepRecords = serverData.map((dto) => {
-            'date': dto.date,
-            'sleep_time': dto.sleep_time,
-            'wake_up_time': dto.wake_up_time,
-            'username': dto.username,
-          }).toList();
-    });
+      setState(() {
+        _sleepRecords = serverData.map((dto) => {
+              'date': dto.date,
+              'sleep_time': dto.sleep_time,
+              'wake_up_time': dto.wake_up_time,
+              'username': dto.username,
+            }).toList();
+      });
     print('_sleepRecords: $_sleepRecords'); // 디버깅용 출력
   }
 

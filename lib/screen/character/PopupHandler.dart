@@ -1,17 +1,20 @@
 
+
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../../core_services/dio_service.dart'; // DioService 추가
 import '../../core_services/token_service.dart';
-import 'package:dio/dio.dart';
 import '../../repositories/status/character_repository.dart';
+import 'character_status.dart';
+import 'character_image.dart';
 
 
 class PopupHandler {
   final List<dynamic> listData;
   final DioService dioService; // DioService 인스턴스
   final TokenService tokenService; // TokenService 인스턴스
-  final Map<String, List<String>> imagePathsByBodyPart;
+
   int _currentImageIndex = 0;
   late ValueNotifier<int> _imageNotifier;
   Timer? _imageTimer;
@@ -20,9 +23,11 @@ class PopupHandler {
   int waterLevel = 100; // 수분 상태 변수 추가
   int mealLevel = 100;
   int sleepLevel = 100; // 수면 상태 변수
-  final CharacterRepository _characterRepository =CharacterRepository();
-  
 
+  final CharacterRepository _characterRepository =CharacterRepository();
+  final CharacterStatus _characterStatus = CharacterStatus();
+
+  final Map<String, List<String>> imagePathsByBodyPart = ImagePaths.imagePathsByBodyPart;
 
   
   
@@ -30,10 +35,10 @@ class PopupHandler {
   Rect? _imageRect;
 
    void initialize() async{
-    await _characterRepository.loadStatusFromServer();
-    setBodyPartStatus();
+      await _characterRepository.loadStatusFromServer();
+      setBodyPartStatus();
     
-}
+    }
 
 
   final List<String> defaultImagePaths = [
@@ -45,315 +50,22 @@ class PopupHandler {
     'assets/person/default/1.jpg',
   ];
 
-  PopupHandler({required this.listData, required this.dioService, required this.tokenService})
-      : imagePathsByBodyPart = {
-          'head': [
-            'assets/person/default/head1.jpg',
-            'assets/person/default/head2.jpg',
-            'assets/person/default/head3.jpg',
-            'assets/person/default/head3.jpg',
-            'assets/person/default/head2.jpg',
-            'assets/person/default/head1.jpg',
-          ],
-          'body': [
-            'assets/person/default/jindan_stomach1.jpg',
-            'assets/person/default/jindan_stomach2.jpg',
-            'assets/person/default/jindan_stomach3.jpg',
-            'assets/person/default/jindan_stomach3.jpg',
-            'assets/person/default/jindan_stomach2.jpg',
-            'assets/person/default/jindan_stomach1.jpg',
-          ],
-          'arm': [
-            'assets/person/default/arm1.jpg',
-            'assets/person/default/arm2.jpg',
-            'assets/person/default/arm3.jpg',
-            'assets/person/default/arm3.jpg',
-            'assets/person/default/arm2.jpg',
-            'assets/person/default/arm1.jpg',
-          ],
-          'leg': [
-            'assets/person/default/leg1.jpg',
-            'assets/person/default/leg2.jpg',
-            'assets/person/default/leg3.jpg',
-            'assets/person/default/leg4.jpg',
-            'assets/person/default/leg3.jpg',
-            'assets/person/default/leg2.jpg',
-            'assets/person/default/leg1.jpg',
-          ],
-          'thirsty': [
-            'assets/person/default/th1.jpg',
-            'assets/person/default/th2.jpg',
-            'assets/person/default/th3.jpg',
-            'assets/person/default/th4.jpg',
-            'assets/person/default/th4.jpg',
-            'assets/person/default/th3.jpg',
-            'assets/person/default/th2.jpg',
-            'assets/person/default/th1.jpg',
-          ],
-          'thirsty_and_hungry': [
-            'assets/person/default/headache1.jpg',
-            'assets/person/default/headache2.jpg',
-            'assets/person/default/headache3.jpg',
-            'assets/person/default/headache3.jpg',
-            'assets/person/default/headache2.jpg',
-            'assets/person/default/headache1.jpg',
-          ],
-          'thirsty_and_hungry_dizzy':[
-            'assets/person/default/dizzy1.jpg',
-            'assets/person/default/dizzy2.jpg',
-            'assets/person/default/dizzy3.jpg',
-            'assets/person/default/dizzy3.jpg',
-            'assets/person/default/dizzy2.jpg',
-            'assets/person/default/dizzy1.jpg',
-          ],
-          'hungry_and_dizzy': [
-            'assets/person/default/jindan_stomach1.jpg',
-            'assets/person/default/jindan_stomach2.jpg',
-            'assets/person/default/jindan_stomach3.jpg',
-            'assets/person/default/jindan_stomach3.jpg',
-            'assets/person/default/jindan_stomach2.jpg',
-            'assets/person/default/jindan_stomach1.jpg',
-          ],
-          'dizzy':[
-            'assets/person/default/tired1.jpg',
-            'assets/person/default/tired2.jpg',
-            'assets/person/default/tired3.jpg',
-            'assets/person/default/tired3.jpg',
-            'assets/person/default/tired2.jpg',
-            'assets/person/default/tired1.jpg',
-          ],
-          'hungry': [
-            'assets/person/default/hungry1.jpg',
-            'assets/person/default/hungry2.jpg',
-            'assets/person/default/hungry3.jpg',
-            'assets/person/default/hungry3.jpg',
-            'assets/person/default/hungry2.jpg',
-            'assets/person/default/hungry1.jpg',
-          ],
-          'thirsty_and_dizzy': [
-            'assets/person/default/jindan_sad1.jpg',
-            'assets/person/default/jindan_sad2.jpg',
-            'assets/person/default/jindan_sad3.jpg',
-            'assets/person/default/jindan_sad3.jpg',
-            'assets/person/default/jindan_sad2.jpg',
-            'assets/person/default/jindan_sad1.jpg',
-          ],
-          'drinkwater': [
-            'assets/person/default/drinkwater1.jpg',
-            'assets/person/default/drinkwater2.jpg',
-            'assets/person/default/drinkwater3.jpg',
-            'assets/person/default/drinkwater3.jpg',
-            'assets/person/default/drinkwater2.jpg',
-            'assets/person/default/drinkwater1.jpg',
-          ],
-          'eatingmeal': [
-            'assets/person/default/eatingmeal1.jpg',
-            'assets/person/default/eatingmeal2.jpg',
-            'assets/person/default/eatingmeal3.jpg',
-            'assets/person/default/eatingmeal3.jpg',
-            'assets/person/default/eatingmeal2.jpg',
-            'assets/person/default/eatingmeal1.jpg',
-          ],
-          
-          'yee': [
-            'assets/person/default/yee1.jpg',
-            'assets/person/default/yee2.jpg',
-            'assets/person/default/yee3.jpg',
-            'assets/person/default/yee3.jpg',
-            'assets/person/default/yee2.jpg',
-            'assets/person/default/yee1.jpg',
-          ],
-          'brush': [
-            'assets/person/default/brush.jpg',
-            'assets/person/default/brush1.jpg',
-            'assets/person/default/brush.jpg',
-            'assets/person/default/brush1.jpg',
-            'assets/person/default/brush.jpg',
-            'assets/person/default/brush1.jpg',
-            'assets/person/default/brush.jpg',
-            'assets/person/default/brush1.jpg',
-            'assets/person/default/brush.jpg',
-            'assets/person/default/brush1.jpg',
-          ],
-          'nobrush': [
-            'assets/person/default/nobrush1.jpg',
-            'assets/person/default/nobrush2.jpg',
-            'assets/person/default/nobrush3.jpg',
-            'assets/person/default/nobrush3.jpg',
-            'assets/person/default/nobrush2.jpg',
-            'assets/person/default/nobrush1.jpg',
-          ],
-          'angry': [
-            'assets/person/default/angry1.jpg',
-            'assets/person/default/angry2.jpg',
-            'assets/person/default/angry3.jpg',
-            'assets/person/default/angry4.jpg',
-            'assets/person/default/angry5.jpg',
-            'assets/person/default/angry6.jpg',
-            'assets/person/default/angry6.jpg',
-            'assets/person/default/angry5.jpg',
-            'assets/person/default/angry4.jpg',
-            'assets/person/default/angry3.jpg',
-            'assets/person/default/angry2.jpg',
-            'assets/person/default/angry1.jpg',
-          ],
-          'smile': [
-            'assets/person/default/smile1.jpg',
-            'assets/person/default/smile2.jpg',
-            'assets/person/default/smile3.jpg',
-            'assets/person/default/smile3.jpg',
-            'assets/person/default/smile2.jpg',
-            'assets/person/default/smile1.jpg',
-          ],
-          'medication': [
-            'assets/person/default/medi1.jpg',
-            'assets/person/default/medi2.jpg',
-            'assets/person/default/medi3.jpg',
-            'assets/person/default/medi3.jpg',
-            'assets/person/default/medi2.jpg',
-            'assets/person/default/medi1.jpg',
-          ],
-          'waist': [
-            'assets/person/default/waist1.jpg',
-            'assets/person/default/waist2.jpg',
-            'assets/person/default/waist3.jpg',
-            'assets/person/default/waist3.jpg',
-            'assets/person/default/waist2.jpg',
-            'assets/person/default/waist1.jpg',
-          ],//여기부터 0am
-          'sleeping': [
-            'assets/person/0am/sleeping1.jpg',
-            'assets/person/0am/sleeping2.jpg',
-            'assets/person/0am/sleeping3.jpg',
-            'assets/person/0am/sleeping3.jpg',
-            'assets/person/0am/sleeping2.jpg',
-            'assets/person/0am/sleeping1.jpg',
-          ],
-          '0am': [
-            'assets/person/0am/0am.jpg',
-            'assets/person/0am/0am1.jpg',
-            'assets/person/0am/0am2.jpg',
-            'assets/person/0am/0am2.jpg',
-            'assets/person/0am/0am1.jpg',
-            'assets/person/0am/0am.jpg',
-          ],
-          '0amtouch': [
-            'assets/person/0am/0amtouch1.jpg',
-            'assets/person/0am/0amtouch2.jpg',
-            'assets/person/0am/0amtouch3.jpg',
-            'assets/person/0am/0amtouch3.jpg',
-            'assets/person/0am/0amtouch2.jpg',
-            'assets/person/0am/0amtouch1.jpg',
-          ],
-          '0amarm': [
-            'assets/person/0am/0amarm1.jpg',
-            'assets/person/0am/0amarm2.jpg',
-            'assets/person/0am/0amarm3.jpg',
-            'assets/person/0am/0amarm3.jpg',
-            'assets/person/0am/0amarm2.jpg',
-            'assets/person/0am/0amarm1.jpg',
-
-          ],
-          '0amhead': [
-            'assets/person/0am/slhead1.jpg',
-            'assets/person/0am/slhead2.jpg',
-            'assets/person/0am/slhead3.jpg',
-            'assets/person/0am/slhead3.jpg',
-            'assets/person/0am/slhead2.jpg',
-            'assets/person/0am/slhead1.jpg',
-          ],
-          '0amnobrush': [
-            'assets/person/0am/0amnobrush1.jpg',
-            'assets/person/0am/0amnobrush2.jpg',
-            'assets/person/0am/0amnobrush3.jpg',
-            'assets/person/0am/0amnobrush3.jpg',
-            'assets/person/0am/0amnobrush2.jpg',
-            'assets/person/0am/0amnobrush1.jpg',
-          ],
-          
-          '0amsupplement':[
-            'assets/person/0am/0amsu1.jpg',
-            'assets/person/0am/0amsu2.jpg',
-            'assets/person/0am/0amsu3.jpg',
-            'assets/person/0am/0amsu3.jpg',
-            'assets/person/0am/0amsu2.jpg',
-            'assets/person/0am/0amsu1.jpg',
-          ],
-          '0amstomach':[
-            'assets/person/0am/0amstomach1.jpg',
-            'assets/person/0am/0amstomach2.jpg',
-            'assets/person/0am/0amstomach3.jpg',
-            'assets/person/0am/0amstomach3.jpg',
-            'assets/person/0am/0amstomach2.jpg',
-            'assets/person/0am/0amstomach1.jpg',
-          ],
-          '0ambrush':[
-            'assets/person/0am/0ambrush1',
-            'assets/person/0am/0ambrush2',
-            'assets/person/0am/0ambrush1',
-            'assets/person/0am/0ambrush2',
-            'assets/person/0am/0ambrush1',
-            'assets/person/0am/0ambrush2',
-            'assets/person/0am/0ambrush1',
-            'assets/person/0am/0ambrush2',
-          ],
-          '0amheadache':[
-            'assets/person/0am/0amheadache1',
-            'assets/person/0am/0amheadache2',
-            'assets/person/0am/0amheadache3',
-            'assets/person/0am/0amheadache3',
-            'assets/person/0am/0amheadache2',
-            'assets/person/0am/0amheadache1',
-          ],
-          '0amtired': [
-            'assets/person/0am/0amtired1',
-            'assets/person/0am/0amtired2',
-            'assets/person/0am/0amtired3',
-            'assets/person/0am/0amtired3',
-            'assets/person/0am/0amtired2',
-            'assets/person/0am/0amtired1',
-
-          ],
-          '0amdizzy': [
-            'assets/person/0am/0amdizzy1',
-            'assets/person/0am/0amdizzy2',
-            'assets/person/0am/0amdizzy3',
-            'assets/person/0am/0amdizzy3',
-            'assets/person/0am/0amdizzy2',
-            'assets/person/0am/0amdizzy1',
-          ],
-          '0ammeal': [
-            'assets/person/0am/0ammeal1',
-            'assets/person/0am/0ammeal2',
-            'assets/person/0am/0ammeal3',
-            'assets/person/0am/0ammeal3',
-            'assets/person/0am/0ammeal2',
-            'assets/person/0am/0ammeal1',
-          ]
-
-        }{
-           _imageNotifier = ValueNotifier<int>(_currentImageIndex);
+  PopupHandler({
+    required this.listData,
+    required this.dioService,
+    required this.tokenService,
+  }) {
+    _imageNotifier = ValueNotifier<int>(_currentImageIndex);
     _characterRepository.loadStatusFromServer();
   }
-  void updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) async {
-    print("Updating status - Water: $newWaterLevel, Meal: $newMealLevel, Sleep: $newSleepLevel");
+
 
   
-   
-      waterLevel = newWaterLevel;
-      mealLevel = newMealLevel;
-      sleepLevel = newSleepLevel;
-
-      // 상태 업데이트 후 서버에 저장
-      await _characterRepository.saveStatusToServer();
-      
-
-      
-      setBodyPartStatus(); // 새로운 상태에 따라 이미지 경로 설정
-      startImageAnimation(); // 애니메이션 다시 시작
-      
-      print("Status updated and animation started - Current Body Part: $_currentBodyPart");
-}
+  void updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) {
+    _characterStatus.updateStatus(newWaterLevel: newWaterLevel, newMealLevel: newMealLevel, newSleepLevel: newSleepLevel);
+    setBodyPartStatus();
+    startImageAnimation();
+  }
    /// 서버에 현재 상태 저장
 
 
@@ -364,44 +76,43 @@ class PopupHandler {
 
 
   void setBodyPartStatus() {
-  String previousBodyPart = _currentBodyPart;
+    String previousBodyPart = _currentBodyPart;
 
-  if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel <= 200) {
-    _currentBodyPart = 'thirsty_and_hungry_dizzy';
-  } else if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel >= 200) {
-    _currentBodyPart = 'thirsty_and_hungry';
-  } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel < 200) {
-    _currentBodyPart = 'thirsty_and_dizzy';
-  } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel < 200) {
-    _currentBodyPart = 'hungry_and_dizzy';
-  } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel >= 200) {
-    _currentBodyPart = 'thirsty';
-  } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel >= 200) {
-    _currentBodyPart = 'hungry';
-  } else if (waterLevel > 200 && mealLevel > 200 && sleepLevel < 200) {
-    _currentBodyPart = 'dizzy';
-  } else {
-    updateCharacterStatusBasedOnTime(); // ⏰ 시간 기반 상태 업데이트
-  }
+    if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel <= 200) {
+      _currentBodyPart = 'thirsty_and_hungry_dizzy';
+    } else if (waterLevel <= 200 && mealLevel <= 200 && sleepLevel >= 200) {
+      _currentBodyPart = 'thirsty_and_hungry';
+    } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel < 200) {
+      _currentBodyPart = 'thirsty_and_dizzy';
+    } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel < 200) {
+      _currentBodyPart = 'hungry_and_dizzy';
+    } else if (waterLevel <= 200 && mealLevel > 200 && sleepLevel >= 200) {
+      _currentBodyPart = 'thirsty';
+    } else if (waterLevel > 200 && mealLevel <= 200 && sleepLevel >= 200) {
+      _currentBodyPart = 'hungry';
+    } else if (waterLevel > 200 && mealLevel > 200 && sleepLevel < 200) {
+      _currentBodyPart = 'dizzy';
+    } else {
+      updateCharacterStatusBasedOnTime(); // ⏰ 시간 기반 상태 업데이트
+    }
 
-  // 🔥 상태가 바뀔 때만 애니메이션 다시 시작!
-  if (previousBodyPart != _currentBodyPart) {
-    print("📢 캐릭터 상태 변경됨: $_currentBodyPart → 애니메이션 재시작!");
-    startImageAnimation();
-  }
+    // 🔥 상태가 바뀔 때만 애니메이션 다시 시작!
+    if (previousBodyPart != _currentBodyPart) {
+      startImageAnimation();
+    }
 }
 
   // 이미지 애니메이션 시작
   void startImageAnimation() {
-  _imageTimer?.cancel(); // 기존 타이머 중지
+    _imageTimer?.cancel(); // 기존 타이머 중지
 
-  _imageTimer = Timer.periodic(frameDuration, (timer) {
-    _currentImageIndex = (_currentImageIndex + 1) %
-        (imagePathsByBodyPart[_currentBodyPart]?.length ?? defaultImagePaths.length);
+    _imageTimer = Timer.periodic(frameDuration, (timer) {
+      _currentImageIndex = (_currentImageIndex + 1) %
+          (imagePathsByBodyPart[_currentBodyPart]?.length ?? defaultImagePaths.length);
 
-    _imageNotifier.value = _currentImageIndex; // ✅ 애니메이션 적용
-    print("🎞 Updating image index: $_currentImageIndex for $_currentBodyPart"); // 🔥 로그 확인
-  });
+      _imageNotifier.value = _currentImageIndex; // ✅ 애니메이션 적용
+      print("🎞 Updating image index: $_currentImageIndex for $_currentBodyPart"); // 🔥 로그 확인
+    });
 }
 
 
@@ -466,59 +177,38 @@ void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
 
     
 
-   if (_currentBodyPart== 'default'){
-    // 10시 이후 상태 변경
-      if (hour >= 22 || hour < 6) {
-        _currentBodyPart = '0am'; // 잠옷바람 상태
-      } else {
-        _currentBodyPart = 'default'; // 기본 상태
-      }
-   }else if(_currentBodyPart == 'thirsty_and_hungry_dizzy'){
-    if (hour >= 22 || hour < 6) {
-        _currentBodyPart = '0am'; // 잠옷바람 상태
-      } else {
-        _currentBodyPart = 'default'; // 기본 상태
-      }
-
-   }else if(_currentBodyPart=='thirsty_and_hungry'){
-    if (hour >= 22 || hour < 6) {
-        _currentBodyPart = '0am'; // 잠옷바람 상태
-      } else {
-        _currentBodyPart = 'default'; // 기본 상태
-      }
-
-   }else if(_currentBodyPart =='thirsty_and_dizzy'){
-    if (hour >= 22 || hour < 6) {
-        _currentBodyPart = '0am'; // 잠옷바람 상태
-      } else {
-        _currentBodyPart = 'default'; // 기본 상태
-      }
-
-   }else if(_currentBodyPart=='thirsty'){
-    if (hour >= 22 || hour < 6) {
-        _currentBodyPart = '0am'; // 잠옷바람 상태
-      } else {
-        _currentBodyPart = 'default'; // 기본 상태
-      }
-
-   }else if(_currentBodyPart=='hungry'){
-    if (hour >= 22 || hour < 6) {
-        _currentBodyPart = '0am'; // 잠옷바람 상태
-      } else {
-        _currentBodyPart = 'default'; // 기본 상태
-      }
-
-   }else if(_currentBodyPart=='dizzy'){
-    if (hour >= 22 || hour < 6) {
-        _currentBodyPart = '0am'; // 잠옷바람 상태
-      } else {
-        _currentBodyPart = 'default'; // 기본 상태
-      }
-
-   }
-
-    
-    print("Character status updated based on time: $_currentBodyPart");
+        if (_currentBodyPart== 'default'){
+          // 10시 이후 상태 변경
+            if (hour >= 22 || hour < 6) {
+              _currentBodyPart = '0am'; // 잠옷바람 상태
+            } else {
+              _currentBodyPart = 'default'; // 기본 상태
+            }
+        }else if(_currentBodyPart == 'thirsty_and_hungry_dizzy'){
+          if (hour >= 22 || hour < 6) {
+              _currentBodyPart = '0amdizzy'; 
+            } 
+        }else if(_currentBodyPart=='thirsty_and_hungry'){
+          if (hour >= 22 || hour < 6) {
+              _currentBodyPart = '0amheadache'; 
+            } 
+        }else if(_currentBodyPart =='thirsty_and_dizzy'){
+          if (hour >= 22 || hour < 6) {
+              _currentBodyPart = '0amheadache'; 
+            } 
+        }else if(_currentBodyPart=='thirsty'){
+          if (hour >= 22 || hour < 6) {
+              _currentBodyPart = '0amheadache'; 
+            } 
+        }else if(_currentBodyPart=='hungry'){
+          if (hour >= 22 || hour < 6) {
+              _currentBodyPart = '0amstomach'; 
+            } 
+        }else if(_currentBodyPart=='dizzy'){
+          if (hour >= 22 || hour < 6) {
+              _currentBodyPart = '0amtired'; 
+            } 
+        }
   }
 
   void startPeriodicStatusUpdate() {

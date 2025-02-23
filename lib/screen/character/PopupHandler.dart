@@ -26,7 +26,8 @@ class PopupHandler {
 
   final CharacterRepository _characterRepository =CharacterRepository();
   final CharacterStatus _characterStatus = CharacterStatus();
-
+  final ImagePaths _imagePaths =ImagePaths();
+  
   final Map<String, List<String>> imagePathsByBodyPart = ImagePaths.imagePathsByBodyPart;
 
   
@@ -50,15 +51,11 @@ class PopupHandler {
     'assets/person/default/1.jpg',
   ];
 
-  PopupHandler({
-    required this.listData,
-    required this.dioService,
-    required this.tokenService,
-  }) {
-    _imageNotifier = ValueNotifier<int>(_currentImageIndex);
-    _characterRepository.loadStatusFromServer();
+  PopupHandler({required this.listData, required this.dioService, required this.tokenService})
+       {
+           _imageNotifier = ValueNotifier<int>(_currentImageIndex);
+           _characterRepository.loadStatusFromServer();
   }
-
 
   
   void updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) {

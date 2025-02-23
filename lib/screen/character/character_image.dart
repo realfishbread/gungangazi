@@ -1,7 +1,7 @@
 
 class ImagePaths {
 
-List<String> defaultImagePaths = [
+static List<String> defaultImagePaths = [
     'assets/person/default/1.jpg',
     'assets/person/default/2.jpg',
     'assets/person/default/3.jpg',
@@ -10,7 +10,7 @@ List<String> defaultImagePaths = [
     'assets/person/default/1.jpg',
   ];
 
-  static const Map<String, List<String>> imagePathsByBodyPart = {
+  static Map<String, List<String>> imagePathsByBodyPart = {
           'head': [
             'assets/person/default/head1.jpg',
             'assets/person/default/head2.jpg',

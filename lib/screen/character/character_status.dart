@@ -18,7 +18,7 @@ class CharacterStatus {
   }
 
   // 현재 상태 업데이트
-  void updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) {
+  Future<void> updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) async {
     waterLevel = newWaterLevel;
     mealLevel = newMealLevel;
     sleepLevel = newSleepLevel;

@@ -28,7 +28,7 @@ class PopupHandler {
   final CharacterStatus _characterStatus = CharacterStatus();
   final ImagePaths _imagePaths =ImagePaths();
   
-  final Map<String, List<String>> imagePathsByBodyPart = ImagePaths.imagePathsByBodyPart;
+  final Map<String, List<String>> imagePathsByBodyPart;
 
   
   
@@ -51,15 +51,301 @@ class PopupHandler {
     'assets/person/default/1.jpg',
   ];
 
+ 
+ 
+
   PopupHandler({required this.listData, required this.dioService, required this.tokenService})
-       {
+      : imagePathsByBodyPart = {
+          'head': [
+            'assets/person/default/head1.jpg',
+            'assets/person/default/head2.jpg',
+            'assets/person/default/head3.jpg',
+            'assets/person/default/head3.jpg',
+            'assets/person/default/head2.jpg',
+            'assets/person/default/head1.jpg',
+          ],
+          'body': [
+            'assets/person/default/jindan_stomach1.jpg',
+            'assets/person/default/jindan_stomach2.jpg',
+            'assets/person/default/jindan_stomach3.jpg',
+            'assets/person/default/jindan_stomach3.jpg',
+            'assets/person/default/jindan_stomach2.jpg',
+            'assets/person/default/jindan_stomach1.jpg',
+          ],
+          'arm': [
+            'assets/person/default/arm1.jpg',
+            'assets/person/default/arm2.jpg',
+            'assets/person/default/arm3.jpg',
+            'assets/person/default/arm3.jpg',
+            'assets/person/default/arm2.jpg',
+            'assets/person/default/arm1.jpg',
+          ],
+          'leg': [
+            'assets/person/default/leg1.jpg',
+            'assets/person/default/leg2.jpg',
+            'assets/person/default/leg3.jpg',
+            'assets/person/default/leg4.jpg',
+            'assets/person/default/leg3.jpg',
+            'assets/person/default/leg2.jpg',
+            'assets/person/default/leg1.jpg',
+          ],
+          'thirsty': [
+            'assets/person/default/th1.jpg',
+            'assets/person/default/th2.jpg',
+            'assets/person/default/th3.jpg',
+            'assets/person/default/th4.jpg',
+            'assets/person/default/th4.jpg',
+            'assets/person/default/th3.jpg',
+            'assets/person/default/th2.jpg',
+            'assets/person/default/th1.jpg',
+          ],
+          'thirsty_and_hungry': [
+            'assets/person/default/headache1.jpg',
+            'assets/person/default/headache2.jpg',
+            'assets/person/default/headache3.jpg',
+            'assets/person/default/headache3.jpg',
+            'assets/person/default/headache2.jpg',
+            'assets/person/default/headache1.jpg',
+          ],
+          'thirsty_and_hungry_dizzy':[
+            'assets/person/default/dizzy1.jpg',
+            'assets/person/default/dizzy2.jpg',
+            'assets/person/default/dizzy3.jpg',
+            'assets/person/default/dizzy3.jpg',
+            'assets/person/default/dizzy2.jpg',
+            'assets/person/default/dizzy1.jpg',
+          ],
+          'hungry_and_dizzy': [
+            'assets/person/default/jindan_stomach1.jpg',
+            'assets/person/default/jindan_stomach2.jpg',
+            'assets/person/default/jindan_stomach3.jpg',
+            'assets/person/default/jindan_stomach3.jpg',
+            'assets/person/default/jindan_stomach2.jpg',
+            'assets/person/default/jindan_stomach1.jpg',
+          ],
+          'dizzy':[
+            'assets/person/default/tired1.jpg',
+            'assets/person/default/tired2.jpg',
+            'assets/person/default/tired3.jpg',
+            'assets/person/default/tired3.jpg',
+            'assets/person/default/tired2.jpg',
+            'assets/person/default/tired1.jpg',
+          ],
+          'hungry': [
+            'assets/person/default/hungry1.jpg',
+            'assets/person/default/hungry2.jpg',
+            'assets/person/default/hungry3.jpg',
+            'assets/person/default/hungry3.jpg',
+            'assets/person/default/hungry2.jpg',
+            'assets/person/default/hungry1.jpg',
+          ],
+          'thirsty_and_dizzy': [
+            'assets/person/default/jindan_sad1.jpg',
+            'assets/person/default/jindan_sad2.jpg',
+            'assets/person/default/jindan_sad3.jpg',
+            'assets/person/default/jindan_sad3.jpg',
+            'assets/person/default/jindan_sad2.jpg',
+            'assets/person/default/jindan_sad1.jpg',
+          ],
+          'drinkwater': [
+            'assets/person/default/drinkwater1.jpg',
+            'assets/person/default/drinkwater2.jpg',
+            'assets/person/default/drinkwater3.jpg',
+            'assets/person/default/drinkwater3.jpg',
+            'assets/person/default/drinkwater2.jpg',
+            'assets/person/default/drinkwater1.jpg',
+          ],
+          'eatingmeal': [
+            'assets/person/default/eatingmeal1.jpg',
+            'assets/person/default/eatingmeal2.jpg',
+            'assets/person/default/eatingmeal3.jpg',
+            'assets/person/default/eatingmeal3.jpg',
+            'assets/person/default/eatingmeal2.jpg',
+            'assets/person/default/eatingmeal1.jpg',
+          ],
+          
+          'yee': [
+            'assets/person/default/yee1.jpg',
+            'assets/person/default/yee2.jpg',
+            'assets/person/default/yee3.jpg',
+            'assets/person/default/yee3.jpg',
+            'assets/person/default/yee2.jpg',
+            'assets/person/default/yee1.jpg',
+          ],
+          'brush': [
+            'assets/person/default/brush.jpg',
+            'assets/person/default/brush1.jpg',
+            'assets/person/default/brush.jpg',
+            'assets/person/default/brush1.jpg',
+            'assets/person/default/brush.jpg',
+            'assets/person/default/brush1.jpg',
+            'assets/person/default/brush.jpg',
+            'assets/person/default/brush1.jpg',
+            'assets/person/default/brush.jpg',
+            'assets/person/default/brush1.jpg',
+          ],
+          'nobrush': [
+            'assets/person/default/nobrush1.jpg',
+            'assets/person/default/nobrush2.jpg',
+            'assets/person/default/nobrush3.jpg',
+            'assets/person/default/nobrush3.jpg',
+            'assets/person/default/nobrush2.jpg',
+            'assets/person/default/nobrush1.jpg',
+          ],
+          'angry': [
+            'assets/person/default/angry1.jpg',
+            'assets/person/default/angry2.jpg',
+            'assets/person/default/angry3.jpg',
+            'assets/person/default/angry4.jpg',
+            'assets/person/default/angry5.jpg',
+            'assets/person/default/angry6.jpg',
+            'assets/person/default/angry6.jpg',
+            'assets/person/default/angry5.jpg',
+            'assets/person/default/angry4.jpg',
+            'assets/person/default/angry3.jpg',
+            'assets/person/default/angry2.jpg',
+            'assets/person/default/angry1.jpg',
+          ],
+          'smile': [
+            'assets/person/default/smile1.jpg',
+            'assets/person/default/smile2.jpg',
+            'assets/person/default/smile3.jpg',
+            'assets/person/default/smile3.jpg',
+            'assets/person/default/smile2.jpg',
+            'assets/person/default/smile1.jpg',
+          ],
+          'medication': [
+            'assets/person/default/medi1.jpg',
+            'assets/person/default/medi2.jpg',
+            'assets/person/default/medi3.jpg',
+            'assets/person/default/medi3.jpg',
+            'assets/person/default/medi2.jpg',
+            'assets/person/default/medi1.jpg',
+          ],
+          'waist': [
+            'assets/person/default/waist1.jpg',
+            'assets/person/default/waist2.jpg',
+            'assets/person/default/waist3.jpg',
+            'assets/person/default/waist3.jpg',
+            'assets/person/default/waist2.jpg',
+            'assets/person/default/waist1.jpg',
+          ],//여기부터 0am
+          'sleeping': [
+            'assets/person/0am/sleeping1.jpg',
+            'assets/person/0am/sleeping2.jpg',
+            'assets/person/0am/sleeping3.jpg',
+            'assets/person/0am/sleeping4.jpg',
+            'assets/person/0am/sleeping5.jpg',
+            'assets/person/0am/sleeping6.jpg',
+            'assets/person/0am/sleeping6.jpg',
+            'assets/person/0am/sleeping5.jpg',
+            'assets/person/0am/sleeping4.jpg',
+            'assets/person/0am/sleeping3.jpg',
+            'assets/person/0am/sleeping2.jpg',
+            'assets/person/0am/sleeping1.jpg',
+          ],
+          '0am': [
+            'assets/person/0am/0am.jpg',
+            'assets/person/0am/0am1.jpg',
+            'assets/person/0am/0am2.jpg',
+            'assets/person/0am/0am2.jpg',
+            'assets/person/0am/0am1.jpg',
+            'assets/person/0am/0am.jpg',
+          ],
+          '0amtouch': [
+            'assets/person/0am/0amtouch1.jpg',
+            'assets/person/0am/0amtouch2.jpg',
+            'assets/person/0am/0amtouch3.jpg',
+            'assets/person/0am/0amtouch3.jpg',
+            'assets/person/0am/0amtouch2.jpg',
+            'assets/person/0am/0amtouch1.jpg',
+          ],
+          '0amarm': [
+            'assets/person/0am/0amarm1.jpg',
+            'assets/person/0am/0amarm2.jpg',
+            'assets/person/0am/0amarm3.jpg',
+            'assets/person/0am/0amarm3.jpg',
+            'assets/person/0am/0amarm2.jpg',
+            'assets/person/0am/0amarm1.jpg',
+
+          ],
+          '0amhead': [
+            'assets/person/0am/slhead1.jpg',
+            'assets/person/0am/slhead2.jpg',
+            'assets/person/0am/slhead3.jpg',
+            'assets/person/0am/slhead3.jpg',
+            'assets/person/0am/slhead2.jpg',
+            'assets/person/0am/slhead1.jpg',
+          ],
+          '0amnobrush': [
+            'assets/person/0am/0amnobrush1.jpg',
+            'assets/person/0am/0amnobrush2.jpg',
+            'assets/person/0am/0amnobrush3.jpg',
+            'assets/person/0am/0amnobrush3.jpg',
+            'assets/person/0am/0amnobrush2.jpg',
+            'assets/person/0am/0amnobrush1.jpg',
+          ],
+          
+          '0amsupplement':[
+            'assets/person/0am/0amsu1.jpg',
+            'assets/person/0am/0amsu2.jpg',
+            'assets/person/0am/0amsu3.jpg',
+            'assets/person/0am/0amsu3.jpg',
+            'assets/person/0am/0amsu2.jpg',
+            'assets/person/0am/0amsu1.jpg',
+          ],
+          '0amstomach':[
+            'assets/person/0am/0amstomach1.jpg',
+            'assets/person/0am/0amstomach2.jpg',
+            'assets/person/0am/0amstomach3.jpg',
+            'assets/person/0am/0amstomach3.jpg',
+            'assets/person/0am/0amstomach2.jpg',
+            'assets/person/0am/0amstomach1.jpg',
+          ],
+          '0ambrush':[
+            'assets/person/0am/0ambrush1',
+            'assets/person/0am/0ambrush2',
+            'assets/person/0am/0ambrush1',
+            'assets/person/0am/0ambrush2',
+            'assets/person/0am/0ambrush1',
+            'assets/person/0am/0ambrush2',
+            'assets/person/0am/0ambrush1',
+            'assets/person/0am/0ambrush2',
+          ],
+          '0amheadache':[
+            'assets/person/0am/0amheadache1',
+            'assets/person/0am/0amheadache2',
+            'assets/person/0am/0amheadache3',
+            'assets/person/0am/0amheadache3',
+            'assets/person/0am/0amheadache2',
+            'assets/person/0am/0amheadache1',
+          ],
+          '0amtired': [
+            'assets/person/0am/0amtired1',
+            'assets/person/0am/0amtired2',
+            'assets/person/0am/0amtired3',
+            'assets/person/0am/0amtired3',
+            'assets/person/0am/0amtired2',
+            'assets/person/0am/0amtired1',
+
+          ],
+          '0amdizzy': [
+            'assets/person/0am/0amdizzy1',
+            'assets/person/0am/0amdizzy2',
+            'assets/person/0am/0amdizzy3',
+            'assets/person/0am/0amdizzy3',
+            'assets/person/0am/0amdizzy2',
+            'assets/person/0am/0amdizzy1',
+          ]
+
+        } {
            _imageNotifier = ValueNotifier<int>(_currentImageIndex);
            _characterRepository.loadStatusFromServer();
   }
 
   
-  void updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) {
-    _characterStatus.updateStatus(newWaterLevel: newWaterLevel, newMealLevel: newMealLevel, newSleepLevel: newSleepLevel);
+  Future<void> updateStatus({required int newWaterLevel, required int newMealLevel, required int newSleepLevel}) async{
+    await _characterStatus.updateStatus(newWaterLevel: newWaterLevel, newMealLevel: newMealLevel, newSleepLevel: newSleepLevel);
     setBodyPartStatus();
     startImageAnimation();
   }

@@ -45,6 +45,7 @@ class _WebHomePageState extends State<WebHomePage> {
   @override
   void initState() {
     super.initState();
+    _characterStatus = CharacterStatus();
     _popupHandler = PopupHandler(listData: [], tokenService: _tokenService, dioService: _dioService, characterStatus: _characterStatus);
     fetchProfile(); // 프로필 데이터 가져오기
     _popupHandler.initialize();

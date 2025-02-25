@@ -4,7 +4,7 @@ import '../../../repositories/userHealth/tooth_repository.dart';
 import '../../../dto/userHealth/brush_history.dart';
 import '../../core_services/dio_service.dart';
 import '../../core_services/token_service.dart';
-import '../character/PopupHandler.dart';
+import '../character/popup_handler.dart';
 import '../../../repositories/userHealth/sleep_repository.dart'; // SleepRepository 임포트
 import '../../../dto/userHealth/sleep_dto.dart'; // SleepDTO 임포트
 

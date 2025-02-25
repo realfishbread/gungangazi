@@ -1,6 +1,6 @@
 import 'package:gungangazi/core_services/dio_service.dart';
 import '../../core_services/token_service.dart';
-import '../../screen/character/PopupHandler.dart';
+import '../../screen/character/popup_handler.dart';
 import 'package:dio/dio.dart';
 import '../../dto/status/character_status_dto.dart';
 
@@ -62,11 +62,16 @@ Future<Map<String, dynamic>?> loadStatusFromServer() async {
     );
 
     if (response.statusCode == 200) {
-     
+      Map<String, dynamic> responseData = response.data; // 🔥 응답 데이터 저장
+
       _popupHandler.setBodyPartStatus();
       _popupHandler.startImageAnimation(); // 상태 업데이트 후 애니메이션 재시작
       print('Status loaded from server successfully');
-       // ✅ Map<String, dynamic> 반환
+
+      return responseData; // ✅ Map<String, dynamic> 반환
+    } else {
+      print('Failed to load status: ${response.statusCode}');
+      return null;
     }
   } catch (e) {
     print('Failed to load status from server: $e');

@@ -1,5 +1,5 @@
-import '../userHealth/MealPage.dart';
-import '../userHealth/SleepPage.dart';
+import '../userHealth/meal_page.dart';
+import '../userHealth/sleep_page.dart';
 import '../userHealth/supplement_page.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';

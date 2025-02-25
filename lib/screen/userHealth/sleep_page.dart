@@ -6,7 +6,7 @@ import '../../../dto/userHealth/sleep_dto.dart';
 import '../../../repositories/userHealth/sleep_repository.dart';
 import '../../core_services/dio_service.dart';
 import '../../core_services/token_service.dart';
-import '../character/PopupHandler.dart';
+import '../character/popup_handler.dart';
 
 class SleepPage extends StatefulWidget {
   final PopupHandler popupHandler;
@@ -65,7 +65,7 @@ class _SleepPageState extends State<SleepPage> {
       }
 
       // sleepLevel 업데이트
-      widget.popupHandler.updateStatus(
+       await widget.popupHandler.updateStatus(
         newWaterLevel: widget.popupHandler.waterLevel,
         newMealLevel: widget.popupHandler.mealLevel,
         newSleepLevel: newSleepLevel,

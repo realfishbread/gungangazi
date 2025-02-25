@@ -4,7 +4,7 @@ import '../../core_services/dio_service.dart';
 import '../../../repositories/userHealth/supplement_repository.dart';
 import '../../dto/userHealth/supplement_dto.dart';
 import '../../core_services/token_service.dart';
-import '../character/PopupHandler.dart';
+import '../character/popup_handler.dart';
 
 class SupplementsPage extends StatefulWidget {
   final PopupHandler popupHandler;

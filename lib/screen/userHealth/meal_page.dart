@@ -4,7 +4,7 @@ import '../../../dto/userHealth/meal_dto.dart';
 import '../../../repositories/userHealth/meal_repository.dart';
 import '../../core_services/dio_service.dart';
 import '../../core_services/token_service.dart';
-import '../character/PopupHandler.dart';
+import '../character/popup_handler.dart';
 
 class MealPage extends StatefulWidget {
   final PopupHandler popupHandler;
@@ -206,11 +206,11 @@ Widget _getCalorieStatusWidget(String date) {
    
 
   // PopupHandler 상태 업데이트
-  void _updatePopupHandler() {
+  Future<void> _updatePopupHandler() async{
     print("Updating PopupHandler...");
     
     
-    widget.popupHandler.updateStatus(
+    await widget.popupHandler.updateStatus(
       newWaterLevel: widget.popupHandler.waterLevel,
       newMealLevel: _mealLevel,
       newSleepLevel: widget.popupHandler.sleepLevel,

@@ -1,15 +1,15 @@
 import 'package:gungangazi/screen/userHealth/walking_page.dart';
 
-import '../userHealth/BloodPressure.dart';
+import '../userHealth/blood_pressure.dart';
 import '../userHealth/tooth_care_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../profile/profile_page.dart';
 import 'package:flutter/material.dart';
-import '../character/PopupHandler.dart';
+import '../character/popup_handler.dart';
 import '../userHealth/supplement_page.dart';
-import '../userHealth/SleepPage.dart';
+import '../userHealth/sleep_page.dart';
 import '../userHealth/water_drink.dart';
-import '../userHealth/MealPage.dart';
+import '../userHealth/meal_page.dart';
 import '../chat_page.dart';
 import '../../core_services/token_service.dart';
 import '../../core_services/dio_service.dart';

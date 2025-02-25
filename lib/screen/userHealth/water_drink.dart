@@ -5,7 +5,7 @@ import '../../../repositories/userHealth/water_repository.dart';
 import '../../core_services/dio_service.dart';
 import '../../core_services/token_service.dart';
 import '../../repositories/auth/profile_repository.dart';
-import '../character/PopupHandler.dart'; // PopupHandler 임포트
+import '../character/popup_handler.dart'; // PopupHandler 임포트
 
 class WaterDrink extends StatefulWidget {
   final PopupHandler popupHandler; // PopupHandler 인스턴스를 받도록 설정
@@ -29,6 +29,7 @@ class _WaterDrinkState extends State<WaterDrink> {
   int? userAge = 0;
   String userGender = "남성";
 
+ 
   @override
   void initState() {
     super.initState();
@@ -105,18 +106,20 @@ class _WaterDrinkState extends State<WaterDrink> {
     _checkStatus(); // 물 섭취량 확인 후 상태 업데이트
   }
 
-  void _checkStatus() {
+  Future<void> _checkStatus() async {
     String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
     int currentHour = DateTime.now().hour;
     int todayWaterIntake = _dailyWaterIntake[today] ?? 0;
 
     // 오전 6시 이전에는 PopupHandler 상태를 업데이트하지 않음
     
-    widget.popupHandler.updateStatus(
+    await widget.popupHandler.updateStatus(
       newWaterLevel: todayWaterIntake,
       newMealLevel: widget.popupHandler.mealLevel,
       newSleepLevel: widget.popupHandler.sleepLevel,
     );
+     // ✅ UI 갱신
+    setState(() {});
   }
 
   List<BarChartGroupData> _generateBarChartData() {
@@ -157,8 +160,7 @@ class _WaterDrinkState extends State<WaterDrink> {
     return WillPopScope(
       onWillPop: () async {
         if (widget.popupHandler.waterLevel > _currentWaterLevel) {
-          widget.popupHandler.triggerAnimation(
-              'drinkwater', delayMilliseconds: 1000);
+          widget.popupHandler.triggerAnimation('drinkwater', delayMilliseconds: 1000);
         }
         return true;
       },

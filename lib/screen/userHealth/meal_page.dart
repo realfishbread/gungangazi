@@ -314,13 +314,28 @@ Color _getMealTypeColor(String? mealType) {
   }
 }
 
+void _checkStatus() {
+  String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  int todayMealIntake = widget.popupHandler.mealLevel;
+  int currentHour = DateTime.now().hour; // 현재 시간 가져오기
+
+  // 저녁 10시 이후인지 확인
+  if (todayMealIntake > _currentMeal) {
+    if (currentHour >= 22) {
+      // ✅ 저녁 10시 이후일 경우 다른 애니메이션 실행
+      widget.popupHandler.triggerAnimation('0ammeal', delayMilliseconds: 2000);
+    } else {
+      // ✅ 저녁 10시 이전일 경우 기존 애니메이션 실행
+      widget.popupHandler.triggerAnimation('eatingmeal', delayMilliseconds: 2000);
+    }
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (widget.popupHandler.mealLevel > _currentMeal) {
-          widget.popupHandler.triggerAnimation('eatingmeal', delayMilliseconds: 2000);
-        }
+        _checkStatus();
         return true;
       },
       child: Scaffold(

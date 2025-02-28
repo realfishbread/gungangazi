@@ -325,7 +325,7 @@ class PopupHandler {
 
         }{
            _imageNotifier = ValueNotifier<int>(_currentImageIndex);
-    _characterRepository.loadStatusFromServer();
+   
   }
  
 
@@ -776,7 +776,7 @@ Future<void> triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) a
 
   Widget buildImageAnimationWithTouch(BuildContext context, Function(String) onImageSelected) {
   
-
+startImageAnimation();
   return LayoutBuilder(
     builder: (context, constraints) {
       return GestureDetector(

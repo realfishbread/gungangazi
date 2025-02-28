@@ -67,10 +67,12 @@ Future<void> _loadCharacterStatus() async {
       _isLoaded = true; // 로드 끝
     });
   }
+
+
   @override
   void dispose() {
-    
-    _popupHandler.dispose();
+    // 지금까진 그냥 super.dispose()만 했을 수 있음
+    _popupHandler.dispose(); // <-- 여기서 타이머 등 정리
     super.dispose();
   }
 
@@ -88,7 +90,7 @@ Future<void> _loadCharacterStatus() async {
 
     final page = routes[title];
     if (page != null) {
-      Navigator.push(
+      Navigator.pushReplacement( //push는 기존 화면 남아있고, 이건 안남아있음
         context,
         MaterialPageRoute(builder: (context) => page),
       );

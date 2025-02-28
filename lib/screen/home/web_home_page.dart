@@ -53,9 +53,17 @@ class _WebHomePageState extends State<WebHomePage> {
 
     // Provider를 쓴다면 read() 사용(또는 직접 생성하되, 꼭 "한 번"만 만듦)
     _characterStatus = context.read<CharacterStatus>(); 
+    fetchProfile();
 
     // 1) 서버에서 상태를 먼저 로드
     _loadCharacterStatus();
+  }
+
+  @override
+  void dispose() {
+    // 지금까진 그냥 super.dispose()만 했을 수 있음
+    _popupHandler.dispose(); // <-- 여기서 타이머 등 정리
+    super.dispose();
   }
 
 Future<void> _loadCharacterStatus() async {
@@ -300,7 +308,7 @@ Future<void> _loadCharacterStatus() async {
                   SideMenuItem(
                     title: '수면',
                     onTap: (index, _) {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => SleepPage(popupHandler: _popupHandler, characterStatus: _characterStatus),),
                       );
@@ -311,7 +319,7 @@ Future<void> _loadCharacterStatus() async {
                   SideMenuItem(
                     title: '식단',
                     onTap: (index, _) {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => MealPage(popupHandler: _popupHandler, characterStatus: _characterStatus)),
                       );
@@ -321,7 +329,7 @@ Future<void> _loadCharacterStatus() async {
                   SideMenuItem(
                     title: '수분',
                     onTap: (index, _) {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => WaterDrink(popupHandler: _popupHandler, characterStatus: _characterStatus)),
                       );
@@ -331,7 +339,7 @@ Future<void> _loadCharacterStatus() async {
                   SideMenuItem(
                     title: '치아 건강',
                     onTap: (index, _) {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => ToothCarePage(popupHandler: _popupHandler)),
                       );
@@ -341,7 +349,7 @@ Future<void> _loadCharacterStatus() async {
                   SideMenuItem(
                     title: '혈압',
                     onTap: (index, _) {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => BloodPressurePage()),
                       );
@@ -357,7 +365,7 @@ Future<void> _loadCharacterStatus() async {
                    SideMenuItem(
                     title: '만보기',
                     onTap: (index, _) {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => WalkingPage()),
                       );

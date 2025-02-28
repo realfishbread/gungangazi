@@ -46,28 +46,23 @@ class _WebHomePageState extends State<WebHomePage> {
   @override
 void initState() {
   super.initState();
-  _characterStatus = CharacterStatus(); // ✅ 싱글톤 초기화
-  fetchProfile(); // ✅ 프로필 데이터 먼저 가져오기
 
-  // ✅ 캐릭터 상태를 먼저 불러온 후 PopupHandler 초기화
-  _loadCharacterStatus();
-}
-
-Future<void> _loadCharacterStatus() async {
+  Future.microtask(() async {
     final characterStatus = context.read<CharacterStatus>(); // ✅ Provider에서 가져오기
     await characterStatus.loadStatus(); // ✅ 서버에서 캐릭터 상태 불러오기
 
     // ✅ PopupHandler 초기화
-    setState(() {
-      _popupHandler = PopupHandler(
-        listData: [],
-        tokenService: TokenService(),
-        dioService: DioService(),
-        characterStatus: characterStatus,
-      );
-      _popupHandler!.initialize();
-    });
-  }
+    _popupHandler = PopupHandler(
+      listData: [],
+      tokenService: _tokenService,
+      dioService: _dioService,
+      characterStatus: characterStatus,
+    );
+    _popupHandler.initialize();
+
+    setState(() {}); // ✅ UI 업데이트
+  });
+}
 
     Future<void> fetchProfile() async {
       String? token = await _tokenService.getToken();

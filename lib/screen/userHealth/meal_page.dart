@@ -243,6 +243,7 @@ Widget _getCalorieStatusWidget(String date) {
       try {
         print("Adding new meal: ${newMeal.toJson()}");
         await _mealRepository.addMeal(newMeal);
+        await _updatePopupHandler(); // 상태 업데이트 완료 후
 
         // 저장 후 데이터를 새로고침
         await _fetchMeals(); // 최신 데이터 가져오기
@@ -252,7 +253,7 @@ Widget _getCalorieStatusWidget(String date) {
         });
 
        // ✅ 해결 방법: `_checkStatus();`를 `await`으로 실행
-      await _updatePopupHandler(); // 상태 업데이트 완료 후
+      
       
         print("Meal added successfully. Updated Meal Level: $_mealLevel");
       } catch (e) {
@@ -326,7 +327,7 @@ Future<void> _checkStatus() async {
   String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
   
   int currentHour = DateTime.now().hour; // 현재 시간 가져오기
-  final characterStatus = context.watch<CharacterStatus>(); // ✅ Provider에서 자동 감지
+  final characterStatus = context.read<CharacterStatus>(); // ✅ 불필요한 재빌드 방지
   int todayMealIntake = characterStatus.meal_level;
 
   // 저녁 10시 이후인지 확인

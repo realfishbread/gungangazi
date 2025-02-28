@@ -233,7 +233,7 @@ class _SleepPageState extends State<SleepPage> {
 
   @override
   Widget build(BuildContext context) {
-    final characterStatus = context.watch<CharacterStatus>(); // ✅ 
+    final characterStatus = context.read<CharacterStatus>(); // ✅ 
     return PopScope(
     canPop: true,
     onPopInvokedWithResult: (didPop, result) async {

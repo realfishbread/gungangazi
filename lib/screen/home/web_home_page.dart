@@ -20,6 +20,7 @@ import '../../repositories/auth/profile_repository.dart';
 import '../userHealth/walking_page.dart';
 import 'home_page.dart';
 import '../character/character_status.dart';
+import 'package:provider/provider.dart';
 
 class WebHomePage extends StatefulWidget {
   const WebHomePage({Key? key}) : super(key: key);
@@ -53,16 +54,17 @@ void initState() {
 }
 
 Future<void> _loadCharacterStatus() async {
-  await _characterStatus.loadStatus(); // ✅ 서버에서 캐릭터 상태 불러오기
-  _popupHandler = PopupHandler(
-    listData: [], 
-    tokenService: _tokenService, 
-    dioService: _dioService, 
-    characterStatus: _characterStatus
-  );
-  _popupHandler.initialize();
-  setState(() {}); // ✅ UI 업데이트
-}
+    final characterStatus = context.read<CharacterStatus>(); // ✅ 전역적으로 관리되는 CharacterStatus 사용
+    await characterStatus.loadStatus(); // ✅ 서버에서 캐릭터 상태 불러오기
+    _popupHandler = PopupHandler(
+      listData: [], 
+      tokenService: _tokenService, 
+      dioService: _dioService, 
+      characterStatus: characterStatus // ✅ Provider에서 가져온 인스턴스 사용
+    );
+    _popupHandler.initialize();
+    setState(() {}); // ✅ UI 업데이트
+  }
 
 
     Future<void> fetchProfile() async {

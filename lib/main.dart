@@ -4,12 +4,18 @@ import 'package:flutter/material.dart';
 import 'screen/home/mobile_home_page.dart'; // 앱 전용 페이지
 import 'screen/auth/login_page.dart'; // 통합된 로그인 페이지
 import 'config/theme.dart'; // 테마 파일 import
-import 'core_services/google_auth_services.dart';
-import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:gungangazi/screen/character/character_status.dart';
 
 void main() {
   runApp(
-      MyApp(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CharacterStatus()), // ✅ Provider 등록
+      ],
+      child: const MyApp(),
+    ),
   );
 }
 

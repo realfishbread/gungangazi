@@ -16,7 +16,7 @@ import '../../core_services/dio_service.dart';
 import '../../widget/is_web.dart';
 import '../character/character_status.dart';
 import '../../repositories/status/character_repository.dart';
-
+import 'package:provider/provider.dart';
 
 import 'web_home_page.dart';
 
@@ -51,16 +51,17 @@ void initState() {
 }
 
 Future<void> _loadCharacterStatus() async {
-  await _characterStatus.loadStatus(); // ✅ 서버에서 캐릭터 상태 불러오기
-  _popupHandler = PopupHandler(
-    listData: [], 
-    tokenService: _tokenService, 
-    dioService: _dioService, 
-    characterStatus: _characterStatus
-  );
-  _popupHandler.initialize();
-  setState(() {}); // ✅ UI 업데이트
-}
+    final characterStatus = context.read<CharacterStatus>(); // ✅ 전역적으로 관리되는 CharacterStatus 사용
+    await characterStatus.loadStatus(); // ✅ 서버에서 캐릭터 상태 불러오기
+    _popupHandler = PopupHandler(
+      listData: [], 
+      tokenService: _tokenService, 
+      dioService: _dioService, 
+      characterStatus: characterStatus // ✅ Provider에서 가져온 인스턴스 사용
+    );
+    _popupHandler.initialize();
+    setState(() {}); // ✅ UI 업데이트
+  }
 
 
   @override

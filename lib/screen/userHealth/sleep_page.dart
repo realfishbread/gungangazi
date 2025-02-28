@@ -8,6 +8,7 @@ import '../../../repositories/userHealth/sleep_repository.dart';
 import '../../core_services/dio_service.dart';
 import '../../core_services/token_service.dart';
 import '../character/popup_handler.dart';
+import 'package:provider/provider.dart'; // ✅ Provider 추가
 
 class SleepPage extends StatefulWidget {
   final PopupHandler popupHandler;
@@ -35,8 +36,16 @@ class _SleepPageState extends State<SleepPage> {
       tokenService: TokenService(),
     );
     _loadSleepDataFromServer();
-    widget.characterStatus.loadStatus();
+    _loadCharacterStatus(); // ✅ 비동기 상태 불러오기
     _currentSleepLevel = widget.characterStatus.sleepLevel;
+  }
+
+   Future<void> _loadCharacterStatus() async {
+    final characterStatus = context.read<CharacterStatus>(); // ✅ Provider에서 가져오기
+    await characterStatus.loadStatus();
+    setState(() {
+      _currentSleepLevel = characterStatus.sleepLevel;
+    });
   }
 
   // 서버에서 수면 데이터 가져오기
@@ -55,6 +64,7 @@ class _SleepPageState extends State<SleepPage> {
 
   // 수면 데이터 서버에 저장하기
   Future<void> _saveSleepDataToServer() async {
+    final characterStatus = context.read<CharacterStatus>(); // ✅ Provider에서 가져오기
     if (_sleepTime != null && _wakeUpTime != null) {
       String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
@@ -62,19 +72,16 @@ class _SleepPageState extends State<SleepPage> {
       double sleepHours = sleepDuration.inMinutes / 60.0;
 
       // 새로운 sleepLevel 계산
-      int newSleepLevel = widget.characterStatus.sleepLevel;
-      
+      int newSleepLevel = characterStatus.sleepLevel;
       if (sleepHours >= 5.0) {
-        newSleepLevel = _currentSleepLevel + 200; // 수면 시간이 충분할 경우 증가
+        newSleepLevel += 200; // ✅ 5시간 이상 수면 시 증가
       }
 
-      // sleepLevel 업데이트
-       await widget.characterStatus.updateStatus(
-        newWaterLevel: widget.characterStatus.waterLevel,
-        newMealLevel: widget.characterStatus.mealLevel,
+      await characterStatus.updateStatus(
+        newWaterLevel: characterStatus.waterLevel,
+        newMealLevel: characterStatus.mealLevel,
         newSleepLevel: newSleepLevel,
       );
-
       // 서버에 저장할 SleepDto 데이터 생성
       String? username = await TokenService().getUsername();
       SleepDto newSleepRecord = SleepDto(
@@ -226,11 +233,12 @@ class _SleepPageState extends State<SleepPage> {
 
   @override
   Widget build(BuildContext context) {
+    final characterStatus = context.watch<CharacterStatus>(); // ✅ 
     return PopScope(
     canPop: true,
     onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) {
-        if (widget.characterStatus.sleepLevel > _currentSleepLevel) {
+        if (characterStatus.sleepLevel > _currentSleepLevel) {
          await widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 1000);
           print('Triggering sleeping animation for sleep level: ${widget.characterStatus.sleepLevel}');
         } else {

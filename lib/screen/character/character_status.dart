@@ -1,9 +1,9 @@
 import '../../repositories/status/character_repository.dart';
-import 'popup_handler.dart';
+import 'package:flutter/material.dart'; // ChangeNotifier를 위해 추가
 import '../../dto/status/character_status_dto.dart';
 import '../../core_services/token_service.dart';
 
-class CharacterStatus {
+class CharacterStatus extends ChangeNotifier { // ✅ ChangeNotifier 상속
   // ✅ 싱글톤 인스턴스
   static final CharacterStatus _instance = CharacterStatus._internal(CharacterRepository());
 
@@ -27,6 +27,7 @@ class CharacterStatus {
       waterLevel = status.waterLevel;
       mealLevel = status.mealLevel;
       sleepLevel = status.sleepLevel;
+      notifyListeners(); // ✅ UI 업데이트 트리거
     }
   }
 
@@ -50,6 +51,8 @@ class CharacterStatus {
     waterLevel = newWaterLevel;
     mealLevel = newMealLevel;
     sleepLevel = newSleepLevel;
+
+    notifyListeners(); // ✅ UI 업데이트
     await saveStatus();
   }
 }

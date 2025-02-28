@@ -51,7 +51,7 @@ void initState() {
 }
 
 Future<void> _loadCharacterStatus() async {
-    final characterStatus = context.read<CharacterStatus>(); // ✅ Provider에서 가져오기
+    final characterStatus = context.watch<CharacterStatus>(); // ✅ Provider에서 가져오기
     await characterStatus.loadStatus(); // ✅ 서버에서 캐릭터 상태 불러오기
 
     // ✅ PopupHandler 초기화

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import '../../core_services/dio_service.dart'; // DioService 추가
 import '../../core_services/token_service.dart';
-import 'package:dio/dio.dart';
 import '../../repositories/status/character_repository.dart';
 import '../../dto/status/character_status_dto.dart'; // ✅ DTO 추가
 import 'character_status.dart'; // ✅ CharacterStatus 추가
+
 
 
 
@@ -225,12 +225,6 @@ class PopupHandler {
             'assets/person/0am/sleeping1.jpg',
             'assets/person/0am/sleeping2.jpg',
             'assets/person/0am/sleeping3.jpg',
-            'assets/person/0am/sleeping4.jpg',
-            'assets/person/0am/sleeping5.jpg',
-            'assets/person/0am/sleeping6.jpg',
-            'assets/person/0am/sleeping6.jpg',
-            'assets/person/0am/sleeping5.jpg',
-            'assets/person/0am/sleeping4.jpg',
             'assets/person/0am/sleeping3.jpg',
             'assets/person/0am/sleeping2.jpg',
             'assets/person/0am/sleeping1.jpg',
@@ -340,6 +334,7 @@ class PopupHandler {
 
 
   Future<void> setBodyPartStatus() async {
+
   String previousBodyPart = _currentBodyPart;
 
   if (characterStatus.water_level <= 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level <= 200) {
@@ -358,12 +353,6 @@ class PopupHandler {
     _currentBodyPart = 'dizzy';
   } else {
     updateCharacterStatusBasedOnTime(); // ⏰ 시간 기반 상태 업데이트
-  }
-
-  // 🔥 상태가 바뀔 때만 애니메이션 다시 시작!
-  if (previousBodyPart != _currentBodyPart) {
-    print("📢 캐릭터 상태 변경됨: $_currentBodyPart → 애니메이션 재시작!");
-    startImageAnimation();
   }
 }
 
@@ -425,7 +414,7 @@ Future<void> triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) a
       Future.delayed(Duration(milliseconds: delayMilliseconds), () {
         _currentBodyPart = previousBodyPart;
         setBodyPartStatus();
-        startImageAnimation();
+         startImageAnimation();
         _isAnimating = false; // ✅ 애니메이션 완료 후 다시 실행 가능하도록 설정
         print("🎭 Character state restored to $_currentBodyPart");
       });
@@ -786,7 +775,7 @@ Future<void> triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) a
   
 
   Widget buildImageAnimationWithTouch(BuildContext context, Function(String) onImageSelected) {
-  startImageAnimation(); // 애니메이션 시작
+  
 
   return LayoutBuilder(
     builder: (context, constraints) {

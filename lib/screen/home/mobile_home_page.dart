@@ -51,18 +51,20 @@ void initState() {
 }
 
 Future<void> _loadCharacterStatus() async {
-    final characterStatus = context.read<CharacterStatus>(); // ✅ 전역적으로 관리되는 CharacterStatus 사용
+    final characterStatus = context.read<CharacterStatus>(); // ✅ Provider에서 가져오기
     await characterStatus.loadStatus(); // ✅ 서버에서 캐릭터 상태 불러오기
-    _popupHandler = PopupHandler(
-      listData: [], 
-      tokenService: _tokenService, 
-      dioService: _dioService, 
-      characterStatus: characterStatus // ✅ Provider에서 가져온 인스턴스 사용
-    );
-    _popupHandler.initialize();
-    setState(() {}); // ✅ UI 업데이트
-  }
 
+    // ✅ PopupHandler 초기화
+    setState(() {
+      _popupHandler = PopupHandler(
+        listData: [],
+        tokenService: TokenService(),
+        dioService: DioService(),
+        characterStatus: characterStatus,
+      );
+      _popupHandler!.initialize();
+    });
+  }
 
   @override
   void dispose() {

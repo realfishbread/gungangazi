@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 class SupplementRepository {
   final DioService dioService;
   final TokenService tokenService;
+  
 
   SupplementRepository({required this.dioService, required this.tokenService});
 
@@ -25,10 +26,15 @@ class SupplementRepository {
       // 서버에 데이터 전송
       await dio.post(
         '/supplements/save',
-        data: {
-          ...supplementDto.toJson(),
-        },
+        data: supplementDto.toJson(),  // ✅ Map 그대로 전달
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json', // ✅ JSON 타입 명시
+          },
+        ),
       );
+
       print('영양제 복용 데이터 저장 완료');
     } catch (e) {
       print('데이터 저장 실패: $e');
@@ -57,6 +63,7 @@ class SupplementRepository {
   Future<SupplementDto?> fetchSingleSupplement(String username, DateTime date) async {
   try {
     String? token = await tokenService.getToken();
+    String? username = await tokenService.getUsername();
     final Dio dio = dioService.getDio();
     final String formattedDate = DateFormat('yyyy-MM-dd').format(date);
     final response = await dio.get(

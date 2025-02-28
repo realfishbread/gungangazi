@@ -116,7 +116,7 @@ class _WaterDrinkState extends State<WaterDrink> {
   }
 
   Future<void> _checkStatus() async {
-  final characterStatus = context.watch<CharacterStatus>(); // ✅ Provider에서 가져오기
+  final characterStatus = Provider.of<CharacterStatus>(context, listen: false); // ✅ 안전하게 가져오기
   String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
   int currentHour = DateTime.now().hour;
   int todayWaterIntake = _dailyWaterIntake[today] ?? 0;

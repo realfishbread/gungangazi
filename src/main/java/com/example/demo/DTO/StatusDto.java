@@ -39,4 +39,17 @@ public class StatusDto {
     public void setSleep_level(int sleep_level) {
         this.sleep_level = sleep_level;
     }
+
+    public int getSleep_level() {
+        return sleep_level;
+    }
+
+    public int getMeal_level() {
+        return meal_level;
+    }
+
+    public int getWater_level() {
+        return water_level;
+    }
+
 }

@@ -64,7 +64,7 @@ class _SleepPageState extends State<SleepPage> {
 
   // 수면 데이터 서버에 저장하기
   Future<void> _saveSleepDataToServer() async {
-    final characterStatus = context.read<CharacterStatus>(); // ✅ Provider에서 가져오기
+    final characterStatus = Provider.of<CharacterStatus>(context, listen: false); // ✅ 안전하게 가져오기
     if (_sleepTime != null && _wakeUpTime != null) {
       String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 

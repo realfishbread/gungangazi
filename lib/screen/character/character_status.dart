@@ -39,7 +39,6 @@ class CharacterStatus extends ChangeNotifier { // ✅ ChangeNotifier 상속
       water_level: water_level,
       meal_level: meal_level,
       sleep_level: sleep_level,
-      
     );
     await _characterRepository.saveStatusToServer(statusDto);
   }

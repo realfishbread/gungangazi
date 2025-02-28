@@ -18,13 +18,9 @@ Future<void> saveStatusToServer(StatusDto statusDto) async {
   try {
     String? jwtToken = await _tokenService.getToken(); // 토큰 가져오기
 
-    
-
     await _dio.post(
       '/character/status',
-      data: {
-        statusDto.toJson(),
-      },
+      data: statusDto.toJson(),//데이터 감싸보내지마
       options: Options(
         headers: {
           'Authorization': 'Bearer $jwtToken', // JWT 토큰 헤더 추가

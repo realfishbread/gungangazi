@@ -213,7 +213,7 @@ Widget _getCalorieStatusWidget(String date) {
   // PopupHandler 상태 업데이트
   Future<void> _updatePopupHandler() async{
     print("Updating PopupHandler...");
-    final characterStatus = context.read<CharacterStatus>(); // ✅ Provider에서 가져오기
+    final characterStatus = Provider.of<CharacterStatus>(context, listen: false); // ✅ 안전하게 가져오기
     
     
     await characterStatus.updateStatus(

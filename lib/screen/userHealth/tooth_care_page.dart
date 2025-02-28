@@ -97,7 +97,8 @@ class _ToothCarePageState extends State<ToothCarePage> {
 
       bool brushed = brushData.any((brush) => brush.date == latestSleepDate);
 
-      bool isNightTime = now.hour >= 22; // 22시(10PM) 이후인지 확인
+      bool isNightTime = (now.hour >= 22 || now.hour < 6);
+
 
 
       if (!brushed) {

@@ -45,7 +45,7 @@ class _WaterDrinkState extends State<WaterDrink> {
     _loadUserInfo();
     _loadWaterIntake();
     final characterStatus = context.read<CharacterStatus>(); // ✅ Provider에서 가져오기
-    _currentWaterLevel = characterStatus.waterLevel;
+    _currentWaterLevel = characterStatus.water_level;
   }
 
    Future<void> _loadUserInfo() async {
@@ -126,8 +126,8 @@ class _WaterDrinkState extends State<WaterDrink> {
   // ✅ `updateStatus()`가 완료될 때까지 기다림
   await characterStatus.updateStatus(
     newWaterLevel: todayWaterIntake,
-    newMealLevel: widget.characterStatus.mealLevel,
-    newSleepLevel: widget.characterStatus.sleepLevel,
+    newMealLevel: characterStatus.meal_level,
+    newSleepLevel: characterStatus.sleep_level,
   );
 
   
@@ -177,7 +177,7 @@ class _WaterDrinkState extends State<WaterDrink> {
       canPop: true,
       onPopInvokedWithResult: (didPop, result) async {
       if (!didPop) {
-          if (characterStatus.waterLevel > _currentWaterLevel) {
+          if (characterStatus.water_level > _currentWaterLevel) {
             await widget.popupHandler.triggerAnimation('drinkwater', delayMilliseconds: 1000);
           }
         }

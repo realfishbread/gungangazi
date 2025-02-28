@@ -342,19 +342,19 @@ class PopupHandler {
   Future<void> setBodyPartStatus() async {
   String previousBodyPart = _currentBodyPart;
 
-  if (characterStatus.waterLevel <= 200 && characterStatus.mealLevel <= 200 && characterStatus.sleepLevel <= 200) {
+  if (characterStatus.water_level <= 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level <= 200) {
     _currentBodyPart = 'thirsty_and_hungry_dizzy';
-  } else if (characterStatus.waterLevel <= 200 && characterStatus.mealLevel <= 200 && characterStatus.sleepLevel >= 200) {
+  } else if (characterStatus.water_level <= 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level >= 200) {
     _currentBodyPart = 'thirsty_and_hungry';
-  } else if (characterStatus.waterLevel <= 200 && characterStatus.mealLevel > 200 && characterStatus.sleepLevel < 200) {
+  } else if (characterStatus.water_level <= 200 && characterStatus.meal_level > 200 && characterStatus.sleep_level < 200) {
     _currentBodyPart = 'thirsty_and_dizzy';
-  } else if (characterStatus.waterLevel > 200 && characterStatus.mealLevel <= 200 && characterStatus.sleepLevel < 200) {
+  } else if (characterStatus.water_level > 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level < 200) {
     _currentBodyPart = 'hungry_and_dizzy';
-  } else if (characterStatus.waterLevel <= 200 && characterStatus.mealLevel > 200 && characterStatus.sleepLevel >= 200) {
+  } else if (characterStatus.water_level <= 200 && characterStatus.meal_level > 200 && characterStatus.sleep_level >= 200) {
     _currentBodyPart = 'thirsty';
-  } else if (characterStatus.waterLevel > 200 && characterStatus.mealLevel <= 200 && characterStatus.sleepLevel >= 200) {
+  } else if (characterStatus.water_level > 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level >= 200) {
     _currentBodyPart = 'hungry';
-  } else if (characterStatus.waterLevel > 200 && characterStatus.mealLevel > 200 && characterStatus.sleepLevel < 200) {
+  } else if (characterStatus.water_level > 200 && characterStatus.meal_level > 200 && characterStatus.sleep_level < 200) {
     _currentBodyPart = 'dizzy';
   } else {
     updateCharacterStatusBasedOnTime(); // ⏰ 시간 기반 상태 업데이트

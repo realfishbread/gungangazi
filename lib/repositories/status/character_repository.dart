@@ -14,21 +14,16 @@ class CharacterRepository {
   CharacterRepository() : _dio = DioService().getDio();
 
     /// 서버에 현재 상태 저장
-Future<void> saveStatusToServer(StatusDto status) async {
+Future<void> saveStatusToServer(StatusDto statusDto) async {
   try {
-    String? username = await _tokenService.getUsername();
     String? jwtToken = await _tokenService.getToken(); // 토큰 가져오기
 
-    // username이 이메일이면 변환
-    if (username != null && username.contains("@")) {
-      username = await fetchUsernameFromServer(username);
-    }
-
+    
 
     await _dio.post(
       '/character/status',
       data: {
-        status.toJson(),
+        statusDto.toJson(),
       },
       options: Options(
         headers: {
@@ -42,14 +37,12 @@ Future<void> saveStatusToServer(StatusDto status) async {
     print('Failed to save status to server: $e');
   }
 }
-
- /// 서버에서 현재 상태 불러오기
 Future<Map<String, dynamic>?> loadStatusFromServer() async {
   try {
     String? username = await _tokenService.getUsername();
     String? jwtToken = await _tokenService.getToken(); // 토큰 가져오기
 
-    final response = await DioService().getDio().get(
+    final response = await _dio.get(
       '/character/status',
       queryParameters: {
         'username': username,
@@ -63,21 +56,27 @@ Future<Map<String, dynamic>?> loadStatusFromServer() async {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> responseData = response.data; // 🔥 응답 데이터 저장
+
+      // 상태 업데이트 및 애니메이션 재시작
       await _popupHandler.stopImageAnimation();
       await _popupHandler.setBodyPartStatus();
       await _popupHandler.startImageAnimation(); // 상태 업데이트 후 애니메이션 재시작
-      print('Status loaded from server successfully');
 
+      print('Status loaded from server successfully');
+      
       return responseData; // ✅ Map<String, dynamic> 반환
     } else {
+      // 서버 응답이 실패한 경우
       print('Failed to load status: ${response.statusCode}');
       return null;
     }
   } catch (e) {
+    // 예외 발생 시 에러 메시지 출력
     print('Failed to load status from server: $e');
     return null;
   }
 }
+
 
 
 

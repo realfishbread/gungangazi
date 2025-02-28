@@ -48,7 +48,7 @@ class _MealPageState extends State<MealPage> {
     _fetchMeals(); // 식사 기록 가져오기
     final characterStatus = context.read<CharacterStatus>(); // ✅ Provider에서 가져오기
    
-    _currentMeal = characterStatus.mealLevel;
+    _currentMeal = characterStatus.meal_level;
   }
 
 
@@ -217,9 +217,9 @@ Widget _getCalorieStatusWidget(String date) {
     
     
     await characterStatus.updateStatus(
-      newWaterLevel: widget.characterStatus.waterLevel,
+      newWaterLevel: characterStatus.water_level,
       newMealLevel: _mealLevel,
-      newSleepLevel: widget.characterStatus.sleepLevel,
+      newSleepLevel: characterStatus.sleep_level,
     );
     print("PopupHandler updated: Meal Level: $_mealLevel");
   }
@@ -327,16 +327,16 @@ Future<void> _checkStatus() async {
   
   int currentHour = DateTime.now().hour; // 현재 시간 가져오기
   final characterStatus = context.watch<CharacterStatus>(); // ✅ Provider에서 자동 감지
-  int todayMealIntake = characterStatus.mealLevel;
+  int todayMealIntake = characterStatus.meal_level;
 
   // 저녁 10시 이후인지 확인
   if (todayMealIntake > _currentMeal) {
     if (currentHour >= 22) {
       // ✅ 저녁 10시 이후일 경우 다른 애니메이션 실행
-      widget.popupHandler.triggerAnimation('0ammeal', delayMilliseconds: 2000);
+      await widget.popupHandler.triggerAnimation('0ammeal', delayMilliseconds: 2000);
     } else {
       // ✅ 저녁 10시 이전일 경우 기존 애니메이션 실행
-      widget.popupHandler.triggerAnimation('eatingmeal', delayMilliseconds: 2000);
+      await widget.popupHandler.triggerAnimation('eatingmeal', delayMilliseconds: 2000);
     }
   }
 }

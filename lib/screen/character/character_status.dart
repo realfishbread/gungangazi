@@ -16,17 +16,17 @@ class CharacterStatus extends ChangeNotifier { // ✅ ChangeNotifier 상속
   // ✅ private 생성자로 외부에서 직접 인스턴스화 방지
   CharacterStatus._internal(this._characterRepository);
 
-  int waterLevel = 100;
-  int mealLevel = 100;
-  int sleepLevel = 100;
+  int water_level = 100;
+  int meal_level = 100;
+  int sleep_level = 100;
 
   Future<void> loadStatus() async {
     final statusData = await _characterRepository.loadStatusFromServer();
     if (statusData != null) {
       StatusDto status = StatusDto.fromJson(statusData);
-      waterLevel = status.waterLevel;
-      mealLevel = status.mealLevel;
-      sleepLevel = status.sleepLevel;
+      water_level = status.water_level;
+      meal_level = status.meal_level;
+      sleep_level = status.sleep_level;
       notifyListeners(); // ✅ UI 업데이트 트리거
     }
   }
@@ -35,10 +35,11 @@ class CharacterStatus extends ChangeNotifier { // ✅ ChangeNotifier 상속
     String? username = await TokenService().getUsername() ?? "defaultUser";
 
     StatusDto statusDto = StatusDto(
-      waterLevel: waterLevel,
-      mealLevel: mealLevel,
-      sleepLevel: sleepLevel,
       username: username,
+      water_level: water_level,
+      meal_level: meal_level,
+      sleep_level: sleep_level,
+      
     );
     await _characterRepository.saveStatusToServer(statusDto);
   }
@@ -48,9 +49,9 @@ class CharacterStatus extends ChangeNotifier { // ✅ ChangeNotifier 상속
     required int newMealLevel,
     required int newSleepLevel,
   }) async {
-    waterLevel = newWaterLevel;
-    mealLevel = newMealLevel;
-    sleepLevel = newSleepLevel;
+    water_level = newWaterLevel;
+    meal_level= newMealLevel;
+    sleep_level = newSleepLevel;
 
     notifyListeners(); // ✅ UI 업데이트
     await saveStatus();

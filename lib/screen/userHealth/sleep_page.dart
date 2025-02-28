@@ -37,14 +37,14 @@ class _SleepPageState extends State<SleepPage> {
     );
     _loadSleepDataFromServer();
     _loadCharacterStatus(); // ✅ 비동기 상태 불러오기
-    _currentSleepLevel = widget.characterStatus.sleepLevel;
+    
   }
 
    Future<void> _loadCharacterStatus() async {
     final characterStatus = context.read<CharacterStatus>(); // ✅ Provider에서 가져오기
     await characterStatus.loadStatus();
     setState(() {
-      _currentSleepLevel = characterStatus.sleepLevel;
+      _currentSleepLevel = characterStatus.sleep_level;
     });
   }
 
@@ -72,14 +72,14 @@ class _SleepPageState extends State<SleepPage> {
       double sleepHours = sleepDuration.inMinutes / 60.0;
 
       // 새로운 sleepLevel 계산
-      int newSleepLevel = characterStatus.sleepLevel;
+      int newSleepLevel = characterStatus.sleep_level;
       if (sleepHours >= 5.0) {
         newSleepLevel += 200; // ✅ 5시간 이상 수면 시 증가
       }
 
       await characterStatus.updateStatus(
-        newWaterLevel: characterStatus.waterLevel,
-        newMealLevel: characterStatus.mealLevel,
+        newWaterLevel: characterStatus.water_level,
+        newMealLevel: characterStatus.meal_level,
         newSleepLevel: newSleepLevel,
       );
       // 서버에 저장할 SleepDto 데이터 생성
@@ -238,9 +238,9 @@ class _SleepPageState extends State<SleepPage> {
     canPop: true,
     onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) {
-        if (characterStatus.sleepLevel > _currentSleepLevel) {
+        if (characterStatus.sleep_level > _currentSleepLevel) {
          await widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 1000);
-          print('Triggering sleeping animation for sleep level: ${widget.characterStatus.sleepLevel}');
+          print('Triggering sleeping animation for sleep level: ${widget.characterStatus.sleep_level}');
         } else {
           print("No significant sleep level change, no animation triggered.");
         }

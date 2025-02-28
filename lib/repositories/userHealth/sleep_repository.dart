@@ -20,6 +20,9 @@ class SleepRepository {
       final response = await dio.post(
         '/sleep/saveSleepData',
         data: sleepData.map((e) => e.toJson()).toList(), // records 키 제거
+        options: Options(headers: {
+          'Authorization': 'Bearer $token',
+        }),
       );
 
       if (response.statusCode == 200) {

@@ -33,39 +33,44 @@ class _WebHomePageState extends State<WebHomePage> {
   PageController pageController = PageController();
   SideMenuController sideMenu = SideMenuController();
 
-  late PopupHandler _popupHandler; // PopupHandler 선언
+  
   final DioService _dioService = DioService(token: 'your-auth-token');
   final TokenService _tokenService = TokenService();
   late final CharacterRepository _characterRepository;
-  late final CharacterStatus _characterStatus;
 
 
   ProfileDto? _profile;
   Uint8List? _imageData;
 
-  @override
-void initState() {
-  super.initState();
-  _characterStatus = CharacterStatus(); // ✅ 싱글톤 초기화
-  fetchProfile(); // ✅ 프로필 데이터 먼저 가져오기
+  bool _isLoaded = false; // 서버에서 캐릭터 상태를 다 불러왔는지
+  late PopupHandler _popupHandler;
+  late CharacterStatus _characterStatus;
+  
 
-  // ✅ 캐릭터 상태를 먼저 불러온 후 PopupHandler 초기화
-  _loadCharacterStatus();
-}
+  @override
+  void initState() {
+    super.initState();
+
+    // Provider를 쓴다면 read() 사용(또는 직접 생성하되, 꼭 "한 번"만 만듦)
+    _characterStatus = context.read<CharacterStatus>(); 
+
+    // 1) 서버에서 상태를 먼저 로드
+    _loadCharacterStatus();
+  }
 
 Future<void> _loadCharacterStatus() async {
-    final characterStatus = context.watch<CharacterStatus>(); // ✅ Provider에서 가져오기
-    await characterStatus.loadStatus(); // ✅ 서버에서 캐릭터 상태 불러오기
+    // 2) 서버에서 데이터 받아오기 (이 시점 이전에는 late 필드에 접근 금지)
+    await _characterStatus.loadStatus();
 
-    // ✅ PopupHandler 초기화
+    // 3) 다 받았으므로, 이제 PopupHandler 만들고
     setState(() {
       _popupHandler = PopupHandler(
         listData: [],
         tokenService: TokenService(),
         dioService: DioService(),
-        characterStatus: characterStatus,
+        characterStatus: _characterStatus,
       );
-      _popupHandler!.initialize();
+      _isLoaded = true; // 로드 끝
     });
   }
 
@@ -177,6 +182,13 @@ Future<void> _loadCharacterStatus() async {
 
   @override
   Widget build(BuildContext context) {
+
+    if (!_isLoaded) {
+      // 아직 데이터가 안 왔으면 로딩 표시
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         elevation: 0, // 그림자 제거

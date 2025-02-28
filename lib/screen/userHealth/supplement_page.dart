@@ -263,8 +263,10 @@ class _SupplementsPageState extends State<SupplementsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+   return PopScope(
+  canPop: true,
+  onPopInvokedWithResult: (didPop, result) async {
+    if (!didPop) {
         if (_addSupplement) {
 
            if(now.hour>=22 || now.hour<=6){
@@ -273,8 +275,8 @@ class _SupplementsPageState extends State<SupplementsPage> {
           await widget.popupHandler.triggerAnimation('medication', delayMilliseconds: 1000);
            }
         }
-        return true;
-      },
+        }
+  },
       child: Scaffold(
         appBar: AppBar(
           title: const Text('캘린더'),

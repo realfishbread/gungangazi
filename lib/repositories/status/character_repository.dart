@@ -63,7 +63,7 @@ Future<Map<String, dynamic>?> loadStatusFromServer() async {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> responseData = response.data; // 🔥 응답 데이터 저장
-
+      await _popupHandler.stopImageAnimation();
       await _popupHandler.setBodyPartStatus();
       await _popupHandler.startImageAnimation(); // 상태 업데이트 후 애니메이션 재시작
       print('Status loaded from server successfully');

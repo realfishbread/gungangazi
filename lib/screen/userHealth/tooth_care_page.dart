@@ -141,11 +141,13 @@ class _ToothCarePageState extends State<ToothCarePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) async {
+      if (!didPop) {
         await _checkBrushAndSleep();
-        return true;
-      },
+       }
+  },
       child: Scaffold(
         appBar: AppBar(
           title: const Text('치아 관리'),

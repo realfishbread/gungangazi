@@ -7,6 +7,10 @@ import '../../core_services/token_service.dart';
 import '../../repositories/auth/profile_repository.dart';
 import '../character/popup_handler.dart'; // PopupHandler 임포트
 import 'package:gungangazi/screen/character/character_status.dart';
+import 'package:flutter/widgets.dart'; // 👈 위젯 관련 기본 패키지
+import 'package:flutter/material.dart'; // 👈 보통 이걸 사용하면 해결됨
+
+
 
 class WaterDrink extends StatefulWidget {
   final PopupHandler popupHandler; // PopupHandler 인스턴스를 받도록 설정
@@ -30,6 +34,7 @@ class _WaterDrinkState extends State<WaterDrink> {
   late ProfileRepository profileRepository;
   int? userAge = 0;
   String userGender = "남성";
+  
 
  
   @override
@@ -109,20 +114,25 @@ class _WaterDrinkState extends State<WaterDrink> {
   }
 
   Future<void> _checkStatus() async {
-    String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    int currentHour = DateTime.now().hour;
-    int todayWaterIntake = _dailyWaterIntake[today] ?? 0;
+  String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  int currentHour = DateTime.now().hour;
+  int todayWaterIntake = _dailyWaterIntake[today] ?? 0;
 
-    // 오전 6시 이전에는 PopupHandler 상태를 업데이트하지 않음
-    
-    await widget.popupHandler.updateStatus(
-      newWaterLevel: todayWaterIntake,
-      newMealLevel: widget.popupHandler.mealLevel,
-      newSleepLevel: widget.popupHandler.sleepLevel,
-    );
-     // ✅ UI 갱신
-    setState(() {});
-  }
+  
+
+  // ✅ `updateStatus()`가 완료될 때까지 기다림
+  await widget.characterStatus.updateStatus(
+    newWaterLevel: todayWaterIntake,
+    newMealLevel: widget.characterStatus.mealLevel,
+    newSleepLevel: widget.characterStatus.sleepLevel,
+  );
+
+  
+
+  // ✅ UI 갱신
+  setState(() {});
+}
+
 
   List<BarChartGroupData> _generateBarChartData() {
     List<String> dates = _dailyWaterIntake.keys.toList()..sort();
@@ -159,13 +169,15 @@ class _WaterDrinkState extends State<WaterDrink> {
         ? MediaQuery.of(context).size.width - 100 // 데스크톱: 화면 너비 기반
         : 7 * 80.0; // 모바일: 7개의 데이터 고정
 
-    return WillPopScope(
-      onWillPop: () async {
-        if (widget.popupHandler.waterLevel > _currentWaterLevel) {
-          await widget.popupHandler.triggerAnimation('drinkwater', delayMilliseconds: 1000);
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) async {
+      if (!didPop) {
+          if (widget.characterStatus.waterLevel > _currentWaterLevel) {
+            await widget.popupHandler.triggerAnimation('drinkwater', delayMilliseconds: 1000);
+          }
         }
-        return true;
-      },
+  },
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: true,

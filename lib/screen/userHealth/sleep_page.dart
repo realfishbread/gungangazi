@@ -35,7 +35,7 @@ class _SleepPageState extends State<SleepPage> {
       tokenService: TokenService(),
     );
     _loadSleepDataFromServer();
-    _currentSleepLevel = widget.characterStatus.waterLevel;
+    _currentSleepLevel = widget.characterStatus.sleepLevel;
   }
 
   // 서버에서 수면 데이터 가져오기
@@ -62,9 +62,9 @@ class _SleepPageState extends State<SleepPage> {
 
       // 새로운 sleepLevel 계산
       int newSleepLevel = widget.characterStatus.sleepLevel;
-      _currentSleepLevel = widget.characterStatus.sleepLevel;
+      
       if (sleepHours >= 5.0) {
-        newSleepLevel = widget.characterStatus.sleepLevel + 200; // 수면 시간이 충분할 경우 증가
+        newSleepLevel = _currentSleepLevel + 200; // 수면 시간이 충분할 경우 증가
       }
 
       // sleepLevel 업데이트
@@ -225,19 +225,19 @@ class _SleepPageState extends State<SleepPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        // sleepLevel이 증가했는지 확인
-        if (widget.popupHandler.sleepLevel > _currentSleepLevel) {
+    return PopScope(
+    canPop: true,
+    onPopInvokedWithResult: (didPop, result) async {
+        if (!didPop) {
+        if (widget.characterStatus.sleepLevel > _currentSleepLevel) {
          await widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 1000);
-          print('Triggering sleeping animation for sleep level: ${widget.popupHandler.sleepLevel}');
+          print('Triggering sleeping animation for sleep level: ${widget.characterStatus.sleepLevel}');
         } else {
           print("No significant sleep level change, no animation triggered.");
         }
 
-        // 뒤로 가기 허용
-        return true;
-      },
+        }
+  },
       child: Scaffold(
         appBar: AppBar(
           title: const Text('수면'),

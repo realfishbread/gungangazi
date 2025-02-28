@@ -337,10 +337,12 @@ Future<void> _checkStatus() async {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        await _checkStatus();
-        return true;
+   return PopScope(
+    canPop: true,
+    onPopInvokedWithResult: (didPop, result) async {
+        if (!didPop) {
+          await _checkStatus();
+        }
       },
       child: Scaffold(
         appBar: AppBar(

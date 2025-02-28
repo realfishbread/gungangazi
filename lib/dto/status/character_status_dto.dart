@@ -1,5 +1,5 @@
 class StatusDto {
-  final String username;
+  final String? username;
   final int waterLevel;
   final int mealLevel;
   final int sleepLevel;
@@ -11,7 +11,7 @@ class StatusDto {
     required this.sleepLevel
   });
 
-  factory StatusDto.fromJson(Map<String, dynamic> json) {
+  factory StatusDto.fromJson(Map<String?, dynamic> json) {
     return StatusDto(
       waterLevel: json['water_level'],
       mealLevel: json['meal_level'],
@@ -20,7 +20,7 @@ class StatusDto {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String?, dynamic> toJson() {
     return {
       'water_level': waterLevel,
       'meal_level': mealLevel,

@@ -24,6 +24,19 @@ public class StatusDto {
 
     // DTO → Entity 변환 메서드
     public Status toEntity() {
-        return new Status(null, username, water_level, meal_level, sleep_level);
+        return new Status(username, water_level, meal_level, sleep_level);
+    }
+
+    // Getter & Setter (필수)
+    public void setWater_level(int water_level) {
+        this.water_level = water_level;
+    }
+
+    public void setMeal_level(int meal_level) {
+        this.meal_level = meal_level;
+    }
+
+    public void setSleep_level(int sleep_level) {
+        this.sleep_level = sleep_level;
     }
 }

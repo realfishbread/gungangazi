@@ -22,8 +22,8 @@ public class Status {
     public Status() {}
 
     // 모든 필드를 포함한 생성자
-    public Status(Long id, String username, int water_level, int meal_level, int sleep_level) {
-        this.id = id;
+    public Status(String username, int water_level, int meal_level, int sleep_level) {
+        
         this.username = username;
         this.water_level = water_level;
         this.meal_level = meal_level;

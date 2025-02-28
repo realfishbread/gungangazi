@@ -245,7 +245,9 @@ Widget _getCalorieStatusWidget(String date) {
           _caloriesController.clear();
         });
 
-        _updatePopupHandler(); // 상태 업데이트
+       // ✅ 해결 방법: `_checkStatus();`를 `await`으로 실행
+      await _updatePopupHandler(); // 상태 업데이트 완료 후
+      await _checkStatus(); // ✅ 최신 상태 기반으로 애니메이션 실행
         print("Meal added successfully. Updated Meal Level: $_mealLevel");
       } catch (e) {
         print('Error adding meal: $e');
@@ -314,7 +316,7 @@ Color _getMealTypeColor(String? mealType) {
   }
 }
 
-void _checkStatus() {
+Future<void> _checkStatus() async {
   String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
   int todayMealIntake = widget.popupHandler.mealLevel;
   int currentHour = DateTime.now().hour; // 현재 시간 가져오기

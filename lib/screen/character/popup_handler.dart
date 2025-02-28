@@ -1,6 +1,3 @@
-import '../userHealth/meal_page.dart';
-import '../userHealth/sleep_page.dart';
-import '../userHealth/supplement_page.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../../core_services/dio_service.dart'; // DioService 추가
@@ -420,7 +417,7 @@ class PopupHandler {
    /// 특정 상태에 맞는 애니메이션 실행
 bool _isAnimating = false; // ✅ 애니메이션 진행 여부 변수 추가
 
-void triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) {
+Future<void> triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) async{
   if (_isAnimating) {
     
     return; // ✅ 이미 애니메이션이 실행 중이면 중복 실행 방지

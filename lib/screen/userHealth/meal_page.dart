@@ -45,6 +45,7 @@ class _MealPageState extends State<MealPage> {
     );
     _fetchUserInfo(); // 사용자 정보 가져오기
     _fetchMeals(); // 식사 기록 가져오기
+    widget.characterStatus.loadStatus();
     _currentMeal = widget.characterStatus.mealLevel;
   }
 

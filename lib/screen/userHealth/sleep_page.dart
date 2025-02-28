@@ -35,6 +35,7 @@ class _SleepPageState extends State<SleepPage> {
       tokenService: TokenService(),
     );
     _loadSleepDataFromServer();
+    widget.characterStatus.loadStatus();
     _currentSleepLevel = widget.characterStatus.sleepLevel;
   }
 

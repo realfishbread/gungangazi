@@ -43,6 +43,7 @@ class _WaterDrinkState extends State<WaterDrink> {
     profileRepository = ProfileRepository(dioService: DioService(), tokenService: TokenService(),);
     _loadUserInfo();
     _loadWaterIntake();
+    widget.characterStatus.loadStatus();
     _currentWaterLevel = widget.characterStatus.waterLevel;
   }
 

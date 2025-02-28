@@ -16,8 +16,8 @@ class CharacterRepository {
     /// 서버에 현재 상태 저장
 Future<void> saveStatusToServer(StatusDto status) async {
   try {
-    String? username = await TokenService().getUsername();
-    String? jwtToken = await TokenService().getToken(); // 토큰 가져오기
+    String? username = await _tokenService.getUsername();
+    String? jwtToken = await _tokenService.getToken(); // 토큰 가져오기
 
     // username이 이메일이면 변환
     if (username != null && username.contains("@")) {
@@ -46,8 +46,8 @@ Future<void> saveStatusToServer(StatusDto status) async {
  /// 서버에서 현재 상태 불러오기
 Future<Map<String, dynamic>?> loadStatusFromServer() async {
   try {
-    String? username = await TokenService().getUsername();
-    String? jwtToken = await TokenService().getToken(); // 토큰 가져오기
+    String? username = await _tokenService.getUsername();
+    String? jwtToken = await _tokenService.getToken(); // 토큰 가져오기
 
     final response = await DioService().getDio().get(
       '/character/status',

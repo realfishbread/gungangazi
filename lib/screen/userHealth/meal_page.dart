@@ -247,7 +247,7 @@ Widget _getCalorieStatusWidget(String date) {
 
        // ✅ 해결 방법: `_checkStatus();`를 `await`으로 실행
       await _updatePopupHandler(); // 상태 업데이트 완료 후
-      await _checkStatus(); // ✅ 최신 상태 기반으로 애니메이션 실행
+      
         print("Meal added successfully. Updated Meal Level: $_mealLevel");
       } catch (e) {
         print('Error adding meal: $e');
@@ -337,7 +337,7 @@ Future<void> _checkStatus() async {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        _checkStatus();
+        await _checkStatus();
         return true;
       },
       child: Scaffold(

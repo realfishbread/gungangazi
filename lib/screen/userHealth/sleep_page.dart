@@ -226,7 +226,7 @@ class _SleepPageState extends State<SleepPage> {
       onWillPop: () async {
         // sleepLevel이 증가했는지 확인
         if (widget.popupHandler.sleepLevel > _currentSleepLevel) {
-          widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 1000);
+         await widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 1000);
           print('Triggering sleeping animation for sleep level: ${widget.popupHandler.sleepLevel}');
         } else {
           print("No significant sleep level change, no animation triggered.");

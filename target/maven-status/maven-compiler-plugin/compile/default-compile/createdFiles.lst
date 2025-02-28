@@ -5,6 +5,7 @@ com\example\demo\controller\userHealth\SleepController.class
 com\example\demo\service\UserService.class
 com\example\demo\config\CorsConfig.class
 com\example\demo\config\RedisConfig.class
+com\example\demo\DTO\StatusDto.class
 com\example\demo\entity\userHealth\Supplement.class
 com\example\demo\entity\userHealth\SupplementId.class
 com\example\demo\service\JwtTokenProvider.class

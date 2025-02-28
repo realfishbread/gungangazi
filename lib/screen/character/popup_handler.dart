@@ -357,7 +357,7 @@ class PopupHandler {
 
 
 
-  void setBodyPartStatus() {
+  Future<void> setBodyPartStatus() async {
   String previousBodyPart = _currentBodyPart;
 
   if (characterStatus.waterLevel <= 200 && characterStatus.mealLevel <= 200 && characterStatus.sleepLevel <= 200) {
@@ -386,7 +386,7 @@ class PopupHandler {
 }
 
   // 이미지 애니메이션 시작
-  void startImageAnimation() {
+  Future<void> startImageAnimation() async {
   _imageTimer?.cancel(); // 기존 타이머 중지
 
   _imageTimer = Timer.periodic(frameDuration, (timer) {

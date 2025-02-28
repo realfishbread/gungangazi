@@ -102,7 +102,7 @@ class _ToothCarePageState extends State<ToothCarePage> {
 
       if (!brushed) {
         if (isNightTime) {
-          widget.popupHandler.triggerAnimation('0amnobrush', delayMilliseconds: 1000);
+         widget.popupHandler.triggerAnimation('0amnobrush', delayMilliseconds: 1000);
         } else {
           widget.popupHandler.triggerAnimation('nobrush', delayMilliseconds: 1000);
         }

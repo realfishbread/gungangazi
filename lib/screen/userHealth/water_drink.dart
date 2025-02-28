@@ -160,7 +160,7 @@ class _WaterDrinkState extends State<WaterDrink> {
     return WillPopScope(
       onWillPop: () async {
         if (widget.popupHandler.waterLevel > _currentWaterLevel) {
-          widget.popupHandler.triggerAnimation('drinkwater', delayMilliseconds: 1000);
+          await widget.popupHandler.triggerAnimation('drinkwater', delayMilliseconds: 1000);
         }
         return true;
       },

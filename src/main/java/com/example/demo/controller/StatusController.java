@@ -33,25 +33,11 @@ public class StatusController {
 
     // 상태 저장 API
     @PostMapping
-public ResponseEntity<String> saveStatus(@RequestBody StatusDto statusDto) {
-    System.out.println("Received Status - Username: " + statusDto.getUsername() + 
-        ", Water Level: " + statusDto.getWater_level() + 
-        ", Meal Level: " + statusDto.getMeal_level() + 
-        ", Sleep Level: " + statusDto.getSleep_level());
-
-    // 🔥 DTO → 엔티티 변환
-    Status status = new Status();
-    status.setUsername(statusDto.getUsername());
-    status.setWater_level(statusDto.getWater_level());
-    status.setMeal_level(statusDto.getMeal_level());
-    status.setSleep_level(statusDto.getSleep_level());
-
-    // ✅ 엔티티 저장
-    statusService.saveStatus(status);
-
-    return ResponseEntity.ok("Status saved successfully");
-}
-
+    public ResponseEntity<String> saveStatus(@RequestBody StatusDto statusDto) {
+        Status status = statusDto.toEntity(); // DTO → Entity 변환
+        statusRepository.save(status); // 저장
+        return ResponseEntity.ok("Status saved successfully");
+    }
 
     // 상태 불러오기 API
     @GetMapping

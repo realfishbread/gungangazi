@@ -43,13 +43,27 @@ class _WebHomePageState extends State<WebHomePage> {
   Uint8List? _imageData;
 
   @override
-  void initState() {
-    super.initState();
-    _characterStatus = CharacterStatus();
-    _popupHandler = PopupHandler(listData: [], tokenService: _tokenService, dioService: _dioService, characterStatus: _characterStatus);
-    fetchProfile(); // 프로필 데이터 가져오기
-    _popupHandler.initialize();
-  }
+void initState() {
+  super.initState();
+  _characterStatus = CharacterStatus(); // ✅ 싱글톤 초기화
+  fetchProfile(); // ✅ 프로필 데이터 먼저 가져오기
+
+  // ✅ 캐릭터 상태를 먼저 불러온 후 PopupHandler 초기화
+  _loadCharacterStatus();
+}
+
+Future<void> _loadCharacterStatus() async {
+  await _characterStatus.loadStatus(); // ✅ 서버에서 캐릭터 상태 불러오기
+  _popupHandler = PopupHandler(
+    listData: [], 
+    tokenService: _tokenService, 
+    dioService: _dioService, 
+    characterStatus: _characterStatus
+  );
+  _popupHandler.initialize();
+  setState(() {}); // ✅ UI 업데이트
+}
+
 
     Future<void> fetchProfile() async {
       String? token = await _tokenService.getToken();
@@ -272,7 +286,7 @@ class _WebHomePageState extends State<WebHomePage> {
                     onTap: (index, _) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SleepPage(popupHandler: _popupHandler)),
+                        MaterialPageRoute(builder: (context) => SleepPage(popupHandler: _popupHandler, characterStatus: _characterStatus),),
                       );
                     },
                     icon: const Icon(Icons.nightlight),
@@ -283,7 +297,7 @@ class _WebHomePageState extends State<WebHomePage> {
                     onTap: (index, _) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => MealPage(popupHandler: _popupHandler)),
+                        MaterialPageRoute(builder: (context) => MealPage(popupHandler: _popupHandler, characterStatus: _characterStatus)),
                       );
                     },
                     icon: const Icon(Icons.restaurant),
@@ -293,7 +307,7 @@ class _WebHomePageState extends State<WebHomePage> {
                     onTap: (index, _) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => WaterDrink(popupHandler: _popupHandler)),
+                        MaterialPageRoute(builder: (context) => WaterDrink(popupHandler: _popupHandler, characterStatus: _characterStatus)),
                       );
                     },
                     icon: const Icon(Icons.water_drop),

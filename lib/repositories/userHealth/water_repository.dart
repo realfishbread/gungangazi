@@ -18,7 +18,7 @@ class WaterRepository {
       String? token = await tokenService.getToken();
       String? username = await tokenService.getUsername();
       
-      final response = await dioService.getDio().get(
+      final response = await _dio.get(
         '/waterIntake/$username',
         options: Options(
           headers: {'Authorization': 'Bearer $token'},
@@ -48,7 +48,7 @@ class WaterRepository {
         throw Exception("Username is missing");
       }
 
-      await dioService.getDio().post(
+      await _dio.post(
         '/waterIntake/$username/save', // username을 URL에 포함
         data: waterIntake.entries
             .map((entry) => {'date': entry.key, 'amount': entry.value})

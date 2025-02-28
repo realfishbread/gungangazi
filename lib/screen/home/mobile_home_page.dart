@@ -42,21 +42,26 @@ class _MobileHomePageState extends State<MobileHomePage> {
   
 
   @override
-  void initState() {
-    super.initState();
-    // ✅ CharacterRepository를 주입하여 CharacterStatus 인스턴스 생성
-  _characterStatus = CharacterStatus();
+void initState() {
+  super.initState();
+  _characterStatus = CharacterStatus(); // ✅ 싱글톤 초기화
 
-  // ✅ PopupHandler에서도 characterStatus 전달 가능
+  // ✅ 캐릭터 상태를 먼저 불러온 후 PopupHandler 초기화
+  _loadCharacterStatus();
+}
+
+Future<void> _loadCharacterStatus() async {
+  await _characterStatus.loadStatus(); // ✅ 서버에서 캐릭터 상태 불러오기
   _popupHandler = PopupHandler(
-    listData: _listData,
-    tokenService: _tokenService,
-    dioService: _dioService,
-    characterStatus: _characterStatus, // ✅ 추가
+    listData: [], 
+    tokenService: _tokenService, 
+    dioService: _dioService, 
+    characterStatus: _characterStatus
   );
-    _popupHandler.initialize();
- 
-  }
+  _popupHandler.initialize();
+  setState(() {}); // ✅ UI 업데이트
+}
+
 
   @override
   void dispose() {
@@ -68,9 +73,9 @@ class _MobileHomePageState extends State<MobileHomePage> {
 
   void _navigateToPage(BuildContext context, String title) {
     final routes = {
-      '수면': SleepPage(popupHandler: _popupHandler),
-      '수분': WaterDrink(popupHandler: _popupHandler),
-      '식단': MealPage(popupHandler: _popupHandler),
+      '수면': SleepPage(popupHandler: _popupHandler, characterStatus: _characterStatus),
+      '수분': WaterDrink(popupHandler: _popupHandler, characterStatus: _characterStatus),
+      '식단': MealPage(popupHandler: _popupHandler, characterStatus: _characterStatus),
       '영양제': SupplementsPage(popupHandler: _popupHandler),
       '혈압': const BloodPressurePage(),
       '치아건강': ToothCarePage(popupHandler: _popupHandler),

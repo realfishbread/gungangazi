@@ -6,11 +6,13 @@ import '../../core_services/dio_service.dart';
 import '../../core_services/token_service.dart';
 import '../../repositories/auth/profile_repository.dart';
 import '../character/popup_handler.dart'; // PopupHandler 임포트
+import 'package:gungangazi/screen/character/character_status.dart';
 
 class WaterDrink extends StatefulWidget {
   final PopupHandler popupHandler; // PopupHandler 인스턴스를 받도록 설정
+  final CharacterStatus characterStatus; // ✅ 추가
 
-  const WaterDrink({Key? key, required this.popupHandler}) : super(key: key);
+  const WaterDrink({Key? key, required this.popupHandler, required this.characterStatus}) : super(key: key);
 
   @override
   _WaterDrinkState createState() => _WaterDrinkState();
@@ -36,7 +38,7 @@ class _WaterDrinkState extends State<WaterDrink> {
     profileRepository = ProfileRepository(dioService: DioService(), tokenService: TokenService(),);
     _loadUserInfo();
     _loadWaterIntake();
-    _currentWaterLevel = widget.popupHandler.waterLevel;
+    _currentWaterLevel = widget.characterStatus.waterLevel;
   }
 
    Future<void> _loadUserInfo() async {

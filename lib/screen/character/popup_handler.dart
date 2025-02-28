@@ -337,22 +337,33 @@ class PopupHandler {
     _characterRepository.loadStatusFromServer();
   }
   /// ✅ 현재 상태 업데이트 및 서버 저장
-  Future<void> updateStatus({
-    required int newWaterLevel,
-    required int newMealLevel,
-    required int newSleepLevel,
-  }) async {
-    print("Updating status - Water: $newWaterLevel, Meal: $newMealLevel, Sleep: $newSleepLevel");
+  /// ✅ 먼저 상태 변경 -> 서버 저장
+Future<void> updateStatus({
+  required int newWaterLevel,
+  required int newMealLevel,
+  required int newSleepLevel,
+}) async {
+  print("🔄 UI 업데이트 - Water: $newWaterLevel, Meal: $newMealLevel, Sleep: $newSleepLevel");
 
-    await characterStatus.updateStatus(
-      newWaterLevel: newWaterLevel,
-      newMealLevel: newMealLevel,
-      newSleepLevel: newSleepLevel,
-    );
+  // 1️⃣ ✅ 먼저 로컬 상태 변경
+  characterStatus.waterLevel = newWaterLevel;
+  characterStatus.mealLevel = newMealLevel;
+  characterStatus.sleepLevel = newSleepLevel;
 
-    setBodyPartStatus();
-    startImageAnimation();
+  // 2️⃣ ✅ UI 즉시 반영
+  setBodyPartStatus();
+  startImageAnimation();
+
+  // 3️⃣ ✅ 서버에 비동기 저장 (실패해도 UI는 유지됨)
+  try {
+    await characterStatus.saveStatus();
+    print("✅ 서버 저장 완료");
+  } catch (e) {
+    print("❌ 서버 저장 실패: $e");
+    // 🔥 서버 저장 실패 시 대비책 (예: 재시도 로직 추가 가능)
   }
+}
+
    /// 서버에 현재 상태 저장
 
 

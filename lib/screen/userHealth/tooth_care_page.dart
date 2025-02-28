@@ -102,15 +102,15 @@ class _ToothCarePageState extends State<ToothCarePage> {
 
       if (!brushed) {
         if (isNightTime) {
-         widget.popupHandler.triggerAnimation('0amnobrush', delayMilliseconds: 1000);
+         await widget.popupHandler.triggerAnimation('0amnobrush', delayMilliseconds: 1000);
         } else {
-          widget.popupHandler.triggerAnimation('nobrush', delayMilliseconds: 1000);
+          await widget.popupHandler.triggerAnimation('nobrush', delayMilliseconds: 1000);
         }
       } else if (_currentTooth == true) { 
         if (isNightTime) {
-          widget.popupHandler.triggerAnimation('0ambrush', delayMilliseconds: 1000);
+          await widget.popupHandler.triggerAnimation('0ambrush', delayMilliseconds: 1000);
         } else {
-          widget.popupHandler.triggerAnimation('brush', delayMilliseconds: 1000);
+          await widget.popupHandler.triggerAnimation('brush', delayMilliseconds: 1000);
         }
       } else {
         print("No significant tooth level change, no animation triggered.");

@@ -5,11 +5,13 @@ import '../../../repositories/userHealth/meal_repository.dart';
 import '../../core_services/dio_service.dart';
 import '../../core_services/token_service.dart';
 import '../character/popup_handler.dart';
+import 'package:gungangazi/screen/character/character_status.dart';
 
 class MealPage extends StatefulWidget {
   final PopupHandler popupHandler;
+  final CharacterStatus characterStatus; // ✅ 추가
 
-  const MealPage({Key? key, required this.popupHandler}) : super(key: key);
+  const MealPage({Key? key, required this.popupHandler, required this.characterStatus}) : super(key: key);
 
   @override
   _MealPageState createState() => _MealPageState();
@@ -43,7 +45,7 @@ class _MealPageState extends State<MealPage> {
     );
     _fetchUserInfo(); // 사용자 정보 가져오기
     _fetchMeals(); // 식사 기록 가져오기
-    _currentMeal = widget.popupHandler.mealLevel;
+    _currentMeal = widget.characterStatus.mealLevel;
   }
 
 
@@ -210,10 +212,10 @@ Widget _getCalorieStatusWidget(String date) {
     print("Updating PopupHandler...");
     
     
-    await widget.popupHandler.updateStatus(
-      newWaterLevel: widget.popupHandler.waterLevel,
+    await widget.characterStatus.updateStatus(
+      newWaterLevel: widget.characterStatus.waterLevel,
       newMealLevel: _mealLevel,
-      newSleepLevel: widget.popupHandler.sleepLevel,
+      newSleepLevel: widget.characterStatus.sleepLevel,
     );
     print("PopupHandler updated: Meal Level: $_mealLevel");
   }
@@ -318,7 +320,7 @@ Color _getMealTypeColor(String? mealType) {
 
 Future<void> _checkStatus() async {
   String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
-  int todayMealIntake = widget.popupHandler.mealLevel;
+  int todayMealIntake = widget.characterStatus.mealLevel;
   int currentHour = DateTime.now().hour; // 현재 시간 가져오기
 
   // 저녁 10시 이후인지 확인

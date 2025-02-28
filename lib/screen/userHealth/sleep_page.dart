@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gungangazi/screen/character/character_status.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:fl_chart/fl_chart.dart';
@@ -10,8 +11,10 @@ import '../character/popup_handler.dart';
 
 class SleepPage extends StatefulWidget {
   final PopupHandler popupHandler;
+  final CharacterStatus characterStatus;
+  
 
-  const SleepPage({Key? key, required this.popupHandler}) : super(key: key);
+  const SleepPage({Key? key, required this.popupHandler, required this.characterStatus}) : super(key: key);
 
   @override
   _SleepPageState createState() => _SleepPageState();
@@ -32,7 +35,7 @@ class _SleepPageState extends State<SleepPage> {
       tokenService: TokenService(),
     );
     _loadSleepDataFromServer();
-    _currentSleepLevel = widget.popupHandler.sleepLevel;
+    _currentSleepLevel = widget.characterStatus.waterLevel;
   }
 
   // 서버에서 수면 데이터 가져오기
@@ -58,16 +61,16 @@ class _SleepPageState extends State<SleepPage> {
       double sleepHours = sleepDuration.inMinutes / 60.0;
 
       // 새로운 sleepLevel 계산
-      int newSleepLevel = widget.popupHandler.sleepLevel;
-      _currentSleepLevel = widget.popupHandler.sleepLevel;
+      int newSleepLevel = widget.characterStatus.sleepLevel;
+      _currentSleepLevel = widget.characterStatus.sleepLevel;
       if (sleepHours >= 5.0) {
-        newSleepLevel = widget.popupHandler.sleepLevel + 200; // 수면 시간이 충분할 경우 증가
+        newSleepLevel = widget.characterStatus.sleepLevel + 200; // 수면 시간이 충분할 경우 증가
       }
 
       // sleepLevel 업데이트
-       await widget.popupHandler.updateStatus(
-        newWaterLevel: widget.popupHandler.waterLevel,
-        newMealLevel: widget.popupHandler.mealLevel,
+       await widget.characterStatus.updateStatus(
+        newWaterLevel: widget.characterStatus.waterLevel,
+        newMealLevel: widget.characterStatus.mealLevel,
         newSleepLevel: newSleepLevel,
       );
 

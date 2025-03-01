@@ -5,6 +5,7 @@ import '../../core_services/token_service.dart';
 import '../../repositories/status/character_repository.dart';
 import '../../dto/status/character_status_dto.dart'; // ✅ DTO 추가
 import 'character_status.dart'; // ✅ CharacterStatus 추가
+import 'package:provider/provider.dart'; // ✅ Provider 추가
 
 
 
@@ -19,9 +20,9 @@ class PopupHandler {
   Timer? _imageTimer;
   Duration frameDuration = const Duration(milliseconds: 300);
   String _currentBodyPart = 'default';
+  final CharacterStatus characterStatus;
+  final CharacterRepository _characterRepository =CharacterRepository();
   
-  final CharacterRepository characterRepository;
-  final CharacterStatus characterStatus; // ✅ CharacterStatus 추가
   
 
 
@@ -45,7 +46,7 @@ class PopupHandler {
     'assets/person/default/1.jpg',
   ];
 
-  PopupHandler({required this.listData, required this.dioService, required this.tokenService, required this.characterStatus, required this.characterRepository})
+  PopupHandler({required this.listData, required this.dioService, required this.tokenService, required this.characterStatus})
       : imagePathsByBodyPart = {
           'head': [
             'assets/person/default/head1.jpg',
@@ -334,7 +335,7 @@ class PopupHandler {
 
 
   Future<void> setBodyPartStatus() async {
-
+  
   String previousBodyPart = _currentBodyPart;
 
   if (characterStatus.water_level <= 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level <= 200) {

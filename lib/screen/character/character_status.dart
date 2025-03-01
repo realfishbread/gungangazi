@@ -1,45 +1,46 @@
-// character_status.dart
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:gungangazi/core_services/token_service.dart';
-import '../../dto/status/character_status_dto.dart';
 import '../../repositories/status/character_repository.dart';
+import 'package:flutter/material.dart'; // ChangeNotifier를 위해 추가
+import '../../dto/status/character_status_dto.dart';
+import '../../core_services/token_service.dart';
 
-class CharacterStatus extends ChangeNotifier {
-  final CharacterRepository repository; // ✅ CharacterRepository 추가
+class CharacterStatus extends ChangeNotifier { // ✅ ChangeNotifier 상속
+  // ✅ 싱글톤 인스턴스
+  static final CharacterStatus _instance = CharacterStatus._internal(CharacterRepository());
 
-  // 상태 필드
+  // ✅ 팩토리 생성자로 싱글톤 유지
+  factory CharacterStatus() => _instance;
+
+  // ✅ 의존성 주입 가능하도록 변경
+  final CharacterRepository _characterRepository;
+
+  // ✅ private 생성자로 외부에서 직접 인스턴스화 방지
+  CharacterStatus._internal(this._characterRepository);
+
   int water_level = 100;
   int meal_level = 100;
   int sleep_level = 100;
 
-  /// ✅ 생성자에서 CharacterRepository 받기
-  CharacterStatus({required this.repository});
-
-
-
-  Future<void> loadStatus(BuildContext context) async {
-    
-    final statusData = await repository.loadStatusFromServer();
+  Future<void> loadStatus() async {
+    final statusData = await _characterRepository.loadStatusFromServer();
     if (statusData != null) {
-      final status = StatusDto.fromJson(statusData);
+      StatusDto status = StatusDto.fromJson(statusData);
       water_level = status.water_level;
       meal_level = status.meal_level;
       sleep_level = status.sleep_level;
-
-      notifyListeners(); // UI 갱신
+      notifyListeners(); // ✅ UI 업데이트 트리거
     }
   }
 
   Future<void> saveStatus() async {
     String? username = await TokenService().getUsername() ?? "defaultUser";
-    final statusDto = StatusDto(
-      username: username, // 수정 필요
+
+    StatusDto statusDto = StatusDto(
+      username: username,
       water_level: water_level,
       meal_level: meal_level,
       sleep_level: sleep_level,
     );
-   await repository.saveStatusToServer(statusDto);
+    await _characterRepository.saveStatusToServer(statusDto);
   }
 
   Future<void> updateStatus({
@@ -48,10 +49,10 @@ class CharacterStatus extends ChangeNotifier {
     required int newSleepLevel,
   }) async {
     water_level = newWaterLevel;
-    meal_level = newMealLevel;
+    meal_level= newMealLevel;
     sleep_level = newSleepLevel;
 
-    notifyListeners(); // UI 갱신
-    await saveStatus(); // 변경 즉시 서버 저장
+    notifyListeners(); // ✅ UI 업데이트
+    await saveStatus();
   }
 }

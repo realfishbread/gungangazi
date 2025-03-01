@@ -11,19 +11,9 @@ import 'repositories/status/character_repository.dart';
 
 void main() {
   runApp(
- MultiProvider(
+MultiProvider(
       providers: [
-        // 1️⃣ CharacterRepository를 먼저 등록
-        Provider<CharacterRepository>(
-          create: (_) => CharacterRepository(),
-        ),
-
-        // 2️⃣ CharacterStatus를 등록 + CharacterRepository 주입
-        ChangeNotifierProvider<CharacterStatus>(
-          create: (context) => CharacterStatus(
-            repository: context.read<CharacterRepository>(),
-          ),
-        ),
+        ChangeNotifierProvider(create: (_) => CharacterStatus()), // ✅ Provider 등록
       ],
       child: const MyApp(),
     ),

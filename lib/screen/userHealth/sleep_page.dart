@@ -42,7 +42,7 @@ class _SleepPageState extends State<SleepPage> {
 
    Future<void> _loadCharacterStatus() async {
     final characterStatus = context.read<CharacterStatus>(); // ✅ Provider에서 가져오기
-    await characterStatus.loadStatus(context);
+    await characterStatus.loadStatus();
     setState(() {
       _currentSleepLevel = characterStatus.sleep_level;
     });

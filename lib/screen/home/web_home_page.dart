@@ -51,15 +51,16 @@ class _WebHomePageState extends State<WebHomePage> {
   void initState() {
     super.initState();
 
+
+ Future.microtask(() {
     // Provider를 쓴다면 read() 사용(또는 직접 생성하되, 꼭 "한 번"만 만듦)
-    Future.microtask(() async {
-    _characterStatus = context.read<CharacterStatus>(); // ✅ 안전하게 가져오기
-    await Future.wait([
-      fetchProfile(),
-      _loadCharacterStatus(),
-    ]);
-  });
-}
+    _characterStatus = context.read<CharacterStatus>(); 
+    fetchProfile();
+
+    // 1) 서버에서 상태를 먼저 로드
+    _loadCharacterStatus();
+    });
+  }
 
   @override
   void dispose() {
@@ -70,7 +71,7 @@ class _WebHomePageState extends State<WebHomePage> {
 
 Future<void> _loadCharacterStatus() async {
     // 2) 서버에서 데이터 받아오기 (이 시점 이전에는 late 필드에 접근 금지)
-    await _characterStatus.loadStatus(context);
+    await _characterStatus.loadStatus();
 
     // 3) 다 받았으므로, 이제 PopupHandler 만들고
     setState(() {
@@ -78,10 +79,11 @@ Future<void> _loadCharacterStatus() async {
         listData: [],
         tokenService: TokenService(),
         dioService: DioService(),
-        characterStatus: _characterStatus,
-        characterRepository: _characterRepository
+        characterStatus: CharacterStatus()
       );
       _isLoaded = true; // 로드 끝
+      _popupHandler.setBodyPartStatus();       // 🔥 자동으로 상태 반영
+      _popupHandler.startImageAnimation();     // 🔥 자동 애니메이션 시작
     });
   }
 

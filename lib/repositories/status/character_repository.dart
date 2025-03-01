@@ -4,14 +4,17 @@ import '../../screen/character/popup_handler.dart';
 import 'package:dio/dio.dart';
 import '../../dto/status/character_status_dto.dart';
 
+
 class CharacterRepository {
    final TokenService _tokenService = TokenService();
    final DioService dioService = DioService();
    late PopupHandler _popupHandler;
    final Dio _dio;
    
+   
 
-  CharacterRepository() : _dio = DioService().getDio();
+  // ✅ 생성자 수정: CharacterStatus와 DioService 초기화
+  CharacterRepository() : _dio = DioService().getDio(); // Dio 초기화
 
     /// 서버에 현재 상태 저장
 Future<void> saveStatusToServer(StatusDto statusDto) async {
@@ -33,6 +36,8 @@ Future<void> saveStatusToServer(StatusDto statusDto) async {
     print('Failed to save status to server: $e');
   }
 }
+
+
 Future<Map<String, dynamic>?> loadStatusFromServer() async {
   try {
     String? username = await _tokenService.getUsername();
@@ -50,13 +55,12 @@ Future<Map<String, dynamic>?> loadStatusFromServer() async {
       ),
     );
 
-    if (response.statusCode == 200) {
-      Map<String, dynamic> responseData = response.data; // 🔥 응답 데이터 저장
 
-      // 상태 업데이트 및 애니메이션 재시작
-      await _popupHandler.stopImageAnimation();
-      await _popupHandler.setBodyPartStatus();
-      await _popupHandler.startImageAnimation(); // 상태 업데이트 후 애니메이션 재시작
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = response.data;
+
+      
+
 
       print('Status loaded from server successfully');
       
@@ -71,8 +75,7 @@ Future<Map<String, dynamic>?> loadStatusFromServer() async {
     print('Failed to load status from server: $e');
     return null;
   }
-}
-
+} 
 
 
 

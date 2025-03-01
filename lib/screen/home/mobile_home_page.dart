@@ -45,26 +45,25 @@ class _MobileHomePageState extends State<MobileHomePage> {
   void initState() {
     super.initState();
 
-    // Provider를 쓴다면 read() 사용(또는 직접 생성하되, 꼭 "한 번"만 만듦)
-    _characterStatus = context.read<CharacterStatus>(); 
-
-    // 1) 서버에서 상태를 먼저 로드
-    _loadCharacterStatus();
+    // ✅ context.read<T>()를 안전하게 사용하기 위해 Future.microtask() 사용
+    Future.microtask(() {
+      _characterStatus = context.read<CharacterStatus>(); 
+      _loadCharacterStatus(); // ✅ 안전하게 호출
+    });
   }
 
-Future<void> _loadCharacterStatus() async {
-    // 2) 서버에서 데이터 받아오기 (이 시점 이전에는 late 필드에 접근 금지)
-    await _characterStatus.loadStatus();
+ Future<void> _loadCharacterStatus() async {
+    await _characterStatus.loadStatus(context);
 
-    // 3) 다 받았으므로, 이제 PopupHandler 만들고
     setState(() {
       _popupHandler = PopupHandler(
         listData: [],
         tokenService: TokenService(),
         dioService: DioService(),
         characterStatus: _characterStatus,
+        characterRepository: context.read<CharacterRepository>(), // ✅ Provider에서 가져오기
       );
-      _isLoaded = true; // 로드 끝
+      _isLoaded = true;
     });
   }
 

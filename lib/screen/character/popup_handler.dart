@@ -20,7 +20,7 @@ class PopupHandler {
   Duration frameDuration = const Duration(milliseconds: 300);
   String _currentBodyPart = 'default';
   
-  final CharacterRepository _characterRepository =CharacterRepository();
+  final CharacterRepository characterRepository;
   final CharacterStatus characterStatus; // ✅ CharacterStatus 추가
   
 
@@ -45,7 +45,7 @@ class PopupHandler {
     'assets/person/default/1.jpg',
   ];
 
-  PopupHandler({required this.listData, required this.dioService, required this.tokenService, required this.characterStatus,})
+  PopupHandler({required this.listData, required this.dioService, required this.tokenService, required this.characterStatus, required this.characterRepository})
       : imagePathsByBodyPart = {
           'head': [
             'assets/person/default/head1.jpg',

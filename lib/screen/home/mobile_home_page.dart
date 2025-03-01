@@ -90,7 +90,7 @@ Future<void> _loadCharacterStatus() async {
 
     final page = routes[title];
     if (page != null) {
-      Navigator.pushReplacement( //push는 기존 화면 남아있고, 이건 안남아있음
+      Navigator.push( //push는 기존 화면 남아있고, 이건 안남아있음
         context,
         MaterialPageRoute(builder: (context) => page),
       );

@@ -218,7 +218,7 @@ Future<void> _loadCharacterStatus() async {
               icon: const Icon(Icons.home),
               color: Colors.black,
               onPressed: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const HomePage()),
                 );
@@ -308,7 +308,7 @@ Future<void> _loadCharacterStatus() async {
                   SideMenuItem(
                     title: '수면',
                     onTap: (index, _) {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => SleepPage(popupHandler: _popupHandler, characterStatus: _characterStatus),),
                       );
@@ -319,7 +319,7 @@ Future<void> _loadCharacterStatus() async {
                   SideMenuItem(
                     title: '식단',
                     onTap: (index, _) {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => MealPage(popupHandler: _popupHandler, characterStatus: _characterStatus)),
                       );
@@ -329,7 +329,7 @@ Future<void> _loadCharacterStatus() async {
                   SideMenuItem(
                     title: '수분',
                     onTap: (index, _) {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => WaterDrink(popupHandler: _popupHandler, characterStatus: _characterStatus)),
                       );
@@ -339,7 +339,7 @@ Future<void> _loadCharacterStatus() async {
                   SideMenuItem(
                     title: '치아 건강',
                     onTap: (index, _) {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => ToothCarePage(popupHandler: _popupHandler)),
                       );
@@ -349,7 +349,7 @@ Future<void> _loadCharacterStatus() async {
                   SideMenuItem(
                     title: '혈압',
                     onTap: (index, _) {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => BloodPressurePage()),
                       );
@@ -365,7 +365,7 @@ Future<void> _loadCharacterStatus() async {
                    SideMenuItem(
                     title: '만보기',
                     onTap: (index, _) {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => WalkingPage()),
                       );

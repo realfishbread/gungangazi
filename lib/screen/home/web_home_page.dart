@@ -79,11 +79,10 @@ Future<void> _loadCharacterStatus() async {
         listData: [],
         tokenService: TokenService(),
         dioService: DioService(),
-        characterStatus: CharacterStatus()
+        characterStatus: _characterStatus
       );
       _isLoaded = true; // 로드 끝
-      _popupHandler.setBodyPartStatus();       // 🔥 자동으로 상태 반영
-      _popupHandler.startImageAnimation();     // 🔥 자동 애니메이션 시작
+      _popupHandler.initialize();      // 🔥 자동으로 상태 반영    // 🔥 자동 애니메이션 시작
     });
   }
 

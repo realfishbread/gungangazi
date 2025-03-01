@@ -34,6 +34,7 @@ class PopupHandler {
   /// ✅ 초기화 (서버에서 상태 불러오기)
   Future<void> initialize() async {
     setBodyPartStatus();
+    startImageAnimation();
   }
 
 
@@ -326,7 +327,10 @@ class PopupHandler {
 
         }{
            _imageNotifier = ValueNotifier<int>(_currentImageIndex);
-   
+          characterStatus.addListener(() {
+            initialize(); // async 함수를 호출하되, 반환값(Future<void>)는 무시
+          });
+
   }
  
 

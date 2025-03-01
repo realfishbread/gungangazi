@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.DTO.userHealth.SleepDto;
+import com.example.demo.entity.User;
 import com.example.demo.entity.userHealth.Sleep;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.userHealth.SleepRepository;
 import com.example.demo.service.userHealth.SleepService;
 
@@ -31,14 +34,25 @@ public class SleepController {
     @Autowired
     private SleepRepository sleepRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     // 수면 데이터 저장 (POST)
-    @PostMapping("/saveSleepData")
+     @PostMapping("/saveSleepData")
 public ResponseEntity<?> saveSleepData(@RequestBody List<SleepDto> sleepData) {
     DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("H:mm:ss");
 
     for (SleepDto data : sleepData) {
+        // 구글 로그인 이메일이 전달되었다면, 기존 유저의 username으로 변환
+        String username = data.getUsername();
+        Optional<User> userOpt = userRepository.findByEmail(username);
+        if (userOpt.isPresent()) {
+            // 기존 유저가 있다면, 기존 유저의 username 사용
+            username = userOpt.get().getUsername();
+        }
+        
         // 중복 체크
-        boolean exists = sleepRepository.existsByUsernameAndDate(data.getUsername(), LocalDate.parse(data.getDate()));
+        boolean exists = sleepRepository.existsByUsernameAndDate(username, LocalDate.parse(data.getDate()));
         if (exists) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                                  .body("수면 데이터가 이미 저장되어 있습니다: " + data.getDate());
@@ -46,7 +60,7 @@ public ResponseEntity<?> saveSleepData(@RequestBody List<SleepDto> sleepData) {
 
         // 데이터 저장
         Sleep sleep = new Sleep();
-        sleep.setUsername(data.getUsername());
+        sleep.setUsername(username);
         sleep.setDate(LocalDate.parse(data.getDate()));
         try {
             sleep.setSleep_time(LocalTime.parse(data.getSleep_time(), timeFormatter));
@@ -59,6 +73,7 @@ public ResponseEntity<?> saveSleepData(@RequestBody List<SleepDto> sleepData) {
 
     return ResponseEntity.ok("데이터가 성공적으로 저장되었습니다.");
 }
+
 
     // 현재 로그인된 사용자의 모든 수면 데이터 가져오기 (GET)
     @GetMapping("/getSleepData")

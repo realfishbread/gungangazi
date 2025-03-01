@@ -91,6 +91,8 @@ class _ToothCarePageState extends State<ToothCarePage> {
     List<SleepDto> sleepData = await sleepRepository.fetchSleepDataFromDatabase();
     List<BrushHistoryDTO> brushData = await toothRepository.fetchBrushHistory();
 
+    print("체크 함수 시작");
+
     if (sleepData.isNotEmpty) {
       SleepDto latestSleep = sleepData.last;
       String latestSleepDate = latestSleep.date;
@@ -117,6 +119,7 @@ class _ToothCarePageState extends State<ToothCarePage> {
         print("No significant tooth level change, no animation triggered.");
       }
     }
+    print("체크 함수 시작");
   }
 
   void _deleteBrushHistory(BrushHistoryDTO history) async {

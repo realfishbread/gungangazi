@@ -342,6 +342,12 @@ class PopupHandler {
   
   String previousBodyPart = _currentBodyPart;
 
+  DateTime now = DateTime.now();
+  int hour = now.hour;
+  bool isNight = (hour >= 22 || hour < 6);
+
+  
+
   if (characterStatus.water_level <= 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level <= 200) {
     _currentBodyPart = 'thirsty_and_hungry_dizzy';
   } else if (characterStatus.water_level <= 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level >= 200) {
@@ -641,18 +647,18 @@ Future<void> triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) a
       // 부위별 팝업 메시지 설정
         if (relativeY < headHeight) {
           popupMessage = '잘 주무셨나요?';
-          _currentBodyPart = 'head';
+          triggerAnimation('head');
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
             popupMessage = '오늘 하루도 화이팅!';
-            _currentBodyPart = 'arm';
+            triggerAnimation('arm');
           } else {
             popupMessage = '식사 하셨나요?';
-            _currentBodyPart = 'waist';
+            triggerAnimation('waist');
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
-          popupMessage = '다리가 아프신가요?';
-          _currentBodyPart = 'smile';
+          popupMessage = '화이팅!';
+          triggerAnimation('smile');
         }
     }
     

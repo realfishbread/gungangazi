@@ -308,12 +308,12 @@ class PopupHandler {
             'assets/person/0am/0amheadache1',
           ],
           '0amtired': [
-            'assets/person/0am/0amtired1',
+            'assets/person/0am/0amtired',
             'assets/person/0am/0amtired2',
             'assets/person/0am/0amtired3',
             'assets/person/0am/0amtired3',
             'assets/person/0am/0amtired2',
-            'assets/person/0am/0amtired1',
+            'assets/person/0am/0amtired',
 
           ],
           '0amdizzy': [

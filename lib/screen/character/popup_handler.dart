@@ -347,25 +347,44 @@ class PopupHandler {
   bool isNight = (hour >= 22 || hour < 6);
 
   
-
-  if (characterStatus.water_level <= 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level <= 200) {
-    _currentBodyPart = 'thirsty_and_hungry_dizzy';
-  } else if (characterStatus.water_level <= 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level >= 200) {
-    _currentBodyPart = 'thirsty_and_hungry';
-  } else if (characterStatus.water_level <= 200 && characterStatus.meal_level > 200 && characterStatus.sleep_level < 200) {
-    _currentBodyPart = 'thirsty_and_dizzy';
-  } else if (characterStatus.water_level > 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level < 200) {
-    _currentBodyPart = 'hungry_and_dizzy';
-  } else if (characterStatus.water_level <= 200 && characterStatus.meal_level > 200 && characterStatus.sleep_level >= 200) {
-    _currentBodyPart = 'thirsty';
-  } else if (characterStatus.water_level > 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level >= 200) {
-    _currentBodyPart = 'hungry';
-  } else if (characterStatus.water_level > 200 && characterStatus.meal_level > 200 && characterStatus.sleep_level < 200) {
-    _currentBodyPart = 'dizzy';
-  } else {
-    updateCharacterStatusBasedOnTime(); // ⏰ 시간 기반 상태 업데이트
+  if(!isNight){
+      if (characterStatus.water_level <= 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level <= 200) {
+        _currentBodyPart = 'thirsty_and_hungry_dizzy';
+      } else if (characterStatus.water_level <= 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level >= 200) {
+        _currentBodyPart = 'thirsty_and_hungry';
+      } else if (characterStatus.water_level <= 200 && characterStatus.meal_level > 200 && characterStatus.sleep_level < 200) {
+        _currentBodyPart = 'thirsty_and_dizzy';
+      } else if (characterStatus.water_level > 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level < 200) {
+        _currentBodyPart = 'hungry_and_dizzy';
+      } else if (characterStatus.water_level <= 200 && characterStatus.meal_level > 200 && characterStatus.sleep_level >= 200) {
+        _currentBodyPart = 'thirsty';
+      } else if (characterStatus.water_level > 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level >= 200) {
+        _currentBodyPart = 'hungry';
+      } else if (characterStatus.water_level > 200 && characterStatus.meal_level > 200 && characterStatus.sleep_level < 200) {
+        _currentBodyPart = 'dizzy';
+      } else {
+        updateCharacterStatusBasedOnTime(); // ⏰ 시간 기반 상태 업데이트
+      }
+    }else {
+      if (characterStatus.water_level <= 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level <= 200) {
+        _currentBodyPart = '0amdizzy';
+      } else if (characterStatus.water_level <= 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level >= 200) {
+        _currentBodyPart = '0amstomach';
+      } else if (characterStatus.water_level <= 200 && characterStatus.meal_level > 200 && characterStatus.sleep_level < 200) {
+        _currentBodyPart = '0amtired';
+      } else if (characterStatus.water_level > 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level < 200) {
+        _currentBodyPart = '0amheadache';
+      } else if (characterStatus.water_level <= 200 && characterStatus.meal_level > 200 && characterStatus.sleep_level >= 200) {
+        _currentBodyPart = '0amheadache';
+      } else if (characterStatus.water_level > 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level >= 200) {
+        _currentBodyPart = '0amstomach';
+      } else if (characterStatus.water_level > 200 && characterStatus.meal_level > 200 && characterStatus.sleep_level < 200) {
+        _currentBodyPart = '0amtired';
+      } else {
+        updateCharacterStatusBasedOnTime(); // ⏰ 시간 기반 상태 업데이트
+      }
+    }
   }
-}
 
   // 이미지 애니메이션 시작
   Future<void> startImageAnimation() async {

@@ -239,6 +239,7 @@ class _SleepPageState extends State<SleepPage> {
     onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) {
         if (characterStatus.sleep_level > _currentSleepLevel) {
+          _currentSleepLevel=characterStatus.sleep_level;
          await widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 1000);
           print('Triggering sleeping animation for sleep level: ${widget.characterStatus.sleep_level}');
         } else {

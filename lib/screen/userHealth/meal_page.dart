@@ -334,9 +334,11 @@ Future<void> _checkStatus() async {
   if (todayMealIntake > _currentMeal) {
     if (currentHour >= 22) {
       // ✅ 저녁 10시 이후일 경우 다른 애니메이션 실행
+      _currentMeal=characterStatus.meal_level;
       await widget.popupHandler.triggerAnimation('0ammeal', delayMilliseconds: 2000);
     } else {
       // ✅ 저녁 10시 이전일 경우 기존 애니메이션 실행
+       _currentMeal=characterStatus.meal_level;
       await widget.popupHandler.triggerAnimation('eatingmeal', delayMilliseconds: 2000);
     }
   }

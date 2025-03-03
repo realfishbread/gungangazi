@@ -222,7 +222,18 @@ class PopupHandler {
             'assets/person/default/waist3.jpg',
             'assets/person/default/waist2.jpg',
             'assets/person/default/waist1.jpg',
-          ],//여기부터 0am
+          ],
+          'stomachtalk': [
+            'assets/person/default/ddongtalk.jpg',
+            'assets/person/default/ddongtalk1.jpg',
+            'assets/person/default/ddongtalk2.jpg',
+            'assets/person/default/ddongtalk2.jpg',
+            'assets/person/default/ddongtalk1.jpg',
+            'assets/person/default/ddongtalk.jpg',
+          ],
+          
+          
+          //여기부터 0am
           'sleeping': [
             'assets/person/0am/sleeping1.jpg',
             'assets/person/0am/sleeping2.jpg',
@@ -323,6 +334,14 @@ class PopupHandler {
             'assets/person/0am/0amdizzy3',
             'assets/person/0am/0amdizzy2',
             'assets/person/0am/0amdizzy1',
+          ],
+          '0amddong': [
+            'assets/person/0am/0amddong1',
+            'assets/person/0am/0amddong2',
+            'assets/person/0am/0amddong3',
+            'assets/person/0am/0amddong3',
+            'assets/person/0am/0amddong2',
+            'assets/person/0am/0amddong1',
           ]
 
         }{
@@ -369,7 +388,7 @@ class PopupHandler {
       if (characterStatus.water_level <= 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level <= 200) {
         _currentBodyPart = '0amdizzy';
       } else if (characterStatus.water_level <= 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level >= 200) {
-        _currentBodyPart = '0amstomach';
+        _currentBodyPart = '0amddong';
       } else if (characterStatus.water_level <= 200 && characterStatus.meal_level > 200 && characterStatus.sleep_level < 200) {
         _currentBodyPart = '0amtired';
       } else if (characterStatus.water_level > 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level < 200) {
@@ -645,7 +664,7 @@ Future<void> triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) a
       }else if (_currentBodyPart == '0amstomach'){
         popupMessage = '몸을 조금 \n더 챙겨주세요.';
           if (relativeY < headHeight) {
-          popupMessage = '아파요';
+          popupMessage = '집가서 자고 싶어요.';
           triggerAnimation('0amstomach');
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
@@ -656,10 +675,83 @@ Future<void> triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) a
             triggerAnimation('0amstomach');
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
-          popupMessage = '아파요';
+          popupMessage = '주무셔야 해요.';
           triggerAnimation('0amtouch');
         } 
-      }else if (_currentBodyPart == 'dizzy') {
+      }else if(_currentBodyPart=='0amddong'){
+         popupMessage = '배가 \n 꼬르륵거려요.';
+          if (relativeY < headHeight) {
+          popupMessage = '식사를 챙겨주세요!';
+          triggerAnimation('0amddong');
+        } else if (relativeY >= headHeight && relativeY < legStartHeight) {
+          if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
+            popupMessage = '수분이 부족해요.';
+            triggerAnimation('0amddong');
+          } else {
+            popupMessage = '충분한 식사와 \n 수분이 필요해요';
+            triggerAnimation('0amddong');
+          }
+        } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
+          popupMessage = '식사를 하시면 \n 제가 기쁠거예요.';
+          triggerAnimation('0amddong');
+        } 
+      }else if(_currentBodyPart=='0amtired'){
+         popupMessage = '배가 \n 꼬르륵거려요.';
+          if (relativeY < headHeight) {
+          popupMessage = '식사를 챙겨주세요!';
+          triggerAnimation('0amtired');
+        } else if (relativeY >= headHeight && relativeY < legStartHeight) {
+          if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
+            popupMessage = '수분이 부족해요.';
+            triggerAnimation('0amtired');
+          } else {
+            popupMessage = '충분한 식사와 \n 수분이 필요해요';
+            triggerAnimation('0amtired');
+          }
+        } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
+          popupMessage = '식사를 하시면 \n 제가 기쁠거예요.';
+          triggerAnimation('0amtired');
+        } 
+
+      }else if(_currentBodyPart=='0amheadache'){
+         popupMessage = '배가 \n 꼬르륵거려요.';
+          if (relativeY < headHeight) {
+          popupMessage = '식사를 챙겨주세요!';
+          triggerAnimation('0amheadache');
+        } else if (relativeY >= headHeight && relativeY < legStartHeight) {
+          if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
+            popupMessage = '수분이 부족해요.';
+            triggerAnimation('0amheadache');
+          } else {
+            popupMessage = '충분한 식사와 \n 수분이 필요해요';
+            triggerAnimation('0amheadache');
+          }
+        } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
+          popupMessage = '식사를 하시면 \n 제가 기쁠거예요.';
+          triggerAnimation('0amheadache');
+        } 
+
+      }else if(_currentBodyPart=='0amdizzy'){
+         popupMessage = '건강을 챙겨주세요.';
+          if (relativeY < headHeight) {
+          popupMessage = '충분한 수분을 섭취후,\n 기록해 주세요.';
+          triggerAnimation('0amdizzy');
+        } else if (relativeY >= headHeight && relativeY < legStartHeight) {
+          if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
+            popupMessage = '식사가 없으면 \n 몸이 망가져요.';
+            triggerAnimation('0amdizzy');
+          } else {
+            popupMessage = '충분한 식사와 \n 수면이 필요해요';
+            triggerAnimation('0amdizzy');
+          }
+        } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
+          popupMessage = '몸을 챙겨주시면 기쁠거예요.';
+          triggerAnimation('0amdizzy');
+        } 
+
+      }
+      
+      else if (_currentBodyPart == 'dizzy') {
         popupMessage = '수면 시간을 늘려주세요!';
       }
       else {

@@ -178,6 +178,7 @@ class _WaterDrinkState extends State<WaterDrink> {
       onPopInvokedWithResult: (didPop, result) async {
       if (!didPop) {
           if (characterStatus.water_level > _currentWaterLevel) {
+            _currentWaterLevel = characterStatus.water_level; // ✅ 애니메이션 실행 전에 업데이트
             await widget.popupHandler.triggerAnimation('drinkwater', delayMilliseconds: 1000);
           }
         }

@@ -266,7 +266,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
    return PopScope(
   canPop: true,
   onPopInvokedWithResult: (didPop, result) async {
-    if (!didPop) {
+    if (didPop) {
         if (_addSupplement) {
 
            if(now.hour>=22 || now.hour<=6){

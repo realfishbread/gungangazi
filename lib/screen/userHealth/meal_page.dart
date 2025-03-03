@@ -349,7 +349,7 @@ Future<void> _checkStatus() async {
    return PopScope(
     canPop: true,
     onPopInvokedWithResult: (didPop, result) async {
-        if (!didPop) {
+        if (didPop) {
           await _checkStatus();
         }
       },

@@ -345,7 +345,7 @@ Future<void> _loadCharacterStatus() async {
                     onTap: (index, _) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ToothCarePage(popupHandler: _popupHandler)),
+                        MaterialPageRoute(builder: (context) => ToothCarePage()),
                       );
                     },
                     icon: const Icon(Icons.medical_services),

@@ -342,6 +342,14 @@ class PopupHandler {
             'assets/person/0am/0amddong3',
             'assets/person/0am/0amddong2',
             'assets/person/0am/0amddong1',
+          ],
+          '0ammeal': [
+            'assets/person/0am/0ammeal1',
+            'assets/person/0am/0ammeal2',
+            'assets/person/0am/0ammeal3',
+            'assets/person/0am/0ammeal3',
+            'assets/person/0am/0ammeal2',
+            'assets/person/0am/0ammeal1',
           ]
 
         }{

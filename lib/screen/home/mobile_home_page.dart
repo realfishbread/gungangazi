@@ -85,7 +85,7 @@ Future<void> _loadCharacterStatus() async {
       '식단': MealPage(popupHandler: _popupHandler, characterStatus: _characterStatus),
       '영양제': SupplementsPage(popupHandler: _popupHandler),
       '혈압': const BloodPressurePage(),
-      '치아건강': ToothCarePage(popupHandler: _popupHandler),
+      '치아건강': ToothCarePage(),
       '만보기': WalkingPage(),
     };
 

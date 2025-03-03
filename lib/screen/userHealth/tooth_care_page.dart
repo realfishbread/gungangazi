@@ -10,15 +10,17 @@ import '../../../dto/userHealth/sleep_dto.dart'; // SleepDTO 임포트
 
 
 class ToothCarePage extends StatefulWidget {
-  final PopupHandler popupHandler;
+  
+  
 
-  const ToothCarePage({Key? key, required this.popupHandler}) : super(key: key);
+  const ToothCarePage({Key? key}) : super(key: key);
 
   @override
   _ToothCarePageState createState() => _ToothCarePageState();
 }
 
 class _ToothCarePageState extends State<ToothCarePage> {
+  late PopupHandler popupHandler; // ✅ `late` 변수로 선언
   final ToothRepository toothRepository = ToothRepository(
     dioService: DioService(),
     tokenService: TokenService(),
@@ -105,20 +107,21 @@ class _ToothCarePageState extends State<ToothCarePage> {
 
       if (!brushed) {
         if (isNightTime) {
-         await widget.popupHandler.triggerAnimation('0amnobrush', delayMilliseconds: 1000);
+         await popupHandler.triggerAnimation('0amnobrush', delayMilliseconds: 1000);
         } else {
-          await widget.popupHandler.triggerAnimation('nobrush', delayMilliseconds: 1000);
+          await popupHandler.triggerAnimation('nobrush', delayMilliseconds: 1000);
         }
       } else if (_currentTooth == true) { 
         if (isNightTime) {
-          await widget.popupHandler.triggerAnimation('0ambrush', delayMilliseconds: 1000);
+          await popupHandler.triggerAnimation('0ambrush', delayMilliseconds: 1000);
         } else {
-          await widget.popupHandler.triggerAnimation('brush', delayMilliseconds: 1000);
+          await popupHandler.triggerAnimation('brush', delayMilliseconds: 1000);
         }
       } else {
         print("No significant tooth level change, no animation triggered.");
       }
     }
+    
     print("체크 함수 시작");
   }
 
@@ -148,7 +151,7 @@ class _ToothCarePageState extends State<ToothCarePage> {
     return PopScope(
       canPop: true,
       onPopInvokedWithResult: (didPop, result) async {
-      if (!didPop) {
+      if (didPop) {
         await _checkBrushAndSleep();
        }
   },

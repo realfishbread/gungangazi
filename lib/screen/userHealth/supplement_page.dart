@@ -269,7 +269,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
     if (didPop) {
         if (_addSupplement) {
 
-           if(now.hour>=22 || now.hour<=6){
+           if(now.hour>=22 || now.hour<6){
             await widget.popupHandler.triggerAnimation('0amsupplement', delayMilliseconds: 1000);
            }else{
           await widget.popupHandler.triggerAnimation('medication', delayMilliseconds: 1000);

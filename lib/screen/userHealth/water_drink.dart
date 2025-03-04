@@ -167,6 +167,8 @@ class _WaterDrinkState extends State<WaterDrink> {
   Widget build(BuildContext context) {
     final characterStatus = context.watch<CharacterStatus>(); // ✅ Provider에서 가져오기
     bool isWeb = MediaQuery.of(context).size.width >= 600;
+    int currentHour = DateTime.now().hour; // 현재 시간 가져오기
+
 
     // 그래프 너비 동적으로 설정
     double graphWidth = isWeb
@@ -179,7 +181,11 @@ class _WaterDrinkState extends State<WaterDrink> {
       if (didPop) {
           if (characterStatus.water_level > _currentWaterLevel) {
             _currentWaterLevel = characterStatus.water_level; // ✅ 애니메이션 실행 전에 업데이트
+            if(currentHour>=22 || currentHour<6){
+              await widget.popupHandler.triggerAnimation('0amdrinkwater', delayMilliseconds: 1000);
+            }else{
             await widget.popupHandler.triggerAnimation('drinkwater', delayMilliseconds: 1000);
+            }
           }
         }
   },

@@ -10,10 +10,10 @@ import '../../../dto/userHealth/sleep_dto.dart'; // SleepDTO 임포트
 
 
 class ToothCarePage extends StatefulWidget {
-  
+  final PopupHandler popupHandler;
   
 
-  const ToothCarePage({Key? key}) : super(key: key);
+  const ToothCarePage({Key? key , required this.popupHandler}) : super(key: key);
 
   @override
   _ToothCarePageState createState() => _ToothCarePageState();

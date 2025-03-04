@@ -350,6 +350,14 @@ class PopupHandler {
             'assets/person/0am/0ammeal3.jpg',
             'assets/person/0am/0ammeal2.jpg',
             'assets/person/0am/0ammeal1.jpg',
+          ],
+          '0amdrinkwater': [
+            'assets/person/0am/0amdrinkwater.jpg',
+            'assets/person/0am/0amdrinkwater1.jpg',
+            'assets/person/0am/0amdrinkwater2.jpg',
+            'assets/person/0am/0amdrinkwater2.jpg',
+            'assets/person/0am/0amdrinkwater1.jpg',
+            'assets/person/0am/0amdrinkwater.jpg',
           ]
 
         }{
@@ -470,8 +478,7 @@ Future<void> triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) a
 
       Future.delayed(Duration(milliseconds: delayMilliseconds), () {
         _currentBodyPart = previousBodyPart;
-        setBodyPartStatus();
-         startImageAnimation();
+        
         _isAnimating = false; // ✅ 애니메이션 완료 후 다시 실행 가능하도록 설정
         print("🎭 Character state restored to $_currentBodyPart");
       });

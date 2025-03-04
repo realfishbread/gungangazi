@@ -473,13 +473,15 @@ Future<void> triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) a
     _imageNotifier.value = _currentImageIndex;
 
     if (_currentImageIndex == imagePathsByBodyPart[bodyPart]!.length - 1) {
-      
-      timer.cancel();
+       timer.cancel();
+      _imageTimer = null; // ✅ 타이머 제거
 
       Future.delayed(Duration(milliseconds: delayMilliseconds), () {
         _currentBodyPart = previousBodyPart;
+        setBodyPartStatus();
+        startImageAnimation(); // ✅ 애니메이션을 자동 반복 실행
+        _isAnimating = false; // ✅ 다시 실행 가능하도록 변경
         
-        _isAnimating = false; // ✅ 애니메이션 완료 후 다시 실행 가능하도록 설정
         print("🎭 Character state restored to $_currentBodyPart");
       });
     }

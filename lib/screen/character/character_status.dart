@@ -3,18 +3,10 @@ import 'package:flutter/material.dart'; // ChangeNotifier를 위해 추가
 import '../../dto/status/character_status_dto.dart';
 import '../../core_services/token_service.dart';
 
-class CharacterStatus extends ChangeNotifier { // ✅ ChangeNotifier 상속
-  // ✅ 싱글톤 인스턴스
-  static final CharacterStatus _instance = CharacterStatus._internal(CharacterRepository());
-
-  // ✅ 팩토리 생성자로 싱글톤 유지
-  factory CharacterStatus() => _instance;
-
-  // ✅ 의존성 주입 가능하도록 변경
+class CharacterStatus extends ChangeNotifier {
   final CharacterRepository _characterRepository;
-
-  // ✅ private 생성자로 외부에서 직접 인스턴스화 방지
-  CharacterStatus._internal(this._characterRepository);
+  
+  CharacterStatus(this._characterRepository); // ✅ 싱글톤 제거하고 직접 주입
 
   int water_level = 100;
   int meal_level = 100;
@@ -27,13 +19,12 @@ class CharacterStatus extends ChangeNotifier { // ✅ ChangeNotifier 상속
       water_level = status.water_level;
       meal_level = status.meal_level;
       sleep_level = status.sleep_level;
-      notifyListeners(); // ✅ UI 업데이트 트리거
+      notifyListeners(); // ✅ UI 업데이트
     }
   }
 
   Future<void> saveStatus() async {
     String? username = await TokenService().getUsername() ?? "defaultUser";
-
     StatusDto statusDto = StatusDto(
       username: username,
       water_level: water_level,
@@ -52,7 +43,7 @@ class CharacterStatus extends ChangeNotifier { // ✅ ChangeNotifier 상속
     meal_level= newMealLevel;
     sleep_level = newSleepLevel;
 
-    notifyListeners(); // ✅ UI 업데이트
+    notifyListeners();
     await saveStatus();
   }
 }

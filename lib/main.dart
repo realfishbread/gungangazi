@@ -13,7 +13,7 @@ void main() {
   runApp(
 MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => CharacterStatus()), // ✅ Provider 등록
+        ChangeNotifierProvider(create: (_) => CharacterStatus(CharacterRepository())), // ✅ Provider 등록
       ],
       child: const MyApp(),
     ),

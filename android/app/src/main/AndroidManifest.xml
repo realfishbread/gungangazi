@@ -1,7 +1,5 @@
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.gungangazi">  <!-- ✅ 여기에 패키지 이름 -->
-
+    package="com.example.gungangazi">  
 
     <!-- 인터넷 사용 권한 추가 -->
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -15,12 +13,12 @@
         android:usesPermissionFlags="neverForLocation"/>
     <uses-permission android:name="android.permission.BODY_SENSORS"/>
 
-
     <application
         android:label="건강하지"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:enableOnBackInvokedCallback="true">
+        
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -29,26 +27,25 @@
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
-            <!-- Specifies an Android theme to apply to this Activity as soon as
-                 the Android process has started. This theme is visible to the user
-                 while the Flutter UI initializes. After that, this theme continues
-                 to determine the Window background behind the Flutter UI. -->
+            
             <meta-data
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
-              
             
+            <!-- ✅ 잘못된 오타 수정 (<<intent-filter> → <intent-filter>) -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
-                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE"/>
+            </intent-filter>
+
         </activity>
 
-         <!-- For supported versions through Android 13, create an activity to show the rationale
-       of Health Connect permissions once users click the privacy policy link. -->
- <!-- ✅ Android 14 이상에서 Health Connect 권한 표시 -->
+        <!-- ✅ Android 14 이상에서 Health Connect 권한 표시 -->
         <activity-alias
             android:name="ViewPermissionUsageActivity"
             android:exported="true"
@@ -59,24 +56,18 @@
                 <category android:name="android.intent.category.HEALTH_PERMISSIONS" />
             </intent-filter>
         </activity-alias>
-        <!-- Don't delete the meta-data below.
-             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
-    <!-- Required to query activities that can process text, see:
-         https://developer.android.com/training/package-visibility and
-         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
 
-         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
+    <!-- ✅ 잘못된 <queries> 태그 내부 오류 수정 -->
     <queries>
          <package android:name="com.google.android.apps.healthdata" />
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
-            <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
         </intent>
     </queries>
 </manifest>
-

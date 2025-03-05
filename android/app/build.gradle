@@ -29,9 +29,23 @@ android {
         multiDexEnabled true  // ✅ 멀티덱스 활성화
     }
 
+    signingConfigs {
+    release {
+        def keystorePropertiesFile = rootProject.file("key.properties")
+        def keystoreProperties = new Properties()
+        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+        storeFile file(keystoreProperties["storeFile"])
+        storePassword keystoreProperties["storePassword"]
+        keyAlias keystoreProperties["keyAlias"]
+        keyPassword keystoreProperties["keyPassword"]
+    }
+}
+
+
     buildTypes {
         release {
-            signingConfig = signingConfigs.debug
+            signingConfig = signingConfigs.release
             minifyEnabled false // R8 최적화 비활성화
             shrinkResources false // 리소스 최적화 비활성화
         }

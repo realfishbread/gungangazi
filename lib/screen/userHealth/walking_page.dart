@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pedometer/pedometer.dart';
+
+import '../../core_services/health_connect_service.dart'; // ✅ HealthConnectService 추가
 
 class WalkingPage extends StatefulWidget {
   @override
@@ -7,23 +8,23 @@ class WalkingPage extends StatefulWidget {
 }
 
 class _WalkingPageState extends State<WalkingPage> {
-  late Stream<StepCount> _stepCountStream;
-  int _steps = 0;
+
+  
+  int _healthConnectSteps = 0;
+  final HealthConnectService _healthService = HealthConnectService();
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    fetchHealthConnectSteps(); // ✅ Health Connect 걸음 수 가져오기
   }
 
-  void initPlatformState() {
-    _stepCountStream = Pedometer.stepCountStream;
-    _stepCountStream.listen((StepCount event) {
-      setState(() {
-        _steps = event.steps;
-      });
-    }).onError((error) {
-      print("걸음 수 측정 에러: $error");
+  
+
+  void fetchHealthConnectSteps() async {
+    int steps = await _healthService.fetchSteps();
+    setState(() {
+      _healthConnectSteps = steps;
     });
   }
 
@@ -38,17 +39,14 @@ class _WalkingPageState extends State<WalkingPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              '현재 걸음 수',
-              style: TextStyle(fontSize: 20),
-            ),
+            Text('현재 걸음 수', style: TextStyle(fontSize: 20)),
             SizedBox(height: 10),
-            Text(
-              '$_steps 걸음',
-              style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: const Color(0xFFFFF9C4)),
-            ),
+            Text('Health Connect: $_healthConnectSteps 걸음', style: TextStyle(fontSize: 30, color: Colors.blue)),
             SizedBox(height: 20),
-            Icon(Icons.directions_walk, size: 100, color: const Color(0xFFFFF9C4)),
+            ElevatedButton(
+              onPressed: fetchHealthConnectSteps, // ✅ Health Connect 데이터 새로고침 버튼
+              child: Text("Health Connect 데이터 새로고침"),
+            ),
           ],
         ),
       ),

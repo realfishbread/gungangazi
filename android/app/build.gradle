@@ -2,17 +2,18 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
-    id "org.jetbrains.kotlin.android" version "1.8.22" apply false
+    id "org.jetbrains.kotlin.android" version "1.9.22" apply false
 }
 
 android {
     namespace = "com.example.gungangazi"
-    compileSdkVersion 34 // 34로 낮추기
+    compileSdkVersion 35 // 34로 낮추기
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+       sourceCompatibility JavaVersion.VERSION_1_8  // ✅ Java 8 이상 설정
+        targetCompatibility JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled true  // ✅ core library desugaring 활성화
     }
 
     kotlinOptions {
@@ -21,8 +22,8 @@ android {
 
     defaultConfig {
         applicationId = "com.gungangazi"
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        minSdkVersion 28 // ✅ 28 이상으로 설정
+        targetSdkVersion 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
@@ -42,7 +43,7 @@ flutter {
 
 dependencies {
     // AndroidX Core
-    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation 'androidx.core:core-ktx:1.12.0'
     
     // JSON 데이터 처리를 위한 Gson
     implementation 'com.google.code.gson:gson:2.8.8'
@@ -61,5 +62,9 @@ dependencies {
     // MySQL 연결을 위한 드라이버 (옵션)
     implementation 'mysql:mysql-connector-java:8.0.25'
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
-    
+    implementation "androidx.health.connect:connect-client:1.1.0-alpha11"
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'  // ✅ Desugaring 필수 의존성 추가
 }
+   
+    
+

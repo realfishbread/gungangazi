@@ -1,5 +1,6 @@
 package com.example.gungangazi
 
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 
-class MainActivity: FlutterActivity()
+class MainActivity: FlutterFragmentActivity() {  // ✅ 올바른 선언
+}

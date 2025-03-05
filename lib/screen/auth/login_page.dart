@@ -5,6 +5,8 @@ import '../../dto/auth/login_dto.dart'; // Login DTO import
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart';
 import '../../widget/alert.dart';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,14 +16,18 @@ class LoginPage extends StatefulWidget {
 }
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(
-  clientId: '423735826070-9dq9dd52a4t5u66krjlg2nm0cpq8f92o.apps.googleusercontent.com',
-  scopes: <String>[
-    'openid',
-    'email',
-    'profile',
-    'https://www.googleapis.com/auth/user.gender.read',
-  ],
-);
+    clientId: kIsWeb
+        ? '423735826070-9dq9dd52a4t5u66krjlg2nm0cpq8f92o.apps.googleusercontent.com'  // ✅ 웹용 OAuth 클라이언트 ID 입력
+        : Platform.isAndroid
+            ? '423735826070-iml5j92c26kqd9l998683q91hs1slk94.apps.googleusercontent.com'  // ✅ 안드로이드용 OAuth 클라이언트 ID 입력
+            : null,
+    scopes: <String>[
+      'openid',
+      'email',
+      'profile',
+      'https://www.googleapis.com/auth/user.gender.read',
+    ],
+  );
 
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _nameController = TextEditingController();

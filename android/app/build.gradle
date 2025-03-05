@@ -26,6 +26,7 @@ android {
         targetSdkVersion 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        multiDexEnabled true  // ✅ 멀티덱스 활성화
     }
 
     buildTypes {

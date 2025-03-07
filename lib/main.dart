@@ -8,12 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:gungangazi/screen/character/character_status.dart';
 import 'repositories/status/character_repository.dart';
+import 'core_services/health_connect_service.dart'; // ✅ HealthConnectService 추가
+
 
 void main() {
   runApp(
-MultiProvider(
+    MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CharacterStatus(CharacterRepository())), // ✅ Provider 등록
+        Provider(create: (_) => HealthConnectService()), // ✅ HealthConnectService 추가
       ],
       child: const MyApp(),
     ),

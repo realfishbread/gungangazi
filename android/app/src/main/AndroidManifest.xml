@@ -64,8 +64,8 @@
 
         <!-- 🔹 추가할 코드: Google 로그인 관련 OAuth 설정 -->
         <meta-data
-            android:name="com.google.android.gms.auth.api.signin"
-            android:value="@string/web_client_id" />
+            android:name="com.google.android.gms.auth.api.signin.AndroidClientId"
+            android:value="@string/android_client_id" />
 
     </application>
 

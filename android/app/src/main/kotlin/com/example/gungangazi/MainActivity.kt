@@ -9,6 +9,9 @@ import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import androidx.health.connect.client.HealthConnectClient
 import kotlinx.coroutines.launch
+import androidx.health.connect.client.permission.HealthPermission
+import androidx.health.connect.client.records.StepsRecord
+
 
 class MainActivity: FlutterFragmentActivity() {  // ✅ 올바른 선언
 

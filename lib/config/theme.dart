@@ -40,16 +40,36 @@ class AppTheme {
 
   /// 🌙 **다크 테마**
   static final ThemeData darkTheme = ThemeData(
-    fontFamily: 'NanumGothic',
-    primarySwatch: createMaterialColor(Color.fromARGB(255, 201, 201, 201) ),//어두운 회색
-    scaffoldBackgroundColor: const Color.fromARGB(255, 179, 179, 179), // 배경색 (다크 모드)
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Color.fromARGB(255, 185, 183, 206), // 다크 모드 앱바 색상
-      elevation: 0,
+  fontFamily: 'NanumGothic',
+  primarySwatch: createMaterialColor(const Color(0xFFB39DDB)), // 부드러운 포인트 컬러
+  scaffoldBackgroundColor: const Color(0xFF1E1E1E), // 거의 블랙에 가까운 다크 그레이
+  appBarTheme: const AppBarTheme(
+    backgroundColor: Color(0xFF2C2C2C), // 살짝 밝은 앱바
+    elevation: 0,
+    titleTextStyle: TextStyle(
+      color: Colors.white,
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
     ),
-    textTheme: const TextTheme(
-      bodyLarge: TextStyle(fontSize: 18, color: Colors.black),
-      bodyMedium: TextStyle(fontSize: 16, color: Colors.black),
+    iconTheme: IconThemeData(color: Colors.white),
+  ),
+  textTheme: TextTheme(
+    bodyLarge: TextStyle(fontSize: 18, color: Colors.white.withOpacity(0.87)), // 강조 텍스트
+    bodyMedium: TextStyle(fontSize: 16, color: Colors.white.withOpacity(0.6)), // 일반 텍스트
+    bodySmall: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.38)), // 비활성 텍스트
+  ),
+  iconTheme: const IconThemeData(color: Colors.white70),
+  dividerColor: Colors.grey.shade700,
+  cardColor: const Color(0xFF2A2A2A), // Elevated surface 표현
+  dialogBackgroundColor: const Color(0xFF2E2E2E),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xFFB39DDB),
+      foregroundColor: Colors.black,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
     ),
-  );
+  ),
+);
 }

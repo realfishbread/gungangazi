@@ -3,10 +3,6 @@ import '../../dto/auth/login_dto.dart';
 import '../../core_services/dio_service.dart';
 import '../../core_services/token_service.dart'; // TokenService를 임포트
 import '../../core_services/google_auth_services.dart';
-import 'dart:convert';
-import 'dart:io' show Platform;
-import 'package:flutter/foundation.dart' show kIsWeb;
-
 
 class AuthRepository {
   final Dio _dio;
@@ -51,43 +47,32 @@ class AuthRepository {
   }
 
 
-  /// ✅ Google 로그인 (Auth Code를 서버에 전송)
   Future<Map<String, dynamic>?> googleLogin() async {
     try {
-      // ✅ Auth Code 가져오기
-      final String? authCode = await _googleAuthService.signInWithGoogle();
-      if (authCode == null) {
-        print('❌ Auth Code가 null이므로 서버 요청을 보낼 수 없습니다.');
-        return null;
-      }
-
-      // ✅ 서버에 Auth Code 전송
+      final accessToken = await _googleAuthService.signInWithGoogle();
       final response = await _dio.post(
         '/api/auth/google-login',
-        data: jsonEncode({'authCode': authCode}), // JSON 바디에 Auth Code 포함
+        data: {'accessToken': accessToken},
         options: Options(headers: {
           'Content-Type': 'application/json',
-          'clientType': Platform.isAndroid ? 'android' : 'web', // ✅ 클라이언트 타입 추가
-          // 'Authorization': 'Bearer $authCode', ❌ 이거 필요 없음 (Auth Code는 인증이 아니라 교환용임)
+          'Authorization': 'Bearer $accessToken',
         }),
       );
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseBody = response.data;
-        print('✅ 서버 응답: $responseBody');
+        print('서버 응답: $responseBody');
 
-        // ✅ 토큰 저장
-        if (responseBody.containsKey('token')) {
-          await _tokenService.saveToken(responseBody['token']);
-        }
+        // 토큰 저장
+        await _tokenService.saveToken(responseBody['token']);
 
         return responseBody;
       } else {
-        print('❌ Google 로그인 실패: 서버 오류 (${response.statusCode})');
+        print('Google 로그인 실패: 서버 오류 (${response.statusCode})');
         return null;
       }
     } catch (e) {
-      print('❌ 서버 요청 중 오류 발생: $e');
+      print('서버 요청 중 오류 발생: $e');
       return null;
     }
   }

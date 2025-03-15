@@ -4,18 +4,14 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleAuthService {
   // GoogleSignIn 인스턴스 생성
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    clientId: kIsWeb
-        ? '423735826070-9dq9dd52a4t5u66krjlg2nm0cpq8f92o.apps.googleusercontent.com'  // 웹용 OAuth 클라이언트 ID
+ final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email', 'openid', 'profile', 'https://www.googleapis.com/auth/user.gender.read'],
+    serverClientId: kIsWeb
+        ? '423735826070-9dq9dd52a4t5u66krjlg2nm0cpq8f92o.apps.googleusercontent.com'  // ✅ 웹용 클라이언트 ID
         : Platform.isAndroid
-            ? '423735826070-iml5j92c26kqd9l998683q91hs1slk94.apps.googleusercontent.com'  // 안드로이드용 OAuth 클라이언트 ID
+            ? '423735826070-iml5j92c26kqd9l998683q91hs1slk94.apps.googleusercontent.com'  // ✅ 안드로이드용 클라이언트 ID
             : null,
-    scopes: <String>[
-      'openid',
-      'email',
-      'profile',
-      'https://www.googleapis.com/auth/user.gender.read',
-    ],
+    forceCodeForRefreshToken: true,  // ✅ 항상 Auth Code를 받도록 설정
   );
 
   /// ✅ Auth Code를 반환하도록 수정

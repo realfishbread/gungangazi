@@ -17,7 +17,7 @@ class WaterDrink extends StatefulWidget {
   final PopupHandler popupHandler; // PopupHandler 인스턴스를 받도록 설정
   final CharacterStatus characterStatus; // ✅ 추가
 
-  const WaterDrink({Key? key, required this.popupHandler, required this.characterStatus}) : super(key: key);
+  const WaterDrink({super.key, required this.popupHandler, required this.characterStatus});
 
   @override
   _WaterDrinkState createState() => _WaterDrinkState();
@@ -62,8 +62,8 @@ class _WaterDrinkState extends State<WaterDrink> {
           : '남성'; // 기본값: '남성'
 
         // 권장 칼로리 계산
-        if (userAge != null && userGender != null) {
-          recommendedIntake = _calculateRecommendedIntake(userAge!, userGender!);
+        if (userAge != null) {
+          recommendedIntake = _calculateRecommendedIntake(userAge!, userGender);
         }
       });
     }

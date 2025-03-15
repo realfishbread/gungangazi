@@ -13,7 +13,7 @@ class ToothCarePage extends StatefulWidget {
   final PopupHandler popupHandler;
   
 
-  const ToothCarePage({Key? key , required this.popupHandler}) : super(key: key);
+  const ToothCarePage({super.key , required this.popupHandler});
 
   @override
   _ToothCarePageState createState() => _ToothCarePageState();

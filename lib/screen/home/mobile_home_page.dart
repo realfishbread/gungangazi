@@ -294,7 +294,7 @@ List<Widget> _buildDrawerItems(String title, List<Map<String, dynamic>> items) {
           const SizedBox(height: 8),
         ],
       );
-    }).toList(),
+    }),
   ];
 }
 }

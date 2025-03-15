@@ -98,8 +98,7 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
               return '$disease';
             }).join('\n');
 
-            final resultMessage = '다음 질환들이 의심됩니다:\n$diagnosisText' +
-                (showWarning ? '\n\n증상이 적을 경우 정확한 진단이 어려울 수 있습니다' : '');
+            final resultMessage = '다음 질환들이 의심됩니다:\n$diagnosisText${showWarning ? '\n\n증상이 적을 경우 정확한 진단이 어려울 수 있습니다' : ''}';
 
             _addDogMessage(resultMessage);
           } else {

@@ -9,7 +9,7 @@ import '../character/popup_handler.dart';
 class SupplementsPage extends StatefulWidget {
   final PopupHandler popupHandler;
   
-  const SupplementsPage({Key? key, required this.popupHandler}) : super(key: key);
+  const SupplementsPage({super.key, required this.popupHandler});
 
   @override
   _SupplementsPageState createState() => _SupplementsPageState();

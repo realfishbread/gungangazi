@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'screen/home/mobile_home_page.dart'; // 앱 전용 페이지
 import 'screen/auth/login_page.dart'; // 통합된 로그인 페이지
 import 'config/theme.dart'; // 테마 파일 import
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:gungangazi/screen/character/character_status.dart';
 import 'repositories/status/character_repository.dart';

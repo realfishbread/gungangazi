@@ -23,10 +23,10 @@ class ProfilePage extends StatefulWidget {
   final VoidCallback onProfileUpdated;
 
   const ProfilePage({
-    Key? key,
+    super.key,
     required this.username,
     required this.onProfileUpdated,
-  }) : super(key: key);
+  });
 
   @override
   _ProfilePageState createState() => _ProfilePageState();

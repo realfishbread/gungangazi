@@ -73,7 +73,7 @@ class BloodPressureRepository {
    // 서버에서 혈압 데이터를 삭제하는 메서드
   Future<void> deleteBloodPressureDataFromDatabase(BloodPressureDTO record) async {
     try {
-      final Dio dio = await dioService.getDio(); // Dio 인스턴스 가져오기
+      final Dio dio = dioService.getDio(); // Dio 인스턴스 가져오기
       final String? token = await tokenService.getToken(); // 토큰 가져오기
 
       if (token == null) {

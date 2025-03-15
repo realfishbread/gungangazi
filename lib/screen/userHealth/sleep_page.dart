@@ -15,7 +15,7 @@ class SleepPage extends StatefulWidget {
   final CharacterStatus characterStatus;
   
 
-  const SleepPage({Key? key, required this.popupHandler, required this.characterStatus}) : super(key: key);
+  const SleepPage({super.key, required this.popupHandler, required this.characterStatus});
 
   @override
   _SleepPageState createState() => _SleepPageState();

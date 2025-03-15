@@ -12,7 +12,7 @@ class MealPage extends StatefulWidget {
   final PopupHandler popupHandler;
   final CharacterStatus characterStatus; // ✅ 추가
 
-  const MealPage({Key? key, required this.popupHandler, required this.characterStatus}) : super(key: key);
+  const MealPage({super.key, required this.popupHandler, required this.characterStatus});
 
   @override
   _MealPageState createState() => _MealPageState();

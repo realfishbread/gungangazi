@@ -3,9 +3,9 @@ import 'dart:async';
 import '../../core_services/dio_service.dart'; // DioService 추가
 import '../../core_services/token_service.dart';
 import '../../repositories/status/character_repository.dart';
-import '../../dto/status/character_status_dto.dart'; // ✅ DTO 추가
+// ✅ DTO 추가
 import 'character_status.dart'; // ✅ CharacterStatus 추가
-import 'package:provider/provider.dart'; // ✅ Provider 추가
+// ✅ Provider 추가
 
 
 

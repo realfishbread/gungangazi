@@ -60,7 +60,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
       return;
     }
 
-    if (systolic.isNotEmpty && diastolic.isNotEmpty && heartRate.isNotEmpty && username != null) {
+    if (systolic.isNotEmpty && diastolic.isNotEmpty && heartRate.isNotEmpty) {
       final newRecord = BloodPressureDTO(
         systolic: systolic,
         diastolic: diastolic,

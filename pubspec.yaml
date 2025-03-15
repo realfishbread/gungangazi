@@ -15,7 +15,6 @@ dependencies:
   
   mysql1: ^0.20.0
   image_picker: ^1.1.2
-  workmanager: ^0.5.1
   http: ^1.2.2
   calendar_date_picker2: ^1.1.7
   flutter_cube: ^0.1.1
@@ -50,7 +49,7 @@ dependencies:
   flutter_dotenv: ^5.2.1
   health: ^12.0.1
   permission_handler: ^11.4.0
-  
+  flutter_plugin_android_lifecycle: ^2.0.27  # 최신 버전 명시
 
 
   

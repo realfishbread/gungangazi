@@ -23,7 +23,7 @@ import '../character/character_status.dart';
 import 'package:provider/provider.dart';
 
 class WebHomePage extends StatefulWidget {
-  const WebHomePage({Key? key}) : super(key: key);
+  const WebHomePage({super.key});
 
   @override
   State<WebHomePage> createState() => _WebHomePageState();

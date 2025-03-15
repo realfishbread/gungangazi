@@ -150,7 +150,7 @@ void _completeSignUp() async {
       showErrorDialog(context, '이메일 인증 링크를 발송했습니다. 메일을 확인해 주세요.');
       return true; // 이메일 인증 요청 성공
     } else {
-      showErrorDialog(context, '$response');
+      showErrorDialog(context, response);
       return false;
     }
   } catch (e) {
@@ -282,7 +282,7 @@ Widget _buildStepForm() {
 }
 
 Widget _buildPasswordField() {
-  return Container(
+  return SizedBox(
     width: 300, // 비밀번호 필드 너비 제한
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -327,7 +327,7 @@ Widget _buildPasswordField() {
   );
 }
 Widget _buildEmailFieldWithButton() {
-  return Container(
+  return SizedBox(
     width: 300, // 전체 너비 제한
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
@@ -566,7 +566,7 @@ Widget _buildTextField(
   bool obscureText = false,
   String? hintText,
 ]) {
-    return Container(
+    return SizedBox(
       width: 300, // 입력 필드 너비 제한 (픽셀 단위)
       child: TextField(
         controller: controller,

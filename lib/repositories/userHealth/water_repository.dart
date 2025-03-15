@@ -25,11 +25,7 @@ class WaterRepository {
         ),
       );
 
-      Map<String, int> waterIntakeMap = Map.fromIterable(
-        response.data as List,
-        key: (item) => item['date'],
-        value: (item) => item['amount'],
-      );
+      Map<String, int> waterIntakeMap = { for (var item in response.data as List) item['date'] : item['amount'] };
       return waterIntakeMap;
     } catch (e) {
       print("물 섭취 기록 불러오기 실패: $e");

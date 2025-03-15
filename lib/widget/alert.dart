@@ -1,5 +1,6 @@
 
 /// **정보성 메시지 다이얼로그 (예: 안내, 성공, 일반 알림)**
+library;
 import 'package:flutter/material.dart';
 
 /// 정보성 메시지 다이얼로그

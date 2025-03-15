@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../core_services/health_connect_service.dart'; // ✅ HealthConnectService 추가
 
 class WalkingPage extends StatefulWidget {
+  const WalkingPage({super.key});
+
   @override
   _WalkingPageState createState() => _WalkingPageState();
 }

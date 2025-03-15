@@ -28,7 +28,7 @@ class DioService {
         print("Response: ${response.statusCode} - ${response.data}");
         return handler.next(response);
       },
-      onError: (DioError e, handler) {
+      onError: (DioException e, handler) {
         print("Error: ${e.response?.statusCode} - ${e.response?.data}");
         return handler.next(e);
       },

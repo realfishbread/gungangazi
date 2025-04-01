@@ -67,6 +67,9 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 .android/
+# Flutter build - 웹 제외
+build/
+!build/web/
 
 
 # Ignore IDE specific files

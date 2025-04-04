@@ -18,8 +18,8 @@ com.mr.flutter.plugin.filepicker.file_picker-jetified-startup-runtime-1.1.1-16 C
 com.mr.flutter.plugin.filepicker.file_picker-jetified-core-ktx-1.13.1-17 C:\Users\Administrator\.gradle\caches\8.11.1\transforms\f67b5cca440856b2fd50eed4552adf02\transformed\jetified-core-ktx-1.13.1\res
 com.mr.flutter.plugin.filepicker.file_picker-lifecycle-livedata-core-2.7.0-18 C:\Users\Administrator\.gradle\caches\8.11.1\transforms\fa45cb542dc2512d661cc34f0772d718\transformed\lifecycle-livedata-core-2.7.0\res
 com.mr.flutter.plugin.filepicker.file_picker-jetified-annotation-experimental-1.4.0-19 C:\Users\Administrator\.gradle\caches\8.11.1\transforms\ff13be29f1c9f3701417b38447906804\transformed\jetified-annotation-experimental-1.4.0\res
-com.mr.flutter.plugin.filepicker.file_picker-main-20 D:\flutter\pub_cache\hosted\pub.dev\file_picker-9.0.2\android\src\main\res
-com.mr.flutter.plugin.filepicker.file_picker-release-21 D:\flutter\pub_cache\hosted\pub.dev\file_picker-9.0.2\android\src\release\res
+com.mr.flutter.plugin.filepicker.file_picker-main-20 D:\flutter\pub_cache\hosted\pub.dev\file_picker-9.2.3\android\src\main\res
+com.mr.flutter.plugin.filepicker.file_picker-release-21 D:\flutter\pub_cache\hosted\pub.dev\file_picker-9.2.3\android\src\release\res
 com.mr.flutter.plugin.filepicker.file_picker-pngs-22 D:\flutter\zolzak\gungangazi\gungangazi\build\file_picker\generated\res\pngs\release
 com.mr.flutter.plugin.filepicker.file_picker-resValues-23 D:\flutter\zolzak\gungangazi\gungangazi\build\file_picker\generated\res\resValues\release
 com.mr.flutter.plugin.filepicker.file_picker-mergeReleaseResources-24 D:\flutter\zolzak\gungangazi\gungangazi\build\file_picker\intermediates\incremental\release\mergeReleaseResources\merged.dir

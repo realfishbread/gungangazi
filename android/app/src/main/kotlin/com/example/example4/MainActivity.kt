@@ -1,78 +1,103 @@
 package com.example.gungangazi
 
-import io.flutter.embedding.android.FlutterFragmentActivity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
+import io.flutter.embedding.android.FlutterFragmentActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodChannel
 import androidx.health.connect.client.HealthConnectClient
-import kotlinx.coroutines.launch
 import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.StepsRecord
+import kotlinx.coroutines.launch
 
+class MainActivity : FlutterFragmentActivity() {
 
-class MainActivity: FlutterFragmentActivity() {  // ✅ 올바른 선언
+    // 채널 이름 정의
+    private val CHANNEL = "com.gungangazi/health_connect"
 
-    private lateinit var healthConnectClient: HealthConnectClient  // Health Connect 클라이언트 선언
+    // Health Connect 클라이언트
+    private lateinit var healthConnectClient: HealthConnectClient
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
 
-        // Health Connect 초기화
-        checkHealthConnect(this)
+        // MethodChannel 설정
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            CHANNEL
+        ).setMethodCallHandler { call, result ->
+            when (call.method) {
+                "checkHealthConnect" -> {
+                    // Flutter에서 "checkHealthConnect"를 호출하면 실행되는 로직
+                    lifecycleScope.launch {
+                        checkHealthConnect(applicationContext)
+                        result.success("HealthConnect Check Done")
+                    }
+                }
+                else -> result.notImplemented()
+            }
+        }
     }
 
+    /**
+     * Health Connect 사용 가능 여부 확인 & 권한 체크
+     */
     private fun checkHealthConnect(context: Context) {
         val providerPackageName = "com.google.android.apps.healthdata"
+        // SDK 사용 가능 여부
         val availabilityStatus = HealthConnectClient.getSdkStatus(context, providerPackageName)
 
-        if (availabilityStatus == HealthConnectClient.SDK_UNAVAILABLE) {
-            Log.e("HealthConnect", "Health Connect를 사용할 수 없습니다.")
-            return // Health Connect 사용 불가
-        }
+        when (availabilityStatus) {
+            HealthConnectClient.SDK_UNAVAILABLE -> {
+                Log.e("HealthConnect", "Health Connect를 사용할 수 없습니다.")
+                return
+            }
+            HealthConnectClient.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED -> {
+                Log.e("HealthConnect", "Health Connect 업데이트 필요")
+                // PlayStore 업데이트 페이지로 이동
+                val uriString =
+                    "market://details?id=$providerPackageName&url=healthconnect%3A%2F%2Fonboarding"
+                context.startActivity(
+                    Intent(Intent.ACTION_VIEW).apply {
+                        setPackage("com.android.vending") // PlayStore
+                        data = Uri.parse(uriString)
+                        putExtra("overlay", true)
+                        putExtra("callerId", context.packageName)
+                    }
+                )
+                return
+            }
+            else -> {
+                // 이용 가능 → 클라이언트 생성
+                healthConnectClient = HealthConnectClient.getOrCreate(context)
 
-        if (availabilityStatus == HealthConnectClient.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED) {
-            Log.e("HealthConnect", "Health Connect 업데이트 필요")
-            val uriString = "market://details?id=$providerPackageName&url=healthconnect%3A%2F%2Fonboarding"
-            context.startActivity(
-                Intent(Intent.ACTION_VIEW).apply {
-                    setPackage("com.android.vending")
-                    data = Uri.parse(uriString)
-                    putExtra("overlay", true)
-                    putExtra("callerId", context.packageName)
+                // 권한 체크 비동기 작업
+                lifecycleScope.launch {
+                    checkPermissionsAndRun(healthConnectClient)
                 }
-            )
-            return
-        }
-
-        // Health Connect 클라이언트 가져오기
-        healthConnectClient = HealthConnectClient.getOrCreate(context)
-
-        // 비동기 작업 실행 (권한 확인 및 요청)
-        lifecycleScope.launch {
-            checkPermissionsAndRun(healthConnectClient)
+            }
         }
     }
 
-    // ✅ 권한 확인 및 요청 함수
+    /**
+     * 권한 확인 & 요청
+     */
     private suspend fun checkPermissionsAndRun(healthConnectClient: HealthConnectClient) {
-        val PERMISSIONS =
-            setOf(
-                androidx.health.connect.client.permission.HealthPermission.getReadPermission(
-                    androidx.health.connect.client.records.StepsRecord::class
-                ),
-                androidx.health.connect.client.permission.HealthPermission.getWritePermission(
-                    androidx.health.connect.client.records.StepsRecord::class
-                )
-            )
+        val PERMISSIONS = setOf(
+            HealthPermission.getReadPermission(StepsRecord::class),
+            HealthPermission.getWritePermission(StepsRecord::class)
+        )
 
         val granted = healthConnectClient.permissionController.getGrantedPermissions()
         if (granted.containsAll(PERMISSIONS)) {
-            Log.d("HealthConnect", "필요한 권한이 이미 부여됨")
+            Log.d("HealthConnect", "✅ 필요한 권한이 이미 부여됨")
         } else {
-            Log.e("HealthConnect", "권한이 부족합니다. 요청이 필요합니다.")
+            Log.e("HealthConnect", "❌ 권한 부족, 요청이 필요합니다.")
+            // 실제로 권한을 요청하려면 healthConnectClient.permissionController.requestPermissions(...) 호출해야 함
         }
     }
 }

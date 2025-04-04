@@ -1,6 +1,6 @@
 <lint-module
     format="1"
-    dir="D:\flutter\pub_cache\hosted\pub.dev\file_picker-9.0.2\android"
+    dir="D:\flutter\pub_cache\hosted\pub.dev\file_picker-9.2.3\android"
     name=":file_picker"
     type="LIBRARY"
     maven="com.mr.flutter.plugin.filepicker:file_picker:1.0-SNAPSHOT"

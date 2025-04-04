@@ -6,6 +6,7 @@
     mergedManifest="D:\flutter\zolzak\gungangazi\gungangazi\build\file_picker\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml"
     manifestMergeReport="D:\flutter\zolzak\gungangazi\gungangazi\build\file_picker\outputs\logs\manifest-merger-release-report.txt"
     proguardFiles="D:\flutter\zolzak\gungangazi\gungangazi\build\file_picker\intermediates\default_proguard_files\global\proguard-android.txt-8.4.0"
+    consumerProguardFiles="proguard-rules.pro"
     partialResultsDir="D:\flutter\zolzak\gungangazi\gungangazi\build\file_picker\intermediates\lint_partial_results\release\lintAnalyzeRelease\out">
   <buildFeatures
       namespacing="REQUIRED"/>

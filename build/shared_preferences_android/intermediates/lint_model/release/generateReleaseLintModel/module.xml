@@ -1,6 +1,6 @@
 <lint-module
     format="1"
-    dir="D:\flutter\pub_cache\hosted\pub.dev\shared_preferences_android-2.4.6\android"
+    dir="D:\flutter\pub_cache\hosted\pub.dev\shared_preferences_android-2.4.7\android"
     name=":shared_preferences_android"
     type="LIBRARY"
     maven="io.flutter.plugins.sharedpreferences:shared_preferences_android:1.0-SNAPSHOT"

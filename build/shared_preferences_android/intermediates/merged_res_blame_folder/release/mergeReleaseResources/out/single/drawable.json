@@ -33,7 +33,7 @@
     },
     {
         "merged": "io.flutter.plugins.sharedpreferences.shared_preferences_android-release-40:/drawable/notification_tile_bg.xml",
-        "source": "io.flutter.plugins.sharedpreferences.shared_preferences_android-core-1.13.1-14:/drawable/notification_tile_bg.xml"
+        "source": "io.flutter.plugins.sharedpreferences.shared_preferences_android-core-1.13.1-16:/drawable/notification_tile_bg.xml"
     },
     {
         "merged": "io.flutter.plugins.sharedpreferences.shared_preferences_android-release-40:/drawable/abc_ratingbar_indicator_material.xml",
@@ -69,7 +69,7 @@
     },
     {
         "merged": "io.flutter.plugins.sharedpreferences.shared_preferences_android-release-40:/drawable/preference_list_divider_material.xml",
-        "source": "io.flutter.plugins.sharedpreferences.shared_preferences_android-preference-1.2.1-21:/drawable/preference_list_divider_material.xml"
+        "source": "io.flutter.plugins.sharedpreferences.shared_preferences_android-preference-1.2.1-22:/drawable/preference_list_divider_material.xml"
     },
     {
         "merged": "io.flutter.plugins.sharedpreferences.shared_preferences_android-release-40:/drawable/btn_radio_off_mtrl.xml",
@@ -85,7 +85,7 @@
     },
     {
         "merged": "io.flutter.plugins.sharedpreferences.shared_preferences_android-release-40:/drawable/ic_arrow_down_24dp.xml",
-        "source": "io.flutter.plugins.sharedpreferences.shared_preferences_android-preference-1.2.1-21:/drawable/ic_arrow_down_24dp.xml"
+        "source": "io.flutter.plugins.sharedpreferences.shared_preferences_android-preference-1.2.1-22:/drawable/ic_arrow_down_24dp.xml"
     },
     {
         "merged": "io.flutter.plugins.sharedpreferences.shared_preferences_android-release-40:/drawable/abc_tab_indicator_material.xml",
@@ -105,7 +105,7 @@
     },
     {
         "merged": "io.flutter.plugins.sharedpreferences.shared_preferences_android-release-40:/drawable/notification_icon_background.xml",
-        "source": "io.flutter.plugins.sharedpreferences.shared_preferences_android-core-1.13.1-14:/drawable/notification_icon_background.xml"
+        "source": "io.flutter.plugins.sharedpreferences.shared_preferences_android-core-1.13.1-16:/drawable/notification_icon_background.xml"
     },
     {
         "merged": "io.flutter.plugins.sharedpreferences.shared_preferences_android-release-40:/drawable/abc_item_background_holo_dark.xml",
@@ -157,7 +157,7 @@
     },
     {
         "merged": "io.flutter.plugins.sharedpreferences.shared_preferences_android-release-40:/drawable/abc_vector_test.xml",
-        "source": "io.flutter.plugins.sharedpreferences.shared_preferences_android-jetified-appcompat-resources-1.1.0-25:/drawable/abc_vector_test.xml"
+        "source": "io.flutter.plugins.sharedpreferences.shared_preferences_android-jetified-appcompat-resources-1.1.0-26:/drawable/abc_vector_test.xml"
     },
     {
         "merged": "io.flutter.plugins.sharedpreferences.shared_preferences_android-release-40:/drawable/abc_ic_menu_overflow_material.xml",
@@ -189,7 +189,7 @@
     },
     {
         "merged": "io.flutter.plugins.sharedpreferences.shared_preferences_android-release-40:/drawable/notification_bg_low.xml",
-        "source": "io.flutter.plugins.sharedpreferences.shared_preferences_android-core-1.13.1-14:/drawable/notification_bg_low.xml"
+        "source": "io.flutter.plugins.sharedpreferences.shared_preferences_android-core-1.13.1-16:/drawable/notification_bg_low.xml"
     },
     {
         "merged": "io.flutter.plugins.sharedpreferences.shared_preferences_android-release-40:/drawable/abc_seekbar_tick_mark_material.xml",
@@ -201,7 +201,7 @@
     },
     {
         "merged": "io.flutter.plugins.sharedpreferences.shared_preferences_android-release-40:/drawable/notification_bg.xml",
-        "source": "io.flutter.plugins.sharedpreferences.shared_preferences_android-core-1.13.1-14:/drawable/notification_bg.xml"
+        "source": "io.flutter.plugins.sharedpreferences.shared_preferences_android-core-1.13.1-16:/drawable/notification_bg.xml"
     },
     {
         "merged": "io.flutter.plugins.sharedpreferences.shared_preferences_android-release-40:/drawable/btn_checkbox_unchecked_mtrl.xml",

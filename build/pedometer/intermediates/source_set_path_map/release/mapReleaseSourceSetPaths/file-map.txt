@@ -18,8 +18,8 @@ com.example.pedometer-jetified-startup-runtime-1.1.1-16 C:\Users\Administrator\.
 com.example.pedometer-jetified-core-ktx-1.13.1-17 C:\Users\Administrator\.gradle\caches\8.11.1\transforms\f67b5cca440856b2fd50eed4552adf02\transformed\jetified-core-ktx-1.13.1\res
 com.example.pedometer-lifecycle-livedata-core-2.7.0-18 C:\Users\Administrator\.gradle\caches\8.11.1\transforms\fa45cb542dc2512d661cc34f0772d718\transformed\lifecycle-livedata-core-2.7.0\res
 com.example.pedometer-jetified-annotation-experimental-1.4.0-19 C:\Users\Administrator\.gradle\caches\8.11.1\transforms\ff13be29f1c9f3701417b38447906804\transformed\jetified-annotation-experimental-1.4.0\res
-com.example.pedometer-main-20 D:\flutter\pub_cache\hosted\pub.dev\pedometer-4.0.2\android\src\main\res
-com.example.pedometer-release-21 D:\flutter\pub_cache\hosted\pub.dev\pedometer-4.0.2\android\src\release\res
+com.example.pedometer-main-20 D:\flutter\pub_cache\hosted\pub.dev\pedometer-4.1.1\android\src\main\res
+com.example.pedometer-release-21 D:\flutter\pub_cache\hosted\pub.dev\pedometer-4.1.1\android\src\release\res
 com.example.pedometer-pngs-22 D:\flutter\zolzak\gungangazi\gungangazi\build\pedometer\generated\res\pngs\release
 com.example.pedometer-resValues-23 D:\flutter\zolzak\gungangazi\gungangazi\build\pedometer\generated\res\resValues\release
 com.example.pedometer-mergeReleaseResources-24 D:\flutter\zolzak\gungangazi\gungangazi\build\pedometer\intermediates\incremental\release\mergeReleaseResources\merged.dir

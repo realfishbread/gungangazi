@@ -1,6 +1,6 @@
 <lint-module
     format="1"
-    dir="D:\flutter\pub_cache\hosted\pub.dev\flutter_plugin_android_lifecycle-2.0.27\android"
+    dir="D:\flutter\pub_cache\hosted\pub.dev\flutter_plugin_android_lifecycle-2.0.26\android"
     name=":flutter_plugin_android_lifecycle"
     type="LIBRARY"
     maven="io.flutter.plugins.flutter_plugin_android_lifecycle:flutter_plugin_android_lifecycle:1.0"

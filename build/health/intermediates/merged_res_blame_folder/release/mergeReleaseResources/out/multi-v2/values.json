@@ -4,6 +4,25 @@
             "outputFile": "cachet.plugins.health-release-32:/values/values.xml",
             "map": [
                 {
+                    "source": "C:\\Users\\Administrator\\.gradle\\caches\\8.11.1\\transforms\\b676347fcb72017eadad39ce6eaf44ba\\transformed\\fragment-1.8.6\\res\\values\\values.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,10",
+                        "startColumns": "4,4,4,4,4",
+                        "startOffsets": "55,112,177,241,411",
+                        "endLines": "2,3,4,9,13",
+                        "endColumns": "56,64,63,24,24",
+                        "endOffsets": "107,172,236,406,555"
+                    },
+                    "to": {
+                        "startLines": "119,123,144,249,254",
+                        "startColumns": "4,4,4,4,4",
+                        "startOffsets": "5795,5964,7095,12060,12230",
+                        "endLines": "119,123,144,253,257",
+                        "endColumns": "56,64,63,24,24",
+                        "endOffsets": "5847,6024,7154,12225,12374"
+                    }
+                },
+                {
                     "source": "C:\\Users\\Administrator\\.gradle\\caches\\8.11.1\\transforms\\914a326983dd425269510fb0c8e49dc9\\transformed\\lifecycle-runtime-2.7.0\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2",
@@ -105,25 +124,6 @@
                         "startOffsets": "7229",
                         "endColumns": "82",
                         "endOffsets": "7307"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Administrator\\.gradle\\caches\\8.11.1\\transforms\\428f9f58a7b5672c8628bcfc4cdf4c76\\transformed\\fragment-1.7.1\\res\\values\\values.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,10",
-                        "startColumns": "4,4,4,4,4",
-                        "startOffsets": "55,112,177,241,411",
-                        "endLines": "2,3,4,9,13",
-                        "endColumns": "56,64,63,24,24",
-                        "endOffsets": "107,172,236,406,555"
-                    },
-                    "to": {
-                        "startLines": "119,123,144,249,254",
-                        "startColumns": "4,4,4,4,4",
-                        "startOffsets": "5795,5964,7095,12060,12230",
-                        "endLines": "119,123,144,253,257",
-                        "endColumns": "56,64,63,24,24",
-                        "endOffsets": "5847,6024,7154,12225,12374"
                     }
                 },
                 {
@@ -151,6 +151,25 @@
             "outputFile": "cachet.plugins.health-mergeReleaseResources-30:/values/values.xml",
             "map": [
                 {
+                    "source": "C:\\Users\\Administrator\\.gradle\\caches\\8.11.1\\transforms\\b676347fcb72017eadad39ce6eaf44ba\\transformed\\fragment-1.8.6\\res\\values\\values.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,10",
+                        "startColumns": "4,4,4,4,4",
+                        "startOffsets": "55,112,177,241,411",
+                        "endLines": "2,3,4,9,13",
+                        "endColumns": "56,64,63,24,24",
+                        "endOffsets": "107,172,236,406,555"
+                    },
+                    "to": {
+                        "startLines": "119,123,144,249,254",
+                        "startColumns": "4,4,4,4,4",
+                        "startOffsets": "5795,5964,7095,12060,12230",
+                        "endLines": "119,123,144,253,257",
+                        "endColumns": "56,64,63,24,24",
+                        "endOffsets": "5847,6024,7154,12225,12374"
+                    }
+                },
+                {
                     "source": "C:\\Users\\Administrator\\.gradle\\caches\\8.11.1\\transforms\\914a326983dd425269510fb0c8e49dc9\\transformed\\lifecycle-runtime-2.7.0\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2",
@@ -252,25 +271,6 @@
                         "startOffsets": "7229",
                         "endColumns": "82",
                         "endOffsets": "7307"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Administrator\\.gradle\\caches\\8.11.1\\transforms\\428f9f58a7b5672c8628bcfc4cdf4c76\\transformed\\fragment-1.7.1\\res\\values\\values.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,10",
-                        "startColumns": "4,4,4,4,4",
-                        "startOffsets": "55,112,177,241,411",
-                        "endLines": "2,3,4,9,13",
-                        "endColumns": "56,64,63,24,24",
-                        "endOffsets": "107,172,236,406,555"
-                    },
-                    "to": {
-                        "startLines": "119,123,144,249,254",
-                        "startColumns": "4,4,4,4,4",
-                        "startOffsets": "5795,5964,7095,12060,12230",
-                        "endLines": "119,123,144,253,257",
-                        "endColumns": "56,64,63,24,24",
-                        "endOffsets": "5847,6024,7154,12225,12374"
                     }
                 },
                 {

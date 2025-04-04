@@ -1,26 +1,26 @@
 [
     {
         "merged": "cachet.plugins.health-release-32:/animator/fragment_close_enter.xml",
-        "source": "cachet.plugins.health-fragment-1.7.1-6:/animator/fragment_close_enter.xml"
+        "source": "cachet.plugins.health-fragment-1.8.6-14:/animator/fragment_close_enter.xml"
     },
     {
         "merged": "cachet.plugins.health-release-32:/animator/fragment_open_enter.xml",
-        "source": "cachet.plugins.health-fragment-1.7.1-6:/animator/fragment_open_enter.xml"
+        "source": "cachet.plugins.health-fragment-1.8.6-14:/animator/fragment_open_enter.xml"
     },
     {
         "merged": "cachet.plugins.health-release-32:/animator/fragment_close_exit.xml",
-        "source": "cachet.plugins.health-fragment-1.7.1-6:/animator/fragment_close_exit.xml"
+        "source": "cachet.plugins.health-fragment-1.8.6-14:/animator/fragment_close_exit.xml"
     },
     {
         "merged": "cachet.plugins.health-release-32:/animator/fragment_fade_enter.xml",
-        "source": "cachet.plugins.health-fragment-1.7.1-6:/animator/fragment_fade_enter.xml"
+        "source": "cachet.plugins.health-fragment-1.8.6-14:/animator/fragment_fade_enter.xml"
     },
     {
         "merged": "cachet.plugins.health-release-32:/animator/fragment_open_exit.xml",
-        "source": "cachet.plugins.health-fragment-1.7.1-6:/animator/fragment_open_exit.xml"
+        "source": "cachet.plugins.health-fragment-1.8.6-14:/animator/fragment_open_exit.xml"
     },
     {
         "merged": "cachet.plugins.health-release-32:/animator/fragment_fade_exit.xml",
-        "source": "cachet.plugins.health-fragment-1.7.1-6:/animator/fragment_fade_exit.xml"
+        "source": "cachet.plugins.health-fragment-1.8.6-14:/animator/fragment_fade_exit.xml"
     }
 ]

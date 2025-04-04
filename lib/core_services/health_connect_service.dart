@@ -1,8 +1,10 @@
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter/services.dart';
 
 class HealthConnectService {
   final Health health = Health(); // ✅ Health 인스턴스 생성
+  
 
   /// ✅ Health Connect 권한 요청
   Future<void> requestPermissions() async {
@@ -47,4 +49,6 @@ class HealthConnectService {
       return 0;
     }
   }
+
+   
 }

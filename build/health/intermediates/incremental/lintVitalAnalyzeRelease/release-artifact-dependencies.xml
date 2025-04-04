@@ -1,20 +1,20 @@
 <dependencies>
   <compile
-      roots="androidx.health.connect:connect-client:1.1.0-alpha07@aar,:@@:device_info_plus::release,io.flutter:flutter_embedding_release:1.0.0-871f65ac1bf129edb222c3293a636ff4b67534a6@jar,androidx.fragment:fragment:1.7.1@aar,androidx.fragment:fragment-ktx:1.7.1@aar,androidx.activity:activity-ktx:1.8.1@aar,androidx.activity:activity:1.8.1@aar,androidx.collection:collection-ktx:1.1.0@jar,androidx.loader:loader:1.0.0@aar,androidx.viewpager:viewpager:1.0.0@aar,androidx.customview:customview:1.0.0@aar,androidx.core:core:1.13.1@aar,androidx.core:core:1.13.1@aar,androidx.lifecycle:lifecycle-livedata:2.7.0@aar,androidx.lifecycle:lifecycle-runtime-ktx:2.7.0@aar,androidx.lifecycle:lifecycle-livedata-core:2.7.0@aar,androidx.lifecycle:lifecycle-viewmodel:2.7.0@aar,androidx.lifecycle:lifecycle-viewmodel:2.7.0@aar,androidx.lifecycle:lifecycle-runtime:2.7.0@aar,androidx.lifecycle:lifecycle-process:2.7.0@aar,androidx.lifecycle:lifecycle-common-java8:2.7.0@jar,androidx.lifecycle:lifecycle-common:2.7.0@jar,androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0@aar,androidx.lifecycle:lifecycle-livedata-core-ktx:2.7.0@aar,androidx.lifecycle:lifecycle-viewmodel-savedstate:2.7.0@aar,androidx.core:core-ktx:1.13.1@aar,androidx.savedstate:savedstate:1.2.1@aar,androidx.savedstate:savedstate-ktx:1.2.1@aar,androidx.window:window:1.2.0@aar,androidx.window:window-java:1.2.0@aar,androidx.versionedparcelable:versionedparcelable:1.1.1@aar,androidx.collection:collection:1.1.0@jar,androidx.arch.core:core-runtime:2.2.0@aar,androidx.arch.core:core-common:2.2.0@jar,androidx.annotation:annotation-jvm:1.8.0@jar,androidx.annotation:annotation-experimental:1.4.0@aar,org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.7.3@jar,org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3@jar,org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.20@jar,org.jetbrains.kotlin:kotlin-stdlib:1.9.22@jar,org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.22@jar,org.jetbrains:annotations:23.0.0@jar,androidx.startup:startup-runtime:1.1.1@aar,androidx.tracing:tracing:1.2.0@aar,com.getkeepsafe.relinker:relinker:1.4.5@aar">
+      roots="androidx.health.connect:connect-client:1.1.0-alpha11@aar,:@@:device_info_plus::release,io.flutter:flutter_embedding_release:1.0.0-18b71d647a292a980abb405ac7d16fe1f0b20434@jar,androidx.fragment:fragment:1.8.6@aar,androidx.fragment:fragment-ktx:1.8.6@aar,androidx.activity:activity-ktx:1.8.1@aar,androidx.activity:activity:1.8.1@aar,androidx.collection:collection-ktx:1.1.0@jar,androidx.loader:loader:1.0.0@aar,androidx.viewpager:viewpager:1.0.0@aar,androidx.customview:customview:1.0.0@aar,androidx.core:core:1.13.1@aar,androidx.core:core:1.13.1@aar,androidx.lifecycle:lifecycle-livedata:2.7.0@aar,androidx.lifecycle:lifecycle-runtime-ktx:2.7.0@aar,androidx.lifecycle:lifecycle-livedata-core:2.7.0@aar,androidx.lifecycle:lifecycle-viewmodel:2.7.0@aar,androidx.lifecycle:lifecycle-viewmodel:2.7.0@aar,androidx.lifecycle:lifecycle-runtime:2.7.0@aar,androidx.lifecycle:lifecycle-process:2.7.0@aar,androidx.lifecycle:lifecycle-common-java8:2.7.0@jar,androidx.lifecycle:lifecycle-common:2.7.0@jar,androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0@aar,androidx.lifecycle:lifecycle-livedata-core-ktx:2.7.0@aar,androidx.lifecycle:lifecycle-viewmodel-savedstate:2.7.0@aar,androidx.core:core-ktx:1.13.1@aar,androidx.savedstate:savedstate:1.2.1@aar,androidx.savedstate:savedstate-ktx:1.2.1@aar,androidx.window:window:1.2.0@aar,androidx.window:window-java:1.2.0@aar,androidx.versionedparcelable:versionedparcelable:1.1.1@aar,androidx.collection:collection:1.1.0@jar,androidx.arch.core:core-runtime:2.2.0@aar,androidx.arch.core:core-common:2.2.0@jar,androidx.annotation:annotation-jvm:1.8.1@jar,androidx.annotation:annotation-experimental:1.4.0@aar,org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.7.3@jar,org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3@jar,org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.20@jar,org.jetbrains.kotlin:kotlin-stdlib:1.9.22@jar,org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.22@jar,org.jetbrains:annotations:23.0.0@jar,androidx.startup:startup-runtime:1.1.1@aar,androidx.tracing:tracing:1.2.0@aar,org.jspecify:jspecify:1.0.0@jar,com.getkeepsafe.relinker:relinker:1.4.5@aar">
     <dependency
-        name="androidx.health.connect:connect-client:1.1.0-alpha07@aar"
+        name="androidx.health.connect:connect-client:1.1.0-alpha11@aar"
         simpleName="androidx.health.connect:connect-client"/>
     <dependency
         name=":@@:device_info_plus::release"
         simpleName="dev.fluttercommunity.plus.device_info:device_info_plus"/>
     <dependency
-        name="io.flutter:flutter_embedding_release:1.0.0-871f65ac1bf129edb222c3293a636ff4b67534a6@jar"
+        name="io.flutter:flutter_embedding_release:1.0.0-18b71d647a292a980abb405ac7d16fe1f0b20434@jar"
         simpleName="io.flutter:flutter_embedding_release"/>
     <dependency
-        name="androidx.fragment:fragment:1.7.1@aar"
+        name="androidx.fragment:fragment:1.8.6@aar"
         simpleName="androidx.fragment:fragment"/>
     <dependency
-        name="androidx.fragment:fragment-ktx:1.7.1@aar"
+        name="androidx.fragment:fragment-ktx:1.8.6@aar"
         simpleName="androidx.fragment:fragment-ktx"/>
     <dependency
         name="androidx.activity:activity-ktx:1.8.1@aar"
@@ -98,7 +98,7 @@
         name="androidx.arch.core:core-common:2.2.0@jar"
         simpleName="androidx.arch.core:core-common"/>
     <dependency
-        name="androidx.annotation:annotation-jvm:1.8.0@jar"
+        name="androidx.annotation:annotation-jvm:1.8.1@jar"
         simpleName="androidx.annotation:annotation-jvm"/>
     <dependency
         name="androidx.annotation:annotation-experimental:1.4.0@aar"
@@ -128,26 +128,44 @@
         name="androidx.tracing:tracing:1.2.0@aar"
         simpleName="androidx.tracing:tracing"/>
     <dependency
+        name="org.jspecify:jspecify:1.0.0@jar"
+        simpleName="org.jspecify:jspecify"/>
+    <dependency
         name="com.getkeepsafe.relinker:relinker:1.4.5@aar"
         simpleName="com.getkeepsafe.relinker:relinker"/>
   </compile>
   <package
-      roots="androidx.health.connect:connect-client:1.1.0-alpha07@aar,:@@:device_info_plus::release,io.flutter:flutter_embedding_release:1.0.0-871f65ac1bf129edb222c3293a636ff4b67534a6@jar,androidx.fragment:fragment-ktx:1.7.1@aar,androidx.fragment:fragment:1.7.1@aar,androidx.window:window:1.2.0@aar,androidx.window:window-java:1.2.0@aar,androidx.activity:activity-ktx:1.8.1@aar,androidx.activity:activity:1.8.1@aar,androidx.loader:loader:1.0.0@aar,androidx.viewpager:viewpager:1.0.0@aar,androidx.lifecycle:lifecycle-runtime-ktx:2.7.0@aar,androidx.lifecycle:lifecycle-livedata:2.7.0@aar,androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0@aar,androidx.lifecycle:lifecycle-livedata-core-ktx:2.7.0@aar,androidx.lifecycle:lifecycle-viewmodel:2.7.0@aar,androidx.lifecycle:lifecycle-viewmodel:2.7.0@aar,androidx.lifecycle:lifecycle-livedata-core:2.7.0@aar,androidx.lifecycle:lifecycle-viewmodel-savedstate:2.7.0@aar,androidx.core:core-ktx:1.13.1@aar,androidx.customview:customview:1.0.0@aar,androidx.core:core:1.13.1@aar,androidx.core:core:1.13.1@aar,androidx.lifecycle:lifecycle-runtime:2.7.0@aar,androidx.lifecycle:lifecycle-process:2.7.0@aar,androidx.lifecycle:lifecycle-common-java8:2.7.0@jar,androidx.savedstate:savedstate-ktx:1.2.1@aar,androidx.savedstate:savedstate:1.2.1@aar,androidx.lifecycle:lifecycle-common:2.7.0@jar,org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3@jar,org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.7.3@jar,org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3@jar,org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.20@jar,androidx.annotation:annotation-experimental:1.4.0@aar,androidx.profileinstaller:profileinstaller:1.3.1@aar,androidx.startup:startup-runtime:1.1.1@aar,androidx.tracing:tracing:1.2.0@aar,androidx.versionedparcelable:versionedparcelable:1.1.1@aar,androidx.collection:collection-ktx:1.1.0@jar,androidx.collection:collection:1.1.0@jar,androidx.arch.core:core-runtime:2.2.0@aar,androidx.arch.core:core-common:2.2.0@jar,androidx.interpolator:interpolator:1.0.0@aar,androidx.concurrent:concurrent-futures:1.1.0@jar,androidx.window.extensions.core:core:1.0.0@aar,androidx.annotation:annotation-jvm:1.8.0@jar,org.jetbrains.kotlin:kotlin-stdlib:1.9.22@jar,org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.22@jar,com.google.guava:guava:31.1-android@jar,com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava@jar,com.getkeepsafe.relinker:relinker:1.4.5@aar,org.jetbrains:annotations:23.0.0@jar,com.google.guava:failureaccess:1.0.1@jar,com.google.code.findbugs:jsr305:3.0.2@jar,org.checkerframework:checker-qual:3.12.0@jar,com.google.errorprone:error_prone_annotations:2.11.0@jar,com.google.j2objc:j2objc-annotations:1.3@jar">
+      roots="androidx.health.connect:connect-client-external-protobuf:1.1.0-alpha11@jar,androidx.health.connect:connect-client-proto:1.1.0-alpha11@jar,androidx.health.connect:connect-client:1.1.0-alpha11@aar,:@@:device_info_plus::release,io.flutter:flutter_embedding_release:1.0.0-18b71d647a292a980abb405ac7d16fe1f0b20434@jar,androidx.fragment:fragment:1.8.6@aar,androidx.fragment:fragment-ktx:1.8.6@aar,androidx.activity:activity:1.8.1@aar,androidx.activity:activity-ktx:1.8.1@aar,androidx.collection:collection-ktx:1.1.0@jar,androidx.window:window:1.2.0@aar,androidx.window:window-java:1.2.0@aar,androidx.loader:loader:1.0.0@aar,androidx.viewpager:viewpager:1.0.0@aar,androidx.core:core-ktx:1.13.1@aar,androidx.customview:customview:1.0.0@aar,androidx.core:core:1.13.1@aar,androidx.core:core:1.13.1@aar,androidx.lifecycle:lifecycle-livedata:2.7.0@aar,androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0@aar,androidx.lifecycle:lifecycle-viewmodel:2.7.0@aar,androidx.lifecycle:lifecycle-viewmodel:2.7.0@aar,androidx.lifecycle:lifecycle-runtime-ktx:2.7.0@aar,androidx.lifecycle:lifecycle-livedata-core-ktx:2.7.0@aar,androidx.lifecycle:lifecycle-livedata-core:2.7.0@aar,androidx.lifecycle:lifecycle-runtime:2.7.0@aar,androidx.lifecycle:lifecycle-process:2.7.0@aar,androidx.lifecycle:lifecycle-common-java8:2.7.0@jar,androidx.lifecycle:lifecycle-common:2.7.0@jar,androidx.lifecycle:lifecycle-viewmodel-savedstate:2.7.0@aar,androidx.savedstate:savedstate:1.2.1@aar,androidx.savedstate:savedstate-ktx:1.2.1@aar,androidx.profileinstaller:profileinstaller:1.3.1@aar,androidx.startup:startup-runtime:1.1.1@aar,androidx.tracing:tracing:1.2.0@aar,androidx.versionedparcelable:versionedparcelable:1.1.1@aar,androidx.collection:collection:1.1.0@jar,androidx.arch.core:core-runtime:2.2.0@aar,androidx.arch.core:core-common:2.2.0@jar,androidx.interpolator:interpolator:1.0.0@aar,androidx.concurrent:concurrent-futures:1.1.0@jar,androidx.window.extensions.core:core:1.0.0@aar,androidx.annotation:annotation-jvm:1.8.1@jar,org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3@jar,org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.7.3@jar,org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3@jar,org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.20@jar,androidx.annotation:annotation-experimental:1.4.0@aar,org.jetbrains.kotlin:kotlin-stdlib:1.9.22@jar,org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.22@jar,com.google.guava:guava:31.1-android@jar,com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava@jar,org.jspecify:jspecify:1.0.0@jar,com.getkeepsafe.relinker:relinker:1.4.5@aar,org.jetbrains:annotations:23.0.0@jar,com.google.guava:failureaccess:1.0.1@jar,com.google.code.findbugs:jsr305:3.0.2@jar,org.checkerframework:checker-qual:3.12.0@jar,com.google.errorprone:error_prone_annotations:2.11.0@jar,com.google.j2objc:j2objc-annotations:1.3@jar">
     <dependency
-        name="androidx.health.connect:connect-client:1.1.0-alpha07@aar"
+        name="androidx.health.connect:connect-client-external-protobuf:1.1.0-alpha11@jar"
+        simpleName="androidx.health.connect:connect-client-external-protobuf"/>
+    <dependency
+        name="androidx.health.connect:connect-client-proto:1.1.0-alpha11@jar"
+        simpleName="androidx.health.connect:connect-client-proto"/>
+    <dependency
+        name="androidx.health.connect:connect-client:1.1.0-alpha11@aar"
         simpleName="androidx.health.connect:connect-client"/>
     <dependency
         name=":@@:device_info_plus::release"
         simpleName="dev.fluttercommunity.plus.device_info:device_info_plus"/>
     <dependency
-        name="io.flutter:flutter_embedding_release:1.0.0-871f65ac1bf129edb222c3293a636ff4b67534a6@jar"
+        name="io.flutter:flutter_embedding_release:1.0.0-18b71d647a292a980abb405ac7d16fe1f0b20434@jar"
         simpleName="io.flutter:flutter_embedding_release"/>
     <dependency
-        name="androidx.fragment:fragment-ktx:1.7.1@aar"
+        name="androidx.fragment:fragment:1.8.6@aar"
+        simpleName="androidx.fragment:fragment"/>
+    <dependency
+        name="androidx.fragment:fragment-ktx:1.8.6@aar"
         simpleName="androidx.fragment:fragment-ktx"/>
     <dependency
-        name="androidx.fragment:fragment:1.7.1@aar"
-        simpleName="androidx.fragment:fragment"/>
+        name="androidx.activity:activity:1.8.1@aar"
+        simpleName="androidx.activity:activity"/>
+    <dependency
+        name="androidx.activity:activity-ktx:1.8.1@aar"
+        simpleName="androidx.activity:activity-ktx"/>
+    <dependency
+        name="androidx.collection:collection-ktx:1.1.0@jar"
+        simpleName="androidx.collection:collection-ktx"/>
     <dependency
         name="androidx.window:window:1.2.0@aar"
         simpleName="androidx.window:window"/>
@@ -155,38 +173,11 @@
         name="androidx.window:window-java:1.2.0@aar"
         simpleName="androidx.window:window-java"/>
     <dependency
-        name="androidx.activity:activity-ktx:1.8.1@aar"
-        simpleName="androidx.activity:activity-ktx"/>
-    <dependency
-        name="androidx.activity:activity:1.8.1@aar"
-        simpleName="androidx.activity:activity"/>
-    <dependency
         name="androidx.loader:loader:1.0.0@aar"
         simpleName="androidx.loader:loader"/>
     <dependency
         name="androidx.viewpager:viewpager:1.0.0@aar"
         simpleName="androidx.viewpager:viewpager"/>
-    <dependency
-        name="androidx.lifecycle:lifecycle-runtime-ktx:2.7.0@aar"
-        simpleName="androidx.lifecycle:lifecycle-runtime-ktx"/>
-    <dependency
-        name="androidx.lifecycle:lifecycle-livedata:2.7.0@aar"
-        simpleName="androidx.lifecycle:lifecycle-livedata"/>
-    <dependency
-        name="androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0@aar"
-        simpleName="androidx.lifecycle:lifecycle-viewmodel-ktx"/>
-    <dependency
-        name="androidx.lifecycle:lifecycle-livedata-core-ktx:2.7.0@aar"
-        simpleName="androidx.lifecycle:lifecycle-livedata-core-ktx"/>
-    <dependency
-        name="androidx.lifecycle:lifecycle-viewmodel:2.7.0@aar"
-        simpleName="androidx.lifecycle:lifecycle-viewmodel"/>
-    <dependency
-        name="androidx.lifecycle:lifecycle-livedata-core:2.7.0@aar"
-        simpleName="androidx.lifecycle:lifecycle-livedata-core"/>
-    <dependency
-        name="androidx.lifecycle:lifecycle-viewmodel-savedstate:2.7.0@aar"
-        simpleName="androidx.lifecycle:lifecycle-viewmodel-savedstate"/>
     <dependency
         name="androidx.core:core-ktx:1.13.1@aar"
         simpleName="androidx.core:core-ktx"/>
@@ -197,6 +188,24 @@
         name="androidx.core:core:1.13.1@aar"
         simpleName="androidx.core:core"/>
     <dependency
+        name="androidx.lifecycle:lifecycle-livedata:2.7.0@aar"
+        simpleName="androidx.lifecycle:lifecycle-livedata"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0@aar"
+        simpleName="androidx.lifecycle:lifecycle-viewmodel-ktx"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-viewmodel:2.7.0@aar"
+        simpleName="androidx.lifecycle:lifecycle-viewmodel"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-runtime-ktx:2.7.0@aar"
+        simpleName="androidx.lifecycle:lifecycle-runtime-ktx"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-livedata-core-ktx:2.7.0@aar"
+        simpleName="androidx.lifecycle:lifecycle-livedata-core-ktx"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-livedata-core:2.7.0@aar"
+        simpleName="androidx.lifecycle:lifecycle-livedata-core"/>
+    <dependency
         name="androidx.lifecycle:lifecycle-runtime:2.7.0@aar"
         simpleName="androidx.lifecycle:lifecycle-runtime"/>
     <dependency
@@ -206,29 +215,17 @@
         name="androidx.lifecycle:lifecycle-common-java8:2.7.0@jar"
         simpleName="androidx.lifecycle:lifecycle-common-java8"/>
     <dependency
-        name="androidx.savedstate:savedstate-ktx:1.2.1@aar"
-        simpleName="androidx.savedstate:savedstate-ktx"/>
+        name="androidx.lifecycle:lifecycle-common:2.7.0@jar"
+        simpleName="androidx.lifecycle:lifecycle-common"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-viewmodel-savedstate:2.7.0@aar"
+        simpleName="androidx.lifecycle:lifecycle-viewmodel-savedstate"/>
     <dependency
         name="androidx.savedstate:savedstate:1.2.1@aar"
         simpleName="androidx.savedstate:savedstate"/>
     <dependency
-        name="androidx.lifecycle:lifecycle-common:2.7.0@jar"
-        simpleName="androidx.lifecycle:lifecycle-common"/>
-    <dependency
-        name="org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3@jar"
-        simpleName="org.jetbrains.kotlinx:kotlinx-coroutines-android"/>
-    <dependency
-        name="org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.7.3@jar"
-        simpleName="org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm"/>
-    <dependency
-        name="org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3@jar"
-        simpleName="org.jetbrains.kotlinx:kotlinx-coroutines-guava"/>
-    <dependency
-        name="org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.20@jar"
-        simpleName="org.jetbrains.kotlin:kotlin-stdlib-jdk8"/>
-    <dependency
-        name="androidx.annotation:annotation-experimental:1.4.0@aar"
-        simpleName="androidx.annotation:annotation-experimental"/>
+        name="androidx.savedstate:savedstate-ktx:1.2.1@aar"
+        simpleName="androidx.savedstate:savedstate-ktx"/>
     <dependency
         name="androidx.profileinstaller:profileinstaller:1.3.1@aar"
         simpleName="androidx.profileinstaller:profileinstaller"/>
@@ -241,9 +238,6 @@
     <dependency
         name="androidx.versionedparcelable:versionedparcelable:1.1.1@aar"
         simpleName="androidx.versionedparcelable:versionedparcelable"/>
-    <dependency
-        name="androidx.collection:collection-ktx:1.1.0@jar"
-        simpleName="androidx.collection:collection-ktx"/>
     <dependency
         name="androidx.collection:collection:1.1.0@jar"
         simpleName="androidx.collection:collection"/>
@@ -263,8 +257,23 @@
         name="androidx.window.extensions.core:core:1.0.0@aar"
         simpleName="androidx.window.extensions.core:core"/>
     <dependency
-        name="androidx.annotation:annotation-jvm:1.8.0@jar"
+        name="androidx.annotation:annotation-jvm:1.8.1@jar"
         simpleName="androidx.annotation:annotation-jvm"/>
+    <dependency
+        name="org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3@jar"
+        simpleName="org.jetbrains.kotlinx:kotlinx-coroutines-android"/>
+    <dependency
+        name="org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.7.3@jar"
+        simpleName="org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm"/>
+    <dependency
+        name="org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3@jar"
+        simpleName="org.jetbrains.kotlinx:kotlinx-coroutines-guava"/>
+    <dependency
+        name="org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.20@jar"
+        simpleName="org.jetbrains.kotlin:kotlin-stdlib-jdk8"/>
+    <dependency
+        name="androidx.annotation:annotation-experimental:1.4.0@aar"
+        simpleName="androidx.annotation:annotation-experimental"/>
     <dependency
         name="org.jetbrains.kotlin:kotlin-stdlib:1.9.22@jar"
         simpleName="org.jetbrains.kotlin:kotlin-stdlib"/>
@@ -277,6 +286,9 @@
     <dependency
         name="com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava@jar"
         simpleName="com.google.guava:listenablefuture"/>
+    <dependency
+        name="org.jspecify:jspecify:1.0.0@jar"
+        simpleName="org.jspecify:jspecify"/>
     <dependency
         name="com.getkeepsafe.relinker:relinker:1.4.5@aar"
         simpleName="com.getkeepsafe.relinker:relinker"/>

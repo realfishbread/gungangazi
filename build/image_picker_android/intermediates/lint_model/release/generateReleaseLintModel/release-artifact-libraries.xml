@@ -3,9 +3,9 @@
       name=":@@:flutter_plugin_android_lifecycle::release"
       project=":flutter_plugin_android_lifecycle"/>
   <library
-      name="io.flutter:flutter_embedding_release:1.0.0-871f65ac1bf129edb222c3293a636ff4b67534a6@jar"
-      jars="C:\Users\Administrator\.gradle\caches\modules-2\files-2.1\io.flutter\flutter_embedding_release\1.0.0-871f65ac1bf129edb222c3293a636ff4b67534a6\3aef8c9981f96834cd2a1a82b02e68caf7071ebb\flutter_embedding_release-1.0.0-871f65ac1bf129edb222c3293a636ff4b67534a6.jar"
-      resolved="io.flutter:flutter_embedding_release:1.0.0-871f65ac1bf129edb222c3293a636ff4b67534a6"/>
+      name="io.flutter:flutter_embedding_release:1.0.0-18b71d647a292a980abb405ac7d16fe1f0b20434@jar"
+      jars="C:\Users\Administrator\.gradle\caches\modules-2\files-2.1\io.flutter\flutter_embedding_release\1.0.0-18b71d647a292a980abb405ac7d16fe1f0b20434\e1f965c14eb9a096111654ae1a59480778f50cbc\flutter_embedding_release-1.0.0-18b71d647a292a980abb405ac7d16fe1f0b20434.jar"
+      resolved="io.flutter:flutter_embedding_release:1.0.0-18b71d647a292a980abb405ac7d16fe1f0b20434"/>
   <library
       name="androidx.fragment:fragment:1.7.1@aar"
       jars="C:\Users\Administrator\.gradle\caches\8.11.1\transforms\428f9f58a7b5672c8628bcfc4cdf4c76\transformed\fragment-1.7.1\jars\classes.jar"

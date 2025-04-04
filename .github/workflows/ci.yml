@@ -72,7 +72,7 @@ jobs:
           # 원격 서버에서 Nginx 재시작 및 Spring Boot 실행
           ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com << EOF
             sudo systemctl restart nginx
-            nohup java -jar /var/app/demo.jar > /dev/null 2>&1 &
+            nohup java -jar /var/app/demo.jar &
           EOF
 
       - name: Cleanup

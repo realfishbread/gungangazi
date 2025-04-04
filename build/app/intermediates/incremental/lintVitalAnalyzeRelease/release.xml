@@ -1,0 +1,37 @@
+<variant
+    name="release"
+    package="com.example.gungangazi"
+    minSdkVersion="28"
+    targetSdkVersion="35"
+    mergedManifest="D:\flutter\zolzak\gungangazi\gungangazi\build\app\intermediates\merged_manifest\release\processReleaseMainManifest\AndroidManifest.xml"
+    proguardFiles="D:\flutter\zolzak\gungangazi\gungangazi\build\app\intermediates\default_proguard_files\global\proguard-android-optimize.txt-8.4.0;D:\flutter_windows_3.24.3-stable\flutter\packages\flutter_tools\gradle\flutter_proguard_rules.pro;proguard-rules.pro"
+    partialResultsDir="D:\flutter\zolzak\gungangazi\gungangazi\build\app\intermediates\lint_vital_partial_results\release\lintVitalAnalyzeRelease\out"
+    desugaredMethodsFiles="C:\Users\Administrator\.gradle\caches\8.11.1\transforms\4d2ab9f7e1d1b9dc055f975f8becb5b1\transformed\desugar_jdk_libs_configuration-2.0.3-desugar-lint.txt;C:\Users\Administrator\.gradle\caches\8.11.1\transforms\f27b55ce85a893d2bb0b67e84efe52b2\transformed\D8BackportedDesugaredMethods.txt">
+  <buildFeatures
+      coreLibraryDesugaring="true"
+      namespacing="REQUIRED"/>
+  <sourceProviders>
+    <sourceProvider
+        manifests="src\main\AndroidManifest.xml"
+        javaDirectories="src\main\java;src\release\java;src\main\kotlin;src\release\kotlin"
+        resDirectories="src\main\res;src\release\res"
+        assetsDirectories="src\main\assets;src\release\assets"/>
+  </sourceProviders>
+  <testSourceProviders>
+  </testSourceProviders>
+  <testFixturesSourceProviders>
+  </testFixturesSourceProviders>
+  <manifestPlaceholders>
+    <placeholder
+        name="applicationName"
+        value="android.app.Application" />
+  </manifestPlaceholders>
+  <artifact
+      classOutputs="D:\flutter\zolzak\gungangazi\gungangazi\build\app\intermediates\javac\release\compileReleaseJavaWithJavac\classes;D:\flutter\zolzak\gungangazi\gungangazi\build\app\tmp\kotlin-classes\release;D:\flutter\zolzak\gungangazi\gungangazi\build\app\kotlinToolingMetadata;D:\flutter\zolzak\gungangazi\gungangazi\build\app\intermediates\compile_and_runtime_not_namespaced_r_class_jar\release\processReleaseResources\R.jar"
+      type="MAIN"
+      applicationId="com.example.gungangazi"
+      generatedSourceFolders="D:\flutter\zolzak\gungangazi\gungangazi\build\app\generated\ap_generated_sources\release\out"
+      generatedResourceFolders="D:\flutter\zolzak\gungangazi\gungangazi\build\app\generated\res\resValues\release"
+      desugaredMethodsFiles="C:\Users\Administrator\.gradle\caches\8.11.1\transforms\4d2ab9f7e1d1b9dc055f975f8becb5b1\transformed\desugar_jdk_libs_configuration-2.0.3-desugar-lint.txt;C:\Users\Administrator\.gradle\caches\8.11.1\transforms\f27b55ce85a893d2bb0b67e84efe52b2\transformed\D8BackportedDesugaredMethods.txt">
+  </artifact>
+</variant>

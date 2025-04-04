@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "cachet.plugins.health-release-32:/layout-v21/notification_template_custom_big.xml",
+        "source": "cachet.plugins.health-core-1.13.1-12:/layout-v21/notification_template_custom_big.xml"
+    },
+    {
+        "merged": "cachet.plugins.health-release-32:/layout-v21/notification_action_tombstone.xml",
+        "source": "cachet.plugins.health-core-1.13.1-12:/layout-v21/notification_action_tombstone.xml"
+    },
+    {
+        "merged": "cachet.plugins.health-release-32:/layout-v21/notification_action.xml",
+        "source": "cachet.plugins.health-core-1.13.1-12:/layout-v21/notification_action.xml"
+    },
+    {
+        "merged": "cachet.plugins.health-release-32:/layout-v21/notification_template_icon_group.xml",
+        "source": "cachet.plugins.health-core-1.13.1-12:/layout-v21/notification_template_icon_group.xml"
+    }
+]

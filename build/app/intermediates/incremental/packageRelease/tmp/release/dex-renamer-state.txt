@@ -1,0 +1,13 @@
+#Sat Apr 05 02:11:58 KST 2025
+base.0=D\:\\flutter\\zolzak\\gungangazi\\gungangazi\\build\\app\\intermediates\\dex\\release\\mergeDexRelease\\classes.dex
+base.1=D\:\\flutter\\zolzak\\gungangazi\\gungangazi\\build\\app\\intermediates\\global_synthetics_dex\\release\\mergeReleaseGlobalSynthetics\\classes.dex
+base.2=D\:\\flutter\\zolzak\\gungangazi\\gungangazi\\build\\app\\intermediates\\dex\\release\\mergeDexRelease\\classes2.dex
+base.3=D\:\\flutter\\zolzak\\gungangazi\\gungangazi\\build\\app\\intermediates\\dex\\release\\mergeDexRelease\\classes3.dex
+path.0=classes.dex
+path.1=classes.dex
+path.2=classes2.dex
+path.3=classes3.dex
+renamed.0=classes.dex
+renamed.1=classes2.dex
+renamed.2=classes3.dex
+renamed.3=classes4.dex

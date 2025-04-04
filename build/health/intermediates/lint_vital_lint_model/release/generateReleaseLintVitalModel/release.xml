@@ -1,0 +1,31 @@
+<variant
+    name="release"
+    package="cachet.plugins.health"
+    minSdkVersion="26"
+    targetSdkVersion="34"
+    mergedManifest="D:\flutter\zolzak\gungangazi\gungangazi\build\health\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml"
+    manifestMergeReport="D:\flutter\zolzak\gungangazi\gungangazi\build\health\outputs\logs\manifest-merger-release-report.txt"
+    proguardFiles="D:\flutter\zolzak\gungangazi\gungangazi\build\health\intermediates\default_proguard_files\global\proguard-android.txt-8.4.0"
+    partialResultsDir="D:\flutter\zolzak\gungangazi\gungangazi\build\health\intermediates\lint_vital_partial_results\release\lintVitalAnalyzeRelease\out">
+  <buildFeatures
+      namespacing="REQUIRED"/>
+  <sourceProviders>
+    <sourceProvider
+        manifests="src\main\AndroidManifest.xml"
+        javaDirectories="src\main\java;src\main\kotlin;src\release\java;src\release\kotlin"
+        resDirectories="src\main\res;src\release\res"
+        assetsDirectories="src\main\assets;src\release\assets"/>
+  </sourceProviders>
+  <testSourceProviders>
+  </testSourceProviders>
+  <testFixturesSourceProviders>
+  </testFixturesSourceProviders>
+  <artifact
+      classOutputs="D:\flutter\zolzak\gungangazi\gungangazi\build\health\intermediates\javac\release\compileReleaseJavaWithJavac\classes;D:\flutter\zolzak\gungangazi\gungangazi\build\health\tmp\kotlin-classes\release;D:\flutter\zolzak\gungangazi\gungangazi\build\health\intermediates\compile_r_class_jar\release\generateReleaseRFile\R.jar"
+      type="MAIN"
+      applicationId="cachet.plugins.health"
+      generatedSourceFolders="D:\flutter\zolzak\gungangazi\gungangazi\build\health\generated\ap_generated_sources\release\out"
+      generatedResourceFolders="D:\flutter\zolzak\gungangazi\gungangazi\build\health\generated\res\resValues\release"
+      desugaredMethodsFiles="C:\Users\Administrator\.gradle\caches\8.11.1\transforms\b07afd6d7328491fb612cb2ef142c7eb\transformed\D8BackportedDesugaredMethods.txt">
+  </artifact>
+</variant>

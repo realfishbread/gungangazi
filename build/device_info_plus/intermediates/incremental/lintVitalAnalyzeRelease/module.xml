@@ -1,0 +1,29 @@
+<lint-module
+    format="1"
+    dir="D:\flutter\pub_cache\hosted\pub.dev\device_info_plus-11.3.0\android"
+    name=":device_info_plus"
+    type="LIBRARY"
+    maven="dev.fluttercommunity.plus.device_info:device_info_plus:1.0-SNAPSHOT"
+    agpVersion="8.4.0"
+    buildFolder="D:\flutter\zolzak\gungangazi\gungangazi\build\device_info_plus"
+    bootClassPath="C:\Users\Administrator\AppData\Local\Android\Sdk\platforms\android-34\android.jar;C:\Users\Administrator\AppData\Local\Android\Sdk\build-tools\34.0.0\core-lambda-stubs.jar"
+    javaSourceLevel="17"
+    compileTarget="android-34"
+    neverShrinking="true">
+  <lintOptions
+      disable="InvalidPackage,MissingPermission"
+      abortOnError="true"
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true">
+    <severities>
+      <severity
+        id="InvalidPackage"
+        severity="IGNORE" />
+      <severity
+        id="MissingPermission"
+        severity="IGNORE" />
+    </severities>
+  </lintOptions>
+  <variant name="release"/>
+</lint-module>

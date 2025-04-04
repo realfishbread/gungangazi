@@ -1,0 +1,26 @@
+<lint-module
+    format="1"
+    dir="D:\flutter\pub_cache\hosted\pub.dev\pedometer-4.0.2\android"
+    name=":pedometer"
+    type="LIBRARY"
+    maven="com.example.pedometer:pedometer:1.0-SNAPSHOT"
+    agpVersion="8.4.0"
+    buildFolder="D:\flutter\zolzak\gungangazi\gungangazi\build\pedometer"
+    bootClassPath="C:\Users\Administrator\AppData\Local\Android\Sdk\platforms\android-31\android.jar;C:\Users\Administrator\AppData\Local\Android\Sdk\build-tools\34.0.0\core-lambda-stubs.jar"
+    javaSourceLevel="1.8"
+    compileTarget="android-31"
+    neverShrinking="true">
+  <lintOptions
+      disable="InvalidPackage"
+      abortOnError="true"
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true">
+    <severities>
+      <severity
+        id="InvalidPackage"
+        severity="IGNORE" />
+    </severities>
+  </lintOptions>
+  <variant name="release"/>
+</lint-module>

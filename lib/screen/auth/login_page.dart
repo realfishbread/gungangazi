@@ -22,7 +22,6 @@ final GoogleSignIn _googleSignIn = GoogleSignIn(
         : Platform.isAndroid
             ? '423735826070-iml5j92c26kqd9l998683q91hs1slk94.apps.googleusercontent.com'  // ✅ 안드로이드용 클라이언트 ID
             : null,
-    forceCodeForRefreshToken: true,  // ✅ 항상 Auth Code를 받도록 설정
   );
 
 class _LoginPageState extends State<LoginPage> {

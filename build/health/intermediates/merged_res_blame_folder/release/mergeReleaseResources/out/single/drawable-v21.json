@@ -1,6 +1,0 @@
-[
-    {
-        "merged": "cachet.plugins.health-release-32:/drawable-v21/notification_action_background.xml",
-        "source": "cachet.plugins.health-core-1.13.1-11:/drawable-v21/notification_action_background.xml"
-    }
-]

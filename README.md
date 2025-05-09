@@ -10,20 +10,45 @@ ui가 마음에 들지 않아 개편중이며,
 2025/2/20 수정
 유지보수를 위해 파일을 나누는 중입니다.
 
-## Getting Started
+2025/4/23 수정
+6월 3일 이후 프로젝트 재개예정. 금년 2월부터 타 프로젝트로 인해 잠시 프로젝트 일시 중지상태에 있습니다.
 
-프론트엔드는 flutter를 사용했으며, 백엔드로 spring boot를 사용한 사용자 몸상태 반영 다마고치입니다.
-aws를 통해 배포하고 있습니다 :D
+
+
+
+<프로젝트 설명>
+
+수분보충, 잠, 혈압, 영양제, 생리 기록, 달력을 지원하며
+사용자가 기록한 바에 따라 캐릭터의 상태변화가 있습니다.
+
+프론트엔드는 flutter를 사용했으며, 
+웹앱, 어플 둘 다 지원합니다.
+
+백엔드로 spring boot를 사용한 사용자 몸상태 반영 다마고치 형식입니다.
+aws ec2 nginx를 통해 배포하고 있습니다 :D
 
 캐릭터는 동화로 한장한장 그리는 방식으로 구현이 되었으며 '강하지'이라는 이름을 갖고 있습니다.
 강하지를 건강하게 만들어주세요! 사용자는 강하지와 함께입니다. 
 
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Provider(상태관리) 사용.
+Ec2 Ubuntu Linux 사용.
+Text editor로 Nano 사용.
+Clean architecture 에서 약간 변주를 준 파일 폴더 구성.
+웹같은 경우 반응형 웹앱 지원.
+웹에서 Google login 지원.
+(앱의 소셜로그인은 구현중에 있습니다.)
+Smtp 설정 완료하여 회원가입시 Redis로 이메일 인증 가능.
+
+질병 예측 룰베이스 시스템 기반하여 flask로 ai 를 만들었으나, 데이터셋의 근거가 살짝 부족한 경향으로 인해 작업 보류 상태.
+
+추후에 갤럭시 워치 연동 예정이며 
+캐릭터 디자인, 그림도 제가 작업해서 작업 속도가 다소 느립니다.
+
+
+
+full stack 개발: realfishbread
+ai 개발: rlaxogml
+assist: Cyan

@@ -120,7 +120,7 @@ void _completeSignUp() async {
     if (message == "아이디가 이미 존재합니다.") {
       showErrorDialog(context,'아이디가 이미 존재합니다.');
     } else if (message == "회원가입 성공") {
-      showErrorDialog(context,'회원가입 성공');
+      showSuccessDialog(context,'회원가입 성공');
       Future.delayed(const Duration(seconds: 1), () {
         Navigator.pushReplacementNamed(context, '/login');
       });
@@ -147,7 +147,7 @@ void _completeSignUp() async {
     final response = await userRepository.sendEmailVerification(email);
 
     if (response == "이메일 인증 요청 발송됨") {
-      showErrorDialog(context, '이메일 인증 링크를 발송했습니다. 메일을 확인해 주세요.');
+      showSuccessDialog(context, '이메일 인증 링크를 발송했습니다. 메일을 확인해 주세요.');
       return true; // 이메일 인증 요청 성공
     } else {
       showErrorDialog(context, response);
@@ -231,7 +231,7 @@ void _verifyCode() async {
 
     if (result == '이메일 인증이 완료되었습니다.') {
       ver =1;
-      showErrorDialog(context,'인증 성공!');
+      showSuccessDialog(context,'인증 성공!');
       setState(() {
         _isVerificationFieldVisible = false; // 인증 필드 숨기기
         _nextStep(); // 다음 단계로 이동

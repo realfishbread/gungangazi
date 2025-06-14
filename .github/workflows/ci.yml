@@ -3,10 +3,10 @@ name: CI/CD Pipeline
 on: 
   push:
     branches:
-      - successful-build
+      - cleanup-branch
   pull_request:
     branches:
-      - successful-build
+      - cleanup-branch
 
 jobs:
   build:

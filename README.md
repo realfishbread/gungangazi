@@ -11,7 +11,6 @@ Spring Boot + AWS EC2 환경에서 서버와 데이터 처리를 수행합니다
 
 ## 🐾 컨셉 및 핵심 기능
 
-**“당신의 건강, 강하지가 느낍니다.”**
 
 사용자의 건강 기록에 따라 강하지의 상태가 변합니다.
 
@@ -35,6 +34,18 @@ Spring Boot + AWS EC2 환경에서 서버와 데이터 처리를 수행합니다
 | **Backend**  | Spring Boot, JWT 인증, Google Login 연동, SMTP+Redis 이메일 인증                     |
 | **DevOps**   | AWS EC2 (Ubuntu), Nginx, GitHub Actions CI/CD                                        |
 | **기타**     | Flask 기반 Rule-Based AI 진단 시스템 (현재 보류), SecureStorage / HttpOnly 쿠키 사용 |
+
+---
+
+## 주요 기술 및 구현
+
+- Flutter 기반 웹/앱 통합 프로젝트 (1인 개발)
+- JWT 기반 사용자 인증 흐름 구현 (로그인 → 토큰 저장 → 프로필 불러오기)
+- Spring Boot 백엔드 연동 및 인증 API 설계
+- Provider + ViewModel 구조로 상태관리 분리
+- 실시간 Google 로그인 구현 (웹/앱 구분 대응)
+- AWS EC2 + Nginx + CI/CD 자동 배포 구성
+- Flask 기반 질병 예측 AI 모듈 (rule-based, 현재는 보류)
 
 ---
 
@@ -91,3 +102,5 @@ Spring Boot + AWS EC2 환경에서 서버와 데이터 처리를 수행합니다
 > **자기관리의 의미를 감각적으로 체험할 수 있는 시도**입니다.  
 > 개발부터 디자인까지 모든 걸 직접 구현하며  
 > 느린 만큼 진심을 담았습니다.
+
+

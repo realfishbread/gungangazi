@@ -7,6 +7,8 @@ class GoogleViewModel {
 
   GoogleViewModel(this._authRepository);
 
+  
+
 Future<void> _handleGoogleLogin(BuildContext context, Function(bool) onLoading) async {
     onLoading(true); // ✅ 로딩 상태 시작
     try {

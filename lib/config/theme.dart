@@ -44,7 +44,7 @@ class AppTheme {
   primarySwatch: createMaterialColor(const Color(0xFFB39DDB)), // 부드러운 포인트 컬러
   scaffoldBackgroundColor: const Color(0xFF1E1E1E), // 거의 블랙에 가까운 다크 그레이
   appBarTheme: const AppBarTheme(
-    backgroundColor: Color(0xFF2C2C2C), // 살짝 밝은 앱바
+    backgroundColor: Color.fromARGB(255, 184, 184, 184), // 살짝 밝은 앱바
     elevation: 0,
     titleTextStyle: TextStyle(
       color: Colors.white,

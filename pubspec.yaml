@@ -74,6 +74,7 @@ flutter:
 
   # 에셋(이미지, 폴더 등) 등록
   assets:
+    - .env
     - assets/fonts/
     - assets/icons/
     - assets/person/0am/

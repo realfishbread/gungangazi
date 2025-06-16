@@ -215,21 +215,7 @@ Future<void> _loadCharacterStatus() async {
         ),
         leadingWidth: 140, // leading의 너비를 120으로 설정
         backgroundColor: const Color(0xFFFFF9C4), // 앱바 배경색
-        actions: [
-          Tooltip(
-            message: '홈페이지',
-            child: IconButton(
-              icon: const Icon(Icons.home),
-              color: Colors.black,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
-                );
-              },
-            ),
-          ),
-        ],
+        
 
       ),
 

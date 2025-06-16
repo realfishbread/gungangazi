@@ -8,9 +8,11 @@ import 'package:provider/provider.dart';
 import 'package:gungangazi/screen/character/character_status.dart';
 import 'repositories/status/character_repository.dart';
 import 'core_services/health_connect_service.dart'; // ✅ HealthConnectService 추가
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
-void main() {
+Future<void> main() async {
+  await dotenv.load(fileName: ".env");
   runApp(
     MultiProvider(
       providers: [

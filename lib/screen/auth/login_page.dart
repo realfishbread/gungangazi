@@ -7,6 +7,8 @@ import 'package:flutter/foundation.dart';
 import '../../widget/alert.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,9 +20,9 @@ class LoginPage extends StatefulWidget {
 final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email', 'openid', 'profile', 'https://www.googleapis.com/auth/user.gender.read'],
     serverClientId: kIsWeb
-        ? '423735826070-9dq9dd52a4t5u66krjlg2nm0cpq8f92o.apps.googleusercontent.com'  // ✅ 웹용 클라이언트 ID
+        ? dotenv.env['GOOGLE_CLIENT_ID_WEB']  // ✅ 웹용 클라이언트 ID
         : Platform.isAndroid
-            ? '423735826070-iml5j92c26kqd9l998683q91hs1slk94.apps.googleusercontent.com'  // ✅ 안드로이드용 클라이언트 ID
+            ? dotenv.env['GOOGLE_CLIENT_ID_ANDROID']  // ✅ 안드로이드용 클라이언트 ID
             : null,
   );
 

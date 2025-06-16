@@ -463,7 +463,7 @@ Widget build(BuildContext context) {
             color: Colors.transparent,
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              '건강하지 | 고객 지원 문의 : +82 1234 5678 및 yoonh12288@gmail.com',
+              '건강하지 | 고객 지원 문의 : yoonh12288@gmail.com',
               style: TextStyle(
                 fontSize: 11,
                 color: Colors.grey[700],

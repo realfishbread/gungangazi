@@ -11,7 +11,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    env:
+      GOOGLE_CLIENT_ID_WEB: ${{ secrets.GOOGLE_CLIENT_ID_WEB }}
+      GOOGLE_CLIENT_ID_ANDROID: ${{ secrets.GOOGLE_CLIENT_ID_ANDROID }}
     steps:
       - uses: actions/checkout@v4
       - run: touch ./src/main/resources/application.properties
@@ -31,6 +33,12 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+
+      - name: Create .env file for Flutter
+        run: |
+          echo "GOOGLE_CLIENT_ID_WEB=${{ secrets.GOOGLE_CLIENT_ID_WEB }}" >> .env
+          echo "GOOGLE_CLIENT_ID_ANDROID=${{ secrets.GOOGLE_CLIENT_ID_ANDROID }}" >> .env
+
       - name: Set up environment
         run: |
           echo 'export PATH="$PATH:$HOME/flutter/bin"' >> $GITHUB_ENV
@@ -64,15 +72,20 @@ jobs:
           chmod 600 GUNGANGAZI.pem
 
           # Flutter 웹 빌드 파일 배포
-          scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem -r ./build/web/* ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com:/var/www/html/
+          scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem -r ./build/web/* ${{ secrets.EC2_DEPLOY_USER }}:/var/www/html/
 
           # Spring Boot JAR 파일 배포
-          scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ./target/demo-0.0.1-SNAPSHOT.jar ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com:/var/app/demo.jar
+          scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ./target/demo-0.0.1-SNAPSHOT.jar ${{ secrets.EC2_DEPLOY_USER }}:/var/app/demo.jar
 
           # 원격 서버에서 Nginx 재시작 및 Spring Boot 실행
-          ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ubuntu@ec2-15-164-140-55.ap-northeast-2.compute.amazonaws.com << EOF
+          ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ${{ secrets.EC2_DEPLOY_USER }} << EOF
             sudo systemctl restart nginx
-            nohup java -jar /var/app/demo.jar &
+
+          # 기존 jar 프로세스 종료
+          pkill -f 'java.*demo.jar' || true
+
+          # 새 jar 실행
+          nohup java -jar /var/app/demo.jar > /dev/null 2>&1 &
           EOF
 
       - name: Cleanup

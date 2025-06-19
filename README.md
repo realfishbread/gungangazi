@@ -6,6 +6,12 @@
 
 ---
 
+## 🌐 배포 링크
+
+- 웹 앱 주소: [https://gungangazi.site](https://gungangazi.site)
+
+---
+
 ## 🐾 핵심 기능
 
 - 수면/수분/영양제/혈압/생리주기 등 건강 기록
@@ -77,8 +83,3 @@
 - 캐릭터 UI 반응 애니메이션 최적화 미흡
 - 컴포넌트 유지보수 빈약
 
----
-
-## 🌐 배포 링크
-
-- 웹 앱 주소: [https://gungangazi.site](https://gungangazi.site)

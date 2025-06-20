@@ -80,7 +80,7 @@ public class UserDTO {
         dto.setPassword(user.getPassword());
         dto.setEmail(user.getEmail());
         dto.setRealname(user.getRealname());
-        dto.setGender(user.getGender()); // ✅ 이거 추가해줘야 해!
+        dto.setGender(user.getGender()); 
         return dto;
     }
 }

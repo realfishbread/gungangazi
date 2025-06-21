@@ -78,6 +78,12 @@
 
 ---
 
+## ERD
+
+![ERD](./erd.png)
+
+---
+
 ## 🚧 Known Issues
 
 - 캐릭터 UI 반응 애니메이션 최적화 미흡

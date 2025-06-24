@@ -1,0 +1,73 @@
+package com.example.demo.entity.userHealth;
+
+import java.time.LocalDate;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "blood_pressure")
+public class BloodPressure {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String username;
+    private int systolic;
+    private int diastolic;
+    private int heart_rate;
+    private LocalDate date;
+
+    // Getters and Setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public int getSystolic() {
+        return systolic;
+    }
+
+    public void setSystolic(int systolic) {
+        this.systolic = systolic;
+    }
+
+    public int getDiastolic() {
+        return diastolic;
+    }
+
+    public void setDiastolic(int diastolic) {
+        this.diastolic = diastolic;
+    }
+
+    public int getHeart_rate() {
+        return heart_rate;
+    }
+
+    public void setHeart_rate(int heart_rate) {
+        this.heart_rate = heart_rate;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+}

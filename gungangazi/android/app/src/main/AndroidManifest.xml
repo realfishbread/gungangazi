@@ -1,0 +1,87 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.gungangazi">  
+
+    <!-- 인터넷 사용 권한 추가 -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION"/>
+    
+    <!-- ✅ Health Connect 권한 -->
+    <uses-permission android:name="android.permission.READ_HEALTH_CONNECT_DATA"/>
+    <uses-permission android:name="android.permission.WRITE_HEALTH_CONNECT_DATA"/>
+    
+    <!-- ✅ 걸음 수 및 심박수 권한 -->
+    <uses-permission 
+        android:name="android.permission.ACTIVITY_RECOGNITION"
+        android:usesPermissionFlags="neverForLocation"/>
+    <uses-permission android:name="android.permission.BODY_SENSORS"/>
+
+    <application
+        android:label="건강하지"
+        android:name="${applicationName}"
+        android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true">
+        
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:launchMode="singleTop"
+            android:theme="@style/LaunchTheme"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true">
+            
+            <meta-data
+              android:name="io.flutter.embedding.android.NormalTheme"
+              android:resource="@style/NormalTheme"
+              />
+            
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE"/>
+            </intent-filter>
+
+        </activity>
+
+        <!-- ✅ Android 14 이상에서 Health Connect 권한 표시 -->
+        <activity-alias
+            android:name="ViewPermissionUsageActivity"
+            android:exported="true"
+            android:targetActivity=".MainActivity"
+            android:permission="android.permission.START_VIEW_PERMISSION_USAGE">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW_PERMISSION_USAGE" />
+                <category android:name="android.intent.category.HEALTH_PERMISSIONS" />
+            </intent-filter>
+        </activity-alias>
+
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+
+        <!-- 🔹 추가할 코드: Google 로그인 관련 OAuth 설정 -->
+        <meta-data
+            android:name="com.google.android.gms.auth.api.signin.AndroidClientId"
+            android:value="@string/android_client_id" />
+
+    </application>
+
+    <queries>
+        <package android:name="com.google.android.apps.healthdata" />
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT"/>
+            <data android:mimeType="text/plain"/>
+        </intent>
+
+        <!-- 🔹 추가할 코드: Google 로그인 관련 queries 설정 -->
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="https"/>
+        </intent>
+        <package android:name="com.google.android.gms"/>
+        <package android:name="com.google.android.googlequicksearchbox"/>
+    </queries>
+</manifest>

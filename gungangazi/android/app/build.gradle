@@ -1,0 +1,86 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+    id "org.jetbrains.kotlin.android" version "1.9.22" apply false
+}
+
+android {
+    namespace = "com.example.gungangazi"
+    compileSdkVersion 35 // 34로 낮추기
+    ndkVersion = flutter.ndkVersion
+
+    compileOptions {
+       sourceCompatibility JavaVersion.VERSION_1_8  // ✅ Java 8 이상 설정
+        targetCompatibility JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled true  // ✅ core library desugaring 활성화
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    defaultConfig {
+        applicationId = "com.example.gungangazi"
+        minSdkVersion 28 // ✅ 28 이상으로 설정
+        targetSdkVersion 35
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
+        multiDexEnabled true  // ✅ 멀티덱스 활성화
+    }
+
+    signingConfigs {
+    release {
+        def keystorePropertiesFile = rootProject.file("key.properties")
+        def keystoreProperties = new Properties()
+        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+        storeFile file(keystoreProperties["storeFile"])
+        storePassword keystoreProperties["storePassword"]
+        keyAlias keystoreProperties["keyAlias"]
+        keyPassword keystoreProperties["keyPassword"]
+    }
+}
+
+
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.release
+            minifyEnabled false // R8 최적화 비활성화
+            shrinkResources false // 리소스 최적화 비활성화
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}
+
+dependencies {
+    // AndroidX Core
+    implementation 'androidx.core:core-ktx:1.12.0'
+    
+    // JSON 데이터 처리를 위한 Gson
+    implementation 'com.google.code.gson:gson:2.8.8'
+
+    // 네트워크 작업을 위한 OkHttp 라이브러리
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+
+    // Retrofit: REST API와 RDS 연결이 필요할 때 사용 가능
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    // Room: RDS와의 연결을 지원하는 로컬 데이터베이스 라이브러리 (옵션)
+    implementation 'androidx.room:room-runtime:2.3.0'
+    annotationProcessor 'androidx.room:room-compiler:2.3.0'
+
+    // MySQL 연결을 위한 드라이버 (옵션)
+    implementation 'mysql:mysql-connector-java:8.0.25'
+    implementation 'com.google.android.gms:play-services-auth:21.3.0'
+    implementation ("androidx.health.connect:connect-client:1.1.0-alpha11")
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'  // ✅ Desugaring 필수 의존성 추가
+    
+}
+   
+    
+

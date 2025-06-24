@@ -69,6 +69,7 @@ app.*.map.json
 .android/
 
 
+
 # Ignore IDE specific files
 .classpath
 .project
@@ -86,3 +87,6 @@ NTUSER.DAT*
 # Other unnecessary files
 *.log
 
+/shd-1.0.0-b1/
+/src/main/resources/application.properties
+/target/classes/application.properties

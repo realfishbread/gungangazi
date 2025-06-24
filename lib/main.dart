@@ -1,16 +1,28 @@
-import '../splash/SplashPage.dart';
+import 'package:gungangazi/screen/home/web_home_page.dart';
+import 'splash/splash_page.dart';
 import 'package:flutter/material.dart';
-import 'mobile_home_page.dart'; // 앱 전용 페이지
-import 'loginPge.dart'; // 통합된 로그인 페이지
+import 'screen/home/mobile_home_page.dart'; // 앱 전용 페이지
+import 'screen/auth/login_page.dart'; // 통합된 로그인 페이지
+import 'config/theme.dart'; // 테마 파일 import
+import 'package:provider/provider.dart';
+import 'package:gungangazi/screen/character/character_status.dart';
+import 'repositories/status/character_repository.dart';
+import 'core_services/health_connect_service.dart'; // ✅ HealthConnectService 추가
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
-
-
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  await dotenv.load(fileName: ".env");
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CharacterStatus(CharacterRepository())), // ✅ Provider 등록
+        Provider(create: (_) => HealthConnectService()), // ✅ HealthConnectService 추가
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
-
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -18,43 +30,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '건강아지',
-      theme: ThemeData(
-        primarySwatch: createMaterialColor(const Color(0xFFFFF9C4)), // 기본 색상 설정
-      ),
-      
+      title: '건강하지',
+      theme: AppTheme.lightTheme,  // 🌞 기본 테마 (라이트)
+      darkTheme: AppTheme.darkTheme, // 🌙 다크 테마 추가
+      themeMode: ThemeMode.system,  // 🔄 시스템 설정에 따라 자동 변경
       initialRoute: '/splash',
-
-      
       routes: {
         '/splash': (context) => const SplashPage(),
         '/login': (context) => const LoginPage(), // 로그인 페이지 경로 추가
-
+        '/WebHome': (context) => const WebHomePage(),
         '/homeApp': (context) => const MobileHomePage(), // 앱 전용 페이지
         
       },
       debugShowCheckedModeBanner: false,
     );
-  }
-
-  MaterialColor createMaterialColor(Color color) {
-    List strengths = <double>[.05];
-    final Map<int, Color> swatch = {};
-    final int r = color.red, g = color.green, b = color.blue;
-
-    for (int i = 1; i < 10; i++) {
-      strengths.add(0.1 * i);
-    }
-    for (var strength in strengths) {
-      final double ds = 0.5 - strength;
-      swatch[(strength * 1000).round()] = Color.fromRGBO(
-        r + ((ds < 0 ? r : (255 - r)) * ds).round(),
-        g + ((ds < 0 ? g : (255 - g)) * ds).round(),
-        b + ((ds < 0 ? b : (255 - b)) * ds).round(),
-        1,
-      );
-    }
-    return MaterialColor(color.value, swatch);
   }
 }
 

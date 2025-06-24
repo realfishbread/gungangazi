@@ -8,8 +8,9 @@ public class UserDTO {
     private String password;
     private String email;
     private String realname;
+    private String gender;
+   
 
-    
     public long getId() {
         return id;
     }
@@ -50,6 +51,15 @@ public class UserDTO {
         this.realname = realname;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+
     // 데이터를 엔티티로 변환하는 메서드
     public User toEntity() {
         User user = new User();
@@ -57,8 +67,10 @@ public class UserDTO {
         user.setPassword(this.password);
         user.setEmail(this.email);
         user.setRealname(this.realname);
+        user.setGender(this.gender);
         return user;
     }
+    
 
     // 엔티티를 DTO로 변환하는 메서드
     public static UserDTO fromEntity(User user) {
@@ -68,6 +80,7 @@ public class UserDTO {
         dto.setPassword(user.getPassword());
         dto.setEmail(user.getEmail());
         dto.setRealname(user.getRealname());
+        dto.setGender(user.getGender()); 
         return dto;
     }
 }

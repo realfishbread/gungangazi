@@ -1,26 +1,29 @@
-import 'package:flutter/material.dart';
-import 'package:easy_sidemenu/easy_sidemenu.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gungangazi/repositories/status/character_repository.dart';
 import 'dart:convert';
 import 'dart:typed_data';
-import '../profile/profile_page.dart';
+
+import 'package:easy_sidemenu/easy_sidemenu.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gungangazi/repositories/status/character_repository.dart';
+import 'package:provider/provider.dart';
+
 import '../../core_services/dio_service.dart';
 import '../../core_services/token_service.dart';
-import '../userHealth/tooth_care_page.dart';
-import '../userHealth/blood_pressure.dart';
-import '../character/popup_handler.dart';
-import '../userHealth/supplement_page.dart';
-import '../userHealth/sleep_page.dart';
-import '../userHealth/water_drink.dart';
-import '../userHealth/meal_page.dart';
-import '../chat_page.dart';
 import '../../dto/auth/profile_dto.dart';
 import '../../repositories/auth/profile_repository.dart';
-import '../userHealth/walking_page.dart';
-import 'home_page.dart';
+import '../../view_model/character_view_model.dart';
 import '../character/character_status.dart';
-import 'package:provider/provider.dart';
+import '../character/popup_handler.dart';
+import '../chat_page.dart';
+import '../profile/profile_page.dart';
+import '../userHealth/blood_pressure.dart';
+import '../userHealth/meal_page.dart';
+import '../userHealth/sleep_page.dart';
+import '../userHealth/supplement_page.dart';
+import '../userHealth/tooth_care_page.dart';
+import '../userHealth/walking_page.dart';
+import '../userHealth/water_drink.dart';
+import 'home_page.dart';
 
 class WebHomePage extends StatefulWidget {
   const WebHomePage({super.key});
@@ -32,12 +35,12 @@ class WebHomePage extends StatefulWidget {
 class _WebHomePageState extends State<WebHomePage> {
   PageController pageController = PageController();
   SideMenuController sideMenu = SideMenuController();
+  final GlobalKey _imageKey = GlobalKey();
 
-  
   final DioService _dioService = DioService(token: 'your-auth-token');
   final TokenService _tokenService = TokenService();
   late final CharacterRepository _characterRepository;
-
+  late CharacterViewModel characterViewModel;
 
   ProfileDto? _profile;
   Uint8List? _imageData;
@@ -45,71 +48,60 @@ class _WebHomePageState extends State<WebHomePage> {
   bool _isLoaded = false; // 서버에서 캐릭터 상태를 다 불러왔는지
   late PopupHandler _popupHandler;
   late CharacterStatus _characterStatus;
-  
 
   @override
   void initState() {
     super.initState();
 
+    Future.microtask(() {
+      characterViewModel = context.read<CharacterViewModel>();
+      _characterStatus = context.read<CharacterStatus>();
 
- Future.microtask(() {
-    // Provider를 쓴다면 read() 사용(또는 직접 생성하되, 꼭 "한 번"만 만듦)
-    _characterStatus = context.read<CharacterStatus>(); 
-    fetchProfile();
+      characterViewModel.startPeriodicStatusUpdate();
 
-    // 1) 서버에서 상태를 먼저 로드
-    _loadCharacterStatus();
+      _popupHandler = PopupHandler(
+        characterViewModel: characterViewModel,
+        imageKey: _imageKey,
+      );
+
+      fetchProfile();
+
+      setState(() {
+        _isLoaded = true;
+      });
     });
   }
 
   @override
   void dispose() {
     // 지금까진 그냥 super.dispose()만 했을 수 있음
-    _popupHandler.dispose(); // <-- 여기서 타이머 등 정리
     super.dispose();
   }
 
-Future<void> _loadCharacterStatus() async {
-    // 2) 서버에서 데이터 받아오기 (이 시점 이전에는 late 필드에 접근 금지)
-    await _characterStatus.loadStatus();
+  Future<void> fetchProfile() async {
+    String? token = await _tokenService.getToken();
+    DioService dioService = DioService(token: token);
+    ProfileRepository profileRepository =
+        ProfileRepository(dioService: dioService, tokenService: _tokenService);
 
-    // 3) 다 받았으므로, 이제 PopupHandler 만들고
+    ProfileDto? profile =
+        await profileRepository.fetchProfile('your-username'); // 서버에서 프로필 가져오기
     setState(() {
-      _popupHandler = PopupHandler(
-        listData: [],
-        tokenService: TokenService(),
-        dioService: DioService(),
-        characterStatus: _characterStatus
-      );
-      _isLoaded = true; // 로드 끝
-      _popupHandler.initialize();      // 🔥 자동으로 상태 반영    // 🔥 자동 애니메이션 시작
+      _profile = profile;
+      if (_profile?.profile_image != null) {
+        _imageData = base64Decode(_profile!.profile_image!);
+      }
     });
   }
 
-    Future<void> fetchProfile() async {
-      String? token = await _tokenService.getToken();
-      DioService dioService = DioService(token: token);
-      ProfileRepository profileRepository = ProfileRepository(dioService: dioService, tokenService: _tokenService);
-
-      ProfileDto? profile = await profileRepository.fetchProfile('your-username'); // 서버에서 프로필 가져오기
-      setState(() {
-        _profile = profile;
-        if (_profile?.profile_image != null) {
-          _imageData = base64Decode(_profile!.profile_image!);
-        }
-      });
-    }
-    
-    void logout(BuildContext context) async {
-      await _tokenService.deleteToken(); // 토큰 삭제
-      setState(() {
-        _profile = null;
-        _imageData = null;
-      });
-      Navigator.pushReplacementNamed(context, '/login');
-    }
-
-
+  void logout(BuildContext context) async {
+    await _tokenService.deleteToken(); // 토큰 삭제
+    setState(() {
+      _profile = null;
+      _imageData = null;
+    });
+    Navigator.pushReplacementNamed(context, '/login');
+  }
 
   void _navigateToProfile(BuildContext context) async {
     String? username = await _tokenService.getUsername();
@@ -157,13 +149,13 @@ Future<void> _loadCharacterStatus() async {
   void _showCalendar(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true,       // 모달 높이 조절 가능
+      isScrollControlled: true, // 모달 높이 조절 가능
       backgroundColor: Colors.transparent, // 배경 투명
       builder: (BuildContext context) {
         return DraggableScrollableSheet(
           initialChildSize: 0.8, // 초기 높이 비율
-          minChildSize: 0.5,     // 최소 높이 비율
-          maxChildSize: 0.95,    // 최대 높이 비율
+          minChildSize: 0.5, // 최소 높이 비율
+          maxChildSize: 0.95, // 최대 높이 비율
           builder: (context, scrollController) {
             return Container(
               margin: const EdgeInsets.all(16.0),
@@ -181,7 +173,8 @@ Future<void> _loadCharacterStatus() async {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(30.0),
                 child: SupplementsPage(
-                  popupHandler: _popupHandler,
+                  characterViewModel: characterViewModel,
+                  characterStatus: _characterStatus,
                   // ...필요한 인자 그대로...
                 ),
               ),
@@ -194,7 +187,6 @@ Future<void> _loadCharacterStatus() async {
 
   @override
   Widget build(BuildContext context) {
-
     if (!_isLoaded) {
       // 아직 데이터가 안 왔으면 로딩 표시
       return const Scaffold(
@@ -202,30 +194,25 @@ Future<void> _loadCharacterStatus() async {
       );
     }
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0, // 그림자 제거
-        centerTitle: true, // 제목(아이콘)을 가운데로 설정
-        leading: SizedBox(
-          child: Image.asset(
+        appBar: AppBar(
+          elevation: 0, // 그림자 제거
+          centerTitle: true, // 제목(아이콘)을 가운데로 설정
+          leading: SizedBox(
+              child: Image.asset(
             'assets/logo.png',
             width: MediaQuery.of(context).size.width * 0.5, // 화면 너비의 50%
             height: MediaQuery.of(context).size.width * 0.5, // 화면 너비의 50%
             fit: BoxFit.contain, // 비율을 유지하면서 꽉 채우기
-          )
+          )),
+          leadingWidth: 140, // leading의 너비를 120으로 설정
+          backgroundColor: const Color(0xFFFFF9C4), // 앱바 배경색
         ),
-        leadingWidth: 140, // leading의 너비를 120으로 설정
-        backgroundColor: const Color(0xFFFFF9C4), // 앱바 배경색
-        
-
-      ),
-
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
+        body: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
           SideMenu(
             controller: sideMenu,
             style: SideMenuStyle(
-              backgroundColor: const Color.fromARGB(255, 247, 247, 247), // 드로어 배경색 추가
+              backgroundColor:
+                  const Color.fromARGB(255, 247, 247, 247), // 드로어 배경색 추가
               displayMode: SideMenuDisplayMode.auto,
               showHamburger: true,
               hoverColor: const Color.fromARGB(255, 242, 217, 247),
@@ -247,7 +234,8 @@ Future<void> _loadCharacterStatus() async {
                     backgroundColor: const Color.fromARGB(255, 240, 240, 240),
                     backgroundImage: _imageData != null
                         ? MemoryImage(_imageData!) // 서버에서 가져온 이미지
-                        : AssetImage('assets/place_holder.png') as ImageProvider, // 기본 이미지
+                        : AssetImage('assets/place_holder.png')
+                            as ImageProvider, // 기본 이미지
                   ),
                 ),
                 const SizedBox(height: 8), // 이미지와 텍스트 간 간격
@@ -282,7 +270,8 @@ Future<void> _loadCharacterStatus() async {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
                   child: Text(
                     '건강하지',
                     style: TextStyle(fontSize: 15, color: Colors.grey[800]),
@@ -300,18 +289,24 @@ Future<void> _loadCharacterStatus() async {
                     onTap: (index, _) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SleepPage(popupHandler: _popupHandler, characterStatus: _characterStatus),),
+                        MaterialPageRoute(
+                          builder: (context) => SleepPage(
+                              characterViewModel: characterViewModel,
+                              characterStatus: _characterStatus),
+                        ),
                       );
                     },
                     icon: const Icon(Icons.nightlight),
                   ),
-
                   SideMenuItem(
                     title: '식단',
                     onTap: (index, _) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => MealPage(popupHandler: _popupHandler, characterStatus: _characterStatus)),
+                        MaterialPageRoute(
+                            builder: (context) => MealPage(
+                                characterViewModel: characterViewModel,
+                                characterStatus: _characterStatus)),
                       );
                     },
                     icon: const Icon(Icons.restaurant),
@@ -321,7 +316,10 @@ Future<void> _loadCharacterStatus() async {
                     onTap: (index, _) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => WaterDrink(popupHandler: _popupHandler, characterStatus: _characterStatus)),
+                        MaterialPageRoute(
+                            builder: (context) => WaterDrink(
+                                characterViewModel: characterViewModel,
+                                characterStatus: _characterStatus)),
                       );
                     },
                     icon: const Icon(Icons.water_drop),
@@ -331,7 +329,10 @@ Future<void> _loadCharacterStatus() async {
                     onTap: (index, _) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ToothCarePage(popupHandler: _popupHandler)),
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ToothCarePage(characterViewModel: characterViewModel,
+                                    characterStatus: _characterStatus)),
                       );
                     },
                     icon: const Icon(Icons.medical_services),
@@ -341,7 +342,8 @@ Future<void> _loadCharacterStatus() async {
                     onTap: (index, _) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => BloodPressurePage()),
+                        MaterialPageRoute(
+                            builder: (context) => BloodPressurePage()),
                       );
                     },
                     icon: const Icon(Icons.favorite),
@@ -352,7 +354,7 @@ Future<void> _loadCharacterStatus() async {
                 title: " 운동",
                 icon: const Icon(FontAwesomeIcons.dumbbell),
                 children: [
-                   SideMenuItem(
+                  SideMenuItem(
                     title: '만보기',
                     onTap: (index, _) {
                       Navigator.push(
@@ -362,10 +364,9 @@ Future<void> _loadCharacterStatus() async {
                     },
                     icon: const Icon(Icons.directions_walk),
                   ),
-
                 ],
               ),
-               SideMenuItem(
+              SideMenuItem(
                 title: '캘린더',
                 onTap: (index, _) {
                   // 기존 Navigator.push -> BottomSheet 호출
@@ -392,12 +393,12 @@ Future<void> _loadCharacterStatus() async {
                 },
               ),
               SideMenuItem(
-                    title: '프로필',
-                    onTap: (index, _) {
-                      _navigateToProfile(context);
-                    },
-                    icon: const Icon(Icons.person),
-                  ),
+                title: '프로필',
+                onTap: (index, _) {
+                  _navigateToProfile(context);
+                },
+                icon: const Icon(Icons.person),
+              ),
               SideMenuItem(
                 builder: (context, displayMode) {
                   return const Divider(
@@ -407,23 +408,38 @@ Future<void> _loadCharacterStatus() async {
                 },
               ),
               SideMenuItem(
-              title: '로그아웃',
-              onTap: (index, _) async {
-                logout(context);
-              },
-              icon: const Icon(Icons.logout),
-            ),
+                title: '로그아웃',
+                onTap: (index, _) async {
+                  logout(context);
+                },
+                icon: const Icon(Icons.logout),
+              ),
             ],
-            ),
-            Expanded(
-              child: Center(
-                child: _popupHandler.buildImageAnimationWithTouch(context, (selectedImagePath) {
+          ),
+          Expanded(
+            child: GestureDetector(
+              onTapDown: (details) {
+                _popupHandler.showPopupForCoordinates(
+                  context,
+                  details.globalPosition,
+                 (selectedImagePath) {
                   print('Selected image path: $selectedImagePath');
-                }),
+                },
+                  characterViewModel,
+                );
+              },
+              child: ValueListenableBuilder(
+                valueListenable: characterViewModel.imageIndex,
+                builder: (_, index, __) {
+                  final images = characterViewModel.currentImages;
+                  return Image.asset(
+                    images[index],
+                    key: _popupHandler.imageKey, // ✅ 여기도 이 key를 써야 터치 좌표 계산 가능!
+                  );
+                },
               ),
             ),
-        ]
-      )
-    );
+          ),
+        ]));
   }
 }

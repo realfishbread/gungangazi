@@ -4,7 +4,7 @@ import '../../screen/character/popup_handler.dart';
 import 'package:dio/dio.dart';
 import '../../dto/status/character_status_dto.dart';
 
-
+//서버 또는 DB에서 캐릭터 상태 가져오기/저장 
 class CharacterRepository {
    final TokenService _tokenService = TokenService();
    final DioService dioService = DioService();

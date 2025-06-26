@@ -5,11 +5,15 @@ import '../../../repositories/userHealth/supplement_repository.dart';
 import '../../dto/userHealth/supplement_dto.dart';
 import '../../core_services/token_service.dart';
 import '../character/popup_handler.dart';
+import '../../view_model/character_view_model.dart'; // ✅ CharacterViewModel 추가
+import 'package:provider/provider.dart';
+import '../../screen/character/character_status.dart';
 
 class SupplementsPage extends StatefulWidget {
-  final PopupHandler popupHandler;
+  final CharacterStatus characterStatus; // ✅ PopupHandler 추가
+  final CharacterViewModel characterViewModel; // ✅ CharacterViewModel 추가
   
-  const SupplementsPage({super.key, required this.popupHandler});
+  const SupplementsPage({super.key, required this.characterViewModel, required this.characterStatus});
 
   @override
   _SupplementsPageState createState() => _SupplementsPageState();
@@ -197,6 +201,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
                                 setState(() {
                                   if (value) {
                                     _selectedMenstruationDays.add(selectedDay);
+                                    
                                   } else {
                                     _selectedMenstruationDays.remove(selectedDay);
                                   }
@@ -268,11 +273,11 @@ class _SupplementsPageState extends State<SupplementsPage> {
   onPopInvokedWithResult: (didPop, result) async {
     if (didPop) {
         if (_addSupplement) {
-
+          final characterViewModel = Provider.of<CharacterViewModel>(context, listen: false);
            if(now.hour>=22 || now.hour<6){
-            await widget.popupHandler.triggerAnimation('0amsupplement', delayMilliseconds: 1000);
+            await characterViewModel.triggerAnimation('0amsupplement', delayMilliseconds: 1000);
            }else{
-          await widget.popupHandler.triggerAnimation('medication', delayMilliseconds: 1000);
+          await characterViewModel.triggerAnimation('medication', delayMilliseconds: 1000);
            }
         }
         }

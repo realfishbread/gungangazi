@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:gungangazi/view_model/character_view_model.dart';
 import 'package:intl/intl.dart';
 import '../../../repositories/userHealth/water_repository.dart';
 import '../../core_services/dio_service.dart';
@@ -13,11 +14,12 @@ import 'package:provider/provider.dart';
 
 
 
+
 class WaterDrink extends StatefulWidget {
-  final PopupHandler popupHandler; // PopupHandler 인스턴스를 받도록 설정
+  final CharacterViewModel characterViewModel;
   final CharacterStatus characterStatus; // ✅ 추가
 
-  const WaterDrink({super.key, required this.popupHandler, required this.characterStatus});
+  const WaterDrink({super.key, required this.characterStatus, required this.characterViewModel});
 
   @override
   _WaterDrinkState createState() => _WaterDrinkState();
@@ -168,6 +170,7 @@ class _WaterDrinkState extends State<WaterDrink> {
     final characterStatus = context.watch<CharacterStatus>(); // ✅ Provider에서 가져오기
     bool isWeb = MediaQuery.of(context).size.width >= 600;
     int currentHour = DateTime.now().hour; // 현재 시간 가져오기
+    final characterViewModel = Provider.of<CharacterViewModel>(context, listen: false);
 
 
     // 그래프 너비 동적으로 설정
@@ -182,9 +185,9 @@ class _WaterDrinkState extends State<WaterDrink> {
           if (characterStatus.water_level > _currentWaterLevel) {
             _currentWaterLevel = characterStatus.water_level; // ✅ 애니메이션 실행 전에 업데이트
             if(currentHour>=22 || currentHour<6){
-              await widget.popupHandler.triggerAnimation('0amdrinkwater', delayMilliseconds: 1000);
+              await characterViewModel.triggerAnimation('0amdrinkwater', delayMilliseconds: 1000);
             }else{
-            await widget.popupHandler.triggerAnimation('drinkwater', delayMilliseconds: 1000);
+            await characterViewModel.triggerAnimation('drinkwater', delayMilliseconds: 1000);
             }
           }
         }

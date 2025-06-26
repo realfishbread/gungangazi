@@ -18,6 +18,7 @@ import '../userHealth/supplement_page.dart';
 import '../userHealth/tooth_care_page.dart';
 import '../userHealth/water_drink.dart';
 import 'web_home_page.dart';
+import '../../view_model/character_view_model.dart';
 
 class MobileHomePage extends StatefulWidget {
   const MobileHomePage({super.key});
@@ -31,9 +32,10 @@ class _MobileHomePageState extends State<MobileHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final TokenService _tokenService = TokenService();
   final DioService _dioService = DioService(token: 'your-auth-token');
-
+final GlobalKey _imageKey = GlobalKey(); // 👈 추가해줘
   final List<dynamic> _listData = [];
   late final CharacterRepository _characterRepository;
+    late CharacterViewModel characterViewModel;
 
   bool _isLoaded = false; // 서버에서 캐릭터 상태를 다 불러왔는지
   late PopupHandler _popupHandler;
@@ -46,47 +48,46 @@ class _MobileHomePageState extends State<MobileHomePage> {
     // Provider를 쓴다면 read() 사용(또는 직접 생성하되, 꼭 "한 번"만 만듦)
     _characterStatus = context.read<CharacterStatus>();
 
-    // 1) 서버에서 상태를 먼저 로드
-    _loadCharacterStatus();
-  }
+    Future.microtask(() {
 
-  Future<void> _loadCharacterStatus() async {
-    // 2) 서버에서 데이터 받아오기 (이 시점 이전에는 late 필드에 접근 금지)
-    await _characterStatus.loadStatus();
+      // 기존 PopupHandler 대체
+      characterViewModel = characterViewModel = CharacterViewModel(
+  status: _characterStatus,
+  tokenService: _tokenService,
+  dioService: _dioService,
+);
+      characterViewModel.startPeriodicStatusUpdate();
 
-    // 3) 다 받았으므로, 이제 PopupHandler 만들고
-    if (_popupHandler == null) {
       _popupHandler = PopupHandler(
-          listData: [],
-          tokenService: TokenService(),
-          dioService: DioService(),
-          characterStatus: _characterStatus);
-      _popupHandler.initialize(); // setState 바깥에서 한 번만!
-    }
+        characterViewModel: characterViewModel,
+        imageKey: _imageKey,
+      );
 
-    setState(() {
       _isLoaded = true;
-    });
+    }); 
+   
   }
+
+  
 
   @override
   void dispose() {
     // 지금까진 그냥 super.dispose()만 했을 수 있음
-    _popupHandler.dispose(); // <-- 여기서 타이머 등 정리
+    _characterStatus.dispose(); // <-- 여기서 타이머 등 정리
     super.dispose();
   }
 
   void _navigateToPage(BuildContext context, String title) {
     final routes = {
       '수면': SleepPage(
-          popupHandler: _popupHandler, characterStatus: _characterStatus),
+          characterViewModel: characterViewModel, characterStatus: _characterStatus),
       '수분': WaterDrink(
-          popupHandler: _popupHandler, characterStatus: _characterStatus),
+          characterViewModel: characterViewModel, characterStatus: _characterStatus),
       '식단': MealPage(
-          popupHandler: _popupHandler, characterStatus: _characterStatus),
-      '영양제': SupplementsPage(popupHandler: _popupHandler),
+          characterViewModel: characterViewModel, characterStatus: _characterStatus),
+      '영양제': SupplementsPage(characterViewModel: characterViewModel, characterStatus: _characterStatus),
       '혈압': const BloodPressurePage(),
-      '치아건강': ToothCarePage(popupHandler: _popupHandler),
+      '치아건강': ToothCarePage(characterViewModel: characterViewModel, characterStatus: _characterStatus),
       '만보기': WalkingPage(),
     };
 
@@ -128,7 +129,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => SupplementsPage(popupHandler: _popupHandler)),
+            builder: (context) => SupplementsPage(characterViewModel: characterViewModel, characterStatus: _characterStatus)),
       );
     }
   }

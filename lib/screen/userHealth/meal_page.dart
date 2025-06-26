@@ -7,12 +7,15 @@ import '../../core_services/token_service.dart';
 import '../character/popup_handler.dart';
 import 'package:gungangazi/screen/character/character_status.dart';
 import 'package:provider/provider.dart'; // ✅ Provider 추가
+import 'package:gungangazi/view_model/character_view_model.dart'; // ✅ CharacterViewModel 추가
+
 
 class MealPage extends StatefulWidget {
-  final PopupHandler popupHandler;
+  final CharacterViewModel characterViewModel;
   final CharacterStatus characterStatus; // ✅ 추가
+  
 
-  const MealPage({super.key, required this.popupHandler, required this.characterStatus});
+  const MealPage({super.key, required this.characterViewModel, required this.characterStatus});
 
   @override
   _MealPageState createState() => _MealPageState();
@@ -22,6 +25,8 @@ class _MealPageState extends State<MealPage> {
   final Map<String, List<Map<String, dynamic>>> _mealsByDate = {}; // 수정: id 포함
   final TextEditingController _mealController = TextEditingController();
   final TextEditingController _caloriesController = TextEditingController();
+  
+  
   late MealRepository _mealRepository;
   int _mealLevel = 0; // 초기 MealLevel 설정
   String _selectedMealType = "식사"; // 기본 식사 타입 선택
@@ -326,20 +331,22 @@ Color _getMealTypeColor(String? mealType) {
 Future<void> _checkStatus() async {
   String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
   
+  
   int currentHour = DateTime.now().hour; // 현재 시간 가져오기
   final characterStatus = context.read<CharacterStatus>(); // ✅ 불필요한 재빌드 방지
   int todayMealIntake = characterStatus.meal_level;
+  final characterViewModel = Provider.of<CharacterViewModel>(context, listen: false);
 
   // 저녁 10시 이후인지 확인
   if (todayMealIntake > _currentMeal) {
     if (currentHour >= 22 || currentHour <6) {
       // ✅ 저녁 10시 이후일 경우 다른 애니메이션 실행
       _currentMeal=characterStatus.meal_level;
-      await widget.popupHandler.triggerAnimation('0ammeal', delayMilliseconds: 2000);
+      await characterViewModel.triggerAnimation('0ammeal', delayMilliseconds: 2000);
     } else {
       // ✅ 저녁 10시 이전일 경우 기존 애니메이션 실행
        _currentMeal=characterStatus.meal_level;
-      await widget.popupHandler.triggerAnimation('eatingmeal', delayMilliseconds: 2000);
+      await characterViewModel.triggerAnimation('eatingmeal', delayMilliseconds: 2000);
     }
   }
 }

@@ -1,448 +1,31 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import '../../core_services/dio_service.dart'; // DioService 추가
-import '../../core_services/token_service.dart';
-import '../../repositories/status/character_repository.dart';
-// ✅ DTO 추가
-import 'character_status.dart'; // ✅ CharacterStatus 추가
+import 'package:gungangazi/view_model/character_view_model.dart';
 // ✅ Provider 추가
+import 'package:provider/provider.dart';
 
+import '../../repositories/status/character_repository.dart';
+import 'character_status_service.dart';
 
-
-
+// 유저 터치 감지, 팝업 띄우기
 class PopupHandler {
-  final List<dynamic> listData;
-  final DioService dioService; // DioService 인스턴스
-  final TokenService tokenService; // TokenService 인스턴스
-  final Map<String, List<String>> imagePathsByBodyPart;
-  int _currentImageIndex = 0;
-  late ValueNotifier<int> _imageNotifier;
-  Timer? _imageTimer;
   Duration frameDuration = const Duration(milliseconds: 300);
-  String _currentBodyPart = 'default';
-  final CharacterStatus characterStatus;
-  final CharacterRepository _characterRepository =CharacterRepository();
-  
-  
 
+  final CharacterRepository _characterRepository = CharacterRepository();
+  final CharacterStatusService characterStatusService =
+      CharacterStatusService();
 
-  
-  
+  final GlobalKey imageKey;
+
+  final CharacterViewModel characterViewModel;
+  PopupHandler({required this.characterViewModel, required this.imageKey});
+
   final GlobalKey _imageKey = GlobalKey(); // 이미지를 위한 GlobalKey 선언
   Rect? _imageRect;
 
-  /// ✅ 초기화 (서버에서 상태 불러오기)
-  Future<void> initialize() async {
-    setBodyPartStatus();
-    startImageAnimation();
-  }
-
-
-  final List<String> defaultImagePaths = [
-    'assets/person/default/1.jpg',
-    'assets/person/default/2.jpg',
-    'assets/person/default/3.jpg',
-    'assets/person/default/3.jpg',
-    'assets/person/default/2.jpg',
-    'assets/person/default/1.jpg',
-  ];
-
-  PopupHandler({required this.listData, required this.dioService, required this.tokenService, required this.characterStatus})
-      : imagePathsByBodyPart = {
-          'head': [
-            'assets/person/default/head1.jpg',
-            'assets/person/default/head2.jpg',
-            'assets/person/default/head3.jpg',
-            'assets/person/default/head3.jpg',
-            'assets/person/default/head2.jpg',
-            'assets/person/default/head1.jpg',
-          ],
-          'body': [
-            'assets/person/default/jindan_stomach1.jpg',
-            'assets/person/default/jindan_stomach2.jpg',
-            'assets/person/default/jindan_stomach3.jpg',
-            'assets/person/default/jindan_stomach3.jpg',
-            'assets/person/default/jindan_stomach2.jpg',
-            'assets/person/default/jindan_stomach1.jpg',
-          ],
-          'arm': [
-            'assets/person/default/arm1.jpg',
-            'assets/person/default/arm2.jpg',
-            'assets/person/default/arm3.jpg',
-            'assets/person/default/arm3.jpg',
-            'assets/person/default/arm2.jpg',
-            'assets/person/default/arm1.jpg',
-          ],
-          'leg': [
-            'assets/person/default/leg1.jpg',
-            'assets/person/default/leg2.jpg',
-            'assets/person/default/leg3.jpg',
-            'assets/person/default/leg4.jpg',
-            'assets/person/default/leg3.jpg',
-            'assets/person/default/leg2.jpg',
-            'assets/person/default/leg1.jpg',
-          ],
-          'thirsty': [
-            'assets/person/default/th1.jpg',
-            'assets/person/default/th2.jpg',
-            'assets/person/default/th3.jpg',
-            'assets/person/default/th4.jpg',
-            'assets/person/default/th4.jpg',
-            'assets/person/default/th3.jpg',
-            'assets/person/default/th2.jpg',
-            'assets/person/default/th1.jpg',
-          ],
-          'thirsty_and_hungry': [
-            'assets/person/default/headache1.jpg',
-            'assets/person/default/headache2.jpg',
-            'assets/person/default/headache3.jpg',
-            'assets/person/default/headache3.jpg',
-            'assets/person/default/headache2.jpg',
-            'assets/person/default/headache1.jpg',
-          ],
-          'thirsty_and_hungry_dizzy':[
-            'assets/person/default/dizzy1.jpg',
-            'assets/person/default/dizzy2.jpg',
-            'assets/person/default/dizzy3.jpg',
-            'assets/person/default/dizzy3.jpg',
-            'assets/person/default/dizzy2.jpg',
-            'assets/person/default/dizzy1.jpg',
-          ],
-          'hungry_and_dizzy': [
-            'assets/person/default/jindan_stomach1.jpg',
-            'assets/person/default/jindan_stomach2.jpg',
-            'assets/person/default/jindan_stomach3.jpg',
-            'assets/person/default/jindan_stomach3.jpg',
-            'assets/person/default/jindan_stomach2.jpg',
-            'assets/person/default/jindan_stomach1.jpg',
-          ],
-          'dizzy':[
-            'assets/person/default/tired1.jpg',
-            'assets/person/default/tired2.jpg',
-            'assets/person/default/tired3.jpg',
-            'assets/person/default/tired3.jpg',
-            'assets/person/default/tired2.jpg',
-            'assets/person/default/tired1.jpg',
-          ],
-          'hungry': [
-            'assets/person/default/hungry1.jpg',
-            'assets/person/default/hungry2.jpg',
-            'assets/person/default/hungry3.jpg',
-            'assets/person/default/hungry3.jpg',
-            'assets/person/default/hungry2.jpg',
-            'assets/person/default/hungry1.jpg',
-          ],
-          'thirsty_and_dizzy': [
-            'assets/person/default/jindan_sad1.jpg',
-            'assets/person/default/jindan_sad2.jpg',
-            'assets/person/default/jindan_sad3.jpg',
-            'assets/person/default/jindan_sad3.jpg',
-            'assets/person/default/jindan_sad2.jpg',
-            'assets/person/default/jindan_sad1.jpg',
-          ],
-          'drinkwater': [
-            'assets/person/default/drinkwater1.jpg',
-            'assets/person/default/drinkwater2.jpg',
-            'assets/person/default/drinkwater3.jpg',
-            'assets/person/default/drinkwater3.jpg',
-            'assets/person/default/drinkwater2.jpg',
-            'assets/person/default/drinkwater1.jpg',
-          ],
-          'eatingmeal': [
-            'assets/person/default/eatingmeal1.jpg',
-            'assets/person/default/eatingmeal2.jpg',
-            'assets/person/default/eatingmeal3.jpg',
-            'assets/person/default/eatingmeal3.jpg',
-            'assets/person/default/eatingmeal2.jpg',
-            'assets/person/default/eatingmeal1.jpg',
-          ],
-          
-          'yee': [
-            'assets/person/default/yee1.jpg',
-            'assets/person/default/yee2.jpg',
-            'assets/person/default/yee3.jpg',
-            'assets/person/default/yee3.jpg',
-            'assets/person/default/yee2.jpg',
-            'assets/person/default/yee1.jpg',
-          ],
-          'brush': [
-            'assets/person/default/brush.jpg',
-            'assets/person/default/brush1.jpg',
-            'assets/person/default/brush.jpg',
-            'assets/person/default/brush1.jpg',
-            'assets/person/default/brush.jpg',
-            'assets/person/default/brush1.jpg',
-            'assets/person/default/brush.jpg',
-            'assets/person/default/brush1.jpg',
-            'assets/person/default/brush.jpg',
-            'assets/person/default/brush1.jpg',
-          ],
-          'nobrush': [
-            'assets/person/default/nobrush1.jpg',
-            'assets/person/default/nobrush2.jpg',
-            'assets/person/default/nobrush3.jpg',
-            'assets/person/default/nobrush3.jpg',
-            'assets/person/default/nobrush2.jpg',
-            'assets/person/default/nobrush1.jpg',
-          ],
-          'angry': [
-            'assets/person/default/angry1.jpg',
-            'assets/person/default/angry2.jpg',
-            'assets/person/default/angry3.jpg',
-            'assets/person/default/angry4.jpg',
-            'assets/person/default/angry5.jpg',
-            'assets/person/default/angry6.jpg',
-            'assets/person/default/angry6.jpg',
-            'assets/person/default/angry5.jpg',
-            'assets/person/default/angry4.jpg',
-            'assets/person/default/angry3.jpg',
-            'assets/person/default/angry2.jpg',
-            'assets/person/default/angry1.jpg',
-          ],
-          'smile': [
-            'assets/person/default/smile1.jpg',
-            'assets/person/default/smile2.jpg',
-            'assets/person/default/smile3.jpg',
-            'assets/person/default/smile3.jpg',
-            'assets/person/default/smile2.jpg',
-            'assets/person/default/smile1.jpg',
-          ],
-          'medication': [
-            'assets/person/default/medi1.jpg',
-            'assets/person/default/medi2.jpg',
-            'assets/person/default/medi3.jpg',
-            'assets/person/default/medi3.jpg',
-            'assets/person/default/medi2.jpg',
-            'assets/person/default/medi1.jpg',
-          ],
-          'waist': [
-            'assets/person/default/waist1.jpg',
-            'assets/person/default/waist2.jpg',
-            'assets/person/default/waist3.jpg',
-            'assets/person/default/waist3.jpg',
-            'assets/person/default/waist2.jpg',
-            'assets/person/default/waist1.jpg',
-          ],
-          'stomachtalk': [
-            'assets/person/default/ddongtalk.jpg',
-            'assets/person/default/ddongtalk1.jpg',
-            'assets/person/default/ddongtalk2.jpg',
-            'assets/person/default/ddongtalk2.jpg',
-            'assets/person/default/ddongtalk1.jpg',
-            'assets/person/default/ddongtalk.jpg',
-          ],
-          
-          
-          //여기부터 0am
-          'sleeping': [
-            'assets/person/0am/sleeping1.jpg',
-            'assets/person/0am/sleeping2.jpg',
-            'assets/person/0am/sleeping3.jpg',
-            'assets/person/0am/sleeping3.jpg',
-            'assets/person/0am/sleeping2.jpg',
-            'assets/person/0am/sleeping1.jpg',
-          ],
-          '0am': [
-            'assets/person/0am/0am.jpg',
-            'assets/person/0am/0am1.jpg',
-            'assets/person/0am/0am2.jpg',
-            'assets/person/0am/0am2.jpg',
-            'assets/person/0am/0am1.jpg',
-            'assets/person/0am/0am.jpg',
-          ],
-          '0amtouch': [
-            'assets/person/0am/0amtouch1.jpg',
-            'assets/person/0am/0amtouch2.jpg',
-            'assets/person/0am/0amtouch3.jpg',
-            'assets/person/0am/0amtouch3.jpg',
-            'assets/person/0am/0amtouch2.jpg',
-            'assets/person/0am/0amtouch1.jpg',
-          ],
-          '0amarm': [
-            'assets/person/0am/0amarm1.jpg',
-            'assets/person/0am/0amarm2.jpg',
-            'assets/person/0am/0amarm3.jpg',
-            'assets/person/0am/0amarm3.jpg',
-            'assets/person/0am/0amarm2.jpg',
-            'assets/person/0am/0amarm1.jpg',
-
-          ],
-          '0amhead': [
-            'assets/person/0am/slhead1.jpg',
-            'assets/person/0am/slhead2.jpg',
-            'assets/person/0am/slhead3.jpg',
-            'assets/person/0am/slhead3.jpg',
-            'assets/person/0am/slhead2.jpg',
-            'assets/person/0am/slhead1.jpg',
-          ],
-          '0amnobrush': [
-            'assets/person/0am/0amnobrush1.jpg',
-            'assets/person/0am/0amnobrush2.jpg',
-            'assets/person/0am/0amnobrush3.jpg',
-            'assets/person/0am/0amnobrush3.jpg',
-            'assets/person/0am/0amnobrush2.jpg',
-            'assets/person/0am/0amnobrush1.jpg',
-          ],
-          
-          '0amsupplement':[
-            'assets/person/0am/0amsu1.jpg',
-            'assets/person/0am/0amsu2.jpg',
-            'assets/person/0am/0amsu3.jpg',
-            'assets/person/0am/0amsu3.jpg',
-            'assets/person/0am/0amsu2.jpg',
-            'assets/person/0am/0amsu1.jpg',
-          ],
-          '0amstomach':[
-            'assets/person/0am/0amstomach1.jpg',
-            'assets/person/0am/0amstomach2.jpg',
-            'assets/person/0am/0amstomach3.jpg',
-            'assets/person/0am/0amstomach3.jpg',
-            'assets/person/0am/0amstomach2.jpg',
-            'assets/person/0am/0amstomach1.jpg',
-          ],
-          '0ambrush':[
-            'assets/person/0am/0ambrush1.jpg',
-            'assets/person/0am/0ambrush2.jpg',
-            'assets/person/0am/0ambrush1.jpg',
-            'assets/person/0am/0ambrush2.jpg',
-            'assets/person/0am/0ambrush1.jpg',
-            'assets/person/0am/0ambrush2.jpg',
-            'assets/person/0am/0ambrush1.jpg',
-            'assets/person/0am/0ambrush2.jpg',
-          ],
-          '0amheadache':[
-            'assets/person/0am/0amheadache1.jpg',
-            'assets/person/0am/0amheadache2.jpg',
-            'assets/person/0am/0amheadache3.jpg',
-            'assets/person/0am/0amheadache3.jpg',
-            'assets/person/0am/0amheadache2.jpg',
-            'assets/person/0am/0amheadache1.jpg',
-          ],
-          '0amtired': [
-            'assets/person/0am/0amtired.jpg',
-            'assets/person/0am/0amtired2.jpg',
-            'assets/person/0am/0amtired3.jpg',
-            'assets/person/0am/0amtired3.jpg',
-            'assets/person/0am/0amtired2.jpg',
-            'assets/person/0am/0amtired.jpg',
-
-          ],
-          '0amdizzy': [
-            'assets/person/0am/0amdizzy1.jpg',
-            'assets/person/0am/0amdizzy2.jpg',
-            'assets/person/0am/0amdizzy3.jpg',
-            'assets/person/0am/0amdizzy3.jpg',
-            'assets/person/0am/0amdizzy2.jpg',
-            'assets/person/0am/0amdizzy1.jpg',
-          ],
-          '0amddong': [
-            'assets/person/0am/0amddong1.jpg',
-            'assets/person/0am/0amddong2.jpg',
-            'assets/person/0am/0amddong3.jpg',
-            'assets/person/0am/0amddong3.jpg',
-            'assets/person/0am/0amddong2.jpg',
-            'assets/person/0am/0amddong1.jpg',
-          ],
-          '0ammeal': [
-            'assets/person/0am/0ammeal1.jpg',
-            'assets/person/0am/0ammeal2.jpg',
-            'assets/person/0am/0ammeal3.jpg',
-            'assets/person/0am/0ammeal3.jpg',
-            'assets/person/0am/0ammeal2.jpg',
-            'assets/person/0am/0ammeal1.jpg',
-          ],
-          '0amdrinkwater': [
-            'assets/person/0am/0amdrinkwater.jpg',
-            'assets/person/0am/0amdrinkwater1.jpg',
-            'assets/person/0am/0amdrinkwater2.jpg',
-            'assets/person/0am/0amdrinkwater2.jpg',
-            'assets/person/0am/0amdrinkwater1.jpg',
-            'assets/person/0am/0amdrinkwater.jpg',
-          ]
-
-        }{
-           _imageNotifier = ValueNotifier<int>(_currentImageIndex);
-          characterStatus.addListener(() {
-            initialize(); // async 함수를 호출하되, 반환값(Future<void>)는 무시
-          });
-
-  }
- 
-
-   /// 서버에 현재 상태 저장
-
-
-
-  Future<void> setBodyPartStatus() async {
-  
-  String previousBodyPart = _currentBodyPart;
-
-  DateTime now = DateTime.now();
-  int hour = now.hour;
-  bool isNight = (hour >= 22 || hour < 6);
-
-  
-  if(!isNight){
-      if (characterStatus.water_level <= 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level <= 200) {
-        _currentBodyPart = 'thirsty_and_hungry_dizzy';
-      } else if (characterStatus.water_level <= 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level >= 200) {
-        _currentBodyPart = 'thirsty_and_hungry';
-      } else if (characterStatus.water_level <= 200 && characterStatus.meal_level > 200 && characterStatus.sleep_level < 200) {
-        _currentBodyPart = 'thirsty_and_dizzy';
-      } else if (characterStatus.water_level > 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level < 200) {
-        _currentBodyPart = 'hungry_and_dizzy';
-      } else if (characterStatus.water_level <= 200 && characterStatus.meal_level > 200 && characterStatus.sleep_level >= 200) {
-        _currentBodyPart = 'thirsty';
-      } else if (characterStatus.water_level > 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level >= 200) {
-        _currentBodyPart = 'hungry';
-      } else if (characterStatus.water_level > 200 && characterStatus.meal_level > 200 && characterStatus.sleep_level < 200) {
-        _currentBodyPart = 'dizzy';
-      } else {
-        updateCharacterStatusBasedOnTime(); // ⏰ 시간 기반 상태 업데이트
-      }
-    }else {
-      if (characterStatus.water_level <= 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level <= 200) {
-        _currentBodyPart = '0amdizzy';
-      } else if (characterStatus.water_level <= 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level >= 200) {
-        _currentBodyPart = '0amddong';
-      } else if (characterStatus.water_level <= 200 && characterStatus.meal_level > 200 && characterStatus.sleep_level < 200) {
-        _currentBodyPart = '0amtired';
-      } else if (characterStatus.water_level > 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level < 200) {
-        _currentBodyPart = '0amheadache';
-      } else if (characterStatus.water_level <= 200 && characterStatus.meal_level > 200 && characterStatus.sleep_level >= 200) {
-        _currentBodyPart = '0amheadache';
-      } else if (characterStatus.water_level > 200 && characterStatus.meal_level <= 200 && characterStatus.sleep_level >= 200) {
-        _currentBodyPart = '0amstomach';
-      } else if (characterStatus.water_level > 200 && characterStatus.meal_level > 200 && characterStatus.sleep_level < 200) {
-        _currentBodyPart = '0amtired';
-      } else {
-        updateCharacterStatusBasedOnTime(); // ⏰ 시간 기반 상태 업데이트
-      }
-    }
-  }
-
-  // 이미지 애니메이션 시작
-  Future<void> startImageAnimation() async {
-  _imageTimer?.cancel(); // 기존 타이머 중지
-
-  _imageTimer = Timer.periodic(frameDuration, (timer) {
-    _currentImageIndex = (_currentImageIndex + 1) %
-        (imagePathsByBodyPart[_currentBodyPart]?.length ?? defaultImagePaths.length);
-
-    _imageNotifier.value = _currentImageIndex; // ✅ 애니메이션 적용
-    print("🎞 Updating image index: $_currentImageIndex for $_currentBodyPart"); // 🔥 로그 확인
-  });
-}
-
-
-  // 이미지 애니메이션 중지
-  Future<void> stopImageAnimation() async {
-    _imageTimer?.cancel();
-  }
-
   // 이미지의 위치 및 크기를 계산하는 함수
   void _calculateImageRect() {
-    final RenderBox? box = _imageKey.currentContext?.findRenderObject() as RenderBox?;
+    final RenderBox? box =
+        _imageKey.currentContext?.findRenderObject() as RenderBox?;
     if (box != null) {
       Offset position = box.localToGlobal(Offset.zero);
       Size size = box.size;
@@ -450,122 +33,48 @@ class PopupHandler {
     }
   }
 
-   /// 특정 상태에 맞는 애니메이션 실행
-bool _isAnimating = false; // ✅ 애니메이션 진행 여부 변수 추가
+  Widget buildImageAnimationWithTouch(
+      BuildContext context,
+      Function(String) onImageSelected,
+    ) {
+      final viewModel = context.read<CharacterViewModel>();
+      final popupHandler = viewModel.popupHandler;
 
-Future<void> triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) async{
-  if (_isAnimating) {
-    
-    return; // ✅ 이미 애니메이션이 실행 중이면 중복 실행 방지
-  }
-  
-  
-  _isAnimating = true; // ✅ 애니메이션 시작 표시
-
-  // 기존 애니메이션 취소
-  _imageTimer?.cancel();
-  _imageNotifier.value = 0;
-  String previousBodyPart = _currentBodyPart;
-  _currentBodyPart = bodyPart;
-
-  _imageTimer = Timer.periodic(frameDuration, (timer) {
-    _currentImageIndex = (_currentImageIndex + 1) % imagePathsByBodyPart[bodyPart]!.length;
-    _imageNotifier.value = _currentImageIndex;
-
-    if (_currentImageIndex == imagePathsByBodyPart[bodyPart]!.length - 1) {
-       timer.cancel();
-      _imageTimer = null; // ✅ 타이머 제거
-
-      Future.delayed(Duration(milliseconds: delayMilliseconds), () {
-        _currentBodyPart = previousBodyPart;
-        setBodyPartStatus();
-        startImageAnimation(); // ✅ 애니메이션을 자동 반복 실행
-        _isAnimating = false; // ✅ 다시 실행 가능하도록 변경
-        
-        print("🎭 Character state restored to $_currentBodyPart");
-      });
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          return GestureDetector(
+            onTapDown: (TapDownDetails details) {
+              final tapPosition = details.globalPosition;
+              popupHandler.showPopupForCoordinates(
+                context,
+                tapPosition,
+                onImageSelected,
+                viewModel,
+              );
+            },
+            child: ValueListenableBuilder<int>(
+              valueListenable: viewModel.imageIndex,
+              builder: (context, value, child) {
+                return Image.asset(
+                  viewModel.currentImages[value],
+                  key: viewModel.imageKey,
+                  fit: BoxFit.cover,
+                  gaplessPlayback: true,
+                );
+              },
+            ),
+          );
+        },
+      );
     }
-  });
-}
-
-
-
-
-   void updateCharacterStatusBasedOnTime() {
-    DateTime now = DateTime.now(); // 현재 시간 가져오기
-    int hour = now.hour;
-
-    
-
-   if (_currentBodyPart== 'default'){
-    // 10시 이후 상태 변경
-      if (hour >= 22 || hour < 6) {
-        _currentBodyPart = '0am'; // 잠옷바람 상태
-      } else {
-        _currentBodyPart = 'default'; // 기본 상태
-      }
-   }else if(_currentBodyPart == 'thirsty_and_hungry_dizzy'){
-    if (hour >= 22 || hour < 6) {
-        _currentBodyPart = '0am'; // 잠옷바람 상태
-      } else {
-        _currentBodyPart = 'default'; // 기본 상태
-      }
-
-   }else if(_currentBodyPart=='thirsty_and_hungry'){
-    if (hour >= 22 || hour < 6) {
-        _currentBodyPart = '0am'; // 잠옷바람 상태
-      } else {
-        _currentBodyPart = 'default'; // 기본 상태
-      }
-
-   }else if(_currentBodyPart =='thirsty_and_dizzy'){
-    if (hour >= 22 || hour < 6) {
-        _currentBodyPart = '0am'; // 잠옷바람 상태
-      } else {
-        _currentBodyPart = 'default'; // 기본 상태
-      }
-
-   }else if(_currentBodyPart=='thirsty'){
-    if (hour >= 22 || hour < 6) {
-        _currentBodyPart = '0am'; // 잠옷바람 상태
-      } else {
-        _currentBodyPart = 'default'; // 기본 상태
-      }
-
-   }else if(_currentBodyPart=='hungry'){
-    if (hour >= 22 || hour < 6) {
-        _currentBodyPart = '0am'; // 잠옷바람 상태
-      } else {
-        _currentBodyPart = 'default'; // 기본 상태
-      }
-
-   }else if(_currentBodyPart=='dizzy'){
-    if (hour >= 22 || hour < 6) {
-        _currentBodyPart = '0am'; // 잠옷바람 상태
-      } else {
-        _currentBodyPart = 'default'; // 기본 상태
-      }
-
-   }
-
-    
-    print("Character status updated based on time: $_currentBodyPart");
-  }
-
-  void startPeriodicStatusUpdate() {
-    _imageTimer = Timer.periodic(const Duration(minutes: 1), (timer) {
-      updateCharacterStatusBasedOnTime();
-    });
-  }
-
-  void stopPeriodicStatusUpdate() {
-    _imageTimer?.cancel();
-  }
-
 
   // 터치 이벤트 및 팝업
   void showPopupForCoordinates(
-      BuildContext context, Offset tapPosition, Function(String) onImageSelected) {
+    BuildContext context,
+    Offset tapPosition,
+    Function(String) onImageSelected,
+    CharacterViewModel characterViewModel,
+  ) {
     if (_imageRect == null) return;
 
     String popupMessage = '';
@@ -584,371 +93,317 @@ Future<void> triggerAnimation(String bodyPart, {int delayMilliseconds = 1000}) a
       double legEndHeight = imageHeight * 0.90;
       double armWidth = imageWidth * 0.3;
 
+      // 메시지 결정 (상태에 따라)
+      final statusKey = characterViewModel.currentBodyPartKey;
+
       // 물 부족 상태일 때 팝업 메시지 설정
-    if (_currentBodyPart == 'thirsty') {
-      popupMessage = '목이 말라요... \n물을 주세요!';
-    } else if (_currentBodyPart == 'hungry') {
+      if (statusKey == 'thirsty') {
+        popupMessage = '목이 말라요... \n물을 주세요!';
+      } else if (statusKey == 'hungry') {
         popupMessage = '배고파요... \n식사를 해주세요!!';
         // 부위별 팝업 메시지 설정
         if (relativeY < headHeight) {
           popupMessage = '식사를 잘 챙겨주세요!';
-          _currentBodyPart = 'angry';
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
             popupMessage = '목을 축이고 싶고,\n배가 고파요';
-            _currentBodyPart = 'angry';
           } else {
             popupMessage = '수분섭취를\n잊지 말아주세요';
-            _currentBodyPart = 'angry';
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
           popupMessage = '배고파서 삭신이 쑤셔요.';
-          _currentBodyPart = 'angry';
         }
-      } else if (_currentBodyPart == 'thirsty_and_dizzy') {
+      } else if (statusKey == 'thirsty_and_dizzy') {
         popupMessage = '충분한 숙면을 \n취하지 못했어요,\n목도 말라요.';
         // 부위별 팝업 메시지 설정
         if (relativeY < headHeight) {
           popupMessage = '식사를 잘 챙겨주세요!';
-          _currentBodyPart = 'angry';
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
             popupMessage = '목을 축이고 싶고,\n배가 고파요';
-            _currentBodyPart = 'angry';
           } else {
             popupMessage = '수분섭취를 잊지 말아주세요';
-            _currentBodyPart = 'angry';
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
           popupMessage = '배고파서 삭신이 쑤셔요.';
-          _currentBodyPart = 'angry';
         }
-      } else if (_currentBodyPart == 'thirsty_and_hungry_dizzy') {
+      } else if (statusKey == 'thirsty_and_hungry_dizzy') {
         popupMessage = '건강을 챙겨주세요';
         // 부위별 팝업 메시지 설정
         if (relativeY < headHeight) {
           popupMessage = '식사를 잘 챙겨주세요!';
-          _currentBodyPart = 'angry';
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
             popupMessage = '목을 축이고 싶고, \n배가 고파요';
-            _currentBodyPart = 'angry';
           } else {
             popupMessage = '수분 섭취를\n잊지 말아주세요';
-            _currentBodyPart = 'angry';
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
           popupMessage = '배고파서 삭신이 쑤셔요.';
-          _currentBodyPart = 'angry';
         }
-      } else if (_currentBodyPart == 'thirsty_and_hungry') {
+      } else if (statusKey == 'thirsty_and_hungry') {
         popupMessage = '목도 마르고 \n배도 고파요,\n 물과 식사가 필요해요!';
         // 부위별 팝업 메시지 설정
         if (relativeY < headHeight) {
           popupMessage = '식사를 잘 챙겨주세요!';
-          _currentBodyPart = 'angry';
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
             popupMessage = '목을 축이고 싶고, \n배가 고파요';
-            _currentBodyPart = 'angry';
           } else {
             popupMessage = '수분섭취를\n잊지 말아주세요';
-            _currentBodyPart = 'angry';
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
           popupMessage = '배고파서 삭신이 쑤셔요.';
-          _currentBodyPart = 'angry';
         }
-      } else if (_currentBodyPart == 'hungry_and_dizzy') {
+      } else if (statusKey == 'hungry_and_dizzy') {
         popupMessage = '충분한 숙면과\n밥을 챙겨주세요';
-      } else if (_currentBodyPart == '0am'){
+      } else if (statusKey == '0am') {
         popupMessage = '좋은 꿈꾸세요!';
-          if (relativeY < headHeight) {
+        if (relativeY < headHeight) {
           popupMessage = '주무실 시간이네요!';
-          triggerAnimation('0amhead');
+          characterViewModel.triggerAnimation('0amhead');
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
             popupMessage = '오늘의 파자마는\n 보라색이예요.';
-            triggerAnimation('0amarm');
+            characterViewModel.triggerAnimation('0amarm');
           } else {
             popupMessage = '오늘은 \n어떤 하루였나요?';
-            triggerAnimation('0amtouch');
+            characterViewModel.triggerAnimation('0amtouch');
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
           popupMessage = '오늘 하루도 \n수고 많으셨어요.';
-          triggerAnimation('0amtouch');
-        } 
-      }else if (_currentBodyPart == '0amstomach'){
+          characterViewModel.triggerAnimation('0amtouch');
+        }
+      } else if (statusKey == '0amstomach') {
         popupMessage = '몸을 조금 \n더 챙겨주세요.';
-          if (relativeY < headHeight) {
+        if (relativeY < headHeight) {
           popupMessage = '집가서 자고 싶어요.';
-          triggerAnimation('0amstomach');
+          characterViewModel.triggerAnimation('0amstomach');
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
             popupMessage = '피곤해요';
-            triggerAnimation('0amstomach');
+            characterViewModel.triggerAnimation('0amstomach');
           } else {
             popupMessage = '피곤해요';
-            triggerAnimation('0amstomach');
+            characterViewModel.triggerAnimation('0amstomach');
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
           popupMessage = '주무셔야 해요.';
-          triggerAnimation('0amtouch');
-        } 
-      }else if(_currentBodyPart=='0amddong'){
-         popupMessage = '배가 \n 꼬르륵거려요.';
-          if (relativeY < headHeight) {
+          characterViewModel.triggerAnimation('0amtouch');
+        }
+      } else if (statusKey == '0amddong') {
+        popupMessage = '배가 \n 꼬르륵거려요.';
+        if (relativeY < headHeight) {
           popupMessage = '식사를 챙겨주세요!';
-          triggerAnimation('0amddong');
+          characterViewModel.triggerAnimation('0amddong');
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
             popupMessage = '수분이 부족해요.';
-            triggerAnimation('0amddong');
+            characterViewModel.triggerAnimation('0amddong');
           } else {
             popupMessage = '충분한 식사와 \n 수분이 필요해요';
-            triggerAnimation('0amddong');
+            characterViewModel.triggerAnimation('0amddong');
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
           popupMessage = '식사를 하시면 \n 제가 기쁠거예요.';
-          triggerAnimation('0amddong');
-        } 
-      }else if(_currentBodyPart=='0amtired'){
-         popupMessage = '배가 \n 꼬르륵거려요.';
-          if (relativeY < headHeight) {
+          characterViewModel.triggerAnimation('0amddong');
+        }
+      } else if (statusKey == '0amtired') {
+        popupMessage = '배가 \n 꼬르륵거려요.';
+        if (relativeY < headHeight) {
           popupMessage = '식사를 챙겨주세요!';
-          triggerAnimation('0amtired');
+          characterViewModel.triggerAnimation('0amtired');
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
             popupMessage = '수분이 부족해요.';
-            triggerAnimation('0amtired');
+            characterViewModel.triggerAnimation('0amtired');
           } else {
             popupMessage = '충분한 식사와 \n 수분이 필요해요';
-            triggerAnimation('0amtired');
+            characterViewModel.triggerAnimation('0amtired');
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
           popupMessage = '식사를 하시면 \n 제가 기쁠거예요.';
-          triggerAnimation('0amtired');
-        } 
-
-      }else if(_currentBodyPart=='0amheadache'){
-         popupMessage = '배가 \n 꼬르륵거려요.';
-          if (relativeY < headHeight) {
+          characterViewModel.triggerAnimation('0amtired');
+        }
+      } else if (statusKey == '0amheadache') {
+        popupMessage = '배가 \n 꼬르륵거려요.';
+        if (relativeY < headHeight) {
           popupMessage = '식사를 챙겨주세요!';
-          triggerAnimation('0amheadache');
+          characterViewModel.triggerAnimation('0amheadache');
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
             popupMessage = '수분이 부족해요.';
-            triggerAnimation('0amheadache');
+            characterViewModel.triggerAnimation('0amheadache');
           } else {
             popupMessage = '충분한 식사와 \n 수분이 필요해요';
-            triggerAnimation('0amheadache');
+            characterViewModel.triggerAnimation('0amheadache');
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
           popupMessage = '식사를 하시면 \n 제가 기쁠거예요.';
-          triggerAnimation('0amheadache');
-        } 
-
-      }else if(_currentBodyPart=='0amdizzy'){
-         popupMessage = '건강을 챙겨주세요.';
-          if (relativeY < headHeight) {
+          characterViewModel.triggerAnimation('0amheadache');
+        }
+      } else if (statusKey == '0amdizzy') {
+        popupMessage = '건강을 챙겨주세요.';
+        if (relativeY < headHeight) {
           popupMessage = '충분한 수분을 섭취후,\n 기록해 주세요.';
-          triggerAnimation('0amdizzy');
+          characterViewModel.triggerAnimation('0amdizzy');
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
             popupMessage = '식사가 없으면 \n 몸이 망가져요.';
-            triggerAnimation('0amdizzy');
+            characterViewModel.triggerAnimation('0amdizzy');
           } else {
             popupMessage = '충분한 식사와 \n 수면이 필요해요';
-            triggerAnimation('0amdizzy');
+            characterViewModel.triggerAnimation('0amdizzy');
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
           popupMessage = '몸을 챙겨주시면 기쁠거예요.';
-          triggerAnimation('0amdizzy');
-        } 
-
-      }
-      
-      else if (_currentBodyPart == 'dizzy') {
+          characterViewModel.triggerAnimation('0amdizzy');
+        }
+      } else if (statusKey == 'dizzy') {
         popupMessage = '수면 시간을 늘려주세요!';
-      }
-      else {
-      // 부위별 팝업 메시지 설정
+      } else {
+        // 부위별 팝업 메시지 설정
         if (relativeY < headHeight) {
           popupMessage = '잘 주무셨나요?';
-          triggerAnimation('head');
+          characterViewModel.triggerAnimation('head');
         } else if (relativeY >= headHeight && relativeY < legStartHeight) {
           if (relativeX < armWidth || relativeX > (imageWidth - armWidth)) {
             popupMessage = '오늘 하루도 화이팅!';
-            triggerAnimation('arm');
+            characterViewModel.triggerAnimation('arm');
           } else {
             popupMessage = '식사 하셨나요?';
-            triggerAnimation('waist');
+            characterViewModel.triggerAnimation('waist');
           }
         } else if (relativeY >= legStartHeight && relativeY < legEndHeight) {
           popupMessage = '화이팅!';
-          triggerAnimation('smile');
+          characterViewModel.triggerAnimation('smile');
         }
-    }
-    
+      }
+
       // 말풍선 형태의 팝업 표시
-     showDialog(
-  context: context,
-  barrierColor: Colors.transparent, // ✅ 배경 완전 투명화
-  builder: (BuildContext context) {
-    // 현재 화면 크기 가져오기
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+      showDialog(
+        context: context,
+        barrierColor: Colors.transparent, // ✅ 배경 완전 투명화
+        builder: (BuildContext context) {
+          // 현재 화면 크기 가져오기
+          double screenWidth = MediaQuery.of(context).size.width;
+          double screenHeight = MediaQuery.of(context).size.height;
 
-    // 팝업 위치 조정 (말풍선이 화면을 벗어나지 않도록)
-    double adjustedLeft = tapPosition.dx;
-    double adjustedTop = tapPosition.dy;
+          // 팝업 위치 조정 (말풍선이 화면을 벗어나지 않도록)
+          double adjustedLeft = tapPosition.dx;
+          double adjustedTop = tapPosition.dy;
 
-    // 가로 위치 조정 (말풍선이 우측 화면을 벗어나지 않도록)
-    if (adjustedLeft + 220 > screenWidth) {
-      adjustedLeft = screenWidth - 230;
-    }
-    if (adjustedLeft < 10) {
-      adjustedLeft = 10;
-    }
+          // 가로 위치 조정 (말풍선이 우측 화면을 벗어나지 않도록)
+          if (adjustedLeft + 220 > screenWidth) {
+            adjustedLeft = screenWidth - 230;
+          }
+          if (adjustedLeft < 10) {
+            adjustedLeft = 10;
+          }
 
-    // 세로 위치 조정 (말풍선이 하단 화면을 벗어나지 않도록)
-    if (adjustedTop + 150 > screenHeight) {
-      adjustedTop = screenHeight - 180;
-    }
-    if (adjustedTop < 10) {
-      adjustedTop = 10;
-    }
+          // 세로 위치 조정 (말풍선이 하단 화면을 벗어나지 않도록)
+          if (adjustedTop + 150 > screenHeight) {
+            adjustedTop = screenHeight - 180;
+          }
+          if (adjustedTop < 10) {
+            adjustedTop = 10;
+          }
 
-    return StatefulBuilder(
-  builder: (context, setState) {
-    double opacityLevel = 1.0; // ✅ 초기 투명도 (완전히 보이게)
+          return StatefulBuilder(
+            builder: (context, setState) {
+              double opacityLevel = 1.0; // ✅ 초기 투명도 (완전히 보이게)
 
-    void fadeOutAndClose() {
-      print("🔄 Fade-out animation 시작");
-      
-      setState(() {
-        opacityLevel = 0.0; // ✅ 서서히 투명하게 만들기
-      });
+              void fadeOutAndClose() {
+                print("🔄 Fade-out animation 시작");
 
-      // onEnd를 사용해 애니메이션 완료 후 팝업 닫기
-    }
+                setState(() {
+                  opacityLevel = 0.0; // ✅ 서서히 투명하게 만들기
+                });
 
-    return Stack(
-      children: [
-        Positioned(
-          left: adjustedLeft,
-          top: adjustedTop,
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: fadeOutAndClose, // ✅ 터치하면 서서히 사라짐
-              borderRadius: BorderRadius.circular(17),
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              child: AnimatedOpacity(
-                duration: const Duration(milliseconds: 1000), // ✅ 1초 동안 서서히 사라짐
-                curve: Curves.easeInOut, // ✅ 부드러운 애니메이션 추가
-                opacity: opacityLevel,
-                onEnd: () { // 애니메이션이 끝난 후 실행됨
-                  
-                  if (Navigator.canPop(context)) {
-                    Navigator.of(context).pop(); // ✅ 팝업 닫기
-                  }
-                },
-                child: Container(
-                  width: 220,
-                  constraints: BoxConstraints(
-                    minWidth: 150,
-                    maxWidth: screenWidth * 0.6,
-                  ),
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(17),
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 2.5,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.15),
-                        blurRadius: 10,
-                        spreadRadius: 0,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          popupMessage,
-                          textAlign: TextAlign.center,
-                          softWrap: true,
-                          maxLines: null,
-                          overflow: TextOverflow.visible,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                // onEnd를 사용해 애니메이션 완료 후 팝업 닫기
+              }
+
+              return Stack(
+                children: [
+                  Positioned(
+                    left: adjustedLeft,
+                    top: adjustedTop,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: fadeOutAndClose, // ✅ 터치하면 서서히 사라짐
+                        borderRadius: BorderRadius.circular(17),
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        child: AnimatedOpacity(
+                          duration: const Duration(
+                              milliseconds: 1000), // ✅ 1초 동안 서서히 사라짐
+                          curve: Curves.easeInOut, // ✅ 부드러운 애니메이션 추가
+                          opacity: opacityLevel,
+                          onEnd: () {
+                            // 애니메이션이 끝난 후 실행됨
+
+                            if (Navigator.canPop(context)) {
+                              Navigator.of(context).pop(); // ✅ 팝업 닫기
+                            }
+                          },
+                          child: Container(
+                            width: 220,
+                            constraints: BoxConstraints(
+                              minWidth: 150,
+                              maxWidth: screenWidth * 0.6,
+                            ),
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(17),
+                              border: Border.all(
+                                color: Colors.black,
+                                width: 2.5,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.15),
+                                  blurRadius: 10,
+                                  spreadRadius: 0,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    popupMessage,
+                                    textAlign: TextAlign.center,
+                                    softWrap: true,
+                                    maxLines: null,
+                                    overflow: TextOverflow.visible,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 10),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  },
-);
-  },
-);
-    }
-      }
-      
-  
-
-  Widget buildImageAnimationWithTouch(BuildContext context, Function(String) onImageSelected) {
-  
-startImageAnimation();
-  return LayoutBuilder(
-    builder: (context, constraints) {
-      return GestureDetector(
-        onTapDown: (TapDownDetails details) {
-          _calculateImageRect();
-          final tapPosition = details.globalPosition;
-          
-          showPopupForCoordinates(context, tapPosition, onImageSelected);
-          
-           setBodyPartStatus();
+                ],
+              );
+            },
+          );
         },
-        child: ValueListenableBuilder<int>(
-          valueListenable: _imageNotifier,
-          builder: (context, value, child) {
-            return Image.asset(
-              _currentBodyPart == 'default'
-                  ? defaultImagePaths[value]
-                  : imagePathsByBodyPart[_currentBodyPart]![value],
-              fit: BoxFit.cover,
-              key: _imageKey,
-              gaplessPlayback: true,
-            );
-          },
-        ),
       );
-    },
-  );
-}
-      
 
-  // 리소스 해제
-  void dispose() {
-    stopImageAnimation();
-    stopPeriodicStatusUpdate();
+      
+    }
+
+    
   }
 }

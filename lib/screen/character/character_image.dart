@@ -1,6 +1,7 @@
 
-class ImagePaths {
-
+class CharacterImagePaths {
+//상태값(bodyPartKey)에 따라 이미지 리스트 매핑
+  
 static List<String> defaultImagePaths = [
     'assets/person/default/1.jpg',
     'assets/person/default/2.jpg',

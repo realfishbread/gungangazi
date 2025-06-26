@@ -9,13 +9,14 @@ import '../../core_services/dio_service.dart';
 import '../../core_services/token_service.dart';
 import '../character/popup_handler.dart';
 import 'package:provider/provider.dart'; // ✅ Provider 추가
+import '../../view_model/character_view_model.dart'; // ✅ CharacterViewModel 추가
 
 class SleepPage extends StatefulWidget {
-  final PopupHandler popupHandler;
+  final CharacterViewModel characterViewModel;
   final CharacterStatus characterStatus;
   
 
-  const SleepPage({super.key, required this.popupHandler, required this.characterStatus});
+  const SleepPage({super.key, required this.characterViewModel, required this.characterStatus});
 
   @override
   _SleepPageState createState() => _SleepPageState();
@@ -234,13 +235,14 @@ class _SleepPageState extends State<SleepPage> {
   @override
   Widget build(BuildContext context) {
     final characterStatus = context.read<CharacterStatus>(); // ✅ 
+    final characterViewModel = Provider.of<CharacterViewModel>(context, listen: false);
     return PopScope(
     canPop: true,
     onPopInvokedWithResult: (didPop, result) async {
         if (didPop) {
         if (characterStatus.sleep_level > _currentSleepLevel) {
           _currentSleepLevel=characterStatus.sleep_level;
-         await widget.popupHandler.triggerAnimation('sleeping', delayMilliseconds: 1000);
+         await characterViewModel.triggerAnimation('sleeping', delayMilliseconds: 1000);
           print('Triggering sleeping animation for sleep level: ${widget.characterStatus.sleep_level}');
         } else {
           print("No significant sleep level change, no animation triggered.");

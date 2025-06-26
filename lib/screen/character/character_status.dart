@@ -3,10 +3,11 @@ import 'package:flutter/material.dart'; // ChangeNotifier를 위해 추가
 import '../../dto/status/character_status_dto.dart';
 import '../../core_services/token_service.dart';
 
+//캐릭터의 수치 상태 관리
 class CharacterStatus extends ChangeNotifier {
   final CharacterRepository _characterRepository;
   
-  CharacterStatus(this._characterRepository); // ✅ 싱글톤 제거하고 직접 주입
+  CharacterStatus(this._characterRepository); // 👈 의존성 주입
 
   int water_level = 100;
   int meal_level = 100;

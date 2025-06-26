@@ -7,13 +7,16 @@ import '../../core_services/token_service.dart';
 import '../character/popup_handler.dart';
 import '../../../repositories/userHealth/sleep_repository.dart'; // SleepRepository 임포트
 import '../../../dto/userHealth/sleep_dto.dart'; // SleepDTO 임포트
-
+import '../character/character_status.dart';
+import '../../view_model/character_view_model.dart';
+import 'package:provider/provider.dart';
 
 class ToothCarePage extends StatefulWidget {
-  final PopupHandler popupHandler;
+  final CharacterViewModel characterViewModel;
+  final CharacterStatus characterStatus;
   
 
-  const ToothCarePage({super.key , required this.popupHandler});
+  const ToothCarePage({super.key , required this.characterViewModel, required this.characterStatus});
 
   @override
   _ToothCarePageState createState() => _ToothCarePageState();
@@ -102,20 +105,21 @@ class _ToothCarePageState extends State<ToothCarePage> {
       bool brushed = brushData.any((brush) => brush.date == latestSleepDate);
 
       bool isNightTime = (now.hour >= 22 || now.hour < 6);
+        final characterViewModel = Provider.of<CharacterViewModel>(context, listen: false);
 
 
 
       if (!brushed) {
         if (isNightTime) {
-         await popupHandler.triggerAnimation('0amnobrush', delayMilliseconds: 1000);
+         await characterViewModel.triggerAnimation('0amnobrush', delayMilliseconds: 1000);
         } else {
-          await popupHandler.triggerAnimation('nobrush', delayMilliseconds: 1000);
+          await characterViewModel.triggerAnimation('nobrush', delayMilliseconds: 1000);
         }
       } else if (_currentTooth == true) { 
         if (isNightTime) {
-          await popupHandler.triggerAnimation('0ambrush', delayMilliseconds: 1000);
+          await characterViewModel.triggerAnimation('0ambrush', delayMilliseconds: 1000);
         } else {
-          await popupHandler.triggerAnimation('brush', delayMilliseconds: 1000);
+          await characterViewModel.triggerAnimation('brush', delayMilliseconds: 1000);
         }
       } else {
         print("No significant tooth level change, no animation triggered.");

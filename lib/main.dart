@@ -22,11 +22,7 @@ Future<void> main() async {
           create: (_) => CharacterStatus(CharacterRepository()),
         ),
         ChangeNotifierProxyProvider<CharacterStatus, CharacterViewModel>(
-          create: (_) => CharacterViewModel(
-            tokenService: TokenService(),
-            dioService: DioService(),
-            status: CharacterStatus(CharacterRepository()), // 임시
-          ),
+          create: (_) => CharacterViewModel.empty(), // ✔️ 안전한 빈 생성자 사용
           update: (_, characterStatus, previous) => CharacterViewModel(
             tokenService: TokenService(),
             dioService: DioService(),

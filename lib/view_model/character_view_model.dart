@@ -8,6 +8,7 @@ import '../screen/character/character_image.dart';
 import '../screen/character/character_status.dart';
 import '../screen/character/character_status_service.dart';
 import '../screen/character/popup_handler.dart';
+import '../../repositories/status/character_repository.dart';
 
 class CharacterViewModel extends ChangeNotifier {
   final TokenService tokenService;
@@ -138,6 +139,19 @@ class CharacterViewModel extends ChangeNotifier {
       if (sleep < 200) return '0amtired';
       return '0am';
     }
+  }
+
+  // 또는 CharacterViewModel.empty() 생성자도 만들어줘도 됨
+  CharacterViewModel.empty()
+      : status = CharacterStatus(CharacterRepository()),
+        tokenService = TokenService(),
+        dioService = DioService(),
+        frameDuration = const Duration(milliseconds: 300) {
+    characterStatusService = CharacterStatusService();
+    popupHandler = PopupHandler(
+      characterViewModel: this,
+      imageKey: imageKey,
+    );
   }
 
   List<String> get currentImages =>

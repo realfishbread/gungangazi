@@ -6,12 +6,13 @@ import '../../core_services/token_service.dart';
 //캐릭터의 수치 상태 관리
 class CharacterStatus extends ChangeNotifier {
   final CharacterRepository _characterRepository;
-  
-  CharacterStatus(this._characterRepository); // 👈 의존성 주입
-
   int water_level = 100;
   int meal_level = 100;
   int sleep_level = 100;
+  
+  CharacterStatus(this._characterRepository); // 👈 의존성 주입
+
+  
 
   Future<void> loadStatus() async {
     final statusData = await _characterRepository.loadStatusFromServer();

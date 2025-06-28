@@ -23,7 +23,6 @@ import '../userHealth/supplement_page.dart';
 import '../userHealth/tooth_care_page.dart';
 import '../userHealth/walking_page.dart';
 import '../userHealth/water_drink.dart';
-import 'home_page.dart';
 
 class WebHomePage extends StatefulWidget {
   const WebHomePage({super.key});
@@ -54,6 +53,7 @@ class _WebHomePageState extends State<WebHomePage> {
     super.initState();
 
     Future.microtask(() {
+      if (!mounted) return; // ✅ 위젯이 살아있을 때만 실행
       characterViewModel = context.read<CharacterViewModel>();
       _characterStatus = context.read<CharacterStatus>();
 
@@ -65,6 +65,10 @@ class _WebHomePageState extends State<WebHomePage> {
       );
 
       fetchProfile();
+
+      // ✅ 초기 애니메이션 트리거 (핵심)
+      characterViewModel
+          .triggerAnimation(characterViewModel.currentBodyPartKey);
 
       setState(() {
         _isLoaded = true;
@@ -330,9 +334,9 @@ class _WebHomePageState extends State<WebHomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                ToothCarePage(characterViewModel: characterViewModel,
-                                    characterStatus: _characterStatus)),
+                            builder: (context) => ToothCarePage(
+                                characterViewModel: characterViewModel,
+                                characterStatus: _characterStatus)),
                       );
                     },
                     icon: const Icon(Icons.medical_services),
@@ -418,23 +422,26 @@ class _WebHomePageState extends State<WebHomePage> {
           ),
           Expanded(
             child: GestureDetector(
+              key: _popupHandler.imageKey,
               onTapDown: (details) {
                 _popupHandler.showPopupForCoordinates(
                   context,
                   details.globalPosition,
-                 (selectedImagePath) {
-                  print('Selected image path: $selectedImagePath');
-                },
+                  (selectedImagePath) {
+                    print('Selected image path: $selectedImagePath');
+                  },
                   characterViewModel,
                 );
               },
               child: ValueListenableBuilder(
-                valueListenable: characterViewModel.imageIndex,
-                builder: (_, index, __) {
+                //ValueListenable<T> ChangeNotifier랑 비슷하지만 훨씬 가볍고 간단한 “값 바뀌면 알려주는 객체”
+                valueListenable: characterViewModel
+                    .imageIndex, //ValueNotifier<int> counter = ValueNotifier(0);
+                builder: (context, index, __) {
                   final images = characterViewModel.currentImages;
                   return Image.asset(
                     images[index],
-                    key: _popupHandler.imageKey, // ✅ 여기도 이 key를 써야 터치 좌표 계산 가능!
+                    // ✅ 여기도 이 key를 써야 터치 좌표 계산 가능!
                   );
                 },
               ),

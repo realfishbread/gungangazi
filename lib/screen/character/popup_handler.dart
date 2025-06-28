@@ -19,54 +19,61 @@ class PopupHandler {
   final CharacterViewModel characterViewModel;
   PopupHandler({required this.characterViewModel, required this.imageKey});
 
-  final GlobalKey _imageKey = GlobalKey(); // 이미지를 위한 GlobalKey 선언
   Rect? _imageRect;
 
   // 이미지의 위치 및 크기를 계산하는 함수
   void _calculateImageRect() {
-    final RenderBox? box =
-        _imageKey.currentContext?.findRenderObject() as RenderBox?;
+    final context = imageKey.currentContext;
+    if (context == null) {
+      print('❌ currentContext 없음');
+      return;
+    }
+
+    final RenderBox? box = context.findRenderObject() as RenderBox?;
     if (box != null) {
-      Offset position = box.localToGlobal(Offset.zero);
-      Size size = box.size;
+      final Offset position = box.localToGlobal(Offset.zero);
+      final Size size = box.size;
       _imageRect = position & size;
+      print('🟢 이미지 위치 계산 완료: $_imageRect');
+    } else {
+      print('❌ RenderBox 못 찾음');
     }
   }
 
   Widget buildImageAnimationWithTouch(
-      BuildContext context,
-      Function(String) onImageSelected,
-    ) {
-      final viewModel = context.read<CharacterViewModel>();
-      final popupHandler = viewModel.popupHandler;
+    BuildContext context,
+    Function(String) onImageSelected,
+  ) {
+    final viewModel = context.read<CharacterViewModel>();
+    final popupHandler = viewModel.popupHandler;
 
-      return LayoutBuilder(
-        builder: (context, constraints) {
-          return GestureDetector(
-            onTapDown: (TapDownDetails details) {
-              final tapPosition = details.globalPosition;
-              popupHandler.showPopupForCoordinates(
-                context,
-                tapPosition,
-                onImageSelected,
-                viewModel,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GestureDetector(
+          onTapDown: (TapDownDetails details) {
+            final tapPosition = details.globalPosition;
+            popupHandler.showPopupForCoordinates(
+              context,
+              tapPosition,
+              onImageSelected,
+              viewModel,
+            );
+          },
+          child: ValueListenableBuilder<int>(
+            valueListenable: viewModel.imageIndex,
+            builder: (context, value, child) {
+              return Image.asset(
+                viewModel.currentImages[value],
+                key: viewModel.imageKey,
+                fit: BoxFit.cover,
+                gaplessPlayback: true,
               );
             },
-            child: ValueListenableBuilder<int>(
-              valueListenable: viewModel.imageIndex,
-              builder: (context, value, child) {
-                return Image.asset(
-                  viewModel.currentImages[value],
-                  key: viewModel.imageKey,
-                  fit: BoxFit.cover,
-                  gaplessPlayback: true,
-                );
-              },
-            ),
-          );
-        },
-      );
-    }
+          ),
+        );
+      },
+    );
+  }
 
   // 터치 이벤트 및 팝업
   void showPopupForCoordinates(
@@ -75,7 +82,12 @@ class PopupHandler {
     Function(String) onImageSelected,
     CharacterViewModel characterViewModel,
   ) {
-    if (_imageRect == null) return;
+    print('📌 currentBodyPartKey: ${characterViewModel.currentBodyPartKey}');
+    _calculateImageRect();
+    if (_imageRect == null) {
+      print('❌ 이미지 위치 계산 실패');
+      return;
+    }
 
     String popupMessage = '';
 
@@ -400,10 +412,6 @@ class PopupHandler {
           );
         },
       );
-
-      
     }
-
-    
   }
 }

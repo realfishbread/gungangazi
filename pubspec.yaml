@@ -1,18 +1,17 @@
 name: gungangazi
-description: "A new Flutter project."
+description: 'A new Flutter project.'
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
-
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  
+
   mysql1: ^0.20.0
   image_picker: ^1.1.2
   http: ^1.2.2
@@ -49,28 +48,18 @@ dependencies:
   flutter_dotenv: ^5.2.1
   health: ^12.0.1
   permission_handler: ^11.4.0
-  flutter_plugin_android_lifecycle: ^2.0.26  # 최신 버전 명시
+  flutter_plugin_android_lifecycle: ^2.0.26 # 최신 버전 명시
 
-
-  
-  
 dev_dependencies:
-   
   flutter_test:
     sdk: flutter
-
-
 
   flutter_lints: ^5.0.0
   build_web_compilers: ^4.0.4
   build_runner: ^2.4.0
 
-
 flutter:
-      
-
   uses-material-design: true
-
 
   # 에셋(이미지, 폴더 등) 등록
   assets:
@@ -81,16 +70,10 @@ flutter:
     - assets/person/default/
     - assets/splash/
     - assets/
+    - assets/person/
 
   # 폰트 등록
   fonts:
     - family: NanumGothic
       fonts:
         - asset: assets/fonts/NanumSquareB.ttf
-
-
-
-
-
-
- 

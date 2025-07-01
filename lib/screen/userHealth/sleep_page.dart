@@ -12,11 +12,9 @@ import 'package:provider/provider.dart'; // ✅ Provider 추가
 import '../../view_model/character_view_model.dart'; // ✅ CharacterViewModel 추가
 
 class SleepPage extends StatefulWidget {
-  final CharacterViewModel characterViewModel;
-  final CharacterStatus characterStatus;
-  
+ 
 
-  const SleepPage({super.key, required this.characterViewModel, required this.characterStatus});
+  const SleepPage({super.key});
 
   @override
   _SleepPageState createState() => _SleepPageState();
@@ -243,7 +241,7 @@ class _SleepPageState extends State<SleepPage> {
         if (characterStatus.sleep_level > _currentSleepLevel) {
           _currentSleepLevel=characterStatus.sleep_level;
          await characterViewModel.triggerAnimation('sleeping', delayMilliseconds: 1000);
-          print('Triggering sleeping animation for sleep level: ${widget.characterStatus.sleep_level}');
+          print('Triggering sleeping animation for sleep level: ${characterStatus.sleep_level}');
         } else {
           print("No significant sleep level change, no animation triggered.");
         }

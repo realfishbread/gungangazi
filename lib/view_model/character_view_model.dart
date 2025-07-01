@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../repositories/status/character_repository.dart';
 import '../core_services/dio_service.dart';
 import '../core_services/token_service.dart';
 import '../screen/character/character_image.dart';
@@ -13,7 +12,10 @@ import '../screen/character/popup_handler.dart';
 class CharacterViewModel extends ChangeNotifier {
   final TokenService tokenService;
   final DioService dioService;
-  final CharacterStatus status;
+  CharacterStatus status;
+  int _previousWaterLevel = 0;
+  int _previousMealLevel = 0;
+  int _previousSleepLevel = 0;
 
   late CharacterStatusService characterStatusService;
   late PopupHandler popupHandler;
@@ -51,21 +53,52 @@ class CharacterViewModel extends ChangeNotifier {
       // 애니메이션과 상태 관리 초기화
       _startAnimation();
     });
+    status.addListener(
+        _onStatusChanged); //_onStatusChanged 만들어서 status가 변경될 때 애니메이션을 실행하겠다는 의도
+  }
+
+  void initialize() {
+    _previousWaterLevel = status.water_level;
+    _previousMealLevel = status.meal_level;
+    _previousSleepLevel = status.sleep_level;
     status.addListener(_onStatusChanged);
   }
 
   void _onStatusChanged() {
-    //상태 업데이트 감지 & 반응
-    updateCharacterState();
-    _resetAnimation();
+    final currentWaterLevel = status.water_level;
+    final currentMealLevel = status.meal_level;
+    final currentSleepLevel = status.sleep_level;
+    if (currentWaterLevel > _previousWaterLevel) {
+      _previousWaterLevel = currentWaterLevel;
+      _resetAnimation();
+      updateCharacterState();
+    } else if (currentMealLevel > _previousMealLevel) {
+      _previousMealLevel = currentMealLevel;
+      _resetAnimation();
+      updateCharacterState();
+    } else if (currentSleepLevel > _previousSleepLevel) {
+      _previousSleepLevel = currentSleepLevel;
+      _resetAnimation();
+      updateCharacterState();
+    } else {
+      // 상태가 변경되지 않았을 때는 아무것도 하지 않음
+      print(
+          "상태 변경 없음: 물: $currentWaterLevel, 식사: $currentMealLevel, 수면: $currentSleepLevel");
+    }
+  }
+
+  void updateStatus(CharacterStatus newStatus) {
+    status.removeListener(_onStatusChanged); // 기존 리스너 제거
+    status = newStatus;
+    status.addListener(_onStatusChanged); // 새 상태에 리스너 다시 등록
   }
 
   void updateCharacterState() {
     final now = DateTime.now();
     final rawStatus =
         CharacterStatusService.getBodyPartStatus(status, now); // ✅ 여긴 static
-    _currentBodyPartKey = CharacterStatusService()
-        .getTimeBasedOverride(rawStatus, now); // ✅ 인스턴스 메서드
+    _currentBodyPartKey = CharacterStatusService.getTimeBasedOverride(
+        rawStatus, now); // ✅ 인스턴스 메서드
     notifyListeners();
   }
 
@@ -122,8 +155,10 @@ class CharacterViewModel extends ChangeNotifier {
       if (imageIndex.value == animFrames.length - 1) {
         timer.cancel();
         Future.delayed(Duration(milliseconds: delayMilliseconds), () {
-          _currentBodyPartKey = _calculateBodyPartKey();
+          updateCharacterState(); // ✅ 상태 재계산
+          print('[🧪복귀] 상태 재계산 후 키: $_currentBodyPartKey');
           _startAnimation();
+          print('[🧪복귀] 기본 애니메이션 시작!');
           _isAnimating = false;
         });
       }
@@ -159,19 +194,6 @@ class CharacterViewModel extends ChangeNotifier {
       if (sleep < 200) return '0amtired';
       return '0am';
     }
-  }
-
-  // 또는 CharacterViewModel.empty() 생성자도 만들어줘도 됨
-  CharacterViewModel.empty()
-      : status = CharacterStatus(CharacterRepository()),
-        tokenService = TokenService(),
-        dioService = DioService(),
-        frameDuration = const Duration(milliseconds: 300) {
-    characterStatusService = CharacterStatusService();
-    popupHandler = PopupHandler(
-      characterViewModel: this,
-      imageKey: imageKey,
-    );
   }
 
   List<String> get currentImages =>

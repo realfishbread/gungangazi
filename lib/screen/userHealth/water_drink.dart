@@ -1,25 +1,19 @@
-import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
+import 'package:gungangazi/screen/character/character_status.dart';
 import 'package:gungangazi/view_model/character_view_model.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
 import '../../../repositories/userHealth/water_repository.dart';
 import '../../core_services/dio_service.dart';
 import '../../core_services/token_service.dart';
 import '../../repositories/auth/profile_repository.dart';
-import '../character/popup_handler.dart'; // PopupHandler 임포트
-import 'package:gungangazi/screen/character/character_status.dart';
-import 'package:flutter/widgets.dart'; // 👈 위젯 관련 기본 패키지
-import 'package:flutter/material.dart'; // 👈 보통 이걸 사용하면 해결됨
-import 'package:provider/provider.dart';
-
-
-
 
 class WaterDrink extends StatefulWidget {
-  final CharacterViewModel characterViewModel;
-  final CharacterStatus characterStatus; // ✅ 추가
-
-  const WaterDrink({super.key, required this.characterStatus, required this.characterViewModel});
+  const WaterDrink({
+    super.key,
+  });
 
   @override
   _WaterDrinkState createState() => _WaterDrinkState();
@@ -37,42 +31,49 @@ class _WaterDrinkState extends State<WaterDrink> {
   late ProfileRepository profileRepository;
   int? userAge = 0;
   String userGender = "남성";
-  
 
- 
   @override
   void initState() {
     super.initState();
-    profileRepository = ProfileRepository(dioService: DioService(), tokenService: TokenService(),);
+    profileRepository = ProfileRepository(
+      dioService: DioService(),
+      tokenService: TokenService(),
+    );
     _loadUserInfo();
+    if (!mounted) return; // 🔥 꼭 필요해
     _loadWaterIntake();
-    final characterStatus = context.read<CharacterStatus>(); // ✅ Provider에서 가져오기
+    final characterStatus =
+        context.read<CharacterStatus>(); // ✅ Provider에서 가져오기
     _currentWaterLevel = characterStatus.water_level;
   }
 
-   Future<void> _loadUserInfo() async {
-  try {
-    final userInfo = await dioService.getUserInfo(); // 사용자 정보 가져오기
-    if (userInfo != null) {
-      setState(() {
-        // 나이: 숫자만 추출
-        userAge = int.tryParse(userInfo['age']?.replaceAll(RegExp(r'[^0-9]'), '') ?? '0') ?? 0;
+  Future<void> _loadUserInfo() async {
+    try {
+      final userInfo = await dioService.getUserInfo(); // 사용자 정보 가져오기
+      if (userInfo != null) {
+        setState(() {
+          // 나이: 숫자만 추출
+          userAge = int.tryParse(
+                  userInfo['age']?.replaceAll(RegExp(r'[^0-9]'), '') ?? '0') ??
+              0;
 
-        // 성별: 값이 없거나 예상 범위를 벗어날 경우 기본값 설정
-        userGender = (userInfo['gender'] == '남성' || userInfo['gender'] == '여성') 
-          ? userInfo['gender'] 
-          : '남성'; // 기본값: '남성'
+          // 성별: 값이 없거나 예상 범위를 벗어날 경우 기본값 설정
+          userGender =
+              (userInfo['gender'] == '남성' || userInfo['gender'] == '여성')
+                  ? userInfo['gender']
+                  : '남성'; // 기본값: '남성'
 
-        // 권장 칼로리 계산
-        if (userAge != null) {
-          recommendedIntake = _calculateRecommendedIntake(userAge!, userGender);
-        }
-      });
+          // 권장 칼로리 계산
+          if (userAge != null) {
+            recommendedIntake =
+                _calculateRecommendedIntake(userAge!, userGender);
+          }
+        });
+      }
+    } catch (e) {
+      print("Failed to load user info: $e");
     }
-  } catch (e) {
-    print("Failed to load user info: $e");
   }
-}
 
   int _calculateRecommendedIntake(int age, String gender) {
     if (gender == "남성") {
@@ -118,26 +119,24 @@ class _WaterDrinkState extends State<WaterDrink> {
   }
 
   Future<void> _checkStatus() async {
-  final characterStatus = Provider.of<CharacterStatus>(context, listen: false); // ✅ 안전하게 가져오기
-  String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
-  int currentHour = DateTime.now().hour;
-  int todayWaterIntake = _dailyWaterIntake[today] ?? 0;
+    final characterStatus =
+        Provider.of<CharacterStatus>(context, listen: false); // ✅ 안전하게 가져오기
+    String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    int currentHour = DateTime.now().hour;
+    int todayWaterIntake = _dailyWaterIntake[today] ?? 0;
 
-  
+    // ✅ `updateStatus()`가 완료될 때까지 기다림
+    await characterStatus.updateStatus(
+      newWaterLevel: todayWaterIntake,
+      newMealLevel: characterStatus.meal_level,
+      newSleepLevel: characterStatus.sleep_level,
+    );
 
-  // ✅ `updateStatus()`가 완료될 때까지 기다림
-  await characterStatus.updateStatus(
-    newWaterLevel: todayWaterIntake,
-    newMealLevel: characterStatus.meal_level,
-    newSleepLevel: characterStatus.sleep_level,
-  );
+    if (!mounted) return; // ✅ 이거 꼭 넣어줘!
 
-  
-
-  // ✅ UI 갱신
-  setState(() {});
-}
-
+    // ✅ UI 갱신
+    setState(() {});
+  }
 
   List<BarChartGroupData> _generateBarChartData() {
     List<String> dates = _dailyWaterIntake.keys.toList()..sort();
@@ -154,9 +153,10 @@ class _WaterDrinkState extends State<WaterDrink> {
             BarChartRodData(
               toY: (_dailyWaterIntake[visibleDates[i]] ?? 0).toDouble(),
               width: 15,
-              color: (_dailyWaterIntake[visibleDates[i]] ?? 0) >= recommendedIntake
-                  ? Colors.green
-                  : Colors.blue, // 권장 섭취량 초과 여부에 따라 색상 변경
+              color:
+                  (_dailyWaterIntake[visibleDates[i]] ?? 0) >= recommendedIntake
+                      ? Colors.green
+                      : Colors.blue, // 권장 섭취량 초과 여부에 따라 색상 변경
             )
           ],
         ),
@@ -167,11 +167,8 @@ class _WaterDrinkState extends State<WaterDrink> {
 
   @override
   Widget build(BuildContext context) {
-    final characterStatus = context.watch<CharacterStatus>(); // ✅ Provider에서 가져오기
     bool isWeb = MediaQuery.of(context).size.width >= 600;
     int currentHour = DateTime.now().hour; // 현재 시간 가져오기
-    final characterViewModel = Provider.of<CharacterViewModel>(context, listen: false);
-
 
     // 그래프 너비 동적으로 설정
     double graphWidth = isWeb
@@ -181,17 +178,25 @@ class _WaterDrinkState extends State<WaterDrink> {
     return PopScope(
       canPop: true,
       onPopInvokedWithResult: (didPop, result) async {
-      if (didPop) {
+        if (didPop) {
+          final characterStatus =
+              context.read<CharacterStatus>(); // 팝 누를때 현재 상태 한 번만 확인
           if (characterStatus.water_level > _currentWaterLevel) {
-            _currentWaterLevel = characterStatus.water_level; // ✅ 애니메이션 실행 전에 업데이트
-            if(currentHour>=22 || currentHour<6){
-              await characterViewModel.triggerAnimation('0amdrinkwater', delayMilliseconds: 1000);
-            }else{
-            await characterViewModel.triggerAnimation('drinkwater', delayMilliseconds: 1000);
-            }
+            _currentWaterLevel = characterStatus.water_level;
+
+            // 이 시점에만 ViewModel을 불러도 충분
+            final characterViewModel = context.read<CharacterViewModel>();
+
+            final currentHour = DateTime.now().hour;
+            final anim = (currentHour >= 22 || currentHour < 6)
+                ? '0amdrinkwater'
+                : 'drinkwater';
+
+            await characterViewModel.triggerAnimation(anim,
+                delayMilliseconds: 1000);
           }
         }
-  },
+      },
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: true,
@@ -239,7 +244,8 @@ class _WaterDrinkState extends State<WaterDrink> {
                     child: BarChart(
                       BarChartData(
                         barGroups: _generateBarChartData(),
-                        maxY: recommendedIntake.toDouble() + 1000, // 권장 섭취량을 기준으로 최대값 설정
+                        maxY: recommendedIntake.toDouble() +
+                            1000, // 권장 섭취량을 기준으로 최대값 설정
                         backgroundColor: Colors.lightBlue[50],
                         titlesData: FlTitlesData(
                           bottomTitles: AxisTitles(
@@ -324,7 +330,8 @@ class _WaterDrinkState extends State<WaterDrink> {
                         const SizedBox(height: 5),
                         const Text(
                           '+물 한 잔',
-                          style: TextStyle(color: Colors.blueAccent, fontSize: 14),
+                          style:
+                              TextStyle(color: Colors.blueAccent, fontSize: 14),
                         ),
                       ],
                     ),
@@ -342,15 +349,15 @@ class _WaterDrinkState extends State<WaterDrink> {
                         const SizedBox(height: 5),
                         const Text(
                           '취소',
-                          style: TextStyle(color: Colors.redAccent, fontSize: 14),
+                          style:
+                              TextStyle(color: Colors.redAccent, fontSize: 14),
                         ),
                       ],
                     ),
                   ),
                 ],
               ),
-             ),
-
+            ),
           ],
         ),
       ),

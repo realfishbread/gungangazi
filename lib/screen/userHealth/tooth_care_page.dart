@@ -12,11 +12,10 @@ import '../../view_model/character_view_model.dart';
 import 'package:provider/provider.dart';
 
 class ToothCarePage extends StatefulWidget {
-  final CharacterViewModel characterViewModel;
-  final CharacterStatus characterStatus;
+
   
 
-  const ToothCarePage({super.key , required this.characterViewModel, required this.characterStatus});
+  const ToothCarePage({super.key });
 
   @override
   _ToothCarePageState createState() => _ToothCarePageState();

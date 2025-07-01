@@ -19,16 +19,21 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
+          //바뀐 거 있으면 알리겠습니다.
           create: (_) => CharacterStatus(CharacterRepository()),
         ),
         ChangeNotifierProxyProvider<CharacterStatus, CharacterViewModel>(
-          create: (_) => CharacterViewModel.empty(), // ✔️ 안전한 빈 생성자 사용
-          update: (_, characterStatus, previous) => CharacterViewModel(
+            create: (context) {
+          final status = Provider.of<CharacterStatus>(context, listen: false);
+          return CharacterViewModel(
             tokenService: TokenService(),
             dioService: DioService(),
-            status: characterStatus,
-          ),
-        ),
+            status: status,
+          );
+        }, update: (context, characterStatus, previous) {
+          previous?.updateStatus(characterStatus);
+          return previous!;
+        }),
       ],
       child: const MyApp(),
     ),

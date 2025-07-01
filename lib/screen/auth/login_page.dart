@@ -1,14 +1,16 @@
-import 'sign_up.dart'; // 회원가입 페이지를 불러오기 위해 추가
-import 'package:flutter/material.dart';
-import '../../repositories/auth/auth_repository.dart'; // AuthRepository import
-import '../../dto/auth/login_dto.dart'; // Login DTO import
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter/foundation.dart';
-import '../../widget/alert.dart';
 import 'dart:io' show Platform;
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+import '../../core_services/token_service.dart'; // 토큰 서비스 import
+import '../../dto/auth/login_dto.dart'; // Login DTO import
+import '../../repositories/auth/auth_repository.dart'; // AuthRepository import
+import '../../widget/alert.dart';
+import 'sign_up.dart'; // 회원가입 페이지를 불러오기 위해 추가
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,19 +20,25 @@ class LoginPage extends StatefulWidget {
 }
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: ['email', 'openid', 'profile', 'https://www.googleapis.com/auth/user.gender.read'],
-    serverClientId: kIsWeb
-        ? dotenv.env['GOOGLE_CLIENT_ID_WEB']  // ✅ 웹용 클라이언트 ID
-        : Platform.isAndroid
-            ? dotenv.env['GOOGLE_CLIENT_ID_ANDROID']  // ✅ 안드로이드용 클라이언트 ID
-            : null,
-  );
+  scopes: [
+    'email',
+    'openid',
+    'profile',
+    'https://www.googleapis.com/auth/user.gender.read'
+  ],
+  serverClientId: kIsWeb
+      ? dotenv.env['GOOGLE_CLIENT_ID_WEB'] // ✅ 웹용 클라이언트 ID
+      : Platform.isAndroid
+          ? dotenv.env['GOOGLE_CLIENT_ID_ANDROID'] // ✅ 안드로이드용 클라이언트 ID
+          : null,
+);
 
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final AuthRepository _authRepository = AuthRepository();
-  
+  final TokenService tokenService = TokenService(); // 토큰 서비스 인스턴스 생성
+
   bool _loginFailed = false;
   bool _obscurePassword = true;
   bool _isLoading = false;
@@ -42,10 +50,6 @@ class _LoginPageState extends State<LoginPage> {
       _googleSignIn.signInSilently();
     }
   }
-
-  
-
-  
 
   Future<void> _login() async {
     // 서버로 로그인 요청 보내기
@@ -62,9 +66,13 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
 
-       // 로컬 테스트용 가짜 아이디와 비밀번호 체크
-      if (_nameController.text == 'testUser' && _passwordController.text == 'password123') {
+      // 로컬 테스트용 가짜 아이디와 비밀번호 체크
+      if (_nameController.text == 'testUser' &&
+          _passwordController.text == 'password123') {
         print('로컬 로그인 성공, 가짜 유저 로그인');
+
+        // 필요하다면 임시 토큰도 저장
+        await tokenService.saveToken("test-token");
         setState(() {
           _loginFailed = false;
         });
@@ -72,7 +80,8 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
       // 로그인 API 호출
-      LoginResponseDto? loginResponse = await _authRepository.login(loginRequest);
+      LoginResponseDto? loginResponse =
+          await _authRepository.login(loginRequest);
 
       if (loginResponse != null) {
         String token = loginResponse.token;
@@ -85,17 +94,15 @@ class _LoginPageState extends State<LoginPage> {
         setState(() {
           _loginFailed = true;
         });
-        showErrorDialog(context,'로그인 실패: 아이디 또는 비밀번호가 잘못되었습니다.');
+        showErrorDialog(context, '로그인 실패: 아이디 또는 비밀번호가 잘못되었습니다.');
       }
     } catch (e) {
       print('로그인 중 에러 발생: $e');
-      showErrorDialog(context,'로그인 중 오류가 발생했습니다.');
+      showErrorDialog(context, '로그인 중 오류가 발생했습니다.');
     }
   }
 
- 
-
-   /// **🔹 Google 로그인 버튼 누르면 호출**
+  /// **🔹 Google 로그인 버튼 누르면 호출**
   Future<void> _handleGoogleLogin() async {
     setState(() => _isLoading = true);
     try {
@@ -103,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
       final responseBody = await _authRepository.googleLogin();
       if (responseBody != null) {
         // 로그인 성공 시
-        
+
         Navigator.pushReplacementNamed(context, '/homeApp', arguments: {
           'email': responseBody['email'],
           'realname': responseBody['realname'],
@@ -113,25 +120,22 @@ class _LoginPageState extends State<LoginPage> {
           'token': responseBody['token'],
         });
 
-        showInfoDialog(context,
+        showInfoDialog(
+          context,
           responseBody['existingUser']
               ? '기존 회원으로 로그인되었습니다.'
               : '신규 회원으로 가입되었습니다.',
         );
       } else {
-        showErrorDialog(context,'Google 로그인 실패');
+        showErrorDialog(context, 'Google 로그인 실패');
       }
     } catch (e) {
       print('Google 로그인 중 오류 발생: $e');
-      showErrorDialog(context,'Google 로그인 중 오류가 발생했습니다.');
+      showErrorDialog(context, 'Google 로그인 중 오류가 발생했습니다.');
     } finally {
       setState(() => _isLoading = false);
     }
   }
-
- 
-
- 
 
   @override
   Widget build(BuildContext context) {
@@ -194,7 +198,9 @@ class _LoginPageState extends State<LoginPage> {
                             border: const OutlineInputBorder(),
                             suffixIcon: IconButton(
                               icon: Icon(
-                                _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                                _obscurePassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
                               ),
                               onPressed: () {
                                 setState(() {
@@ -208,7 +214,10 @@ class _LoginPageState extends State<LoginPage> {
                         if (_loginFailed)
                           const Text(
                             '로그인 실패: 아이디 또는 비밀번호가 잘못되었습니다.',
-                            style: TextStyle(color: Colors.red, fontSize: 13,),
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 13,
+                            ),
                           ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -235,7 +244,8 @@ class _LoginPageState extends State<LoginPage> {
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => const SignUpPage()),
+                                  MaterialPageRoute(
+                                      builder: (context) => const SignUpPage()),
                                 );
                               },
                               child: const Text('회원가입'),
@@ -266,7 +276,9 @@ class _LoginPageState extends State<LoginPage> {
                             foregroundColor: Colors.black,
                             side: const BorderSide(color: Colors.grey),
                           ),
-                          onPressed: _isLoading ? null : _handleGoogleLogin, // ✅ 여기만 수정!
+                          onPressed: _isLoading
+                              ? null
+                              : _handleGoogleLogin, // ✅ 여기만 수정!
                         ),
                       ],
                     ),

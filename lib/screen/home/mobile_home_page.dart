@@ -47,15 +47,10 @@ final GlobalKey _imageKey = GlobalKey(); // 👈 추가해줘
 
     // Provider를 쓴다면 read() 사용(또는 직접 생성하되, 꼭 "한 번"만 만듦)
     _characterStatus = context.read<CharacterStatus>();
+    characterViewModel = context.read<CharacterViewModel>();
 
     Future.microtask(() {
 
-      // 기존 PopupHandler 대체
-      characterViewModel = characterViewModel = CharacterViewModel(
-  status: _characterStatus,
-  tokenService: _tokenService,
-  dioService: _dioService,
-);
       characterViewModel.startPeriodicStatusUpdate();
 
       _popupHandler = PopupHandler(
@@ -80,14 +75,12 @@ final GlobalKey _imageKey = GlobalKey(); // 👈 추가해줘
   void _navigateToPage(BuildContext context, String title) {
     final routes = {
       '수면': SleepPage(
-          characterViewModel: characterViewModel, characterStatus: _characterStatus),
-      '수분': WaterDrink(
-          characterViewModel: characterViewModel, characterStatus: _characterStatus),
-      '식단': MealPage(
-          characterViewModel: characterViewModel, characterStatus: _characterStatus),
-      '영양제': SupplementsPage(characterViewModel: characterViewModel, characterStatus: _characterStatus),
+         ),
+      '수분': WaterDrink(),
+      '식단': MealPage(),
+      '영양제': SupplementsPage(),
       '혈압': const BloodPressurePage(),
-      '치아건강': ToothCarePage(characterViewModel: characterViewModel, characterStatus: _characterStatus),
+      '치아건강': ToothCarePage(),
       '만보기': WalkingPage(),
     };
 
@@ -129,7 +122,7 @@ final GlobalKey _imageKey = GlobalKey(); // 👈 추가해줘
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => SupplementsPage(characterViewModel: characterViewModel, characterStatus: _characterStatus)),
+            builder: (context) => SupplementsPage()),
       );
     }
   }

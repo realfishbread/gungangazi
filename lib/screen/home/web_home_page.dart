@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gungangazi/repositories/status/character_repository.dart';
 import 'package:provider/provider.dart';
 
 import '../../core_services/dio_service.dart';
@@ -12,7 +11,6 @@ import '../../core_services/token_service.dart';
 import '../../dto/auth/profile_dto.dart';
 import '../../repositories/auth/profile_repository.dart';
 import '../../view_model/character_view_model.dart';
-import '../character/character_status.dart';
 import '../character/popup_handler.dart';
 import '../chat_page.dart';
 import '../profile/profile_page.dart';
@@ -35,18 +33,14 @@ class _WebHomePageState extends State<WebHomePage> {
   PageController pageController = PageController();
   SideMenuController sideMenu = SideMenuController();
   final GlobalKey _imageKey = GlobalKey();
-
-  final DioService _dioService = DioService(token: 'your-auth-token');
   final TokenService _tokenService = TokenService();
-  late final CharacterRepository _characterRepository;
-  late CharacterViewModel characterViewModel;
+  late CharacterViewModel characterViewModel; // ✅ 이거 꼭 필요
 
   ProfileDto? _profile;
   Uint8List? _imageData;
 
   bool _isLoaded = false; // 서버에서 캐릭터 상태를 다 불러왔는지
   late PopupHandler _popupHandler;
-  late CharacterStatus _characterStatus;
 
   @override
   void initState() {
@@ -54,21 +48,22 @@ class _WebHomePageState extends State<WebHomePage> {
 
     Future.microtask(() {
       if (!mounted) return; // ✅ 위젯이 살아있을 때만 실행
-      characterViewModel = context.read<CharacterViewModel>();
-      _characterStatus = context.read<CharacterStatus>();
 
-      characterViewModel.startPeriodicStatusUpdate();
-
-      _popupHandler = PopupHandler(
-        characterViewModel: characterViewModel,
-        imageKey: _imageKey,
-      );
+      characterViewModel =
+          context.read<CharacterViewModel>(); // ✅ read 또는 watch
+      characterViewModel.initialize(); // ✅ 요기서 호출만 하면 돼!
 
       fetchProfile();
 
       // ✅ 초기 애니메이션 트리거 (핵심)
       characterViewModel
           .triggerAnimation(characterViewModel.currentBodyPartKey);
+
+      characterViewModel.startPeriodicStatusUpdate();
+      _popupHandler = PopupHandler(
+        characterViewModel: characterViewModel,
+        imageKey: _imageKey,
+      );
 
       setState(() {
         _isLoaded = true;
@@ -177,10 +172,9 @@ class _WebHomePageState extends State<WebHomePage> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(30.0),
                 child: SupplementsPage(
-                  characterViewModel: characterViewModel,
-                  characterStatus: _characterStatus,
-                  // ...필요한 인자 그대로...
-                ),
+
+                    // ...필요한 인자 그대로...
+                    ),
               ),
             );
           },
@@ -294,9 +288,7 @@ class _WebHomePageState extends State<WebHomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SleepPage(
-                              characterViewModel: characterViewModel,
-                              characterStatus: _characterStatus),
+                          builder: (context) => SleepPage(),
                         ),
                       );
                     },
@@ -307,10 +299,7 @@ class _WebHomePageState extends State<WebHomePage> {
                     onTap: (index, _) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => MealPage(
-                                characterViewModel: characterViewModel,
-                                characterStatus: _characterStatus)),
+                        MaterialPageRoute(builder: (context) => MealPage()),
                       );
                     },
                     icon: const Icon(Icons.restaurant),
@@ -320,10 +309,7 @@ class _WebHomePageState extends State<WebHomePage> {
                     onTap: (index, _) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => WaterDrink(
-                                characterViewModel: characterViewModel,
-                                characterStatus: _characterStatus)),
+                        MaterialPageRoute(builder: (context) => WaterDrink()),
                       );
                     },
                     icon: const Icon(Icons.water_drop),
@@ -334,9 +320,7 @@ class _WebHomePageState extends State<WebHomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ToothCarePage(
-                                characterViewModel: characterViewModel,
-                                characterStatus: _characterStatus)),
+                            builder: (context) => ToothCarePage()),
                       );
                     },
                     icon: const Icon(Icons.medical_services),
@@ -433,16 +417,11 @@ class _WebHomePageState extends State<WebHomePage> {
                   characterViewModel,
                 );
               },
-              child: ValueListenableBuilder(
-                //ValueListenable<T> ChangeNotifier랑 비슷하지만 훨씬 가볍고 간단한 “값 바뀌면 알려주는 객체”
-                valueListenable: characterViewModel
-                    .imageIndex, //ValueNotifier<int> counter = ValueNotifier(0);
-                builder: (context, index, __) {
-                  final images = characterViewModel.currentImages;
-                  return Image.asset(
-                    images[index],
-                    // ✅ 여기도 이 key를 써야 터치 좌표 계산 가능!
-                  );
+              child: ValueListenableBuilder<int>(
+                valueListenable: characterViewModel.imageIndex,
+                builder: (context, index, _) {
+                  final imagePath = characterViewModel.currentImages[index];
+                  return Image.asset(imagePath);
                 },
               ),
             ),

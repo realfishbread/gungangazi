@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+
 import 'token_service.dart';
 
 class DioService {
@@ -51,65 +52,66 @@ class DioService {
   }
 
   Future<String?> getGender() async {
-  try {
-    // 토큰 가져오기
-   final token = await tokenService.getToken();
-    if (token == null) {
-      print("Token is null");
+    try {
+      // 토큰 가져오기
+      final token = await tokenService.getToken();
+      if (token == null) {
+        print("Token is null");
+        return null;
+      }
+
+      // 서버 API 호출
+      final response = await DioService().getDio().get(
+            '/profile', // 예: 서버에서 사용자 프로필 반환
+            options: Options(
+              headers: {'Authorization': 'Bearer $token'},
+            ),
+          );
+
+      // API 응답 처리
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print("Fetched gender: ${data['gender']}");
+        return data['gender']; // 서버에서 반환된 성별 값
+      } else {
+        print("Failed to fetch gender: ${response.statusCode}");
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching gender: $e");
       return null;
     }
-
-    // 서버 API 호출
-    final response = await DioService().getDio().get(
-      '/profile', // 예: 서버에서 사용자 프로필 반환
-      options: Options(
-        headers: {'Authorization': 'Bearer $token'},
-      ),
-    );
-
-    // API 응답 처리
-    if (response.statusCode == 200) {
-      final data = response.data;
-      print("Fetched gender: ${data['gender']}");
-      return data['gender']; // 서버에서 반환된 성별 값
-    } else {
-      print("Failed to fetch gender: ${response.statusCode}");
-      return null;
-    }
-  } catch (e) {
-    print("Error fetching gender: $e");
-    return null;
   }
-}
-Future<Map<String, dynamic>?> getUserInfo() async {
-  try {
-    // 토큰 가져오기
-    final token = await tokenService.getToken();
-    if (token == null) {
-      print("Token is null");
+
+  Future<Map<String, dynamic>?> getUserInfo() async {
+    try {
+      // 토큰 가져오기
+      final token = await tokenService.getToken();
+      if (token == null) {
+        print("Token is null");
+        return null;
+      }
+
+      // 서버 API 호출
+      final response = await getDio().get(
+        '/profile', // 예: 서버에서 사용자 프로필 반환
+        options: Options(
+          headers: {'Authorization': 'Bearer $token'},
+        ),
+      );
+
+      // API 응답 처리
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print("Fetched user info: $data");
+        return data; // 서버에서 반환된 프로필 데이터 전체 반환
+      } else {
+        print("Failed to fetch user info: ${response.statusCode}");
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching user info: $e");
       return null;
     }
-
-    // 서버 API 호출
-    final response = await getDio().get(
-      '/profile', // 예: 서버에서 사용자 프로필 반환
-      options: Options(
-        headers: {'Authorization': 'Bearer $token'},
-      ),
-    );
-
-    // API 응답 처리
-    if (response.statusCode == 200) {
-      final data = response.data;
-      print("Fetched user info: $data");
-      return data; // 서버에서 반환된 프로필 데이터 전체 반환
-    } else {
-      print("Failed to fetch user info: ${response.statusCode}");
-      return null;
-    }
-  } catch (e) {
-    print("Error fetching user info: $e");
-    return null;
   }
-}
 }

@@ -10,10 +10,9 @@ import 'package:provider/provider.dart';
 import '../../screen/character/character_status.dart';
 
 class SupplementsPage extends StatefulWidget {
-  final CharacterStatus characterStatus; // ✅ PopupHandler 추가
-  final CharacterViewModel characterViewModel; // ✅ CharacterViewModel 추가
   
-  const SupplementsPage({super.key, required this.characterViewModel, required this.characterStatus});
+  
+  const SupplementsPage({super.key});
 
   @override
   _SupplementsPageState createState() => _SupplementsPageState();

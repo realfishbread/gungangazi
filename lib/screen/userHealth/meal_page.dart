@@ -11,11 +11,10 @@ import 'package:gungangazi/view_model/character_view_model.dart'; // ✅ Charact
 
 
 class MealPage extends StatefulWidget {
-  final CharacterViewModel characterViewModel;
-  final CharacterStatus characterStatus; // ✅ 추가
+
   
 
-  const MealPage({super.key, required this.characterViewModel, required this.characterStatus});
+  const MealPage({super.key});
 
   @override
   _MealPageState createState() => _MealPageState();

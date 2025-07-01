@@ -72,7 +72,7 @@ class CharacterStatusService {
     return 'default';
   }
 
-  String getTimeBasedOverride(String currentStatus, DateTime now) {
+  static String getTimeBasedOverride(String currentStatus, DateTime now) {
     final hour = now.hour;
     final isNight = (hour >= 22 || hour < 6);
 

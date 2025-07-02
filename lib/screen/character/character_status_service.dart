@@ -14,7 +14,7 @@ class CharacterStatusService {
           characterStatus.sleep_level <= 200) {
         return 'thirsty_and_hungry_dizzy';
       }
-    } else if (characterStatus.water_level <= 200 &&
+      else if (characterStatus.water_level <= 200 &&
         characterStatus.meal_level <= 200 &&
         characterStatus.sleep_level >= 200) {
       return 'thirsty_and_hungry';
@@ -38,6 +38,7 @@ class CharacterStatusService {
         characterStatus.meal_level > 200 &&
         characterStatus.sleep_level < 200) {
       return 'dizzy';
+    }
     } else if (isNight) {
       if (characterStatus.water_level <= 200 &&
           characterStatus.meal_level <= 200 &&

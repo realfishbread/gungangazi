@@ -291,6 +291,14 @@ class CharacterImagePaths {
       'assets/person/0am/0ammeal3.jpg',
       'assets/person/0am/0ammeal2.jpg',
       'assets/person/0am/0ammeal1.jpg',
+    ],
+    '0amdrinkwater': [
+      'assets/person/0am/0amdrinkwater.jpg',
+      'assets/person/0am/0amdrinkwater1.jpg',
+      'assets/person/0am/0amdrinkwater2.jpg',
+      'assets/person/0am/0amdrinkwater2.jpg',
+      'assets/person/0am/0amdrinkwater1.jpg',
+      'assets/person/0am/0amdrinkwater.jpg',
     ]
   };
 }

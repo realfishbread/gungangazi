@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gungangazi/screen/character/character_status.dart';
 import 'package:provider/provider.dart';
 
 import '../../core_services/dio_service.dart';
@@ -35,6 +36,7 @@ class _WebHomePageState extends State<WebHomePage> {
   final GlobalKey _imageKey = GlobalKey();
   final TokenService _tokenService = TokenService();
   late CharacterViewModel characterViewModel; // ✅ 이거 꼭 필요
+  late CharacterStatus characterStatus; // ✅ 이거 꼭 필요
 
   ProfileDto? _profile;
   Uint8List? _imageData;
@@ -62,7 +64,7 @@ class _WebHomePageState extends State<WebHomePage> {
           .triggerAnimation(characterViewModel.currentBodyPartKey);
 
       characterViewModel.startPeriodicStatusUpdate();
-      
+
       _popupHandler = PopupHandler(
         characterViewModel: characterViewModel,
         imageKey: _imageKey,
@@ -76,6 +78,7 @@ class _WebHomePageState extends State<WebHomePage> {
   @override
   void dispose() {
     // 지금까진 그냥 super.dispose()만 했을 수 있음
+    characterViewModel.dispose();
     super.dispose();
   }
 

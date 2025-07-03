@@ -7,19 +7,40 @@ import '../../repositories/status/character_repository.dart';
 //캐릭터의 수치 상태 관리
 class CharacterStatus extends ChangeNotifier {
   final CharacterRepository _characterRepository;
-  int water_level = 100;
-  int meal_level = 100;
-  int sleep_level = 100;
+  int _waterLevel = 100;
+  int _mealLevel = 100;
+  int _sleepLevel = 100;
 
-  CharacterStatus(this._characterRepository); // 👈 의존성 주입
+  CharacterStatus(this._characterRepository);
+
+  // ✅ getter: 읽기 전용
+  int get water_level => _waterLevel;
+  int get meal_level => _mealLevel;
+  int get sleep_level => _sleepLevel;
+
+  // ✅ setter: 값 설정 + 자동 알림
+  void setWaterLevel(int value) {
+    _waterLevel = value;
+    notifyListeners();
+  }
+
+  void setMealLevel(int value) {
+    _mealLevel = value;
+    notifyListeners();
+  }
+
+  void setSleepLevel(int value) {
+    _sleepLevel = value;
+    notifyListeners();
+  }
 
   Future<void> loadStatus() async {
     final statusData = await _characterRepository.loadStatusFromServer();
     if (statusData != null) {
       StatusDto status = StatusDto.fromJson(statusData);
-      water_level = status.water_level;
-      meal_level = status.meal_level;
-      sleep_level = status.sleep_level;
+      _waterLevel = status.water_level;
+       _mealLevel = status.meal_level;
+      _sleepLevel = status.sleep_level;
       notifyListeners(); // ✅ UI 업데이트
     }
   }
@@ -40,9 +61,9 @@ class CharacterStatus extends ChangeNotifier {
     required int newMealLevel,
     required int newSleepLevel,
   }) async {
-    water_level = newWaterLevel;
-    meal_level = newMealLevel;
-    sleep_level = newSleepLevel;
+    _waterLevel = newWaterLevel;
+     _mealLevel = newMealLevel;
+   _sleepLevel= newSleepLevel;
 
     notifyListeners(); // 상태 업데이트 통지 (ViewModel이 여기 반응함)
 

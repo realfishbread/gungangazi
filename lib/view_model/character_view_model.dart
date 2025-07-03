@@ -13,9 +13,10 @@ class CharacterViewModel extends ChangeNotifier {
   final TokenService tokenService;
   final DioService dioService;
   CharacterStatus status;
-  int _previousWaterLevel = 0;
-  int _previousMealLevel = 0;
-  int _previousSleepLevel = 0;
+
+  int _previousWaterLevel = 100;
+  int _previousMealLevel = 100;
+  int _previousSleepLevel = 100;
 
   late CharacterStatusService characterStatusService;
   late PopupHandler popupHandler;
@@ -61,6 +62,8 @@ class CharacterViewModel extends ChangeNotifier {
   }
 
   Future<void> initialize() async {
+    await status.loadStatus(); // ✅ 직접 불러와!
+    // ✅ 여기서 이전값을 현재값으로 세팅
     _previousWaterLevel = status.water_level;
     _previousMealLevel = status.meal_level;
     _previousSleepLevel = status.sleep_level;
@@ -70,35 +73,45 @@ class CharacterViewModel extends ChangeNotifier {
   }
 
   void _onStatusChanged() {
-    final currentWaterLevel = status.water_level;
-    final currentMealLevel = status.meal_level;
-    final currentSleepLevel = status.sleep_level;
-    if (currentWaterLevel > _previousWaterLevel) {
-      _previousWaterLevel = currentWaterLevel;
+    onStatusChanged(
+      newWaterLevel: status.water_level,
+      newMealLevel: status.meal_level,
+      newSleepLevel: status.sleep_level,
+    );
+  }
+
+  void onStatusChanged({
+    required int newWaterLevel,
+    required int newMealLevel,
+    required int newSleepLevel,
+  }) {
+    if (newWaterLevel > _previousWaterLevel) {
+      _previousWaterLevel = newWaterLevel;
       _resetAnimation();
       updateCharacterState();
-    } else if (currentMealLevel > _previousMealLevel) {
-      _previousMealLevel = currentMealLevel;
+    } else if (newMealLevel > _previousMealLevel) {
+      _previousMealLevel = newMealLevel;
       _resetAnimation();
       updateCharacterState();
-    } else if (currentSleepLevel > _previousSleepLevel) {
-      _previousSleepLevel = currentSleepLevel;
+    } else if (newSleepLevel > _previousSleepLevel) {
+      _previousSleepLevel = newSleepLevel;
       _resetAnimation();
       updateCharacterState();
     } else {
-      // 상태가 변경되지 않았을 때는 아무것도 하지 않음
       print(
-          "상태 변경 없음: 물: $currentWaterLevel, 식사: $currentMealLevel, 수면: $currentSleepLevel");
+          "상태 변경 없음: 물: $newWaterLevel, 식사: $newMealLevel, 수면: $newSleepLevel");
     }
   }
 
   void updateStatus(CharacterStatus newStatus) {
+    //새로운 상태 객체 주입 시 사용
     status.removeListener(_onStatusChanged); // 기존 리스너 제거
     status = newStatus;
     status.addListener(_onStatusChanged); // 새 상태에 리스너 다시 등록
   }
 
   void updateCharacterState() {
+    //현재 상태(water/meal/sleep)에 따른 이미지 키 갱신
     final now = DateTime.now();
     final rawStatus =
         CharacterStatusService.getBodyPartStatus(status, now); // ✅ 여긴 static
@@ -128,6 +141,14 @@ class CharacterViewModel extends ChangeNotifier {
     _startAnimation();
   }
 
+  void forceStopAnimation() {
+    print('[🛑강제 종료] 애니메이션 강제 종료!');
+    _timer?.cancel();
+    _isAnimating = false;
+    updateCharacterState(); // 상태 재계산해서 기본 애니메이션 복귀
+    _startAnimation(); // 기본 애니메이션 재시작
+  }
+
   void startPeriodicStatusUpdate() {
     //자동 상태 주기적 갱신 타이머
     _statusUpdateTimer = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -142,12 +163,17 @@ class CharacterViewModel extends ChangeNotifier {
 //터치 이벤트 등으로 강제로 애니메이션 바꾸는 함수
   Future<void> triggerAnimation(String bodyPart,
       {int delayMilliseconds = 1000}) async {
-    if (_isAnimating) return;
+    if (_isAnimating) {
+      print('[⛔차단] 이미 애니메이션 중이어서 무시됨');
+      forceStopAnimation(); // 💥 강제 종료하고 새로 시작
+    }
+
+    print('[🎬시작] $bodyPart 애니메이션 시작!');
     _isAnimating = true;
 
-    stopPeriodicStatusUpdate(); // ⛔️ 상태 갱신 멈춤
+    stopPeriodicStatusUpdate(); // 상태 갱신 멈춤
 
-    _timer?.cancel();
+    _timer?.cancel(); // 혹시 이전 타이머가 남아있을 경우
     imageIndex.value = 0;
     _currentBodyPartKey = bodyPart;
 
@@ -160,9 +186,8 @@ class CharacterViewModel extends ChangeNotifier {
       if (imageIndex.value == animFrames.length - 1) {
         timer.cancel();
         Future.delayed(Duration(milliseconds: delayMilliseconds), () {
-          updateCharacterState(); // ✅ 상태 재계산
-          print('[🧪복귀] 상태 재계산 후 키: $_currentBodyPartKey');
-          _startAnimation();
+          updateCharacterState(); // 상태 재계산
+          _startAnimation(); // 기본 애니메이션
           print('[🧪복귀] 기본 애니메이션 시작!');
           _isAnimating = false;
         });

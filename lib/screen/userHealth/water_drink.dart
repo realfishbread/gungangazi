@@ -125,12 +125,18 @@ class _WaterDrinkState extends State<WaterDrink> {
     int currentHour = DateTime.now().hour;
     int todayWaterIntake = _dailyWaterIntake[today] ?? 0;
 
+    // ✅ ViewModel에 접근해서 이전값 직접 확인
+
+    final previous = _currentWaterLevel;
+
     // ✅ `updateStatus()`가 완료될 때까지 기다림
-    await characterStatus.updateStatus(
-      newWaterLevel: todayWaterIntake,
-      newMealLevel: characterStatus.meal_level,
-      newSleepLevel: characterStatus.sleep_level,
-    );
+    if (todayWaterIntake > previous) {
+      await characterStatus.updateStatus(
+        newWaterLevel: todayWaterIntake,
+        newMealLevel: characterStatus.meal_level,
+        newSleepLevel: characterStatus.sleep_level,
+      );
+    }
 
     if (!mounted) return; // ✅ 이거 꼭 넣어줘!
 
@@ -168,7 +174,6 @@ class _WaterDrinkState extends State<WaterDrink> {
   @override
   Widget build(BuildContext context) {
     bool isWeb = MediaQuery.of(context).size.width >= 600;
-    int currentHour = DateTime.now().hour; // 현재 시간 가져오기
 
     // 그래프 너비 동적으로 설정
     double graphWidth = isWeb
@@ -179,11 +184,14 @@ class _WaterDrinkState extends State<WaterDrink> {
       canPop: true,
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) {
-          final characterStatus =
-              context.read<CharacterStatus>(); // 팝 누를때 현재 상태 한 번만 확인
-          if (characterStatus.water_level > _currentWaterLevel) {
+          // 뒤로가기 버튼이 눌렸을 때 시점, 실행되는 시점은 진짜 뒤로가기 끝났을 떄.
+          final characterStatus = context.read<CharacterStatus>();
+          final previousLevel = _currentWaterLevel;
+          final newLevel = characterStatus.water_level;
 
-            // 이 시점에만 ViewModel을 불러도 충분
+          print('💧 이전: $previousLevel / 현재: $newLevel');
+
+          if (newLevel > previousLevel) {
             final characterViewModel = context.read<CharacterViewModel>();
 
             final currentHour = DateTime.now().hour;
@@ -194,6 +202,8 @@ class _WaterDrinkState extends State<WaterDrink> {
             await characterViewModel.triggerAnimation(anim,
                 delayMilliseconds: 1000);
           }
+          // 🔄 _currentWaterLevel 갱신
+          _currentWaterLevel = newLevel;
         }
       },
       child: Scaffold(

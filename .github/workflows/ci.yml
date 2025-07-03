@@ -79,7 +79,7 @@ jobs:
 
           # 원격 서버에서 Nginx 재시작 및 Spring Boot 실행
           ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ${{ secrets.EC2_DEPLOY_USER }} << EOF
-            sudo systemctl restart nginx
+          sudo systemctl restart nginx
 
           # 기존 jar 프로세스 종료
           pkill -f 'java.*demo.jar' || true

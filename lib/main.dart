@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gungangazi/screen/character/character_status.dart';
@@ -15,6 +16,11 @@ import 'view_model/character_view_model.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
+
+  final Widget entryPage = kIsWeb
+      ? const WebHomePage()
+      : const MobileHomePage(); // ❗ context 없이 플랫폼으로 먼저 분기
+
   runApp(
     MultiProvider(
       providers: [
@@ -35,13 +41,14 @@ Future<void> main() async {
           return previous!;
         }),
       ],
-      child: const MyApp(),
+      child: MyApp(entryPage: entryPage),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final Widget entryPage;
+  const MyApp({super.key, required this.entryPage});
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +57,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lightTheme, // 🌞 기본 테마 (라이트)
       darkTheme: AppTheme.darkTheme, // 🌙 다크 테마 추가
       themeMode: ThemeMode.system, // 🔄 시스템 설정에 따라 자동 변경
+      home: entryPage, // ✅ context가 필요 없는 시점에서 분기 완료
       initialRoute: '/splash',
       routes: {
         '/splash': (context) => const SplashPage(),

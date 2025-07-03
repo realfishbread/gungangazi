@@ -51,7 +51,9 @@ class _WebHomePageState extends State<WebHomePage> {
 
       characterViewModel =
           context.read<CharacterViewModel>(); // ✅ read 또는 watch
-      characterViewModel.initialize(); // ✅ 요기서 호출만 하면 돼!
+      if (!characterViewModel.isInitialized) {
+        characterViewModel.initialize();
+      }
 
       fetchProfile();
 
@@ -60,10 +62,14 @@ class _WebHomePageState extends State<WebHomePage> {
           .triggerAnimation(characterViewModel.currentBodyPartKey);
 
       characterViewModel.startPeriodicStatusUpdate();
+      
       _popupHandler = PopupHandler(
         characterViewModel: characterViewModel,
         imageKey: _imageKey,
       );
+      setState(() {
+        _isLoaded = true; // 데이터가 로드되었음을 표시
+      });
     });
   }
 

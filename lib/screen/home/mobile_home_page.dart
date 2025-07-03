@@ -50,7 +50,9 @@ class _MobileHomePageState extends State<MobileHomePage> {
 
       characterViewModel =
           context.read<CharacterViewModel>(); // ✅ read 또는 watch
-      characterViewModel.initialize(); // ✅ 요기서 호출만 하면 돼!
+      if (!characterViewModel.isInitialized) {
+        characterViewModel.initialize();
+      }
 
       // ✅ 초기 애니메이션 트리거 (핵심)
       characterViewModel
@@ -70,7 +72,6 @@ class _MobileHomePageState extends State<MobileHomePage> {
   @override
   void dispose() {
     // 지금까진 그냥 super.dispose()만 했을 수 있음
-    _characterStatus.dispose(); // <-- 여기서 타이머 등 정리
     super.dispose();
   }
 

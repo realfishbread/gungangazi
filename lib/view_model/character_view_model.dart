@@ -32,6 +32,9 @@ class CharacterViewModel extends ChangeNotifier {
   String _currentBodyPartKey = 'default';
   String get currentBodyPartKey => _currentBodyPartKey;
 
+  bool _isInitialized = false;
+  bool get isInitialized => _isInitialized;
+
   CharacterViewModel({
     // 생성자 + 초기화 블록
     required this.tokenService,
@@ -57,11 +60,13 @@ class CharacterViewModel extends ChangeNotifier {
         _onStatusChanged); //_onStatusChanged 만들어서 status가 변경될 때 애니메이션을 실행하겠다는 의도
   }
 
-  void initialize() {
+  Future<void> initialize() async {
     _previousWaterLevel = status.water_level;
     _previousMealLevel = status.meal_level;
     _previousSleepLevel = status.sleep_level;
     status.addListener(_onStatusChanged);
+    if (_isInitialized) return; // 이미 초기화된 경우 무시
+    _isInitialized = true;
   }
 
   void _onStatusChanged() {

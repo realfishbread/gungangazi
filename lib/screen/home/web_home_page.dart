@@ -64,10 +64,6 @@ class _WebHomePageState extends State<WebHomePage> {
         characterViewModel: characterViewModel,
         imageKey: _imageKey,
       );
-
-      setState(() {
-        _isLoaded = true;
-      });
     });
   }
 

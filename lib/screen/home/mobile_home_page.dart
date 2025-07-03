@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../core_services/dio_service.dart';
 import '../../core_services/token_service.dart';
 import '../../repositories/status/character_repository.dart';
+import '../../view_model/character_view_model.dart';
 import '../../widget/is_web.dart';
 import '../character/character_status.dart';
 import '../character/popup_handler.dart';
@@ -18,7 +19,6 @@ import '../userHealth/supplement_page.dart';
 import '../userHealth/tooth_care_page.dart';
 import '../userHealth/water_drink.dart';
 import 'web_home_page.dart';
-import '../../view_model/character_view_model.dart';
 
 class MobileHomePage extends StatefulWidget {
   const MobileHomePage({super.key});
@@ -32,10 +32,10 @@ class _MobileHomePageState extends State<MobileHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final TokenService _tokenService = TokenService();
   final DioService _dioService = DioService(token: 'your-auth-token');
-final GlobalKey _imageKey = GlobalKey(); // 👈 추가해줘
+  final GlobalKey _imageKey = GlobalKey(); // 👈 추가해줘
   final List<dynamic> _listData = [];
   late final CharacterRepository _characterRepository;
-    late CharacterViewModel characterViewModel;
+  late CharacterViewModel characterViewModel;
 
   bool _isLoaded = false; // 서버에서 캐릭터 상태를 다 불러왔는지
   late PopupHandler _popupHandler;
@@ -45,25 +45,27 @@ final GlobalKey _imageKey = GlobalKey(); // 👈 추가해줘
   void initState() {
     super.initState();
 
-    // Provider를 쓴다면 read() 사용(또는 직접 생성하되, 꼭 "한 번"만 만듦)
-    _characterStatus = context.read<CharacterStatus>();
-    characterViewModel = context.read<CharacterViewModel>();
-
     Future.microtask(() {
+      if (!mounted) return; // ✅ 위젯이 살아있을 때만 실행
+
+      characterViewModel =
+          context.read<CharacterViewModel>(); // ✅ read 또는 watch
+      characterViewModel.initialize(); // ✅ 요기서 호출만 하면 돼!
+
+      // ✅ 초기 애니메이션 트리거 (핵심)
+      characterViewModel
+          .triggerAnimation(characterViewModel.currentBodyPartKey);
 
       characterViewModel.startPeriodicStatusUpdate();
-
       _popupHandler = PopupHandler(
         characterViewModel: characterViewModel,
         imageKey: _imageKey,
       );
-
-      _isLoaded = true;
-    }); 
-   
+      setState(() {
+        _isLoaded = true; // ✅ 이거 꼭 해줘야 로딩 화면에서 넘어감!
+      });
+    });
   }
-
-  
 
   @override
   void dispose() {
@@ -74,8 +76,7 @@ final GlobalKey _imageKey = GlobalKey(); // 👈 추가해줘
 
   void _navigateToPage(BuildContext context, String title) {
     final routes = {
-      '수면': SleepPage(
-         ),
+      '수면': SleepPage(),
       '수분': WaterDrink(),
       '식단': MealPage(),
       '영양제': SupplementsPage(),
@@ -121,8 +122,7 @@ final GlobalKey _imageKey = GlobalKey(); // 👈 추가해줘
     } else if (_selectedIndex == 2) {
       Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) => SupplementsPage()),
+        MaterialPageRoute(builder: (context) => SupplementsPage()),
       );
     }
   }

@@ -182,7 +182,6 @@ class _WaterDrinkState extends State<WaterDrink> {
           final characterStatus =
               context.read<CharacterStatus>(); // 팝 누를때 현재 상태 한 번만 확인
           if (characterStatus.water_level > _currentWaterLevel) {
-            _currentWaterLevel = characterStatus.water_level;
 
             // 이 시점에만 ViewModel을 불러도 충분
             final characterViewModel = context.read<CharacterViewModel>();

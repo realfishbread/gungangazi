@@ -14,6 +14,7 @@ class CharacterViewModel extends ChangeNotifier {
   final DioService dioService;
   CharacterStatus status;
 
+  final now = DateTime.now();
   bool _isDisposed = false;
 
   int _previousWaterLevel = 100;
@@ -43,7 +44,7 @@ class CharacterViewModel extends ChangeNotifier {
     required this.tokenService,
     required this.dioService,
     required this.status, // ✅ 요거 빼먹어서 에러 난 거야
-    this.frameDuration = const Duration(milliseconds: 400),
+    this.frameDuration = const Duration(milliseconds: 300),
   }) {
     // 객체 초기화 명확히!
     characterStatusService = CharacterStatusService(); // ✅
@@ -66,7 +67,8 @@ class CharacterViewModel extends ChangeNotifier {
     _previousMealLevel = status.meal_level;
     _previousSleepLevel = status.sleep_level;
 
-    _currentBodyPartKey = _calculateBodyPartKey(); // 이미지 키 설정
+    _currentBodyPartKey =
+        CharacterStatusService.getBodyPartStatus(status, now); // 이미지 키 설정
     status.addListener(_onStatusChanged); // ✅ 먼저 리스너 등록
 
     _startAnimation(); // 그 다음에 애니메이션 시작
@@ -113,12 +115,17 @@ class CharacterViewModel extends ChangeNotifier {
   }
 
   void updateCharacterState() {
-    //현재 상태(water/meal/sleep)에 따른 이미지 키 갱신
     final now = DateTime.now();
-    final rawStatus =
-        CharacterStatusService.getBodyPartStatus(status, now); // ✅ 여긴 static
+    final newKey =
+        CharacterStatusService.getBodyPartStatus(status, now); // ✅ 새 키 계산
 
-    notifyListeners();
+    if (_currentBodyPartKey != newKey) {
+      _currentBodyPartKey = newKey;
+      print("🔄 상태 업데이트로 이미지 키 변경됨: $_currentBodyPartKey");
+      _resetAnimation(); // 키 바뀌었으니까 애니메이션도 초기화!
+    }
+
+    notifyListeners(); // 위에서 키 바뀐 경우에만 애니메이션 리셋하고, 항상 리빌드 알림
   }
 
   void _startAnimation() {
@@ -150,7 +157,7 @@ class CharacterViewModel extends ChangeNotifier {
     _isAnimating = false;
 
     // ✅ 이 조건으로 중복 호출 방지
-    final newKey = _calculateBodyPartKey();
+    final newKey = CharacterStatusService.getBodyPartStatus(status, now);
     if (newKey != _currentBodyPartKey) {
       _currentBodyPartKey = newKey;
     }
@@ -201,37 +208,6 @@ class CharacterViewModel extends ChangeNotifier {
         });
       }
     });
-  }
-
-  String _calculateBodyPartKey() {
-    final water = status.water_level;
-    final meal = status.meal_level;
-    final sleep = status.sleep_level;
-    final hour = DateTime.now().hour;
-    final isNight = hour >= 22 || hour < 6;
-
-    if (water == 0 && meal == 0 && sleep == 0) return 'loading'; // 🛑 이거 추가
-
-    if (!isNight) {
-      if (water <= 200 && meal <= 200 && sleep <= 200)
-        return 'thirsty_and_hungry_dizzy';
-      if (water <= 200 && meal <= 200) return 'thirsty_and_hungry';
-      if (water <= 200 && sleep < 200) return 'thirsty_and_dizzy';
-      if (meal <= 200 && sleep < 200) return 'hungry_and_dizzy';
-      if (water <= 200) return 'thirsty';
-      if (meal <= 200) return 'hungry';
-      if (sleep < 200) return 'dizzy';
-      return 'default';
-    } else {
-      if (water <= 200 && meal <= 200 && sleep <= 200) return '0amdizzy';
-      if (water <= 200 && meal <= 200) return '0amddong';
-      if (water <= 200 && sleep < 200) return '0amtired';
-      if (meal <= 200 && sleep < 200) return '0amheadache';
-      if (water <= 200) return '0amheadache';
-      if (meal <= 200) return '0amstomach';
-      if (sleep < 200) return '0amtired';
-      return '0am';
-    }
   }
 
   List<String> get currentImages =>

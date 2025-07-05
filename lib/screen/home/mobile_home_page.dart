@@ -39,7 +39,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
 
   bool _isLoaded = false; // 서버에서 캐릭터 상태를 다 불러왔는지
   late PopupHandler _popupHandler;
-  late CharacterStatus _characterStatus;
+
 
   @override
   void initState() {

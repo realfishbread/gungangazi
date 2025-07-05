@@ -14,6 +14,8 @@ class CharacterViewModel extends ChangeNotifier {
   final DioService dioService;
   CharacterStatus status;
 
+  bool _isDisposed = false;
+
   int _previousWaterLevel = 100;
   int _previousMealLevel = 100;
   int _previousSleepLevel = 100;
@@ -41,7 +43,7 @@ class CharacterViewModel extends ChangeNotifier {
     required this.tokenService,
     required this.dioService,
     required this.status, // ✅ 요거 빼먹어서 에러 난 거야
-    this.frameDuration = const Duration(milliseconds: 500),
+    this.frameDuration = const Duration(milliseconds: 400),
   }) {
     // 객체 초기화 명확히!
     characterStatusService = CharacterStatusService(); // ✅
@@ -142,11 +144,19 @@ class CharacterViewModel extends ChangeNotifier {
   }
 
   void forceStopAnimation() {
+    if (_isDisposed) return; // ✅ dispose 된 후에는 아무것도 하지 않기
+
     print('[🛑강제 종료] 애니메이션 강제 종료!');
     _timer?.cancel();
     _isAnimating = false;
-    updateCharacterState(); // 상태 재계산해서 기본 애니메이션 복귀
-    _startAnimation(); // 기본 애니메이션 재시작
+
+    // ✅ 이 조건으로 중복 호출 방지
+    final newKey = _calculateBodyPartKey();
+    if (newKey != _currentBodyPartKey) {
+      _currentBodyPartKey = newKey;
+    }
+
+    _startAnimation(); // ✅ 새로운 상태로 기본 애니메이션 재시작
   }
 
   void startPeriodicStatusUpdate() {
@@ -164,8 +174,7 @@ class CharacterViewModel extends ChangeNotifier {
   Future<void> triggerAnimation(String bodyPart,
       {int delayMilliseconds = 1000}) async {
     if (_isAnimating) {
-      print('[⛔차단] 이미 애니메이션 중이어서 무시됨');
-      forceStopAnimation(); // 💥 강제 종료하고 새로 시작
+      forceStopAnimation();
     }
 
     print('[🎬시작] $bodyPart 애니메이션 시작!');
@@ -233,8 +242,9 @@ class CharacterViewModel extends ChangeNotifier {
   @override
   void dispose() {
     _timer?.cancel();
-    status.removeListener(_onStatusChanged);
     _statusUpdateTimer?.cancel();
+    status.removeListener(_onStatusChanged);
+    _isDisposed = true;
     super.dispose();
   }
 }

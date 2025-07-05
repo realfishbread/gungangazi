@@ -52,13 +52,11 @@ class _MobileHomePageState extends State<MobileHomePage> {
           context.read<CharacterViewModel>(); // ✅ read 또는 watch
       if (!characterViewModel.isInitialized) {
         characterViewModel.initialize();
+        characterViewModel.updateCharacterState();
+        characterViewModel.startPeriodicStatusUpdate();
       }
 
-      // ✅ 초기 애니메이션 트리거 (핵심)
-      characterViewModel
-          .triggerAnimation(characterViewModel.currentBodyPartKey);
-
-      characterViewModel.startPeriodicStatusUpdate();
+     
       _popupHandler = PopupHandler(
         characterViewModel: characterViewModel,
         imageKey: _imageKey,
@@ -71,7 +69,11 @@ class _MobileHomePageState extends State<MobileHomePage> {
 
   @override
   void dispose() {
-    // 지금까진 그냥 super.dispose()만 했을 수 있음
+    // ❌ 절대 이렇게 직접 호출하지 마!
+    // characterViewModel.dispose(); ❌
+
+    // 대신 필요한 정리만 하면 돼
+    characterViewModel.stopPeriodicStatusUpdate(); // ✅ 예: 타이머만 멈추기
     super.dispose();
   }
 

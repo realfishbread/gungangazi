@@ -53,17 +53,14 @@ class _WebHomePageState extends State<WebHomePage> {
 
       characterViewModel =
           context.read<CharacterViewModel>(); // ✅ read 또는 watch
+      // ✅ 초기 애니메이션 트리거 부분을 이렇게 변경:
       if (!characterViewModel.isInitialized) {
         characterViewModel.initialize();
+        characterViewModel.updateCharacterState();
+        characterViewModel.startPeriodicStatusUpdate();
       }
 
       fetchProfile();
-
-      // ✅ 초기 애니메이션 트리거 (핵심)
-      characterViewModel
-          .triggerAnimation(characterViewModel.currentBodyPartKey);
-
-      characterViewModel.startPeriodicStatusUpdate();
 
       _popupHandler = PopupHandler(
         characterViewModel: characterViewModel,
@@ -77,8 +74,11 @@ class _WebHomePageState extends State<WebHomePage> {
 
   @override
   void dispose() {
-    // 지금까진 그냥 super.dispose()만 했을 수 있음
-    characterViewModel.dispose();
+    // ❌ 절대 이렇게 직접 호출하지 마!
+    // characterViewModel.dispose(); ❌
+
+    // 대신 필요한 정리만 하면 돼
+    characterViewModel.stopPeriodicStatusUpdate(); // ✅ 예: 타이머만 멈추기
     super.dispose();
   }
 

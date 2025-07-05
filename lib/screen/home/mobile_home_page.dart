@@ -45,18 +45,17 @@ class _MobileHomePageState extends State<MobileHomePage> {
   void initState() {
     super.initState();
 
-    Future.microtask(() {
+    Future.microtask(() async {
       if (!mounted) return; // ✅ 위젯이 살아있을 때만 실행
 
       characterViewModel =
           context.read<CharacterViewModel>(); // ✅ read 또는 watch
       if (!characterViewModel.isInitialized) {
-        characterViewModel.initialize();
+        await characterViewModel.initialize();
         characterViewModel.updateCharacterState();
         characterViewModel.startPeriodicStatusUpdate();
       }
 
-     
       _popupHandler = PopupHandler(
         characterViewModel: characterViewModel,
         imageKey: _imageKey,

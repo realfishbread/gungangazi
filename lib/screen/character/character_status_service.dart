@@ -73,24 +73,5 @@ class CharacterStatusService {
     return 'default';
   }
 
-  static String getTimeBasedOverride(String currentStatus, DateTime now) {
-    final hour = now.hour;
-    final isNight = (hour >= 22 || hour < 6);
 
-    final overrideStatuses = [
-      'default',
-      'thirsty_and_hungry_dizzy',
-      'thirsty_and_hungry',
-      'thirsty_and_dizzy',
-      'thirsty',
-      'hungry',
-      'dizzy',
-    ];
-
-    if (overrideStatuses.contains(currentStatus)) {
-      return isNight ? '0am' : 'default';
-    }
-
-    return currentStatus;
-  }
 }

@@ -52,25 +52,25 @@ class CharacterViewModel extends ChangeNotifier {
       imageKey: imageKey, // ✅ 이거 꼭 추가!!
     );
 
-    Future.microtask(() {
-      // ✅ 초기에 상태를 미리 한번 계산해서 반영!
-      _currentBodyPartKey = _calculateBodyPartKey();
-
-      // 애니메이션과 상태 관리 초기화
-      _startAnimation();
-    });
     status.addListener(
         _onStatusChanged); //_onStatusChanged 만들어서 status가 변경될 때 애니메이션을 실행하겠다는 의도
   }
 
   Future<void> initialize() async {
-    await status.loadStatus(); // ✅ 직접 불러와!
-    // ✅ 여기서 이전값을 현재값으로 세팅
+    if (_isInitialized) return; // ✅ 제일 먼저 중복 방지
+
+    await status.loadStatus();
+
+    // ✅ 상태 기준 이전 값 세팅
     _previousWaterLevel = status.water_level;
     _previousMealLevel = status.meal_level;
     _previousSleepLevel = status.sleep_level;
-    status.addListener(_onStatusChanged);
-    if (_isInitialized) return; // 이미 초기화된 경우 무시
+
+    _currentBodyPartKey = _calculateBodyPartKey(); // 이미지 키 설정
+    status.addListener(_onStatusChanged); // ✅ 먼저 리스너 등록
+
+    _startAnimation(); // 그 다음에 애니메이션 시작
+
     _isInitialized = true;
   }
 
@@ -117,8 +117,7 @@ class CharacterViewModel extends ChangeNotifier {
     final now = DateTime.now();
     final rawStatus =
         CharacterStatusService.getBodyPartStatus(status, now); // ✅ 여긴 static
-    _currentBodyPartKey = CharacterStatusService.getTimeBasedOverride(
-        rawStatus, now); // ✅ 인스턴스 메서드
+
     notifyListeners();
   }
 

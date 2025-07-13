@@ -213,6 +213,13 @@ class _WaterDrinkState extends State<WaterDrink> {
           backgroundColor: const Color(0xFFFFF9C4),
           actions: [
             IconButton(
+              icon: const Icon(
+                Icons.bar_chart,
+                color: Colors.black,
+              ),
+              onPressed: () {},
+            ),
+            IconButton(
               icon: const Icon(Icons.info_outline, color: Colors.black),
               onPressed: () {
                 showDialog(

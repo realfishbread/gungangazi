@@ -9,6 +9,7 @@ import '../../../repositories/userHealth/water_repository.dart';
 import '../../core_services/dio_service.dart';
 import '../../core_services/token_service.dart';
 import '../../repositories/auth/profile_repository.dart';
+import '../../widget/alert.dart';
 
 class WaterDrink extends StatefulWidget {
   const WaterDrink({
@@ -108,14 +109,23 @@ class _WaterDrinkState extends State<WaterDrink> {
 
   void _addWater(int amount) {
     String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    int current = _dailyWaterIntake[today] ?? 0;
+    int newAmount = current + amount;
+
+    if (newAmount > 2000) {
+      showErrorDialog(
+        context,
+        '오늘은 이미 2000ml를 섭취했어요!\n더 마시면 배불러요 🧸💦',
+      );
+      return;
+    }
+
     setState(() {
-      _dailyWaterIntake[today] = (_dailyWaterIntake[today] ?? 0) + amount;
-      if (_dailyWaterIntake[today]! < 0) {
-        _dailyWaterIntake[today] = 0;
-      }
+      _dailyWaterIntake[today] = newAmount < 0 ? 0 : newAmount;
     });
+
     waterRepository.saveWaterIntake(_dailyWaterIntake);
-    _checkStatus(); // 물 섭취량 확인 후 상태 업데이트
+    _checkStatus(); // 상태 업데이트
   }
 
   Future<void> _checkStatus() async {
@@ -260,8 +270,7 @@ class _WaterDrinkState extends State<WaterDrink> {
                     child: BarChart(
                       BarChartData(
                         barGroups: _generateBarChartData(),
-                        maxY: recommendedIntake.toDouble() +
-                            1000, // 권장 섭취량을 기준으로 최대값 설정
+                        maxY: 2000, // 최대 Y값 설정
                         backgroundColor: Colors.lightBlue[50],
                         titlesData: FlTitlesData(
                           bottomTitles: AxisTitles(

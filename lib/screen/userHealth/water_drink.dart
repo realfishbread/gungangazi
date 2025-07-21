@@ -354,7 +354,7 @@ class _WaterDrinkState extends State<WaterDrink> {
                         ),
                         const SizedBox(height: 5),
                         const Text(
-                          '+물 한 잔',
+                          '+ 한 잔',
                           style:
                               TextStyle(color: Colors.blueAccent, fontSize: 14),
                         ),

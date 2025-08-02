@@ -18,7 +18,7 @@ import '../profile/profile_page.dart';
 import '../userHealth/blood_pressure.dart';
 import '../userHealth/meal_page.dart';
 import '../userHealth/sleep_page.dart';
-import '../userHealth/supplement_page.dart';
+import '../userHealth/supplements/supplement_page.dart';
 import '../userHealth/tooth_care_page.dart';
 import '../userHealth/walking_page.dart';
 import '../userHealth/water_drink.dart';

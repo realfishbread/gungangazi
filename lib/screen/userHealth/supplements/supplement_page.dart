@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../../core_services/dio_service.dart';
-import '../../../repositories/userHealth/supplement_repository.dart';
-import '../../dto/userHealth/supplement_dto.dart';
-import '../../core_services/token_service.dart';
-import '../character/popup_handler.dart';
-import '../../view_model/character_view_model.dart'; // ✅ CharacterViewModel 추가
+import '../../../core_services/dio_service.dart';
+import '../../../../repositories/userHealth/supplement_repository.dart';
+import '../../../dto/userHealth/supplement_dto.dart';
+import '../../../core_services/token_service.dart';
+import '../../character/popup_handler.dart';
+import '../../../view_model/character_view_model.dart'; // ✅ CharacterViewModel 추가
 import 'package:provider/provider.dart';
-import '../../screen/character/character_status.dart';
+import '../../character/character_status.dart';
+
+// 상태, 로직담당 + ui 로직 호출
+
 
 class SupplementsPage extends StatefulWidget {
   

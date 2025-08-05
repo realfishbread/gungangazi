@@ -245,7 +245,7 @@ class _SupplementsPageState extends State<SupplementsPage> {
                           );
                         },
                         child: const Text(
-                          '할 일 추가 +',
+                          'TO DO LIST +',
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
                         ),
                       ),

@@ -73,8 +73,8 @@
 ## 👤 기여자
 
 - 🧑‍💻 Full-stack 개발: [@realfishbread](https://github.com/realfishbread)  
-- 🤖 AI 알고리즘: rlaxogml  
-- 🎨 캐릭터 디자인: Cyan
+- 🤖 AI 알고리즘: @rlaxogml  
+- 🎨 캐릭터 디자인: [@realfishbread](https://github.com/realfishbread) 
 
 ---
 

@@ -22,6 +22,8 @@ Videos/
 .sts4/
 .vscode/
 eclipse-workspace/
+.build/
+build/
 
 # Miscellaneous
 *.class

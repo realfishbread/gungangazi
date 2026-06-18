@@ -97929,7 +97929,7 @@ A.aeQ.prototype={
 $0(){this.b.d9(0,A.aJU(this.a.w))},
 $S:11}
 A.e2.prototype={
-dU(){var s=A.aQS(A.aQ5("https://gungangazi.site",B.qO,B.qO)),r=s.a_f$
+dU(){var s=A.aQS(A.aQ5("https://gunganghazi.site",B.qO,B.qO)),r=s.a_f$
 r.D(r,new A.R0(new A.aaR(this),new A.aaS(),new A.aaT(),null,null,null))
 return s},
 CE(a,b,c){return this.auF(0,b,c)},

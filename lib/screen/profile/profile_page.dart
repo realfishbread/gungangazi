@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gungangazi/repositories/auth/auth_repository.dart';
-import 'package:gungangazi/view_model/google_view_model.dart';
+import 'package:gunganghazi/repositories/auth/auth_repository.dart';
+import 'package:gunganghazi/view_model/google_view_model.dart';
 import '../../dto/auth/profile_dto.dart';
 import '../../repositories/auth/profile_repository.dart';
 import '../../core_services/dio_service.dart';

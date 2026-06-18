@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'token_service.dart';
 
 class DioService {
-  static final String baseUrl = 'https://gungangazi.site';
+  static final String baseUrl = 'https://gunganghazi.site';
   String? token;
   final TokenService tokenService = TokenService(); // TokenService 인스턴스 생성
 

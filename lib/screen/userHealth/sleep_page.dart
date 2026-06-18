@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gungangazi/screen/character/character_status.dart';
+import 'package:gunganghazi/screen/character/character_status.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:fl_chart/fl_chart.dart';

@@ -1,4 +1,4 @@
-import 'package:gungangazi/core_services/dio_service.dart';
+import 'package:gunganghazi/core_services/dio_service.dart';
 import '../../core_services/token_service.dart';
 import '../../screen/character/popup_handler.dart';
 import 'package:dio/dio.dart';

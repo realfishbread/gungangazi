@@ -5,9 +5,9 @@ import '../../../repositories/userHealth/meal_repository.dart';
 import '../../core_services/dio_service.dart';
 import '../../core_services/token_service.dart';
 import '../character/popup_handler.dart';
-import 'package:gungangazi/screen/character/character_status.dart';
+import 'package:gunganghazi/screen/character/character_status.dart';
 import 'package:provider/provider.dart'; // ✅ Provider 추가
-import 'package:gungangazi/view_model/character_view_model.dart'; // ✅ CharacterViewModel 추가
+import 'package:gunganghazi/view_model/character_view_model.dart'; // ✅ CharacterViewModel 추가
 
 
 class MealPage extends StatefulWidget {

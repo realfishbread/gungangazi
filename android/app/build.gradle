@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.gungangazi"
+    namespace = "com.example.gunganghazi"
     compileSdkVersion 35 // 34로 낮추기
     ndkVersion = flutter.ndkVersion
 
@@ -21,7 +21,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.gungangazi"
+        applicationId = "com.example.gunganghazi"
         minSdkVersion 28 // ✅ 28 이상으로 설정
         targetSdkVersion 35
         versionCode = flutter.versionCode

@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:gungangazi/screen/character/character_status.dart';
-import 'package:gungangazi/view_model/character_view_model.dart';
+import 'package:gunganghazi/screen/character/character_status.dart';
+import 'package:gunganghazi/view_model/character_view_model.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 

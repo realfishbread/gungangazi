@@ -12,7 +12,7 @@ public class CorsConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // API 엔드포인트에 CORS 적용
                 .allowedOrigins(
-                        "https://gungangazi.site", // 배포된 프론트엔드 URL
+                        "https://gunganghazi.site", // 배포된 프론트엔드 URL
                         "http://localhost:8080",  // 로컬 개발 환경 (백엔드)
                         "http://localhost:3000"   // 로컬 개발 환경 (프론트엔드)
                 )

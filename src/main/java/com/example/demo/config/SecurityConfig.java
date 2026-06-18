@@ -43,7 +43,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         .cors(cors -> cors.configurationSource(request -> {
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowCredentials(true);
-            config.addAllowedOrigin("https://gungangazi.site");
+            config.addAllowedOrigin("https://gunganghazi.site");
             config.addAllowedOrigin("http://localhost:8080");
             config.addExposedHeader("Authorization"); // Authorization 헤더 노출 설정
             config.addAllowedHeader("*");

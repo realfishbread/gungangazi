@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:gungangazi/screen/character/character_status.dart';
-import 'package:gungangazi/screen/home/web_home_page.dart';
+import 'package:gunganghazi/screen/character/character_status.dart';
+import 'package:gunganghazi/screen/home/web_home_page.dart';
 import 'package:provider/provider.dart';
 
 import 'config/theme.dart'; // 테마 파일 import

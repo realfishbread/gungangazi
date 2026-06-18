@@ -1,6 +1,6 @@
 Dart SDK 3.6.1
 Flutter SDK 3.27.3
-gungangazi 1.0.0+1
+gunganghazi 1.0.0+1
 ├── adaptive_bottom_navigation 1.0.7
 │   ├── cupertino_icons...
 │   ├── flutter...

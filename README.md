@@ -1,4 +1,4 @@
-# 건강하지?! (Gungangazi)
+# 건강하지?! (Gunganghazi)
 
 > 감정형 캐릭터 **‘강하지’**를 통해 건강 상태를 시각화하는  
 > **Flutter 기반 Web/App 헬스케어 앱**  
@@ -8,7 +8,7 @@
 
 ## 🌐 배포 링크
 
-- 웹 앱 주소: [https://gungangazi.site](https://gungangazi.site)
+- 웹 앱 주소: [https://gunganghazi.site](https://gunganghazi.site)
 
 ---
 

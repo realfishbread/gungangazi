@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gungangazi/screen/userHealth/walking_page.dart';
+import 'package:gunganghazi/screen/userHealth/walking_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../core_services/dio_service.dart';

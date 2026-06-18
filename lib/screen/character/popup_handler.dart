@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gungangazi/view_model/character_view_model.dart';
+import 'package:gunganghazi/view_model/character_view_model.dart';
 // ✅ Provider 추가
 import 'package:provider/provider.dart';
 

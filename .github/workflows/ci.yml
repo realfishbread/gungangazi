@@ -68,17 +68,17 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > GUNGANGAZI.pem
-          chmod 600 GUNGANGAZI.pem
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > newGunganghazi.pem
+          chmod 600 newGunganghazi.pem
 
           # Flutter 웹 빌드 파일 배포
-          scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem -r ./build/web/* ${{ secrets.EC2_DEPLOY_USER }}:/var/www/html/
+          scp -o StrictHostKeyChecking=no -i newGunganghazi.pem -r ./build/web/* ${{ secrets.EC2_DEPLOY_USER }}:/var/www/html/
 
           # Spring Boot JAR 파일 배포
-          scp -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ./target/demo-0.0.1-SNAPSHOT.jar ${{ secrets.EC2_DEPLOY_USER }}:/var/app/demo.jar
+          scp -o StrictHostKeyChecking=no -i newGunganghazi.pem ./target/demo-0.0.1-SNAPSHOT.jar ${{ secrets.EC2_DEPLOY_USER }}:/var/app/demo.jar
 
           # 원격 서버에서 Nginx 재시작 및 Spring Boot 실행
-          ssh -o StrictHostKeyChecking=no -i GUNGANGAZI.pem ${{ secrets.EC2_DEPLOY_USER }} << EOF
+          ssh -o StrictHostKeyChecking=no -i newGunganghazi.pem ${{ secrets.EC2_DEPLOY_USER }} << EOF
           sudo systemctl restart nginx
 
           # 기존 jar 프로세스 종료
@@ -89,4 +89,4 @@ jobs:
           EOF
 
       - name: Cleanup
-        run: rm -f GUNGANGAZI.pem
+        run: rm -f newGunganghazi.pem

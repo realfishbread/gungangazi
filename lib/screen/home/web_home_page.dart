@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gungangazi/screen/character/character_status.dart';
+import 'package:gunganghazi/screen/character/character_status.dart';
 import 'package:provider/provider.dart';
 
 import '../../core_services/dio_service.dart';

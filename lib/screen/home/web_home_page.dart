@@ -285,7 +285,7 @@ class _WebHomePageState extends State<WebHomePage> {
             items: [
               SideMenuExpansionItem(
                 title: " 자기관리",
-                icon: const Icon(FontAwesomeIcons.book),
+                icon: const FaIcon(FontAwesomeIcons.book),
                 children: [
                   SideMenuItem(
                     title: '수면',
@@ -345,7 +345,7 @@ class _WebHomePageState extends State<WebHomePage> {
               ),
               SideMenuExpansionItem(
                 title: " 운동",
-                icon: const Icon(FontAwesomeIcons.dumbbell),
+                icon: const FaIcon(FontAwesomeIcons.dumbbell),
                 children: [
                   SideMenuItem(
                     title: '만보기',
@@ -375,7 +375,7 @@ class _WebHomePageState extends State<WebHomePage> {
                     MaterialPageRoute(builder: (context) => const ChatPage()),
                   );
                 },
-                icon: const Icon(FontAwesomeIcons.commentMedical),
+                icon: const FaIcon(FontAwesomeIcons.commentMedical),
               ),
               SideMenuItem(
                 builder: (context, displayMode) {

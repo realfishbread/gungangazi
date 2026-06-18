@@ -195,11 +195,11 @@ class _MobileHomePageState extends State<MobileHomePage> {
         backgroundColor: const Color(0xFFFFF9C4),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.book),
+            icon: FaIcon(FontAwesomeIcons.book),
             label: '자기 관리',
           ),
           BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.dumbbell),
+            icon: FaIcon(FontAwesomeIcons.dumbbell),
             label: '운동',
           ),
           BottomNavigationBarItem(
@@ -224,7 +224,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
           );
         },
         backgroundColor: const Color(0xFFD9D7F1),
-        child: const Icon(FontAwesomeIcons.commentMedical),
+        child: const FaIcon(FontAwesomeIcons.commentMedical),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );

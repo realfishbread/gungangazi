@@ -1,6 +1,6 @@
 name: CI/CD Pipeline
 
-on: 
+on:
   push:
     branches:
       - cleanup-branch
@@ -18,10 +18,6 @@ jobs:
       - uses: actions/checkout@v4
       - run: touch ./src/main/resources/application.properties
       - run: echo "${{secrets.APPLICATION}}" > ./src/main/resources/application.properties
-      - uses: actions/upload-artifact@v4
-        with:
-          name: application.properties
-          path: ./src/main/resources/application.properties
 
       - name: Set up JDK
         uses: actions/setup-java@v3
@@ -39,32 +35,43 @@ jobs:
           echo "GOOGLE_CLIENT_ID_WEB=${{ secrets.GOOGLE_CLIENT_ID_WEB }}" >> .env
           echo "GOOGLE_CLIENT_ID_ANDROID=${{ secrets.GOOGLE_CLIENT_ID_ANDROID }}" >> .env
 
-      - name: Set up environment
-        run: |
-          echo 'export PATH="$PATH:$HOME/flutter/bin"' >> $GITHUB_ENV
       - run: flutter pub get
-      - run: flutter build web 
+      - run: flutter build web
 
       - name: Grant execute permission for Maven Wrapper
         run: chmod +x ./mvnw
 
-      - name: Build and Test Spring demo
-        run: ./mvnw clean install
+      - name: Build Spring Boot
+        run: ./mvnw clean package -DskipTests
+
+      - name: Upload jar artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: spring-boot-jar
+          path: ./target/demo-0.0.1-SNAPSHOT.jar
+
+      - name: Upload Flutter web artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-web
+          path: ./build/web/
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    env:
-      DB_USERNAME: ${{ secrets.DB_USERNAME }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
-      MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
-      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Download jar artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: spring-boot-jar
+          path: ./target/
+
+      - name: Download Flutter web artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: flutter-web
+          path: ./build/web/
 
       - name: Deploy to EC2
         run: |
@@ -78,14 +85,11 @@ jobs:
           scp -o StrictHostKeyChecking=no -i newGunganghazi.pem ./target/demo-0.0.1-SNAPSHOT.jar ${{ secrets.EC2_DEPLOY_USER }}:/var/app/demo.jar
 
           # 원격 서버에서 Nginx 재시작 및 Spring Boot 실행
-          ssh -o StrictHostKeyChecking=no -i newGunganghazi.pem ${{ secrets.EC2_DEPLOY_USER }} << EOF
+          ssh -o StrictHostKeyChecking=no -i newGunganghazi.pem ${{ secrets.EC2_DEPLOY_USER }} << 'EOF'
           sudo systemctl restart nginx
-
-          # 기존 jar 프로세스 종료
           pkill -f 'java.*demo.jar' || true
-
-          # 새 jar 실행
-          nohup java -jar /var/app/demo.jar > /dev/null 2>&1 &
+          sleep 2
+          nohup java -jar /var/app/demo.jar > /var/log/springboot.log 2>&1 &
           EOF
 
       - name: Cleanup

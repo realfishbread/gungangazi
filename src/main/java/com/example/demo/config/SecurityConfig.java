@@ -44,8 +44,10 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowCredentials(true);
             config.addAllowedOrigin("https://gunganghazi.site");
+            config.addAllowedOrigin("https://www.gunganghazi.site");
+            config.addAllowedOrigin("http://localhost:3000");
             config.addAllowedOrigin("http://localhost:8080");
-            config.addExposedHeader("Authorization"); // Authorization 헤더 노출 설정
+            config.addExposedHeader("Authorization");
             config.addAllowedHeader("*");
             config.addAllowedMethod("*");
             return config;
@@ -82,8 +84,10 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .anyRequest().authenticated()
         )
         .headers(headers -> headers
-        .contentSecurityPolicy("script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://www.gstatic.com https://apis.google.com")
-        )// Content-Security-Policy 설정 추가
+            .contentSecurityPolicy(csp -> csp.policyDirectives(
+                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://www.gstatic.com https://apis.google.com"
+            ))
+        )
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가
     return http.build();
 }

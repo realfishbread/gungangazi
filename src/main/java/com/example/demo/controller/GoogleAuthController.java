@@ -179,8 +179,8 @@ logger.info("성별 저장 값: {}", gender);
         }
         
 
-        // JWT 토큰 발급
-        String token = jwtTokenProvider.createToken(email);
+        // JWT 토큰 발급 (기존 유저는 실제 username, 신규 유저는 email을 subject로 사용)
+        String token = jwtTokenProvider.createToken(existingUser ? user.getUsername() : email);
 
         // 응답 반환
         return ResponseEntity.ok(Map.of(

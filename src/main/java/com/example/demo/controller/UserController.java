@@ -36,7 +36,6 @@ import com.example.demo.service.JwtTokenProvider;
 import com.example.demo.service.UserService;
 
 @RestController
-@RequestMapping
 public class UserController {
 
     @Autowired

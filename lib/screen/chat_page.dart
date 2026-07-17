@@ -18,7 +18,7 @@ class _ChatPageState extends State<ChatPage> with SingleTickerProviderStateMixin
   bool _isTyping = false;
 
   // 로컬 서버 URL 설정
-  final String serverUrl = 'https://gungangazi.site';
+  final String serverUrl = 'https://gunganghazi.site';
 
   @override
   void initState() {

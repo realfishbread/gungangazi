@@ -91,5 +91,5 @@ NTUSER.DAT*
 
 /shd-1.0.0-b1/
 /src/main/resources/application.properties
-/target/classes/application.properties
+/target/
 .env

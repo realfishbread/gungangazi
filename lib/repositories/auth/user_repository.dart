@@ -33,9 +33,11 @@ class UserRepository {
         return null;
       }
     } on DioException catch (e) {
-      final errorMessage = e.response?.data['message'] ?? '알 수 없는 오류가 발생했습니다.';
-      print('회원가입 오류: $errorMessage');
-      return errorMessage;  // 오류 메시지 반환
+      final errorMessage = (e.response?.data is Map)
+          ? (e.response?.data['message'] ?? '알 수 없는 오류가 발생했습니다.')
+          : '알 수 없는 오류가 발생했습니다.';
+      print('회원가입 오류: $errorMessage (status: ${e.response?.statusCode})');
+      return {'message': errorMessage, 'token': ''};
     }
   }
   
